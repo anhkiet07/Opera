@@ -168,7 +168,7 @@ Supported backbones (selectable via `--model`): `patchtst`, `patchmixer`, `tmix`
 ```bibtex
 @inproceedings{lim2026quite,
   title         = {Qu{ITE}: Query-based Irregular Time-series Embedding},
-  author        = {Lim, JungHoon},
+  author        = {Lim, Junghoon},
   booktitle     = {Forty-third International Conference on Machine Learning},
   year          = {2026},
   url           = {https://openreview.net/forum?id=ILQGHFvEoo},
