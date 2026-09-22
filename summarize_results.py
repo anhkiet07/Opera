@@ -70,8 +70,8 @@ def forecasting_tables(runs):
                 rs = [r for r in rs if "robustness" in r]
                 if not rs:
                     continue
-                cells = [fmt([r["robustness"][v][metric] for r in rs]) for v in views]
-                degraded = [np.mean([r["robustness"][v][metric] for v in views if v != "none"]) for r in rs]
+                cells = [fmt([r["robustness"][v][metric] for r in rs if v in r["robustness"]]) for v in views]
+                degraded = [np.mean([r["robustness"][v][metric] for v in views if v != "none" and v in r["robustness"]]) for r in rs]
                 rel = [(d / r["robustness"]["none"][metric] - 1) * 100 for d, r in zip(degraded, rs)]
                 lines.append(f"| {g} | {len(rs)} | " + " | ".join(cells) + f" | {fmt(degraded)} | {fmt(rel, nd=1)}% |")
     return "\n".join(lines)

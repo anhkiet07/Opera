@@ -30,6 +30,9 @@ MIXED_POOL = ["random:0.3", "random:0.6", "bursty:0.3", "bursty:0.5", "variable:
 # Views used for the cross-sampling robustness table.
 DEFAULT_EVAL_VIEWS = ["none", "random:0.3", "random:0.5", "random:0.7",
                       "bursty:0.3", "bursty:0.5", "variable:0.3"]
+# Phase 2: adds regimes that are NOT in the 'mixed' training pool (unseen severity / unseen type).
+UNSEEN_EVAL_VIEWS = ["variable:0.5", "stride:2", "stride:3"]
+EXTENDED_EVAL_VIEWS = DEFAULT_EVAL_VIEWS + UNSEEN_EVAL_VIEWS
 
 
 def parse_view(spec):
@@ -82,6 +85,14 @@ def keep_mask(tp, mask, spec, gen=None):
             drop[all_dropped.nonzero(as_tuple=True)[0], j] = False
         shape = [B] + [1] * (mask.dim() - 2) + [N]
         return (~drop).to(mask.dtype).view(shape).expand_as(mask).clone()
+
+    if kind == "stride":
+        # Systematic subsampling: keep every k-th observation of each variable (in time order).
+        # Lower effective sampling rate with regular spacing - a regime type absent from 'mixed'.
+        k = max(int(p), 1)
+        tdim = mask.dim() - 2                       # time axis: (B, L, N) -> 1, (B, M, L, N) -> 2
+        order = (mask > 0).float().cumsum(dim=tdim) - 1
+        return ((order % k == 0) & (mask > 0)).to(mask.dtype)
 
     if kind == "bursty":
         # Drop 2 contiguous time windows per sample, total width = p * range.

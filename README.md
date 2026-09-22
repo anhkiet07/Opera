@@ -166,10 +166,16 @@ python train_classification.py --dataset P19 \
 
 Each run writes `results/<run_tag>.json` (test metrics, parameter count, time per epoch, peak GPU memory, inference cost, robustness table) and logs the same to W&B, including collapse diagnostics (`repr/pos_cos`, `repr/neg_cos`, `repr/std`).
 
+**Adaptive queries (Phase 2)** — `--adaptive_query {full,density,gaps,avail,random}` makes the QuITE query token observation-aware, `q(X) = q + MLP(s(X))`, where `s` summarises the observation pattern seen by that query (count / density, gap timing, availability; `random` is a noise-fed capacity control). Zero-initialised, +3.6 % parameters. Views `stride:k` (keep every k-th observation) serve as an unseen-regime test.
+
 ```bash
 bash jobs/run_phase01_all.sh          # Phase 0 reproduction + Phase 1 comparison & ablations
+bash jobs/phase2_adaptive.sh          # Phase 2 adaptive-query runs + ablations
+python eval_checkpoint.py --tags <run_tag> ... --views variable:0.5,stride:2,stride:3   # extra views for saved runs
 python summarize_results.py           # -> results/summary.md
 ```
+
+Reports: `results/PHASE01_REPORT.md`, `results/PHASE2_REPORT.md`.
 
 ---
 

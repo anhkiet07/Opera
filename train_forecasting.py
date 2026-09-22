@@ -81,6 +81,10 @@ parser.add_argument('--consistency_dist', type=str, default='cos', choices=['cos
 parser.add_argument('--eval_views', type=str, default=','.join(DEFAULT_EVAL_VIEWS),
                     help='Comma-separated views for the final cross-sampling robustness table')
 parser.add_argument('--run_tag', type=str, default=None, help='Checkpoint / results file tag (auto if omitted)')
+parser.add_argument('--adaptive_query', type=str, default='none',
+                    choices=['none', 'full', 'density', 'gaps', 'avail', 'random'],
+                    help='Phase 2: observation-aware query q + MLP(stats). none = plain QuITE; '
+                         'random = same MLP fed with noise (capacity control)')
 
 args = parser.parse_args()
 args.npatch = int(np.ceil((args.history - args.patch_size) / args.stride)) + 1
@@ -166,6 +170,7 @@ if __name__ == '__main__':
     logger.info(model)
     logger.info(f'parameters:{count_parameters(model)}')
     _cons = f'_view-{args.train_view}_lam{args.consistency_lambda}' if args.train_view != 'none' else ''
+    _cons += f'_aq-{args.adaptive_query}' if args.adaptive_query != 'none' else ''
     args.run_tag = args.run_tag or args.wandb_name or f'{args.dataset}_h{args.history}_{args.model}_{args.mode}{_cons}_s{args.seed}'
     wandb_utils.init(args, name=args.run_tag, tags=[args.dataset, 'forecasting', args.model, args.mode],
                      group=f'{args.dataset}_h{args.history}')
