@@ -13,7 +13,10 @@ Backbones (selected by `args.model`):
 import torch
 import torch.nn as nn
 
-from mamba_ssm import Mamba
+try:
+    from mamba_ssm import Mamba
+except ImportError:  # mamba-ssm is only needed for the S-Mamba backbone
+    Mamba = None
 
 from models.common import PatchMixerLayer, Transpose, TempBlock
 from models.embeddings import get_embedding, LearnableTE
@@ -225,7 +228,7 @@ class Model(nn.Module):
     # ================================================================
     # Forecasting head (cross-attention decoder + MLP regressor)
     # ================================================================
-    def forecasting(self, time_steps_to_predict, X, truth_time_steps, mask=None):
+    def forecasting(self, time_steps_to_predict, X, truth_time_steps, mask=None, return_repr=False):
         irr_z_flat, B, _, N = self._embed_encode(X, truth_time_steps, mask)
 
         L_pred = time_steps_to_predict.shape[1]
@@ -234,12 +237,16 @@ class Model(nn.Module):
 
         out_flat, _ = self.cross_transformer(te_pred_flat, irr_z_flat, irr_z_flat)
         out = out_flat.reshape(B, N, L_pred, self.d_model).permute(0, 2, 1, 3)
-        return self.decoder(out).squeeze(-1)                                   # (B, L_pred, N)
+        pred = self.decoder(out).squeeze(-1)                                   # (B, L_pred, N)
+        if return_repr:
+            # representation per sample: (B, N * M_eff * D)
+            return pred, irr_z_flat.reshape(B, -1)
+        return pred
 
     # ================================================================
     # Classification head (sum-over-D pool + MLP classifier)
     # ================================================================
-    def classification(self, X, truth_time_steps, mask=None, P_static=None, feature=False):
+    def classification(self, X, truth_time_steps, mask=None, P_static=None, feature=False, return_repr=False):
         irr_z_flat, B, M_eff, N = self._embed_encode(X, truth_time_steps, mask)
         irr_z = irr_z_flat.reshape(B, N, M_eff * self.d_model)
 
@@ -249,5 +256,9 @@ class Model(nn.Module):
         h = torch.sum(irr_z, dim=-1)                                          # (B, N)
         if P_static is not None:
             static_emb = self.emb(P_static)
-            return self.classifier(torch.cat([h, static_emb], dim=-1))
-        return self.classifier(h)
+            logits = self.classifier(torch.cat([h, static_emb], dim=-1))
+        else:
+            logits = self.classifier(h)
+        if return_repr:
+            return logits, irr_z.reshape(B, -1)
+        return logits

@@ -1,3 +1,4 @@
+import os
 from sklearn import model_selection
 
 from data.physionet import *
@@ -5,6 +6,7 @@ from data.ushcn import *
 from data.mimic import MIMIC
 from data.activity import *
 from utils import *
+from data import DATA_ROOT
 
 #####################################################################################################
 def parse_datasets(args, patch_ts=False, max_ts=False, length_stat=False):
@@ -18,10 +20,10 @@ def parse_datasets(args, patch_ts=False, max_ts=False, length_stat=False):
         args.pred_window = 48 - args.history
         ### list of tuples (record_id, tt, vals, mask) ###
         if dataset_name == "physionet":
-            total_dataset = PhysioNet('../data/physionet', quantization = args.quantization,
+            total_dataset = PhysioNet(os.path.join(DATA_ROOT, 'physionet'), quantization = args.quantization,
                                             download=True, n_samples = args.n, device = device)
         elif dataset_name == "mimic":
-            total_dataset = MIMIC('../data/mimic/', n_samples = args.n, device = device)
+            total_dataset = MIMIC(os.path.join(DATA_ROOT, 'mimic'), n_samples = args.n, device = device)
 
         seen_data, test_data = model_selection.train_test_split(total_dataset, train_size= 0.8, random_state = 42, shuffle = True)
         train_data, val_data = model_selection.train_test_split(seen_data, train_size= 0.75, random_state = 42, shuffle = False)
@@ -93,7 +95,7 @@ def parse_datasets(args, patch_ts=False, max_ts=False, length_stat=False):
         # args.pred_window = 1 # predict future one month
 
         ### list of tuples (record_id, tt, vals, mask) ###
-        total_dataset = USHCN('../data/ushcn/', n_samples = args.n, device = device)
+        total_dataset = USHCN(os.path.join(DATA_ROOT, 'ushcn'), n_samples = args.n, device = device)
 
         seen_data, test_data = model_selection.train_test_split(total_dataset, train_size= 0.8, random_state = 42, shuffle = True)
         train_data, val_data = model_selection.train_test_split(seen_data, train_size= 0.75, random_state = 42, shuffle = False)
@@ -168,7 +170,7 @@ def parse_datasets(args, patch_ts=False, max_ts=False, length_stat=False):
     elif dataset_name == "activity":
         args.pred_window = 4000 - args.history # predict future 1000 ms
 
-        total_dataset = PersonActivity('../data/activity/', n_samples = args.n, download=True, device = device)
+        total_dataset = PersonActivity(os.path.join(DATA_ROOT, 'activity'), n_samples = args.n, download=True, device = device)
 
         # Shuffle and split
         seen_data, test_data = model_selection.train_test_split(total_dataset, train_size= 0.8, random_state = 42, shuffle = True)

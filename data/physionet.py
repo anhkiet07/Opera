@@ -11,7 +11,7 @@ import urllib.request
 from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import DataLoader
 
-def download_url(url, root, filename=None):
+def download_url(url, root, filename=None, md5=None):
     """Download a file from a url and place it in root."""
     if filename is None:
         filename = os.path.basename(url.split('?')[0])
@@ -97,7 +97,7 @@ class PhysioNet(object):
 
         # Download outcome data
         # for url in self.outcome_urls:
-        #   filename = url.rpartition('/')[2]
+        #   filename = url.rpartition('/')[2].split('?')[0]
         #   download_url(url, self.raw_folder, filename, None)
 
         #   txtfile = os.path.join(self.raw_folder, filename)
@@ -115,7 +115,7 @@ class PhysioNet(object):
         #       )
 
         for url in self.urls:
-            filename = url.rpartition('/')[2]
+            filename = url.rpartition('/')[2].split('?')[0]
             download_url(url, self.raw_folder, filename, None)
             tar = tarfile.open(os.path.join(self.raw_folder, filename), "r:gz")
             tar.extractall(self.raw_folder)
@@ -194,7 +194,7 @@ class PhysioNet(object):
 
     def _check_exists(self):
         for url in self.urls:
-            filename = url.rpartition('/')[2]
+            filename = url.rpartition('/')[2].split('?')[0]
 
             if not os.path.exists(
                 os.path.join(self.processed_folder, 

@@ -66,10 +66,29 @@ parser.add_argument('-ps', '--patch_size', type=float, default=24)
 parser.add_argument('--stride', type=float, default=24)
 parser.add_argument('--dropout', type=float, default=0.1)
 
+import wandb_utils
+from sampling_views import DEFAULT_EVAL_VIEWS
+wandb_utils.add_args(parser)
+
+# ----- Sampling-invariant training (Phase 1) & robustness evaluation -----
+parser.add_argument('--train_view', type=str, default='none',
+                    help="Sampling view applied to training inputs: none | random:p | bursty:p | variable:p | mixed | a|b")
+parser.add_argument('--n_views', type=int, default=1, help='Views per batch when train_view != none')
+parser.add_argument('--consistency_lambda', type=float, default=0.0,
+                    help='Weight of the cross-view consistency loss (0 = off)')
+parser.add_argument('--consistency_target', type=str, default='repr', choices=['repr', 'pred'])
+parser.add_argument('--consistency_dist', type=str, default='cos', choices=['cos', 'mse'])
+parser.add_argument('--eval_views', type=str, default=','.join(DEFAULT_EVAL_VIEWS),
+                    help='Comma-separated views for the final cross-sampling robustness table')
+parser.add_argument('--run_tag', type=str, default=None, help='Checkpoint / results file tag (auto if omitted)')
+
 args = parser.parse_args()
 args.npatch = int(np.ceil((args.history - args.patch_size) / args.stride)) + 1
 os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu
 os.environ['CUBLAS_WORKSPACE_CONFIG'] = ':4096:8'
+# Variable-length irregular batches fragment the caching allocator; expandable segments keep
+# reserved memory close to the actual peak (important on 8 GB GPUs).
+os.environ.setdefault('PYTORCH_CUDA_ALLOC_CONF', 'expandable_segments:True')
 
 import torch
 import torch.optim as optim
@@ -77,7 +96,9 @@ torch.backends.cudnn.benchmark = False
 torch.backends.cudnn.deterministic = True
 torch.use_deterministic_algorithms(True)
 
+import json
 import utils
+import sampling_views as sv
 from data.parse import parse_datasets
 from evaluation import compute_all_losses, evaluation
 from models.quite import Model
@@ -144,6 +165,17 @@ if __name__ == '__main__':
     logger.info(args)
     logger.info(model)
     logger.info(f'parameters:{count_parameters(model)}')
+    _cons = f'_view-{args.train_view}_lam{args.consistency_lambda}' if args.train_view != 'none' else ''
+    args.run_tag = args.run_tag or args.wandb_name or f'{args.dataset}_h{args.history}_{args.model}_{args.mode}{_cons}_s{args.seed}'
+    wandb_utils.init(args, name=args.run_tag, tags=[args.dataset, 'forecasting', args.model, args.mode],
+                     group=f'{args.dataset}_h{args.history}')
+    wandb_utils.summary({'n_params': count_parameters(model)})
+    view_gen = sv.make_generator(args.seed, args.device)
+    eval_gen_seed = 12345
+    ckpt_path = f'./models/{args.run_tag}.pt'
+    if torch.cuda.is_available():
+        torch.cuda.reset_peak_memory_stats()
+    train_times = []
 
     optimizer = optim.Adam(model.parameters(), lr=args.lr)
 
@@ -157,15 +189,19 @@ if __name__ == '__main__':
         # Train
         model.train()
         st = time.time()
+        epoch_loss, epoch_n = 0.0, 0
         for _ in tqdm(range(num_batches)):
             optimizer.zero_grad()
             batch_dict = utils.get_next_batch(data_obj["train_dataloader"])
             if batch_dict is None:
                 continue
-            train_res = compute_all_losses(model, batch_dict)
+            train_res = compute_all_losses(model, batch_dict, args, view_gen)
             train_res["loss"].backward()
             optimizer.step()
-        logger.info(f'training time per epoch :{time.time() - st:.3f}s')
+            epoch_loss += train_res['mse']; epoch_n += 1
+        train_time = time.time() - st
+        train_times.append(train_time)
+        logger.info(f'training time per epoch :{train_time:.3f}s')
 
         # Val + Test
         model.eval()
@@ -180,9 +216,7 @@ if __name__ == '__main__':
                 st = time.time()
                 test_res, _ = evaluation(model, data_obj["test_dataloader"], data_obj["n_test_batches"])
                 logger.info(f"test time per epoch :{time.time() - st:.2f}s")
-                torch.save(model.state_dict(),
-                           f"./models/{args.dataset}_{args.history}history_"
-                           f"{args.pred_window}pred_{args.model}_{args.mode}.pt")
+                torch.save(model.state_dict(), ckpt_path)
 
             logger.info(f'- Epoch {itr:03d}, ExpID {experimentID}')
             logger.info(f"Train - Loss (one batch): {train_res['loss'].item():.5f}")
@@ -199,6 +233,68 @@ if __name__ == '__main__':
                     f"{test_res['mape'] * 100:.2f}%"
                 )
 
+            metrics = {
+                'epoch': itr,
+                'train/loss': epoch_loss / max(epoch_n, 1),
+                'train/loss_last_batch': train_res['loss'].item(),
+                'train/epoch_time_s': train_time,
+                'val/mse': val_res['mse'], 'val/rmse': val_res['rmse'],
+                'val/mae': val_res['mae'], 'val/mape': val_res['mape'],
+                'best_epoch': best_iter,
+            }
+            if test_res is not None:
+                metrics.update({'test/mse': test_res['mse'], 'test/rmse': test_res['rmse'],
+                                'test/mae': test_res['mae'], 'test/mape': test_res['mape']})
+            for k in ('consistency', 'repr/pos_cos', 'repr/neg_cos', 'repr/std'):
+                if k in train_res:
+                    metrics['train/' + k if k == 'consistency' else k] = train_res[k]
+            if torch.cuda.is_available():
+                metrics['gpu/peak_mem_mb'] = torch.cuda.max_memory_allocated() / 2**20
+            wandb_utils.log(metrics, step=itr)
+
         if itr - best_iter >= args.patience:
             logger.info("Exp has been early stopped!")
-            sys.exit(0)
+            break
+
+    # ---------------- Final report: cost + cross-sampling robustness ----------------
+    results = {'run_tag': args.run_tag,
+               'args': {k: v for k, v in vars(args).items() if isinstance(v, (int, float, str, bool, type(None)))},
+               'n_params': count_parameters(model), 'best_epoch': best_iter, 'best_val_mse': best_val_mse,
+               'epochs_run': itr + 1, 'train_time_per_epoch_s': float(np.mean(train_times)),
+               'total_train_time_s': float(np.sum(train_times))}
+    if torch.cuda.is_available():
+        results['peak_gpu_mem_mb'] = torch.cuda.max_memory_allocated() / 2**20
+    if test_res is not None:
+        results['test'] = {k: test_res[k] for k in ('mse', 'rmse', 'mae', 'mape', 'infer_ms_per_series')}
+        wandb_utils.summary({'best_epoch': best_iter, 'best_val_mse': best_val_mse,
+                             'test_mse': test_res['mse'], 'test_rmse': test_res['rmse'],
+                             'test_mae': test_res['mae'], 'test_mape': test_res['mape'],
+                             'train_time_per_epoch_s': results['train_time_per_epoch_s'],
+                             'peak_gpu_mem_mb': results.get('peak_gpu_mem_mb'),
+                             'infer_ms_per_series': test_res['infer_ms_per_series']})
+        # Robustness: best checkpoint evaluated on the test set under each sampling view
+        model.load_state_dict(torch.load(ckpt_path, map_location=args.device))
+        model.eval()
+        robust = {}
+        with torch.no_grad():
+            for view in [v.strip() for v in args.eval_views.split(',') if v.strip()]:
+                g = sv.make_generator(eval_gen_seed, args.device)
+                r, _ = evaluation(model, data_obj['test_dataloader'], data_obj['n_test_batches'], view=view, gen=g)
+                robust[view] = {k: r[k] for k in ('mse', 'rmse', 'mae', 'mape')}
+                logger.info(f"Robustness [{view}] MSE {r['mse']:.5f} MAE {r['mae']:.5f}")
+                wandb_utils.summary({f'robust/{view}/mse': r['mse'], f'robust/{view}/mae': r['mae']})
+        results['robustness'] = robust
+        try:
+            import wandb
+            if wandb.run is not None:
+                tbl = wandb.Table(columns=['view', 'mse', 'rmse', 'mae', 'mape'],
+                                  data=[[v, r['mse'], r['rmse'], r['mae'], r['mape']] for v, r in robust.items()])
+                wandb.log({'robustness/mse_by_view': wandb.plot.bar(tbl, 'view', 'mse', title='Test MSE by observation view'),
+                           'robustness/mae_by_view': wandb.plot.bar(tbl, 'view', 'mae', title='Test MAE by observation view')})
+        except Exception as e:
+            logger.info(f'wandb table skipped: {e}')
+    utils.makedirs('results/')
+    with open(f'results/{args.run_tag}.json', 'w') as f:
+        json.dump(results, f, indent=2)
+    logger.info(f'Saved results/{args.run_tag}.json')
+    wandb_utils.finish()

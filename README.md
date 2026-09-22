@@ -66,7 +66,7 @@ Across **7 benchmarks** and **6 MTS backbones**, plugging QuITE in yields averag
 
 ## 📊 Datasets
 
-We use **4 forecasting** + **3 classification** benchmarks, following [t-PatchGNN](https://github.com/usail-hkust/t-PatchGNN) for forecasting and [Raindrop](https://github.com/mims-harvard/Raindrop) for classification preprocessing. Place all data under `../data/` (sibling of this repository).
+We use **4 forecasting** + **3 classification** benchmarks, following [t-PatchGNN](https://github.com/usail-hkust/t-PatchGNN) for forecasting and [Raindrop](https://github.com/mims-harvard/Raindrop) for classification preprocessing. All data lives under `data/<dataset>/` inside this repository (override with the `QUITE_DATA_ROOT` environment variable).
 
 ### Forecasting (paper Appendix A.1)
 
@@ -101,8 +101,23 @@ Tested on **Python 3.10+** and **PyTorch 2.0+**.
 ```bash
 git clone https://github.com/Meaningfull9502/QuITE.git
 cd QuITE
+python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install torch --index-url https://download.pytorch.org/whl/cu126   # pick your CUDA version
 pip install -r requirements.txt
-pip install mamba-ssm   # only required for the S-Mamba backbone
+pip install mamba-ssm   # optional, only required for the S-Mamba backbone (Linux + CUDA)
+```
+
+PhysioNet and Human Activity are downloaded and preprocessed automatically into `data/physionet/` and `data/activity/` on first run.
+
+### Weights & Biases logging
+
+Every entrypoint logs to [W&B](https://wandb.ai) by default (project `quite`): per-epoch train loss, validation / test MSE-RMSE-MAE-MAPE (forecasting) or loss / accuracy / AUROC / AUPRC / F1 per fold (classification), epoch time, parameter count, and the final best-epoch test numbers in the run summary.
+
+```bash
+wandb login                       # once
+python train_forecasting.py ... --wandb_project quite --wandb_name my-run
+python train_forecasting.py ... --wandb_offline   # no network: later `wandb sync wandb/offline-run-*`
+python train_forecasting.py ... --no_wandb        # disable entirely
 ```
 
 ---
@@ -133,6 +148,28 @@ python train_classification.py --dataset P19 \
 ```
 
 > Per-dataset hyperparameters follow paper Table C.1 and are encoded in `jobs/*.sh`. Run `python <script>.py --help` for the full argument list.
+
+---
+
+## 🧪 Sampling-Invariant QuITE (research extension, Phase 1)
+
+`sampling_views.py` generates alternative *observation views* of the same trajectory by editing the observation mask (`random:p`, `bursty:p`, `variable:p`, `mixed`). `train_forecasting.py` and `train_classification.py` accept:
+
+| Flag | Meaning |
+| --- | --- |
+| `--train_view mixed` | draw a fresh sampling view of every training batch (`none` = off) |
+| `--n_views 2` | number of views per batch; the task loss is averaged over views |
+| `--consistency_lambda 0.1` | weight of the cross-view consistency loss `D(z_A, z_B)` (`0` = augmentation only) |
+| `--consistency_target repr\|pred` | apply consistency to the encoder representation or to the predictions |
+| `--consistency_dist cos\|mse` | distance used for representation consistency |
+| `--eval_views ...` | views used for the final cross-sampling robustness table on the test set |
+
+Each run writes `results/<run_tag>.json` (test metrics, parameter count, time per epoch, peak GPU memory, inference cost, robustness table) and logs the same to W&B, including collapse diagnostics (`repr/pos_cos`, `repr/neg_cos`, `repr/std`).
+
+```bash
+bash jobs/run_phase01_all.sh          # Phase 0 reproduction + Phase 1 comparison & ablations
+python summarize_results.py           # -> results/summary.md
+```
 
 ---
 

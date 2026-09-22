@@ -4,7 +4,7 @@ import torch
 import urllib.request
 from torch.utils.data import DataLoader
 
-def download_url(url, root, filename=None):
+def download_url(url, root, filename=None, md5=None):
     """Download a file from a url and place it in root."""
     if filename is None:
         filename = os.path.basename(url.split('?')[0])
@@ -112,7 +112,7 @@ class PersonActivity(object):
 
 
 		for url in self.urls:
-			filename = url.rpartition('/')[2]
+			filename = url.rpartition('/')[2].split('?')[0]
 			download_url(url, self.raw_folder, filename, None)
 
 			print('Processing {}...'.format(filename))
@@ -188,7 +188,7 @@ class PersonActivity(object):
 
 	def _check_exists(self):
 		for url in self.urls:
-			filename = url.rpartition('/')[2]
+			filename = url.rpartition('/')[2].split('?')[0]
 			if not os.path.exists(
 				os.path.join(self.processed_folder, 'data.pt')
 			):
