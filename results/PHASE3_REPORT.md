@@ -154,6 +154,36 @@ learned bias is indistinguishable from no bias. The semantic prior therefore doe
 an estimated graph on this dataset; whether the prior itself is poor or the benchmark leaves no room cannot be
 separated without a validated clinical graph.
 
+## 5b. PhysioNet in the regime where structure worked on synthetic data: hard masks, low data
+
+Motivation: Section 3 found that structure helps only as a *hard* constraint with *scarce* data. Section 5 tested a
+soft prior on full data. Phase 3b (`jobs/phase3b_physionet.sh`) therefore trains on 900 PhysioNet stays (first
+1,500 records; 900 / 300 / 300 split) with hard attention masks built from three graphs: the LLM physiological
+prior, a graph **estimated from the same 900 training stays** (`estimate_graph.py`: hourly grid, forward fill,
+lasso lagged regression, top-3 parents with |coef| >= 0.02; 26 edges over 12 variables, mostly the blood-pressure
+cluster, FiO2 -> PaO2, HCO3 -> PaCO2, GCS -> FiO2 / Urine), and their union (77 edges). Controls: shuffled and
+random masks with the union's edge count, and identity (channel-independent backbone). 3 seeds, epoch cap 150,
+patience 20, min-epochs 40. Test MSE (mean +- std):
+
+| hard mask from | clean | random 0.7 | bursty 0.5 | variable 0.3 | variable 0.5 | stride 3 |
+|---|---|---|---|---|---|---|
+| none (plain QuITE) | 0.0085 +- .0004 | **0.0220** +- .0007 | **0.0132** +- .0005 | 0.0218 +- .0037 | 0.0283 +- .0047 | 0.0145 +- .0001 |
+| LLM physiological prior | 0.0083 +- .0001 | 0.0256 +- .0003 | 0.0141 +- .0003 | 0.0217 +- .0022 | 0.0295 +- .0030 | 0.0153 +- .0009 |
+| estimated graph | 0.0084 +- .0002 | 0.0241 +- .0025 | 0.0140 +- .0004 | **0.0197** +- .0032 | **0.0266** +- .0047 | 0.0147 +- .0012 |
+| union (LLM + estimated) | 0.0084 +- .0002 | 0.0265 +- .0027 | 0.0143 +- .0009 | 0.0225 +- .0041 | 0.0307 +- .0059 | 0.0166 +- .0012 |
+| shuffled union | 0.0083 +- .0004 | 0.0246 +- .0031 | 0.0136 +- .0004 | 0.0220 +- .0057 | 0.0303 +- .0095 | **0.0144** +- .0000 |
+| identity | 0.0083 +- .0001 | 0.0262 +- .0015 | 0.0142 +- .0002 | 0.0213 +- .0019 | 0.0287 +- .0027 | 0.0169 +- .0008 |
+| random (union edge count) | **0.0082** +- .0004 | 0.0248 +- .0043 | 0.0138 +- .0011 | 0.0207 +- .0050 | 0.0285 +- .0081 | 0.0147 +- .0022 |
+
+Restricting the error to the variables that have parents in each graph (`results/phase3b_tables.md`) gives the
+same ordering. Reading: all seven configurations are within one seed-std of each other in distribution
+(0.0082 - 0.0085); no mask is reliably more robust than the unconstrained encoder, and the informative graphs are
+not better than the shuffled or random ones anywhere. The estimated graph's advantage under variable removal
+(0.0197 vs 0.0218) is inside the seed spread. Unlike the synthetic low-data regime, PhysioNet with 900 stays shows
+neither the benefit of the correct constraint nor the harm of a wrong one, which is consistent with none of the
+three graphs being a good approximation of the dependencies the encoder needs (the synthetic effect required the
+*true* parents). Soft estimated / union priors and full-data estimated-graph runs: **[pending]**.
+
 ## Verdict
 
 1. **The soft "causal" attention bias is a negative result.** On full data, on low data and on PhysioNet with an
@@ -168,8 +198,11 @@ separated without a validated clinical graph.
    configuration that relies on Y's parents. With 2,400 trajectories the same mask brings nothing beyond the
    identity bias. The benefit costs robustness to random dropout, since the constrained model relies on fewer
    channels.
-3. **On real data nothing helped.** The PhysioNet semantic prior gave no gain in any form; the only robustness
-   effect (variable removal under a hard mask) was reproduced by a random prior of the same sparsity.
+3. **On real data nothing helped, in either regime.** On full PhysioNet the semantic prior gave no gain in any
+   form, and the only robustness effect (variable removal under a hard mask) was reproduced by a random prior of
+   the same sparsity. In the low-data, hard-constraint regime that worked on synthetic data (Section 5b), the
+   physiological prior, a graph estimated from the training split, and their union are all within seed noise of
+   the unconstrained encoder and of shuffled / identity / random masks (3 seeds).
 
 Practical reading: structural information is useful as a *constraint in the low-data regime* and only when it is
 correct, which on real data requires a validated or well-estimated graph rather than a soft prior. Estimating such a

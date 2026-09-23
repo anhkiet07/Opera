@@ -55,8 +55,9 @@ def main():
         with torch.no_grad():
             for view in todo:
                 g = sv.make_generator(12345, args.device)
-                r, _ = evaluation(model, d['test_dataloader'], d['n_test_batches'], view=view, gen=g)
+                r, var_mse = evaluation(model, d['test_dataloader'], d['n_test_batches'], view=view, gen=g)
                 res.setdefault('robustness', {})[view] = {k: r[k] for k in ('mse', 'rmse', 'mae', 'mape')}
+                res['robustness'][view]['mse_per_var'] = [float(x) for x in var_mse.detach().cpu().tolist()]
                 print(f'{tag} [{view}] MSE {r["mse"]:.5f} MAE {r["mae"]:.5f}')
         json.dump(res, open(path, 'w'), indent=2)
         del model, d

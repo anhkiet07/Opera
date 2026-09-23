@@ -89,6 +89,8 @@ parser.add_argument('--causal_mode', type=str, default='none', choices=['none', 
 parser.add_argument('--causal_graph', type=str, default='true',
                     help='Graph source for soft/hard: true | identity | random | shuffled | noisy:p')
 parser.add_argument('--causal_lambda', type=float, default=1.0)
+parser.add_argument('--prior_source', type=str, default='llm', choices=['llm', 'estimated', 'hybrid'],
+                    help='PhysioNet only: which external graph the causal bias is built from')
 parser.add_argument('--adaptive_query', type=str, default='none',
                     choices=['none', 'full', 'density', 'gaps', 'avail', 'random'],
                     help='Phase 2: observation-aware query q + MLP(stats). none = plain QuITE; '
@@ -180,6 +182,7 @@ if __name__ == '__main__':
     _cons = f'_view-{args.train_view}_lam{args.consistency_lambda}' if args.train_view != 'none' else ''
     _cons += f'_aq-{args.adaptive_query}' if args.adaptive_query != 'none' else ''
     _cons += f'_causal-{args.causal_mode}-{args.causal_graph}-lam{args.causal_lambda}' if args.causal_mode != 'none' else ''
+    _cons += f'_prior-{args.prior_source}' if (args.causal_mode != 'none' and args.dataset == 'physionet') else ''
     args.run_tag = args.run_tag or args.wandb_name or f'{args.dataset}_h{args.history}_{args.model}_{args.mode}{_cons}_s{args.seed}'
     wandb_utils.init(args, name=args.run_tag, tags=[args.dataset, 'forecasting', args.model, args.mode],
                      group=f'{args.dataset}_h{args.history}')

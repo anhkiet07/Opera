@@ -548,9 +548,42 @@ unchanged for every variant ($0.0053$--$0.0057$ vs.\ $0.0054$), every soft prior
 random dropout and variable removal at $\lambda\in\{1,2\}$, and the shuffled prior behaves like the real one. The
 hard mask reduces the damage from variable removal ($0.0149$ vs.\ $0.0166$), but a random prior with the same
 edge count reduces it equally ($0.0150$), so the effect is that of restricting cross-variable attention, not of the
-physiology. A free learned bias is indistinguishable from no bias. On this dataset, therefore, the semantic prior
-does not compensate for the absence of an estimated graph; whether the prior is poor or the benchmark leaves no
-room for it cannot be separated without a validated clinical graph.
+physiology. A free learned bias is indistinguishable from no bias.
+
+\paragraph{Real data in the low-data, hard-constraint regime.}
+Since the synthetic study located the benefit of structure in hard constraints with scarce data, we repeated the
+test on PhysioNet with 900 training stays (Table~\ref{tab:physlow}), using three graphs: the physiological prior,
+a graph \emph{estimated from the same 900 stays} by sparse lagged regression on an hourly grid (top-3 parents per
+variable by absolute coefficient; 26 edges, mostly the blood-pressure cluster, FiO$_2\to$PaO$_2$ and
+HCO$_3\to$PaCO$_2$), and their union, against shuffled, identity and random hard masks. All seven configurations
+are within one seed standard deviation of each other in distribution ($0.0082$--$0.0085$), no mask is reliably
+more robust than the unconstrained encoder, and the informative graphs are nowhere better than the shuffled or
+random ones; the estimated graph's lower error under variable removal ($0.0197$ vs.\ $0.0218$) lies inside the
+seed spread. Unlike the synthetic regime, PhysioNet shows neither the benefit of a correct constraint nor the harm
+of a wrong one, which is consistent with none of the three graphs approximating the dependencies the encoder
+needs: the synthetic effect required the true parents. Whether a validated clinical graph would behave differently
+cannot be settled here; the estimation route is limited by the grid reconstruction it requires, which
+reintroduces the artificial values that irregular encoders are meant to avoid.
+
+\begin{table}[t]
+\caption{PhysioNet with 900 training stays, hard attention masks from different graphs (test MSE\prelim, 3 seeds,
+mean~$\pm$~std). Random and shuffled masks use the union graph's edge count.}
+\label{tab:physlow}
+\small
+\begin{tabular}{lcccccc}
+\toprule
+Hard mask from & ID & random .7 & bursty .5 & variable .3 & variable .5$^*$ & stride 3$^*$ \\
+\midrule
+none (base encoder) & 0.0085$\pm$.0004 & \textbf{0.0220}$\pm$.0007 & \textbf{0.0132}$\pm$.0005 & 0.0218$\pm$.0037 & 0.0283$\pm$.0047 & 0.0145$\pm$.0001 \\
+physiological prior & 0.0083$\pm$.0001 & 0.0256$\pm$.0003 & 0.0141$\pm$.0003 & 0.0217$\pm$.0022 & 0.0295$\pm$.0030 & 0.0153$\pm$.0009 \\
+estimated graph & 0.0084$\pm$.0002 & 0.0241$\pm$.0025 & 0.0140$\pm$.0004 & \textbf{0.0197}$\pm$.0032 & \textbf{0.0266}$\pm$.0047 & 0.0147$\pm$.0012 \\
+union of both & 0.0084$\pm$.0002 & 0.0265$\pm$.0027 & 0.0143$\pm$.0009 & 0.0225$\pm$.0041 & 0.0307$\pm$.0059 & 0.0166$\pm$.0012 \\
+shuffled & 0.0083$\pm$.0004 & 0.0246$\pm$.0031 & 0.0136$\pm$.0004 & 0.0220$\pm$.0057 & 0.0303$\pm$.0095 & \textbf{0.0144}$\pm$.0000 \\
+identity & 0.0083$\pm$.0001 & 0.0262$\pm$.0015 & 0.0142$\pm$.0002 & 0.0213$\pm$.0019 & 0.0287$\pm$.0027 & 0.0169$\pm$.0008 \\
+random & \textbf{0.0082}$\pm$.0004 & 0.0248$\pm$.0043 & 0.0138$\pm$.0011 & 0.0207$\pm$.0050 & 0.0285$\pm$.0081 & 0.0147$\pm$.0022 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \begin{table}[t]
 \caption{Language-model-elicited physiological prior on PhysioNet forecasting (test MSE\prelim; 3 seeds for the
