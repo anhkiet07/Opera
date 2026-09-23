@@ -1,0 +1,12 @@
+# E2: augmentation + privileged-observation distillation (frozen rich-view teacher, prediction-level).
+_base_: augmentation.yaml
+experiment: E2_distillation
+distillation:
+  enabled: true
+  teacher_type: frozen
+  teacher_ckpt: results/raw/teacher_rich_s0/model.pt
+  loss: prediction
+  prediction_loss: mse
+  weight: 1.0
+observation:
+  rich_process: "identity"

@@ -5,7 +5,6 @@ from sklearn import model_selection
 from data.physionet import *
 from data.ushcn import *
 from data.mimic import MIMIC
-from data.synthetic import SyntheticCausal
 from data.activity import *
 from utils import *
 from data import DATA_ROOT
@@ -18,7 +17,7 @@ def parse_datasets(args, patch_ts=False, max_ts=False, length_stat=False):
     ##################################################################
     ### PhysioNet dataset ###
     ### MIMIC dataset ###
-    if dataset_name in ["physionet", "mimic", "synthetic"]:
+    if dataset_name in ["physionet", "mimic"]:
         args.pred_window = 48 - args.history
         ### list of tuples (record_id, tt, vals, mask) ###
         if dataset_name == "physionet":
@@ -26,27 +25,6 @@ def parse_datasets(args, patch_ts=False, max_ts=False, length_stat=False):
                                             download=True, n_samples = args.n, device = device)
         elif dataset_name == "mimic":
             total_dataset = MIMIC(os.path.join(DATA_ROOT, 'mimic'), n_samples = args.n, device = device)
-        if dataset_name == "physionet":
-            # Phase 3 on real data. Prior sources (args.prior_source):
-            #   llm       : LLM-elicited physiological graph (data/physionet_prior.py)
-            #   estimated : sparse lagged regression on the training split (estimate_graph.py, same -n cap)
-            #   hybrid    : union of the two
-            from data.physionet_prior import adjacency as physionet_prior_adjacency
-            src = getattr(args, "prior_source", "llm") or "llm"
-            A_llm = physionet_prior_adjacency()
-            if src == "llm":
-                args.causal_adjacency = A_llm
-            else:
-                n_cap = min(int(getattr(args, "n", 12000)), 12000)
-                f = os.path.join(DATA_ROOT, "physionet", f"estimated_graph_n{n_cap}.npy")
-                if not os.path.exists(f):
-                    raise FileNotFoundError(f"{f} missing: run `python estimate_graph.py -n {n_cap}` first")
-                A_est = np.load(f).astype(np.float32)
-                args.causal_adjacency = A_est if src == "estimated" else np.maximum(A_llm, A_est)
-            print(f"causal prior source={src}, edges={int(args.causal_adjacency.sum())}")
-        elif dataset_name == "synthetic":
-            total_dataset = SyntheticCausal(os.path.join(DATA_ROOT, 'synthetic'), n_samples = args.n, device = device)
-            args.causal_adjacency = total_dataset.adjacency
 
         seen_data, test_data = model_selection.train_test_split(total_dataset, train_size= 0.8, random_state = 42, shuffle = True)
         train_data, val_data = model_selection.train_test_split(seen_data, train_size= 0.75, random_state = 42, shuffle = False)

@@ -21,10 +21,12 @@ class USHCN(object):
 
         self.process()
 
-        if device == torch.device("cpu"):
-            self.data = torch.load(os.path.join(self.processed_folder, 'ushcn.pt'), map_location='cpu')
-        else:
-            self.data = torch.load(os.path.join(self.processed_folder, 'ushcn.pt'))
+        # The cache may have been written from any device (scripts/prepare_data.py builds it on CPU), so load
+        # it to CPU and move the tensors to the requested device explicitly.
+        self.data = torch.load(os.path.join(self.processed_folder, 'ushcn.pt'), map_location='cpu')
+        if device != torch.device("cpu"):
+            self.data = [(rid, tt.to(device), vals.to(device), mask.to(device))
+                         for rid, tt, vals, mask in self.data]
 
         if n_samples is not None:
             print('Total records:', len(self.data))

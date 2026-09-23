@@ -1,0 +1,15 @@
+# E1: observation-process augmentation. Multiple views per batch from a mixed training pool.
+# The pool is deliberately milder than the test conditions (see src/observation/generator.py).
+_base_: base.yaml
+experiment: E1_augmentation
+observation:
+  train_processes:
+    - "random_dropout:0.1"
+    - "random_dropout:0.25"
+    - "random_dropout:0.4"
+    - "temporal_stride:2"
+    - "burst:0.2"
+    - "burst:0.3"
+    - "variable_dropout:0.2"
+    - "local_mask:0.3"
+  num_views: 2

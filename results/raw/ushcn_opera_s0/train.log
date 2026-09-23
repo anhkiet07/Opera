@@ -1,0 +1,76 @@
+run ushcn_opera_s0 | device cuda:0 | params 126849 | commit 2aec816268d397efd2e72d037ae94f51ccdf6adc
+config: {"data": {"batch_size": 128, "history": 24, "n_records": 100000000, "name": "ushcn", "patch_size": 1.5, "pred_window": 1, "stride": 1.5}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/ushcn_baseline_s0/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E4_opera", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": true, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "itransformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 1.14368 val_mse 1.10382 best 1.10382@0 (31.1s)
+epoch 001 loss 1.05633 val_mse 1.03651 best 1.03651@1 (30.7s)
+epoch 002 loss 0.81871 val_mse 0.87728 best 0.87728@2 (31.4s)
+epoch 003 loss 0.65495 val_mse 0.85740 best 0.85740@3 (32.0s)
+epoch 004 loss 0.61412 val_mse 0.84028 best 0.84028@4 (31.7s)
+epoch 005 loss 0.61399 val_mse 0.85830 best 0.84028@4 (50.8s)
+epoch 006 loss 0.60366 val_mse 0.81932 best 0.81932@6 (50.7s)
+epoch 007 loss 0.59281 val_mse 0.82981 best 0.81932@6 (51.3s)
+epoch 008 loss 0.59553 val_mse 0.81568 best 0.81568@8 (51.5s)
+epoch 009 loss 0.59101 val_mse 0.83968 best 0.81568@8 (51.2s)
+epoch 010 loss 0.57697 val_mse 0.80748 best 0.80748@10 (51.0s)
+epoch 011 loss 0.57131 val_mse 0.82786 best 0.80748@10 (51.4s)
+epoch 012 loss 0.58186 val_mse 0.83257 best 0.80748@10 (51.7s)
+epoch 013 loss 0.57543 val_mse 0.81961 best 0.80748@10 (51.1s)
+epoch 014 loss 0.58134 val_mse 0.80121 best 0.80121@14 (51.5s)
+epoch 015 loss 0.56737 val_mse 0.80271 best 0.80121@14 (51.3s)
+epoch 016 loss 0.57986 val_mse 0.82266 best 0.80121@14 (51.3s)
+epoch 017 loss 0.57017 val_mse 0.82482 best 0.80121@14 (51.3s)
+epoch 018 loss 0.56134 val_mse 0.82469 best 0.80121@14 (51.6s)
+epoch 019 loss 0.56868 val_mse 0.82948 best 0.80121@14 (51.5s)
+epoch 020 loss 0.56848 val_mse 0.79283 best 0.79283@20 (51.1s)
+epoch 021 loss 0.56747 val_mse 0.80344 best 0.79283@20 (51.4s)
+epoch 022 loss 0.55514 val_mse 0.80140 best 0.79283@20 (51.4s)
+epoch 023 loss 0.56248 val_mse 0.81620 best 0.79283@20 (51.2s)
+epoch 024 loss 0.55585 val_mse 0.79432 best 0.79283@20 (51.4s)
+epoch 025 loss 0.56635 val_mse 0.78213 best 0.78213@25 (51.4s)
+epoch 026 loss 0.56077 val_mse 0.80970 best 0.78213@25 (51.3s)
+epoch 027 loss 0.56187 val_mse 0.81093 best 0.78213@25 (51.3s)
+epoch 028 loss 0.56010 val_mse 0.81164 best 0.78213@25 (51.4s)
+epoch 029 loss 0.55036 val_mse 0.77838 best 0.77838@29 (52.1s)
+epoch 030 loss 0.55858 val_mse 0.79370 best 0.77838@29 (51.6s)
+epoch 031 loss 0.55797 val_mse 0.81541 best 0.77838@29 (51.5s)
+epoch 032 loss 0.55459 val_mse 0.77951 best 0.77838@29 (51.2s)
+epoch 033 loss 0.55596 val_mse 0.78400 best 0.77838@29 (51.3s)
+epoch 034 loss 0.55196 val_mse 0.81486 best 0.77838@29 (51.2s)
+epoch 035 loss 0.55501 val_mse 0.81847 best 0.77838@29 (51.3s)
+epoch 036 loss 0.56281 val_mse 0.80344 best 0.77838@29 (51.3s)
+epoch 037 loss 0.55338 val_mse 0.79914 best 0.77838@29 (51.3s)
+epoch 038 loss 0.55717 val_mse 0.78633 best 0.77838@29 (51.3s)
+epoch 039 loss 0.54683 val_mse 0.79061 best 0.77838@29 (51.8s)
+early stop
+  [identity                                  ] MSE 0.52107  MAE 0.32233
+  [random_dropout:0.3                        ] MSE 0.51896  MAE 0.32004
+  [random_dropout:0.5                        ] MSE 0.52449  MAE 0.32264
+  [random_dropout:0.7                        ] MSE 0.53779  MAE 0.32920
+  [variable_dropout:0.3                      ] MSE 0.53047  MAE 0.32630
+  [variable_dropout:0.5                      ] MSE 0.54584  MAE 0.33310
+  [temporal_stride:2                         ] MSE 0.51958  MAE 0.31995
+  [temporal_stride:3                         ] MSE 0.52225  MAE 0.32187
+  [temporal_stride:4                         ] MSE 0.52427  MAE 0.32303
+  [burst:0.3                                 ] MSE 0.52601  MAE 0.32752
+  [burst:0.5                                 ] MSE 0.52959  MAE 0.33097
+  [long_gap:0.4                              ] MSE 0.52782  MAE 0.32618
+  [variable_group_dropout:0.3                ] MSE 0.53127  MAE 0.32839
+  [density:0.5                               ] MSE 0.51991  MAE 0.32008
+  [random_dropout:0.5+variable_dropout:0.3   ] MSE 0.53695  MAE 0.32915
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.53550  MAE 0.32963
+best {'val_mse': 0.7783774733543396, 'epoch': 29} -> results/raw\ushcn_opera_s0\results.json
+summary {
+  "clean_mse": 0.5210674405097961,
+  "mean_shift_mse": 0.5287126819292705,
+  "mean_degradation": 0.014672268549334838,
+  "worst_mse": 0.5458372235298157,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.5323637591467963,
+  "mean_unseen_degradation": 0.02167918729665439,
+  "matched_density_0.5_spread": 0.026252269744873047,
+  "matched_density_0.5_values": {
+    "density:0.5": 0.5199108719825745,
+    "temporal_stride:2": 0.5195849537849426,
+    "burst:0.5": 0.5295907855033875,
+    "variable_dropout:0.5": 0.5458372235298157
+  }
+}

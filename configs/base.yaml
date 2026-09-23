@@ -1,0 +1,57 @@
+# Shared defaults for every OPERA experiment. Experiment configs inherit with `_base_: base.yaml`.
+experiment: base
+
+data:
+  name: physionet
+  history: 24            # hours of observed history; the forecast window is 48 - history
+  patch_size: 6
+  stride: 6
+  batch_size: 32
+  n_records: 100000000   # cap on the number of records (used for low-data studies)
+
+model:
+  backbone: itransformer  # BaseIrregularEncoder implementation
+  embedding: quite        # query-based irregular input embedding
+  irr_emb: true
+  hid_dim: 64
+  nhead: 4
+  nlayer: 3
+  dropout: 0.1
+  observation_aware: false   # optional ObservationAwareQuery module (E5 only)
+  adaptive_query: none
+
+training:
+  epochs: 40
+  patience: 10
+  min_epochs: 15
+  lr: 0.001
+
+observation:
+  # E0 trains on the dataset's own observation process only.
+  train_processes: ["identity"]
+  num_views: 1
+  rich_process: "identity"     # the teacher's privileged view
+  constraints:
+    min_density: 0.15
+    min_variable_coverage: 0.3
+    max_gap: 0.6
+    min_obs_per_sample: 4
+
+distillation:
+  enabled: false
+  teacher_type: frozen      # frozen | ema
+  teacher_ckpt: null
+  loss: prediction          # prediction | representation | prediction+representation
+  prediction_loss: mse
+  weight: 1.0
+
+hard_mining:
+  enabled: false
+  candidate_pool: 8
+  top_k: 2
+  alpha: 0.5
+  warmup_epochs: 5
+
+wandb:
+  enabled: true
+  project: opera

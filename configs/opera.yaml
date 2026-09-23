@@ -1,0 +1,16 @@
+# E4: full OPERA = augmentation + privileged distillation + hard mining.
+_base_: augmentation.yaml
+experiment: E4_opera
+distillation:
+  enabled: true
+  teacher_type: frozen
+  teacher_ckpt: results/raw/teacher_rich_s0/model.pt
+  loss: prediction
+  prediction_loss: mse
+  weight: 1.0
+hard_mining:
+  enabled: true
+  candidate_pool: 8
+  top_k: 2
+  alpha: 0.5
+  warmup_epochs: 5
