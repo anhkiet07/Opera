@@ -67,6 +67,14 @@ class Model(nn.Module):
         # ----- Backbone encoder -----
         self._build_encoder(args)
 
+        # ----- Phase 3: causal bias on the variable-level attention (variate family only) -----
+        self.causal = None
+        if getattr(args, 'causal_mode', 'none') not in (None, 'none'):
+            if self.model not in VARIATE_MODELS:
+                raise ValueError('causal bias requires a variable-level attention backbone (itransformer)')
+            from models.causal import CausalBias
+            self.causal = CausalBias(args, adj=getattr(args, 'causal_adjacency', None))
+
         # ----- Output head (task-specific) -----
         if self.task == 'forecasting':
             self.cross_transformer = CrossAttentionFFNLayer(
@@ -179,7 +187,8 @@ class Model(nn.Module):
                 mask = mask.reshape(B, M * L_in, N)
 
             variable_embeddings = self.embedding(X, truth_time_steps, mask)   # (B, N, D)
-            irr_z, _ = self.encoder(variable_embeddings)
+            bias = self.causal() if self.causal is not None else None
+            irr_z, _ = self.encoder(variable_embeddings, attn_mask=bias)
             B, N = irr_z.shape[0], irr_z.shape[1]
             return irr_z.unsqueeze(2).reshape(B * N, 1, self.d_model), B, 1, N
 
@@ -235,7 +244,7 @@ class Model(nn.Module):
         te_pred = self.te(time_steps_to_predict.unsqueeze(-1))                # (B, L_pred, D)
         te_pred_flat = te_pred.unsqueeze(1).expand(-1, N, -1, -1).reshape(B * N, L_pred, self.d_model)
 
-        out_flat, _ = self.cross_transformer(te_pred_flat, irr_z_flat, irr_z_flat)
+        out_flat, _ = self.cross_transformer(te_pred_flat, irr_z_flat)
         out = out_flat.reshape(B, N, L_pred, self.d_model).permute(0, 2, 1, 3)
         pred = self.decoder(out).squeeze(-1)                                   # (B, L_pred, N)
         if return_repr:

@@ -18,7 +18,13 @@ class FullAttention(nn.Module):
         scale = self.scale or 1. / sqrt(E)
 
         scores = torch.einsum("blhe,bshe->bhls", queries, keys)
-        A = self.dropout(torch.softmax(scale * scores, dim=-1))
+        scores = scale * scores
+        # Optional additive attention bias (Phase 3 causal bias): (L, S) or broadcastable to (B, H, L, S).
+        # Large negative entries act as a hard mask.
+        if (attn_mask is not None and torch.is_tensor(attn_mask) and attn_mask.dtype != torch.bool
+                and attn_mask.dim() in (2, 4)):
+            scores = scores + attn_mask
+        A = self.dropout(torch.softmax(scores, dim=-1))
         V = torch.einsum("bhls,bshd->blhd", A, values)
 
         if self.output_attention:

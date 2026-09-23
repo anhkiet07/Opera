@@ -29,6 +29,8 @@ parser = argparse.ArgumentParser('QuITE Forecasting')
 # ----- Training -----
 parser.add_argument('--epoch', type=int, default=1000)
 parser.add_argument('--patience', type=int, default=10)
+parser.add_argument('--min_epochs', type=int, default=0,
+                    help='Never early-stop before this epoch (guards against an initial constant-predictor plateau)')
 parser.add_argument('-b', '--batch_size', type=int, default=32)
 parser.add_argument('--lr', type=float, default=1e-3)
 parser.add_argument('--seed', type=int, default=1)
@@ -39,7 +41,7 @@ parser.add_argument('--load', type=str, default=None,
 
 # ----- Dataset -----
 parser.add_argument('--dataset', type=str, default='physionet',
-                    choices=['physionet', 'mimic', 'ushcn', 'activity'])
+                    choices=['physionet', 'mimic', 'ushcn', 'activity', 'synthetic'])
 parser.add_argument('--history', type=int, default=24,
                     help='Historical window length (hours / months / ms by dataset)')
 parser.add_argument('--pred_window', type=int, default=1)
@@ -81,6 +83,12 @@ parser.add_argument('--consistency_dist', type=str, default='cos', choices=['cos
 parser.add_argument('--eval_views', type=str, default=','.join(DEFAULT_EVAL_VIEWS),
                     help='Comma-separated views for the final cross-sampling robustness table')
 parser.add_argument('--run_tag', type=str, default=None, help='Checkpoint / results file tag (auto if omitted)')
+# ----- Phase 3: causal attention bias (variable-level attention, iTransformer) -----
+parser.add_argument('--causal_mode', type=str, default='none', choices=['none', 'soft', 'hard', 'learned'],
+                    help='none = plain; soft = + lambda*M; hard = mask to causes+self; learned = free NxN bias')
+parser.add_argument('--causal_graph', type=str, default='true',
+                    help='Graph source for soft/hard: true | identity | random | shuffled | noisy:p')
+parser.add_argument('--causal_lambda', type=float, default=1.0)
 parser.add_argument('--adaptive_query', type=str, default='none',
                     choices=['none', 'full', 'density', 'gaps', 'avail', 'random'],
                     help='Phase 2: observation-aware query q + MLP(stats). none = plain QuITE; '
@@ -171,6 +179,7 @@ if __name__ == '__main__':
     logger.info(f'parameters:{count_parameters(model)}')
     _cons = f'_view-{args.train_view}_lam{args.consistency_lambda}' if args.train_view != 'none' else ''
     _cons += f'_aq-{args.adaptive_query}' if args.adaptive_query != 'none' else ''
+    _cons += f'_causal-{args.causal_mode}-{args.causal_graph}-lam{args.causal_lambda}' if args.causal_mode != 'none' else ''
     args.run_tag = args.run_tag or args.wandb_name or f'{args.dataset}_h{args.history}_{args.model}_{args.mode}{_cons}_s{args.seed}'
     wandb_utils.init(args, name=args.run_tag, tags=[args.dataset, 'forecasting', args.model, args.mode],
                      group=f'{args.dataset}_h{args.history}')
@@ -257,7 +266,7 @@ if __name__ == '__main__':
                 metrics['gpu/peak_mem_mb'] = torch.cuda.max_memory_allocated() / 2**20
             wandb_utils.log(metrics, step=itr)
 
-        if itr - best_iter >= args.patience:
+        if itr - best_iter >= args.patience and itr + 1 >= args.min_epochs:
             logger.info("Exp has been early stopped!")
             break
 
@@ -284,8 +293,9 @@ if __name__ == '__main__':
         with torch.no_grad():
             for view in [v.strip() for v in args.eval_views.split(',') if v.strip()]:
                 g = sv.make_generator(eval_gen_seed, args.device)
-                r, _ = evaluation(model, data_obj['test_dataloader'], data_obj['n_test_batches'], view=view, gen=g)
+                r, var_mse = evaluation(model, data_obj['test_dataloader'], data_obj['n_test_batches'], view=view, gen=g)
                 robust[view] = {k: r[k] for k in ('mse', 'rmse', 'mae', 'mape')}
+                robust[view]['mse_per_var'] = [float(x) for x in var_mse.detach().cpu().tolist()]
                 logger.info(f"Robustness [{view}] MSE {r['mse']:.5f} MAE {r['mae']:.5f}")
                 wandb_utils.summary({f'robust/{view}/mse': r['mse'], f'robust/{view}/mae': r['mae']})
         results['robustness'] = robust

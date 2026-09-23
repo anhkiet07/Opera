@@ -41,8 +41,11 @@ def parse_view(spec):
     if spec in ("none", "dense", ""):
         return "none", 0.0
     if ":" in spec:
-        kind, p = spec.split(":")
-        return kind, float(p)
+        kind, p = spec.split(":", 1)
+        try:
+            return kind, float(p)
+        except ValueError:          # non-numeric parameter, e.g. 'dropvars:5-6-7'
+            return kind, 1.0
     return spec, 0.0
 
 
@@ -85,6 +88,13 @@ def keep_mask(tp, mask, spec, gen=None):
             drop[all_dropped.nonzero(as_tuple=True)[0], j] = False
         shape = [B] + [1] * (mask.dim() - 2) + [N]
         return (~drop).to(mask.dtype).view(shape).expand_as(mask).clone()
+
+    if kind == "dropvars":
+        # Remove specific variables entirely, e.g. 'dropvars:5-6-7' (Phase 3 critical experiment).
+        idx = [int(x) for x in spec.split(":")[1].split("-") if x != ""]
+        k = torch.ones_like(mask)
+        k[..., idx] = 0
+        return k
 
     if kind == "stride":
         # Systematic subsampling: keep every k-th observation of each variable (in time order).
