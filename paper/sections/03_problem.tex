@@ -1,4 +1,4 @@
-%% Problem formulation and the controlled re-observation protocol (CLAUDE_paper.md sections 7.1 and 25).
+%% Problem formulation, the three dimensions of an observation process, and the re-observation protocol.
 %% Included by sigconf.tex. Do not add a preamble here.
 
 \section{Observation-Process Shift}
@@ -26,16 +26,19 @@ P_{\mathrm{train}}(X)\ \neq\ P_{\mathrm{test}}(X)
 P_{\mathrm{train}}(\Sobs)\ \neq\ P_{\mathrm{test}}(\Sobs)
 \qquad\textit{(observation-process shift)}.
 \end{equation}
-This paper concerns the second, with $P(X)$ comparable. Two deployments may record the same underlying dynamics
-while differing in observation density, in the temporal clustering of observations, in which variables are
-observed, or in sampling regularity, and nothing in the standard protocol distinguishes those differences from
-one another.
+This paper concerns the second, with $P(X)$ comparable. A protocol that draws training and test data from one
+observation process cannot see it.
 
-\subsection{A composable family of observation processes}
+\subsection{Three dimensions of an observation process}
 \label{sec:family}
-To study the shift we need observation processes that are \emph{realisable}: each must correspond to a way the
-same trajectory could have been recorded, so that the target stays well defined. We therefore restrict attention
-to processes that act on the observation mask by \emph{removal} only, so that an observation process is a map
+An observation process is not a scalar. Because $\Sobs$ acts on a mask indexed by both time and variable, it can
+differ from another process in three elementary ways: in \emph{how much} it records, in \emph{when} it records,
+and in \emph{which variables} it records. We organise both the process family and the evaluation protocol around
+those three dimensions, so that a measured degradation can be attributed to one of them.
+
+We require the processes to be \emph{realisable}: each must correspond to a way the same trajectory could have
+been recorded, so that the target stays well defined. We therefore admit only processes that act on the mask by
+\emph{removal},
 \begin{equation}
 \Sobs:(t,m)\ \mapsto\ (t,\,m\odot\kappa),\qquad \kappa\in\{0,1\}^{K\times N},
 \end{equation}
@@ -43,24 +46,31 @@ with values at removed entries discarded rather than imputed. Every $\Sobs(X)$ i
 original record and no artificial value is introduced, which is what permits one held-out set to be re-observed
 many times with its supervision untouched.
 
-We use nine primitive families, grouped by the structure they destroy:
+Nine primitives instantiate the three dimensions:
 \begin{itemize}
-\item \textbf{unstructured}: \textsc{RandomDropout}$(p)$ removes each observation independently with probability
-$p$; \textsc{DensityControlledSampling}$(\rho)$ retains a fixed fraction $\rho$ of every variable's observations,
-fixing density independently of the original pattern.
-\item \textbf{temporal}: \textsc{TemporalStride}$(k)$ keeps every $k$-th observation of each variable, lowering
-the sampling \emph{rate} while keeping it regular; \textsc{BurstMissingness}$(p)$ removes contiguous windows
-covering a fraction $p$ of the observed span; \textsc{LongGapMissingness}$(p)$ is the single-window case;
-\textsc{LocalTemporalMask}$(p)$ removes one contiguous run per variable, matching random dropout in density but
-clustering the loss within each channel.
-\item \textbf{variable-wise}: \textsc{VariableDropout}$(p)$ removes whole variables independently;
-\textsc{VariableGroupDropout}$(p)$ removes contiguous blocks of variables together, modelling a failed monitor or
-an unavailable panel.
+\item \textbf{density} --- how much survives. \textsc{RandomDropout}$(p)$ removes each observation independently
+with probability $p$; \textsc{DensityControlledSampling}$(\rho)$ retains a fixed fraction $\rho$ of every
+variable's observations, fixing density independently of the original pattern.
+\item \textbf{timing} --- when observations arrive. \textsc{TemporalStride}$(k)$ keeps every $k$-th observation
+of each variable, lowering the sampling \emph{rate} while keeping it regular; \textsc{BurstMissingness}$(p)$
+removes contiguous windows covering a fraction $p$ of the observed span; \textsc{LongGapMissingness}$(p)$ is the
+single-window case; \textsc{LocalTemporalMask}$(p)$ removes one contiguous run per variable, matching random
+dropout in density but clustering the loss within each channel.
+\item \textbf{variable availability} --- which channels exist at all. \textsc{VariableDropout}$(p)$ removes whole
+variables independently; \textsc{VariableGroupDropout}$(p)$ removes contiguous blocks of variables together,
+modelling a failed monitor or an unavailable panel.
 \end{itemize}
 Processes compose sequentially ($\Sobs_2\circ\Sobs_1$, written \texttt{a+b}) and mix
 ($\Sobs\sim\mathrm{Unif}\{\Sobs_1,\dots\}$, written \texttt{a|b}), so an observation regime is specified by a
-string rather than by code. \textsc{LocalTemporalMask} and \textsc{DensityControlledSampling} exist so that
-density-matched comparisons can be constructed.
+string rather than by code, and a process can move two dimensions at once.
+
+\paragraph{The dimensions are not separable at the level of a single variable.}
+It is tempting to summarise what a process did to variable $i$ by how many of its observations survived, and to
+expect the error on variable $i$ to follow. It does not, because $f_\theta$ predicts each variable from the whole
+observation. Two processes can leave one channel exactly the same observations and still produce very different
+error on it, if they differ in what they removed from the \emph{other} channels
+(Figure~\ref{fig:views}). A per-variable missingness rate is therefore not a sufficient statistic for the damage,
+which is the concrete sense in which the observation process has to be treated as a structured object.
 
 \subsection{Controlled re-observation and validity}
 \label{sec:reobs}
@@ -68,9 +78,9 @@ Observation-process shift is measured by re-observation. For an evaluation proce
 \emph{history} of each held-out input by $\Sobs$ applied to it, and leave the prediction times, forecast targets
 and labels exactly as they were. The comparison therefore isolates the observation process: the underlying
 trajectory and the supervision are held fixed by construction, and a single test set yields as many shifted
-conditions as there are processes. The pseudo-random draw is seeded identically for every model, so all models are
-scored on the same re-observed inputs. The \emph{clean} condition is the dataset's own observation process,
-$\Sobs=\mathrm{id}$.
+conditions as there are processes. The pseudo-random draw is seeded independently of the run, so every model is
+scored on byte-identical re-observed inputs and comparisons are paired at the level of individual test inputs.
+The \emph{clean} condition is the dataset's own observation process, $\Sobs=\mathrm{id}$.
 
 Because two of our mechanisms select observation processes rather than merely sampling them, we also need to rule
 out degenerate choices. We impose validity constraints $\mathcal{C}$ on relative density, variable coverage,

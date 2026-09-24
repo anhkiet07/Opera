@@ -1,6 +1,5 @@
-%% Method. POSD is the centrepiece; augmentation supports it. OPERA = the two; OPERA++ = plus harsh-pool mining.
-%% Mining over the training mixture is a control, never an arm.
-%% See CLAUDE_paper.md sections 2, 7, 8, 9, 10.
+%% Method. POSD is the centrepiece; augmentation supplies its views. OPERA = the two. OPERA++ = plus harsh-pool
+%% mining, reported as a variant. Mining over the training mixture is a control, never an arm.
 %% Included by sigconf.tex. Do not add a preamble here.
 
 \section{Privileged Observation Self-Distillation}
@@ -19,9 +18,20 @@ observation remain.}
 \end{figure}
 
 Everything in this section acts on $\Sobs$ rather than on the encoder: the architecture, its parameter count and
-its inference path are untouched (Figure~\ref{fig:framework}). We first introduce privileged observation
-self-distillation, the mechanism we regard as the methodological contribution, then the observation-process
-augmentation that supports it, then hard mining, which forms the OPERA++ variant.
+its inference path are untouched (Figure~\ref{fig:framework}). Two configurations are reported, and the
+distinction matters because one mechanism turns out to be conditional on a hyper-parameter rather than
+universally useful:
+\begin{itemize}
+\item \textbf{OPERA} $=$ privileged observation self-distillation $+$ observation-process augmentation. This is
+the method: two mechanisms, no candidate pool to choose.
+\item \textbf{OPERA++} $=$ OPERA $+$ hard observation-process mining from a pool strictly harsher than the
+training mixture. It buys worst-case robustness for $K$ extra forward passes per step and one more
+hyper-parameter.
+\end{itemize}
+Mining over the training mixture itself is neither configuration. It is the control that establishes why pool
+severity matters, and we report it as an ablation (Section~\ref{sec:mining-results}). We introduce distillation
+first, as the mechanism we regard as the contribution, then the augmentation that feeds it, then the objective
+that defines OPERA, and finally the mining variant.
 
 \subsection{Rich and sparse observations of one history}
 \label{sec:distill}
@@ -63,13 +73,20 @@ exposes the student to prediction-relevant information that is present in the un
 obscured by the deployment observation process. It does not tell the student which observations will be available:
 that is fixed by the deployment process and is not something the student can act on.
 
+\paragraph{Why the teacher has something to offer.}
+Section~\ref{sec:family} noted that a variable is predicted from the whole observation, not from its own channel,
+so removing one channel degrades the others. The converse is what makes the rich view informative: an observation
+that retains channels the student's view lost supports a prediction the student cannot reconstruct from what it
+holds. The teacher's output is a summary of that, at exactly the granularity the task is scored on.
+
 \paragraph{Why this is self-distillation.}
 The asymmetry between the two networks lies entirely in the observation. The teacher is not a separately designed
 expert, a larger network, or a model solving a different task; it is the same predictive model family evaluated on
 a richer view of the same sample. Teacher--student distillation is not new and we do not claim it is. What is
 specific here is the \emph{source and structure of the privileged signal}: it is produced by choosing a different
 observation process for a history the student already holds, which requires no extra annotation, no extra sensor
-and no extra data.
+and no extra data. In our experiments it also requires no extra training run, because the teacher is the
+unmodified baseline for the same setting, backbone and seed.
 
 \paragraph{The anti-leakage invariant.}
 Teacher and student must differ \emph{only} in the observation of the history. Both are evaluated over the same
@@ -94,7 +111,9 @@ and train on every resulting view,
 \label{eq:aug}
 \end{equation}
 with $\ell$ the masked mean squared error for forecasting and cross-entropy for classification. The targets $Y$
-are shared across views and never modified: every view is a different recording of the same episode.
+are shared across views and never modified: every view is a different recording of the same episode. The mixture
+spans all three dimensions of Section~\ref{sec:family}, since exposure to one of them does not confer robustness
+to the others.
 
 We impose no representation-level requirement. The property we want is that $f_\theta(\Sobs_1(X))$ and
 $f_\theta(\Sobs_2(X))$ both remain useful for the task, which is weaker than requiring the latent codes
@@ -103,10 +122,40 @@ penalty admits the degenerate solution of collapsing all observations of all tra
 that needs anti-collapse machinery unrelated to the shift under study. A representation-matching variant exists in
 our implementation and is reported only as an ablation.
 
-\subsection{Hard observation-process mining}
+\subsection{The objective, and what OPERA is}
+OPERA adds one term to the task loss,
+\begin{equation}
+\fbox{$\displaystyle\ \mathcal{L}=\mathcal{L}_{\mathrm{task}}+\lambda_{d}\,\mathcal{L}_{\mathrm{distill}}\ $}
+\label{eq:objective}
+\end{equation}
+with $\mathcal{L}_{\mathrm{task}}$ from Eq.~\ref{eq:aug} over $V$ augmented views and
+$\mathcal{L}_{\mathrm{distill}}$ from Eq.~\ref{eq:distill} against the frozen rich-view teacher. No other loss is
+introduced, and in particular no representation-consistency term. Setting $\lambda_d=0$ and $V=1$ recovers
+ordinary training. We use $\lambda_d=1$, $V=2$ and a frozen teacher throughout. Algorithm~\ref{alg:opera} is a
+single update: one loss, one backward pass, one optimiser step, and the only staging is that the teacher is
+trained beforehand --- which in our setup costs nothing extra, since it is the baseline run for that cell.
+
+\begin{algorithm}[t]
+\caption{One OPERA training step (OPERA++ adds the bracketed branch)}
+\label{alg:opera}
+\begin{algorithmic}[1]
+\Require batch $(X,Y)$ with observation $(t,m)$; mixture $P_{\mathrm{mix}}$; frozen teacher $f_{\theta_T}$;
+\emph{for OPERA++:} epoch $e$, pool $\mathcal{P}$, constraints $\mathcal{C}$, ratio $\alpha$
+\State $\{\Sobs_v\}_{v=1}^{V}\sim P_{\mathrm{mix}}$
+\If{OPERA++ \textbf{and} $e\ge e_{\mathrm{warm}}$}
+  \State draw $K$ candidates from $\mathcal{P}$; keep those satisfying $\mathcal{C}$
+  \State score survivors with $f_\theta$ under \texttt{no\_grad}; replace $\lceil\alpha V\rceil$ views with the hardest
+\EndIf
+\State $\hat{Y}_T \gets \mathrm{sg}\big[f_{\theta_T}(\Sobs_{r}(X))\big]$ \Comment{same history, richer view}
+\State $\mathcal{L}\gets\frac1V\sum_v \ell(f_\theta(\Sobs_v(X)),Y) + \lambda_d\sum_v \mathcal{L}_{\mathrm{distill}}$
+\State one optimiser step on $\mathcal{L}$
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{OPERA++: hard observation-process mining}
 \label{sec:mining}
-Random exposure spends most of its budget on observation processes the model already handles. A third mechanism
-searches instead for the admissible process the \emph{current} model handles worst,
+Random exposure spends most of its budget on observation processes the model already handles. The variant searches
+instead for the admissible process the \emph{current} model handles worst,
 \begin{equation}
 \Sobs^{*}=\arg\max_{\Sobs\in\mathcal{A}}\ \ell\big(f_\theta(\Sobs(X)),Y\big),
 \qquad \mathcal{A}=\{\Sobs:\ \Sobs\ \mathrm{satisfies}\ \mathcal{C}\},
@@ -120,62 +169,14 @@ observation-process mining, or approximate worst-case observation-process select
 training: the maximisation runs over a discrete pool of physically valid recordings rather than a norm ball, and it
 is neither exact nor differentiable.
 
-Two design points matter. Training only on hard views destabilises optimisation and biases the student away from
-the deployment regime, so we mix,
+Training only on hard views destabilises optimisation and biases the student away from the deployment regime, so
+we mix,
 \begin{equation}
 P(\Sobs)=(1-\alpha)\,P_{\mathrm{mix}}+\alpha\,P_{\mathrm{hard}},
 \label{eq:alpha}
 \end{equation}
-and hold $\alpha=0$ during a warm-up period. More consequentially, the outcome depends on the relationship between
-$\mathcal{P}$ and $P_{\mathrm{mix}}$: if $\mathcal{P}=P_{\mathrm{mix}}$ then the hardest of $K$ draws is close in
-severity to a single draw, and mining reduces to augmentation at $K$ times the cost. The mechanism is therefore
-defined by a pool strictly harsher than $P_{\mathrm{mix}}$, and the matched-pool setting $\mathcal{P}=P_{\mathrm{mix}}$
-is reported as a control rather than as a configuration anyone should use
-(Section~\ref{sec:mining-results}).
-
-\subsection{Complete objective}
-The full objective adds one term to the task loss,
-\begin{equation}
-\fbox{$\displaystyle\ \mathcal{L}=\mathcal{L}_{\mathrm{task}}+\lambda_{d}\,\mathcal{L}_{\mathrm{distill}}\ $}
-\label{eq:objective}
-\end{equation}
-where augmentation and mining together determine \emph{which} observation processes contribute to
-$\mathcal{L}_{\mathrm{task}}$ in Eq.~\ref{eq:aug}. No other loss is introduced, and in particular no
-representation-consistency term. Setting $\lambda_d=0$, $\alpha=0$ and $V=1$ recovers ordinary training. We use
-$\lambda_d=1$, $V=2$, $K=4$ and $\alpha=0.5$ after a five-epoch warm-up, with a frozen teacher throughout.
-
-\begin{algorithm}[t]
-\caption{Training step}
-\label{alg:opera}
-\begin{algorithmic}[1]
-\Require batch $(X,Y)$ with observation $(t,m)$; epoch $e$; mixture $P_{\mathrm{mix}}$; pool $\mathcal{P}$;
-constraints $\mathcal{C}$; frozen teacher $f_{\theta_T}$
-\If{$e<e_{\mathrm{warm}}$ \textbf{or} $\alpha=0$}
-  \State $\{\Sobs_v\}_{v=1}^{V}\sim P_{\mathrm{mix}}$ \Comment{augmentation only}
-\Else
-  \State draw $K$ candidates from $\mathcal{P}$; keep those satisfying $\mathcal{C}$
-  \State score survivors with $f_\theta$ under \texttt{no\_grad}; take the $\lceil\alpha V\rceil$ hardest
-  \State fill the remaining $V-\lceil\alpha V\rceil$ views from $P_{\mathrm{mix}}$
-\EndIf
-\State $\hat{Y}_T \gets \mathrm{sg}\big[f_{\theta_T}(\Sobs_{r}(X))\big]$ \Comment{same history, richer view}
-\State $\mathcal{L}\gets\frac1V\sum_v \ell(f_\theta(\Sobs_v(X)),Y) + \lambda_d\sum_v \mathcal{L}_{\mathrm{distill}}$
-\State one optimiser step on $\mathcal{L}$
-\end{algorithmic}
-\end{algorithm}
-
-Algorithm~\ref{alg:opera} is a single update: one loss, one backward pass, one optimiser step. The only staging is
-the mining warm-up and the fact that the teacher is trained beforehand.
-
-\paragraph{Two named configurations.}
-Because the mining result turns entirely on the candidate pool, we do not report a single framework that bundles
-all three mechanisms. We name two:
-\begin{itemize}
-\item \textbf{OPERA} $=$ observation-process augmentation $+$ privileged observation self-distillation. This is
-the configuration we recommend: two mechanisms, no candidate pool to choose, and $\alpha=0$ in
-Eq.~\ref{eq:alpha}.
-\item \textbf{OPERA++} $=$ OPERA $+$ hard mining with a pool strictly harsher than $P_{\mathrm{mix}}$. This adds
-worst-case robustness at $K$ extra forward passes per step and one more hyper-parameter.
-\end{itemize}
-Mining with $\mathcal{P}=P_{\mathrm{mix}}$ is neither: it is the control that establishes why the pool matters,
-and we report it as an ablation. Every claim below is attached to one of these three labels so that no result is
-credited to a mechanism that was not doing work.
+and hold $\alpha=0$ during a warm-up period; we use $K=4$ and $\alpha=0.5$ after five epochs. The consequential
+choice is $\mathcal{P}$. If $\mathcal{P}=P_{\mathrm{mix}}$ then the hardest of $K$ draws is close in severity to a
+single draw and the mechanism reduces to augmentation at $K$ times the cost. OPERA++ is therefore \emph{defined}
+by a pool strictly harsher than $P_{\mathrm{mix}}$, and the matched-pool setting is reported only as the control
+that establishes the distinction (Section~\ref{sec:mining-results}).
