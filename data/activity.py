@@ -76,10 +76,13 @@ class PersonActivity(object):
 		if not self._check_exists():
 			raise RuntimeError('Dataset not found. You can use download=True to download it')
 		
-		if device == torch.device("cpu"):
-			self.data = torch.load(os.path.join(self.processed_folder, self.data_file), map_location='cpu')
-		else:
-			self.data = torch.load(os.path.join(self.processed_folder, self.data_file))
+		# The cache may have been written from any device (scripts/prepare_data.py builds it on CPU), so load
+		# it to CPU and move the tensors to the requested device explicitly. Loading without map_location
+		# would only work for a cache serialised on a GPU with the same ordinal.
+		self.data = torch.load(os.path.join(self.processed_folder, self.data_file), map_location='cpu')
+		if device != torch.device("cpu"):
+			self.data = [(rid, tt.to(device), vals.to(device), mask.to(device))
+						 for rid, tt, vals, mask in self.data]
 
 		if n_samples is not None:
 			print('Total records:', len(self.data))

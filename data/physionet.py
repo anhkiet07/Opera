@@ -64,21 +64,17 @@ class PhysioNet(object):
         # else:
         #   data_file = self.test_file
         
-        if device == torch.device("cpu"):
-            # self.data = torch.load(os.path.join(self.processed_folder, data_file), map_location='cpu')
-            # self.labels = torch.load(os.path.join(self.processed_folder, self.label_file), map_location='cpu')
-            data_a = torch.load(os.path.join(self.processed_folder, self.set_a), map_location='cpu')
-            data_b = torch.load(os.path.join(self.processed_folder, self.set_b), map_location='cpu')
-            data_c = torch.load(os.path.join(self.processed_folder, self.set_c), map_location='cpu')
-        else:
-            data_a = torch.load(os.path.join(self.processed_folder, self.set_a))
-            data_b = torch.load(os.path.join(self.processed_folder, self.set_b))
-            data_c = torch.load(os.path.join(self.processed_folder, self.set_c))
-            # self.data = torch.cat([data_a, data_b, data_c], dim=0)
-            # self.labels = torch.load(os.path.join(self.processed_folder, self.label_file))
-            # print(len(self.data), len(self.labels.shape))
+        # The cache may have been written from any device (scripts/prepare_data.py builds it on CPU), so load
+        # it to CPU and move the tensors to the requested device explicitly. Loading without map_location
+        # would only work for a cache serialised on a GPU with the same ordinal.
+        data_a = torch.load(os.path.join(self.processed_folder, self.set_a), map_location='cpu')
+        data_b = torch.load(os.path.join(self.processed_folder, self.set_b), map_location='cpu')
+        data_c = torch.load(os.path.join(self.processed_folder, self.set_c), map_location='cpu')
 
         self.data = data_a + data_b + data_c # a list with length 12000
+        if device != torch.device("cpu"):
+            self.data = [(rid, tt.to(device), vals.to(device), mask.to(device))
+                         for rid, tt, vals, mask in self.data]
 
         if n_samples is not None:
             print('Total records:', len(self.data))
