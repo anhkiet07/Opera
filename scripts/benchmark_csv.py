@@ -270,15 +270,15 @@ def write_curated(rows, path, all_methods=False):
         key = (r["run_group"], r["setting"], r["task"], r["backbone"], method, r["seed"])
         keyed.setdefault(key, {})[r["condition"]] = r
 
-    fields = (["run_group", "setting", "task", "history", "horizon", "time_unit", "backbone", "method",
-               "seed", "batch_size", "metric"]
+    fields = (["backbone", "setting", "method", "seed", "task", "history", "horizon", "time_unit",
+               "batch_size", "metric"]
               + [CURATED_COL[c] for c in ["clean"] + SHIFTS]
-              + ["mean_4shifts", "delta_4shifts_pct"])
+              + ["mean_4shifts", "delta_4shifts_pct", "run_group"])
     order = {"vanilla": 0, "opera": 1, "opera++": 2}
     with open(path, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fields)
         w.writeheader()
-        for key in sorted(keyed, key=lambda k: (k[0], k[1], k[3], order.get(k[4], 99), k[5])):
+        for key in sorted(keyed, key=lambda k: (k[3], k[1], order.get(k[4], 99), k[5], k[0])):
             group, setting, task, backbone, method, seed = key
             per = keyed[key]
             if "clean" not in per:
