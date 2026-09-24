@@ -161,10 +161,13 @@ def fig2(out, dataset="physionet"):
     tgt_n = (batch["mask_predicted_data"][..., HR] > 0).sum(1)
     i = int(torch.argmin(-(obs_n + tgt_n)))
 
-    views = [("(a) reference", "identity"),
-             ("(b) temporal subsampling", "temporal_stride:3"),
-             ("(c) variable removal", "variable_dropout:0.5"),
-             ("(d) density reduction", "random_dropout:0.7")]
+    # Panel names and order are the benchmark's own condition names (BENCHMARK_PROTOCOL.md section 2), and each
+    # panel prints the exact process spec, so the figure and the results tables share one vocabulary.
+    views = [("clean", "identity"),
+             ("density", "random_dropout:0.7"),
+             ("timing", "temporal_stride:3"),
+             ("variables", "variable_dropout:0.5"),
+             ("composed", "temporal_stride:3+variable_group_dropout:0.3")]
     mses, src = _panel_mse([spec for _, spec in views])
     print(f"fig2 MSE from {src}" if mses else "fig2: no run found, drawing without MSE")
 
@@ -179,7 +182,7 @@ def fig2(out, dataset="physionet"):
     v_f = batch["data_to_predict"][i, :, HR]
     m_f = batch["mask_predicted_data"][i, :, HR] > 0
 
-    fig, axes = plt.subplots(1, 4, figsize=(7.2, 1.95), sharey=True)
+    fig, axes = plt.subplots(1, len(views), figsize=(7.2, 2.05), sharey=True)
     for k, (ax, (title, spec)) in enumerate(zip(axes, views)):
         d, m = gen.condition(batch["observed_data"], batch["observed_tp"], batch["observed_mask"],
                              spec, seed=12345)
@@ -200,11 +203,15 @@ def fig2(out, dataset="physionet"):
         ax.set_xlim(0, 48); ax.set_xticks([0, 12, 24, 36, 48])
         ax.tick_params(labelsize=6)
         ax.set_xlabel("time (h)", fontsize=7)
-        head = title + (chr(10) + f"MSE {mses[spec]:.4f}" if mses else "")
-        ax.set_title(head, fontsize=7.5, linespacing=1.35)
+        # name (as in the tables), the exact spec, then the measured MSE
+        spec_short = spec.replace("temporal_stride", "stride").replace("random_dropout", "rnd drop")                          .replace("variable_group_dropout", "var-group").replace("variable_dropout", "var drop")
+        head = f"({chr(97 + k)}) {title}" + chr(10) + spec_short
+        if mses:
+            head += chr(10) + f"MSE {mses[spec]:.4f}"
+        ax.set_title(head, fontsize=6.6, linespacing=1.5)
         if int(keep.sum()) == 0:
-            ax.text(0.24, 0.80, "HR removed" + chr(10) + f"0 of {int(m_h.sum())} kept",
-                    transform=ax.transAxes, ha="center", va="center", fontsize=6.2, color=PRED)
+            ax.text(0.03, 0.80, "HR removed" + chr(10) + f"(0 of {int(m_h.sum())})",
+                    transform=ax.transAxes, ha="left", va="center", fontsize=6.0, color=PRED)
         ax.text(0.24, 0.045, "input", transform=ax.transAxes, ha="center", fontsize=6.2, color="0.45")
         ax.text(0.76, 0.045, "output", transform=ax.transAxes, ha="center", fontsize=6.2, color="0.45")
     axes[0].set_ylabel("heart rate (norm.)", fontsize=7)
