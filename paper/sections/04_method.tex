@@ -1,4 +1,5 @@
-%% Method. POSD is the centrepiece; augmentation is the supporting mechanism; mining is a conditional extension.
+%% Method. POSD is the centrepiece; augmentation supports it. OPERA = the two; OPERA++ = plus harsh-pool mining.
+%% Mining over the training mixture is a control, never an arm.
 %% See CLAUDE_paper.md sections 2, 7, 8, 9, 10.
 %% Included by sigconf.tex. Do not add a preamble here.
 
@@ -11,15 +12,16 @@
 \caption{The student is restricted to a sparse observation of a trajectory; the teacher receives a richer
 observation of the \emph{same history}, over the same prediction times and with the same supervision, and its
 task output becomes an additional target for the student (dashed). Observation-process augmentation supplies the
-student's views, and hard mining optionally replaces some of them with the hardest admissible candidate. At
-deployment only the student and one sparse observation remain.}
+student's views. OPERA is these two mechanisms; OPERA++ additionally replaces some views with the hardest
+candidate from a pool harsher than the training mixture. At deployment only the student and one sparse
+observation remain.}
 \label{fig:framework}
 \end{figure}
 
 Everything in this section acts on $\Sobs$ rather than on the encoder: the architecture, its parameter count and
 its inference path are untouched (Figure~\ref{fig:framework}). We first introduce privileged observation
 self-distillation, the mechanism we regard as the methodological contribution, then the observation-process
-augmentation that supports it, then hard mining as a conditional extension.
+augmentation that supports it, then hard mining, which forms the OPERA++ variant.
 
 \subsection{Rich and sparse observations of one history}
 \label{sec:distill}
@@ -101,7 +103,7 @@ penalty admits the degenerate solution of collapsing all observations of all tra
 that needs anti-collapse machinery unrelated to the shift under study. A representation-matching variant exists in
 our implementation and is reported only as an ablation.
 
-\subsection{Optional: hard observation-process mining}
+\subsection{Hard observation-process mining}
 \label{sec:mining}
 Random exposure spends most of its budget on observation processes the model already handles. A third mechanism
 searches instead for the admissible process the \emph{current} model handles worst,
@@ -126,8 +128,10 @@ P(\Sobs)=(1-\alpha)\,P_{\mathrm{mix}}+\alpha\,P_{\mathrm{hard}},
 \end{equation}
 and hold $\alpha=0$ during a warm-up period. More consequentially, the outcome depends on the relationship between
 $\mathcal{P}$ and $P_{\mathrm{mix}}$: if $\mathcal{P}=P_{\mathrm{mix}}$ then the hardest of $K$ draws is close in
-severity to a single draw, and mining reduces to augmentation at $K$ times the cost. We therefore treat
-$\mathcal{P}$ as a separate hyper-parameter and report both choices (Section~\ref{sec:mining-results}).
+severity to a single draw, and mining reduces to augmentation at $K$ times the cost. The mechanism is therefore
+defined by a pool strictly harsher than $P_{\mathrm{mix}}$, and the matched-pool setting $\mathcal{P}=P_{\mathrm{mix}}$
+is reported as a control rather than as a configuration anyone should use
+(Section~\ref{sec:mining-results}).
 
 \subsection{Complete objective}
 The full objective adds one term to the task loss,
@@ -160,5 +164,18 @@ constraints $\mathcal{C}$; frozen teacher $f_{\theta_T}$
 \end{algorithm}
 
 Algorithm~\ref{alg:opera} is a single update: one loss, one backward pass, one optimiser step. The only staging is
-the mining warm-up and the fact that the teacher is trained beforehand. We write OPERA for the complete
-configuration and refer to individual mechanisms by name.
+the mining warm-up and the fact that the teacher is trained beforehand.
+
+\paragraph{Two named configurations.}
+Because the mining result turns entirely on the candidate pool, we do not report a single framework that bundles
+all three mechanisms. We name two:
+\begin{itemize}
+\item \textbf{OPERA} $=$ observation-process augmentation $+$ privileged observation self-distillation. This is
+the configuration we recommend: two mechanisms, no candidate pool to choose, and $\alpha=0$ in
+Eq.~\ref{eq:alpha}.
+\item \textbf{OPERA++} $=$ OPERA $+$ hard mining with a pool strictly harsher than $P_{\mathrm{mix}}$. This adds
+worst-case robustness at $K$ extra forward passes per step and one more hyper-parameter.
+\end{itemize}
+Mining with $\mathcal{P}=P_{\mathrm{mix}}$ is neither: it is the control that establishes why the pool matters,
+and we report it as an ablation. Every claim below is attached to one of these three labels so that no result is
+credited to a mechanism that was not doing work.

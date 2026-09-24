@@ -63,12 +63,14 @@ under 70\% dropout, and $0.00721$ against $0.00753$ under 50\% variable removal.
 
 \textbf{Interpretation.} The hardest of $K$ draws from the training mixture is barely harder than one draw, so
 with a matched pool the maximisation in Eq.~\ref{eq:mining} has nothing to find and the mechanism reduces to
-augmentation at $K$ times the cost. Severity of the pool, not the search, is what produces the improvement. We
-report this as a boundary on the mechanism rather than a recommendation: the benefit over augmentation is
-$0.00006$\,MSE at one seed, it requires choosing a second pool that must stay disjoint from evaluation, and on
-USHCN mining without distillation is the worst configuration in Table~\ref{tab:posd}. We therefore treat hard
-mining as an optional extension whose value is not established, and the complete configuration reported elsewhere
-uses $\mathcal{P}=P_{\mathrm{mix}}$.
+augmentation at $K$ times the cost. Severity of the pool, not the search, is what produces the improvement. This
+is why we name two configurations rather than one. OPERA is augmentation plus privileged distillation, with no
+pool to choose. OPERA++ adds mining from a strictly harsher pool, and is the configuration to use when worst-case
+error is what matters. Mining from the matched pool is neither, and we report it only as the control that
+establishes the distinction; a reader who adopted it as the default would pay $K$ forward passes per step for
+nothing. The boundary on OPERA++ should be stated plainly as well: its advantage over OPERA is $0.00006$\,MSE at
+one seed, it introduces a second pool that must stay disjoint from evaluation, and on USHCN mining without
+distillation is the worst configuration in Table~\ref{tab:posd}.
 
 \subsection{Robustness extends to unseen observation-process families}
 \label{sec:q-unseen}
