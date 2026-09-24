@@ -122,14 +122,14 @@ def _panel_mse(conditions, var=None):
 
 
 def fig2(out, dataset="physionet"):
-    """One ICU channel seen through the five evaluation conditions, with the error that channel incurs.
+    """What the model is given, and what that costs it.
 
-    Message: same underlying history and same target, different observations, different error. Filled markers are
-    what the model is given, hollow ones were recorded but withheld, so filled plus hollow is the same record in
-    every panel. The heading carries the evaluated test MSE for the plotted channel, not for all 41 variables, so
-    the picture and the number describe the same thing.
+    Five panels, one ICU channel, the five evaluation conditions. Filled markers are the observations handed to
+    the model; hollow ones were recorded but withheld, so filled plus hollow is the same record in every panel.
+    Only the input is drawn --- the forecast window is not shown, because the heading already reports the cost:
+    the evaluated test MSE for THIS channel, not averaged over all 41 variables.
 
-    Needs no model: the masks come from the observation-process generator and the errors from the evaluated run.
+    Needs no model: masks come from the observation-process generator, errors from the evaluated run record.
     """
     import torch
     if dataset != "physionet":
@@ -185,27 +185,20 @@ def fig2(out, dataset="physionet"):
     tt_h = batch["observed_tp"][i, ..., VAR].reshape(-1) * HRS
     v_h = batch["observed_data"][i, ..., VAR].reshape(-1)
     m_h = batch["observed_mask"][i, ..., VAR].reshape(-1) > 0
-    tt_f = batch["tp_to_predict"][i] * HRS
-    v_f = batch["data_to_predict"][i, :, VAR]
-    m_f = batch["mask_predicted_data"][i, :, VAR] > 0
-
     fig, axes = plt.subplots(1, len(views), figsize=(7.2, 2.05), sharey=True)
     for k, (ax, (title, spec)) in enumerate(zip(axes, views)):
         keep = masks[spec][i, ..., VAR].reshape(-1) > 0
         gone = m_h & ~keep                 # recorded but withheld by this process
 
-        ax.axvspan(24, 48, color="0.93", zorder=0)
-        ax.axvline(24, color="0.6", lw=0.8, ls="--", zorder=1)
         # outlines, not translucent fills: overlapping semi-transparent markers stack into something that
         # looks solid, which made a fully removed channel look partly kept.
         ax.scatter(tt_h[gone], v_h[gone], s=10, facecolors="none", edgecolors=OBS, linewidths=0.6,
                    alpha=0.55, zorder=2, label="recorded, withheld" if k == 1 else None)
         ax.scatter(tt_h[keep], v_h[keep], s=11, color=OBS, zorder=4,
-                   label="given to model / ground truth" if k == 0 else None)
-        ax.plot(tt_f[m_f], v_f[m_f], color=OBS, lw=1.4, zorder=3)          # ground truth, same colour
-        ax.set_xlim(0, 48); ax.set_xticks([0, 12, 24, 36, 48])
+                   label="given to model" if k == 0 else None)
+        ax.set_xlim(0, 24); ax.set_xticks([0, 6, 12, 18, 24])
         ax.tick_params(labelsize=6)
-        ax.set_xlabel("time (h)", fontsize=7)
+        ax.set_xlabel("history (h)", fontsize=7)
         head = f"({chr(97 + k)}) {title}"
         if mses:
             head += chr(10) + f"MSE {mses[spec]:.4f}"
@@ -213,8 +206,6 @@ def fig2(out, dataset="physionet"):
         if int(keep.sum()) == 0:
             ax.text(0.03, 0.82, "channel removed", transform=ax.transAxes, ha="left", va="center",
                     fontsize=6.2, color=FLAG)
-        ax.text(0.24, 0.045, "input", transform=ax.transAxes, ha="center", fontsize=6.2, color="0.45")
-        ax.text(0.76, 0.045, "output", transform=ax.transAxes, ha="center", fontsize=6.2, color="0.45")
     axes[0].set_ylabel(f"{VNAME} (norm.)", fontsize=7)
     fig.subplots_adjust(bottom=0.34)
     fig.legend(loc="lower center", ncol=2, frameon=False, fontsize=6.8, bbox_to_anchor=(0.5, -0.02),
