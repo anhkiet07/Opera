@@ -196,7 +196,8 @@ def fig2(out, dataset="physionet"):
                    alpha=0.55, zorder=2, label="recorded, withheld" if k == 1 else None)
         ax.scatter(tt_h[keep], v_h[keep], s=11, color=OBS, zorder=4,
                    label="given to model" if k == 0 else None)
-        ax.set_xlim(0, 24); ax.set_xticks([0, 6, 12, 18, 24])
+        # pad past the window so markers sitting at 0 h and 24 h are not sliced by the axis
+        ax.set_xlim(-1.4, 25.4); ax.set_xticks([0, 6, 12, 18, 24])
         ax.tick_params(labelsize=6)
         ax.set_xlabel("history (h)", fontsize=7)
         head = f"({chr(97 + k)}) {title}"
@@ -204,10 +205,10 @@ def fig2(out, dataset="physionet"):
             head += chr(10) + f"MSE {mses[spec]:.4f}"
         ax.set_title(head, fontsize=7.2, linespacing=1.4)
         if int(keep.sum()) == 0:
-            ax.text(0.03, 0.82, "channel removed", transform=ax.transAxes, ha="left", va="center",
+            ax.text(0.03, 0.06, "channel removed", transform=ax.transAxes, ha="left", va="center",
                     fontsize=6.2, color=FLAG)
     axes[0].set_ylabel(f"{VNAME} (norm.)", fontsize=7)
-    fig.subplots_adjust(bottom=0.34)
+    fig.subplots_adjust(bottom=0.34, wspace=0.18)
     fig.legend(loc="lower center", ncol=2, frameon=False, fontsize=6.8, bbox_to_anchor=(0.5, -0.02),
                handlelength=1.6, columnspacing=1.8)
     fig.savefig(os.path.join(out, "fig2_observation_shift.pdf"))
