@@ -5,6 +5,7 @@
     python scripts/run_benchmark.py --stage C         # opera = aug + distillation, seed 0, 21 runs (needs A)
     python scripts/run_benchmark.py --stage B         # vanilla, seeds 1-4, 84 runs
     python scripts/run_benchmark.py --stage D         # opera,   seeds 1-4, 84 runs (needs B)
+    python scripts/run_benchmark.py --stage E         # opera++ = opera + harsh-pool mining, seed 0 (needs A)
 
 Run names carry the backbone, `bench_{setting}_{backbone}_{method}_s{seed}`, because the frozen rich-view
 teacher must share the student's architecture: the teacher is the same-cell vanilla checkpoint, and a
@@ -47,19 +48,26 @@ BACKBONES = ["itransformer", "patchtst", "tmix"]
 # already trains on is barely harder than one draw.
 SETTINGS = {
     "physionet":  {"vanilla": "configs/baseline.yaml",
-                   "opera":   "configs/distillation.yaml"},
+                   "opera":   "configs/distillation.yaml",
+                 "operapp": "configs/opera_strong.yaml"},
     "activity":   {"vanilla": "configs/activity_baseline.yaml",
-                   "opera":   "configs/activity_distillation.yaml"},
+                   "opera":   "configs/activity_distillation.yaml",
+                "operapp": "configs/activity_operapp.yaml"},
     "ushcn_1mo":  {"vanilla": "configs/ushcn_baseline.yaml",
-                   "opera":   "configs/ushcn_distillation.yaml"},
+                   "opera":   "configs/ushcn_distillation.yaml",
+                 "operapp": "configs/ushcn_operapp.yaml"},
     "ushcn_12mo": {"vanilla": "configs/ushcn_long_baseline.yaml",
-                   "opera":   "configs/ushcn_long_distillation.yaml"},
+                   "opera":   "configs/ushcn_long_distillation.yaml",
+                  "operapp": "configs/ushcn_long_operapp.yaml"},
     "P12":        {"vanilla": "configs/P12_baseline.yaml",
-                   "opera":   "configs/P12_distillation.yaml"},
+                   "opera":   "configs/P12_distillation.yaml",
+           "operapp": "configs/P12_operapp.yaml"},
     "P19":        {"vanilla": "configs/P19_baseline.yaml",
-                   "opera":   "configs/P19_distillation.yaml"},
+                   "opera":   "configs/P19_distillation.yaml",
+           "operapp": "configs/P19_operapp.yaml"},
     "PAM":        {"vanilla": "configs/PAM_baseline.yaml",
-                   "opera":   "configs/PAM_distillation.yaml"},
+                   "opera":   "configs/PAM_distillation.yaml",
+           "operapp": "configs/PAM_operapp.yaml"},
 }
 
 CONDITIONS = ",".join([
@@ -75,6 +83,8 @@ STAGES = {
     "B": ("vanilla", [1, 2, 3, 4]),
     "C": ("opera", [0]),
     "D": ("opera", [1, 2, 3, 4]),
+    "E": ("operapp", [0]),          # OPERA++ = OPERA + mining from the harsher pool
+    "F": ("operapp", [1, 2, 3, 4]),
 }
 
 
@@ -121,7 +131,7 @@ def plan(stage, settings, backbones):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--stage", required=True, choices=["smoke", "A", "B", "C", "D"])
+    ap.add_argument("--stage", required=True, choices=["smoke", "A", "B", "C", "D", "E", "F"])
     ap.add_argument("--out", default="results/raw")
     ap.add_argument("--settings", default=None, help="comma-separated subset")
     ap.add_argument("--backbones", default=None, help="comma-separated subset")
