@@ -7,7 +7,7 @@ definition; this file is only what you need to get running and the traps that al
 ## 1. What is done and what you are running
 
 Seed 0 is complete: 7 settings x 3 backbones x {vanilla, opera} = 42 cells, no failures. `opera++` is running
-locally on 6 settings (the mortality task excluded, see §5).
+locally on 6 settings (the mortality task excluded, see §6).
 
 | stage | arm | seeds | cells | needs |
 |---|---|---|---|---|
@@ -54,13 +54,44 @@ P12 / P19 / PAM use the Raindrop pipeline and expect their files under `data/P12
 **Do not copy the processed `.pt` files from the Windows machine.** They were serialised with CUDA tensors and
 fail to load unless a GPU is visible with the same ordinal. Regenerate them.
 
-## 4. Launch
+## 4. Work in scratch, not in the repo
+
+Make one dedicated directory on scratch and send **everything** there: run outputs, checkpoints, SLURM logs,
+CSVs. Nothing this sweep produces should land inside the git checkout.
+
+```bash
+export OPERA_RUN=$SCRATCH/opera_bench          # or /scratch/$USER/opera_bench if $SCRATCH is unset
+mkdir -p "$OPERA_RUN"/{raw,logs,csv}
+echo "$OPERA_RUN"                              # note this path, every command below needs it
+```
+
+Every path is a flag, so no code changes are needed:
+
+| what | flag | value |
+|---|---|---|
+| run dirs + checkpoints | `--out` | `$OPERA_RUN/raw` |
+| CSV inputs | `--raw` | `$OPERA_RUN/raw` |
+| CSV outputs | `--out --summary --curated` | `$OPERA_RUN/csv/...` |
+| SLURM stdout/stderr | `#SBATCH --output` | `$OPERA_RUN/logs/%x-%j.out` |
+| wandb, if you enable it | `WANDB_DIR` | `$OPERA_RUN` |
+
+**Pass the same `--out` to every stage.** The teacher path is derived from it (`{out}/bench_{setting}_{backbone}_vanilla_s{seed}/model.pt`),
+so stage D only finds stage B's checkpoints if both used one root. Mixing roots looks like a missing teacher.
+
+**Scratch is usually purged.** Before the purge window, copy back the small artefacts only:
+`$OPERA_RUN/raw/*/results.json`, `$OPERA_RUN/raw/*/config.yaml` and `$OPERA_RUN/csv/*`. Leave `model.pt`
+behind -- checkpoints are ~25 MB each and the repo is already carrying too many (§8). But do not delete them
+while any stage D or F run is still pending, because those read them.
+
+## 5. Launch
 
 Sequential (what we ran locally):
 
 ```bash
-python scripts/run_benchmark.py --stage B --no_wandb
-python scripts/run_benchmark.py --stage D --no_wandb
+python scripts/run_benchmark.py --stage B --out "$OPERA_RUN/raw" --no_wandb \
+  2>&1 | tee "$OPERA_RUN/logs/stageB.log"
+python scripts/run_benchmark.py --stage D --out "$OPERA_RUN/raw" --no_wandb \
+  2>&1 | tee "$OPERA_RUN/logs/stageD.log"
 ```
 
 Finished cells are skipped, so a stage is always safe to re-run after an interruption.
@@ -71,7 +102,8 @@ an epoch once went from 96 s to 9380 s with no error. On dedicated GPUs, drop bo
 Use `--settings` and `--backbones` to slice the grid, e.g.
 
 ```bash
-python scripts/run_benchmark.py --stage B --settings physionet --backbones itransformer --no_wandb
+python scripts/run_benchmark.py --stage B --settings physionet --backbones itransformer \
+  --out "$OPERA_RUN/raw" --no_wandb
 ```
 
 Still: **never two jobs on one GPU.** One job per GPU.
@@ -79,7 +111,7 @@ Still: **never two jobs on one GPU.** One job per GPU.
 Node guidance from `sinfo`: `l40s-f-[01-04]` (48 GB) for anything memory-hungry, `v100l-f-*` (32 GB) next,
 `v100-f-*` (16 GB) for everything else. `rtxp6000l-f-01` is down and `v100-f-07` is draining.
 
-## 5. Traps that already cost us time
+## 6. Traps that already cost us time
 
 **Do not change any batch size.** Seed 0 was run at the sizes in `BENCHMARK_PROTOCOL.md` §3, and seeds must be
 comparable. In particular **P12 stays at 8** even though your GPUs have room. It is 8 because iTransformer's
@@ -103,17 +135,21 @@ positions in seconds. If you hit it, fix the environment; do not loop.
 not a result. If seeds 1--4 reproduce it, say so -- it is an architecture failure worth reporting, not a bug to
 hide.
 
-## 6. Results plumbing
+## 7. Results plumbing
 
 ```bash
-python scripts/benchmark_csv.py
+python scripts/benchmark_csv.py \
+  --raw     "$OPERA_RUN/raw" \
+  --out     "$OPERA_RUN/csv/benchmark.csv" \
+  --summary "$OPERA_RUN/csv/benchmark_summary.csv" \
+  --curated "$OPERA_RUN/csv/benchmark_curated.csv"
 ```
 
-Writes three files, all regenerated from `results/raw/` so they cannot drift:
+Writes three files, all regenerated from the run directories so they cannot drift:
 
-* `results/benchmark.csv` -- one row per (setting, backbone, method, seed, condition), every metric
-* `results/benchmark_summary.csv` -- mean/std over seeds, degradation derived
-* `results/benchmark_curated.csv` -- the main table: clean + the four shifts, one row per seed
+* `benchmark.csv` -- one row per (setting, backbone, method, seed, condition), every metric
+* `benchmark_summary.csv` -- mean/std over seeds, degradation derived
+* `benchmark_curated.csv` -- the main table: clean + the four shifts, one row per seed
 
 Method labels (`vanilla`, `opera`, `opera++`, `abl_*`) are derived from what each config switches on, not from
 filenames, so they cannot be mislabelled. `run_group` is `bench` for these runs; anything `explore` is from
@@ -122,7 +158,7 @@ earlier exploratory work and is not comparable cell-by-cell.
 Degradation for classification is computed on `1 - AUROC` (or `1 - accuracy`), never cross-entropy: the two move
 in opposite directions on the mortality task.
 
-## 7. Please do not
+## 8. Please do not
 
 * Commit checkpoints if you can avoid it. `results/raw/**/model.pt` is already ~291 MB and 185 MB of git
   history. Keep `results.json`; that is what the CSVs are built from. But note stage D **needs** stage B's
@@ -131,7 +167,7 @@ in opposite directions on the mortality task.
   chained call.
 * Reformat or restructure the paper in `paper/`. It is mid-revision on this side.
 
-## 8. When you are done
+## 9. When you are done
 
 Report per-cell: clean, mean over the four shifts, and `delta_4shifts_pct`, with mean ± std over the five seeds.
 Then say which of the seed-0 conclusions survive. The ones to check are:
