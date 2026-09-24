@@ -139,7 +139,7 @@ def main():
     cells = plan(a.stage, settings, backbones)
     print(f"stage {a.stage}: {len(cells)} cells", flush=True)
 
-    done, failed = [], []
+    done, failed, instant = [], [], 0
     for i, (setting, backbone, method, seed) in enumerate(cells, 1):
         name = run_name(setting, backbone, method, seed)
         if a.stage == "smoke":
@@ -188,6 +188,20 @@ def main():
         else:
             print(f"[{i}/{len(cells)}] FAILED {name} rc={rc} ({dt/60:.1f} min)", flush=True)
             failed.append((name, f"rc={rc}"))
+            # A cell that dies before it could plausibly have started is environmental, not a bad config:
+            # an OS shutdown, a dead GPU, a broken venv. Windows reports these as 0xC000026B
+            # (DLL_INIT_FAILED_LOGOFF) / 0x40010004 (DBG_TERMINATE_PROCESS). Without this guard the launcher
+            # marches through the whole queue at 0.0 min per cell and marks every remaining cell FAILED, which
+            # is what happened during a machine restart: six cells burned in seconds.
+            if dt < 30:
+                instant += 1
+                if instant >= 2:
+                    print(f"[abort] {instant} cells failed in under 30s; the environment is going down or "
+                          f"broken, not the configs. Stopping so the queue is not burned. Re-run this "
+                          f"stage once the machine is up; finished cells are skipped.", flush=True)
+                    break
+            else:
+                instant = 0
 
     print(f"\nstage {a.stage}: {len(done)} ok, {len(failed)} failed")
     for n, why in failed:
