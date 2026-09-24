@@ -189,11 +189,64 @@ def write_summary(rows, path):
     return len(keyed)
 
 
+SHIFTS = ["density", "timing", "variables", "composed"]
+
+
+def write_curated(rows, path):
+    """Curated wide table: one row per (setting, backbone, method), the clean reference and the four
+    representative shifts, averaged over seeds. This is the file the main paper table is built from.
+
+    `delta4_pct` is the mean relative degradation over the four shifts, computed on `primary_error` so it is
+    lower-is-better for both tasks. Nothing else is derived here.
+    """
+    keyed = {}
+    for r in rows:
+        if r["condition"] not in ("clean",) + tuple(SHIFTS):
+            continue
+        method = r["method"] + ("+harsh_pool" if r["variant"] == "harsh_pool" else "")
+        keyed.setdefault((r["setting"], r["task"], r["backbone"], method), {})              .setdefault(r["condition"], []).append(r)
+
+    fields = (["setting", "task", "backbone", "method", "metric", "n_seeds", "clean"] + SHIFTS
+              + ["clean_std"] + [f"{c}_std" for c in SHIFTS] + ["mean_shift", "delta4_pct"])
+    order = {"vanilla": 0, "augmentation": 1, "distillation": 2, "hard_mining": 3,
+             "hard_mining+harsh_pool": 4, "opera": 5, "opera+harsh_pool": 6}
+    with open(path, "w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=fields)
+        w.writeheader()
+        for (setting, task, backbone, method) in sorted(
+                keyed, key=lambda k: (k[0], k[2], order.get(k[3], 99))):
+            per = keyed[(setting, task, backbone, method)]
+            if "clean" not in per:
+                continue
+            dec = 5 if task == "forecast" else 2
+            row = {"setting": setting, "task": task, "backbone": backbone, "method": method,
+                   "metric": per["clean"][0]["primary_metric"],
+                   "n_seeds": len({x["seed"] for x in per["clean"]})}
+            errs = {}
+            for cond in ["clean"] + SHIFTS:
+                rs = per.get(cond)
+                if not rs:
+                    row[cond] = row[f"{cond}_std"] = ""
+                    continue
+                vals = [x["primary_value"] for x in rs]
+                row[cond] = round(mean(vals), dec)
+                row[f"{cond}_std"] = round(pstdev(vals), dec) if len(vals) > 1 else ""
+                errs[cond] = mean(x["primary_error"] for x in rs)
+            have = [c for c in SHIFTS if c in errs]
+            row["mean_shift"] = round(mean(row[c] for c in have), dec) if have else ""
+            e0 = errs.get("clean")
+            row["delta4_pct"] = (round(100.0 * mean((errs[c] - e0) / e0 for c in have), 2)
+                                 if have and e0 else "")
+            w.writerow(row)
+    return len(keyed)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--raw", default="results/raw")
     ap.add_argument("--out", default="results/benchmark.csv")
     ap.add_argument("--summary", default="results/benchmark_summary.csv")
+    ap.add_argument("--curated", default="results/benchmark_curated.csv")
     ap.add_argument("--main-only", action="store_true", help="keep only the 5 protocol conditions")
     a = ap.parse_args()
 
@@ -213,9 +266,11 @@ def main():
             w.writerow({k: r.get(k, "") for k in FIELDS})
 
     n_groups = write_summary(rows, a.summary)
+    n_cur = write_curated(rows, a.curated)
     cells = {(r["setting"], r["backbone"], r["method"], r["variant"], r["seed"]) for r in rows}
     print(f"{a.out}: {len(rows)} rows from {len(cells)} run cells")
     print(f"{a.summary}: {n_groups} groups")
+    print(f"{a.curated}: {n_cur} rows (curated: 4 shifts + clean, averaged over seeds)")
     if skipped:
         print(f"skipped (no usable per-condition metrics): {', '.join(skipped)}")
     print("\ncoverage by setting x backbone x method:")

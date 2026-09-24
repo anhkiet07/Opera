@@ -22,6 +22,19 @@ import time
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+def _python():
+    """The project venv interpreter. `sys.executable` is the system Python when this script is launched from a
+    shell that has not activated the venv, and the deps (yaml, torch) live only in the venv."""
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    for rel in (".venv/Scripts/python.exe", ".venv/bin/python"):
+        cand = os.path.join(root, rel)
+        if os.path.exists(cand):
+            return cand
+    return sys.executable
+
+
+PYTHON = _python()
+
 BACKBONES = ["itransformer", "patchtst", "tmix"]
 
 # setting -> (vanilla config, opera config). Each config already carries its dataset's history/patch/batch.
@@ -79,8 +92,9 @@ def plan(stage, settings, backbones):
     """The (setting, backbone, method, seed) cells this stage runs, in a sensible order."""
     if stage == "smoke":
         cells = []
+        order = ["PAM", "ushcn_12mo", "P19", "activity", "P12", "ushcn_1mo", "physionet"]
         for backbone in backbones:
-            for setting in ("physionet", "PAM"):   # one forecasting, one classification
+            for setting in order:
                 if setting in settings:
                     cells.append((setting, backbone, "vanilla", 0))
         return cells
@@ -98,6 +112,7 @@ def main():
     ap.add_argument("--settings", default=None, help="comma-separated subset")
     ap.add_argument("--backbones", default=None, help="comma-separated subset")
     ap.add_argument("--dry_run", action="store_true")
+    ap.add_argument("--quick", action="store_true", help="smoke only: cap records, hides OOM")
     ap.add_argument("--no_wandb", action="store_true")
     a = ap.parse_args()
 
@@ -124,7 +139,11 @@ def main():
         cfg = SETTINGS[setting][0 if method == "vanilla" else 1]
         overrides = [f"model.backbone={backbone}"]
         if a.stage == "smoke":
-            overrides += ["training.epochs=1", "training.min_epochs=1", "data.n_records=600"]
+            # full data by default: the point of the smoke stage is to catch out-of-memory and patch-count
+            # failures, and a record cap hides exactly those. --quick trades that away for speed.
+            overrides += ["training.epochs=1", "training.min_epochs=1"]
+            if a.quick:
+                overrides.append("data.n_records=600")
 
         if method == "opera":
             # the teacher must share the student's architecture: same setting, same backbone, same seed
@@ -137,7 +156,7 @@ def main():
                 continue
             overrides.append(f"distillation.teacher_ckpt={ckpt}")
 
-        cmd = [sys.executable, "scripts/train.py", "--config", cfg, "--seed", str(seed),
+        cmd = [PYTHON, "scripts/train.py", "--config", cfg, "--seed", str(seed),
                "--name", name, "--out", a.out, "--conditions", CONDITIONS, "--set", *overrides]
         if a.no_wandb or a.stage == "smoke":
             cmd.append("--no_wandb")
@@ -160,7 +179,7 @@ def main():
     for n, why in failed:
         print(f"  FAILED {n}: {why}")
     if not a.dry_run and a.stage != "smoke":
-        subprocess.call([sys.executable, "scripts/benchmark_csv.py"])
+        subprocess.call([PYTHON, "scripts/benchmark_csv.py"])
     return 1 if failed else 0
 
 
