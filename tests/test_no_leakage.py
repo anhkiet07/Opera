@@ -94,3 +94,41 @@ def test_identical_predictions_give_zero_distillation():
     b = make_batch()
     p = torch.randn_like(b["data_to_predict"])
     assert float(prediction_distillation(p, p.clone(), b["mask_predicted_data"])) == pytest.approx(0.0)
+
+
+# ---------------------------------------------------------------- classification batches
+def make_cls_batch(B=4, M=4, L=8, N=6, n_class=2, seed=0):
+    g = torch.Generator().manual_seed(seed)
+    mask = (torch.rand(B, M, L, N, generator=g) < 0.6).float()
+    return {
+        "observed_data": torch.randn(B, M, L, N, generator=g) * mask,
+        "observed_tp": torch.rand(B, M, L, N, generator=g),
+        "observed_mask": mask,
+        "static": None,
+        "labels": torch.randint(n_class, (B,), generator=g),
+    }
+
+
+def test_leakage_check_handles_classification():
+    b = make_cls_batch()
+    gen = ObservationProcessGenerator(seed=0)
+    rich = gen.rich_view(b["observed_data"], b["observed_tp"], b["observed_mask"])
+    tb = BaseIrregularEncoder.with_observation(b, *rich)
+    assert assert_no_future_leakage(b, tb)
+
+
+def test_leakage_check_catches_changed_labels():
+    b = make_cls_batch()
+    bad = dict(b)
+    bad["labels"] = 1 - b["labels"]
+    with pytest.raises(AssertionError):
+        assert_no_future_leakage(b, bad)
+
+
+def test_classification_views_leave_labels_untouched():
+    b = make_cls_batch()
+    gen = ObservationProcessGenerator(seed=0)
+    d, m = gen.condition(b["observed_data"], b["observed_tp"], b["observed_mask"], "variable_dropout:0.5")
+    b2 = BaseIrregularEncoder.with_observation(b, d, m)
+    assert torch.equal(b["labels"], b2["labels"])
+    assert torch.all(m <= b["observed_mask"])

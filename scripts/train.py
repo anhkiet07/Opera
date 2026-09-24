@@ -83,7 +83,11 @@ def main():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     dsname = cfg.get("data", {}).get("name", "physionet")
-    mod = ds_registry
+    if dsname in ("P12", "P19", "PAM"):
+        from src.datasets import classification as ds_cls
+        mod = ds_cls
+    else:
+        mod = ds_registry
     data_obj, info = mod.load(cfg, device, seed=a.seed)
     model, model_args = build_model(cfg, info, device)
 

@@ -316,9 +316,9 @@ def normalize_masked_tp(data, att_min, att_max):
 
 
 def get_device(tensor):
-    if tensor.is_cuda:
-        return torch.device(tensor.get_device())
-    return torch.device("cuda:0")
+    # Return the tensor's own device. (This used to fall back to "cuda:0" for CPU tensors, which made every
+    # CPU-only run fail with a device mismatch inside split_and_patch_batch.)
+    return tensor.device
 
 
 def add_mask(data_dict):

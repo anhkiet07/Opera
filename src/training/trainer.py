@@ -33,6 +33,8 @@ class Trainer:
         self.next_batch = next_batch
         self.device = device
         self.out = out_dir
+        self.task = data_info.get("task", "forecasting")
+        self.n_class = data_info.get("n_class", 0)
         self.log = logger
         self.wandb = wandb_run
         os.makedirs(out_dir, exist_ok=True)
@@ -86,6 +88,9 @@ class Trainer:
             if self.teacher is not None:
                 batch["_rich"] = self.obs_gen.rich_view(batch["observed_data"], batch["observed_tp"],
                                                         batch["observed_mask"])
+                # classification batches carry no future window; make that explicit for the shared code paths
+                batch.setdefault("data_to_predict", None)
+                batch.setdefault("mask_predicted_data", None)
                 if not self.checked_leakage:
                     assert_no_future_leakage(batch, self.model.with_observation(batch, *batch["_rich"]))
                     self.checked_leakage = True
@@ -114,7 +119,8 @@ class Trainer:
         for epoch in range(self.epochs):
             logs = self.train_epoch(epoch)
             val = evaluate(self.model, self.data["val_dataloader"], self.info["n_val_batches"],
-                           self.next_batch, condition="identity", obs_gen=self.obs_gen)
+                           self.next_batch, condition="identity", obs_gen=self.obs_gen,
+                           task=self.task, n_class=self.n_class)
             logs.update({"val/mse": val["mse"], "val/mae": val["mae"], "epoch": epoch})
             if self.miner is not None:
                 logs.update(self.miner.summary())
@@ -142,7 +148,8 @@ class Trainer:
     # ------------------------------------------------------------------ evaluation
     def test(self, conditions=None):
         res = evaluate_conditions(self.model, self.data["test_dataloader"], self.info["n_test_batches"],
-                                  self.next_batch, conditions=conditions, obs_gen=self.obs_gen, log=self.log)
+                                  self.next_batch, conditions=conditions, obs_gen=self.obs_gen, log=self.log,
+                                  task=self.task, n_class=self.n_class)
         res["cost"] = {
             "n_params": self.model.n_params(),
             "train_time_per_epoch_s": float(np.mean(self.epoch_times)) if self.epoch_times else None,

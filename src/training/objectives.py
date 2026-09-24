@@ -9,7 +9,14 @@ under a richer observation of the *same history*. No representation-consistency 
 import torch
 
 from src.distillation.losses import prediction_distillation, representation_distillation, teacher_gap
-from src.evaluation.metrics import task_loss
+from src.evaluation.metrics import task_loss, classification_loss
+
+
+def _loss_for(model, pred, batch):
+    """Masked MSE for forecasting, cross-entropy for classification."""
+    if getattr(model, "task", "forecasting") == "classification":
+        return classification_loss(pred, batch)
+    return task_loss(pred, batch)
 
 
 def opera_step(model, batch, views, teacher=None, cfg=None, collect_diag=False):
@@ -47,14 +54,16 @@ def opera_step(model, batch, views, teacher=None, cfg=None, collect_diag=False):
         vbatch = model.with_observation(batch, data, mask)
         out = model(vbatch, return_repr=need_repr)
         pred, z = (out if need_repr else (out, None))
-        mse, m = task_loss(pred, vbatch)
+        mse, m = _loss_for(model, pred, vbatch)
         task_terms.append(mse)
         if i == 0:
             logs.update({f"train/{k}": v for k, v in m.items()})
             logs["train/view"] = spec
 
         if use_distill:
-            tmask = batch["mask_predicted_data"]
+            tmask = batch.get("mask_predicted_data")
+            if tmask is None:                      # classification: distil over logits, no target mask
+                tmask = torch.ones_like(pred)
             if dkind in ("prediction", "prediction+representation"):
                 distill_terms.append(prediction_distillation(pred, teacher_pred, tmask, pred_kind))
             if dkind in ("representation", "prediction+representation"):

@@ -32,16 +32,27 @@ class HardMiner:
 
     @torch.no_grad()
     def _candidate_losses(self, model, batch, items):
-        """Per-sample loss of every candidate: (B, K)."""
+        """Per-sample task loss of every candidate: (B, K).
+
+        Forecasting: masked MSE over the target window. Classification: per-sample cross-entropy. The loss is
+        per sample (not averaged) so a per-sample miner can be added later without changing this signature.
+        """
+        import torch.nn.functional as F
         was_training = model.training
         model.eval()
         losses = []
-        target, tmask = batch["data_to_predict"], batch["mask_predicted_data"]
+        target = batch.get("data_to_predict")
+        classify = target is None and "labels" in batch
+        if not classify:
+            tmask = batch["mask_predicted_data"]
         for data, mask, _ in items:
             pred = model(model.with_observation(batch, data, mask))
-            err = ((target - pred) ** 2 * tmask).reshape(target.shape[0], -1).sum(dim=1)
-            cnt = tmask.reshape(target.shape[0], -1).sum(dim=1).clamp_min(1.0)
-            losses.append(err / cnt)
+            if classify:
+                losses.append(F.cross_entropy(pred, batch["labels"], reduction="none"))
+            else:
+                err = ((target - pred) ** 2 * tmask).reshape(target.shape[0], -1).sum(dim=1)
+                cnt = tmask.reshape(target.shape[0], -1).sum(dim=1).clamp_min(1.0)
+                losses.append(err / cnt)
         if was_training:
             model.train()
         return torch.stack(losses, dim=1)

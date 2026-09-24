@@ -1,0 +1,75 @@
+run activity_opera_s0 | device cuda:0 | params 127297 | commit 6d69fbe0a95ba838fb7f82de69c78dda53a87c7a
+config: {"data": {"batch_size": 32, "history": 3000, "n_records": 100000000, "name": "activity", "patch_size": 750, "stride": 750}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/activity_baseline_s0/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E4_opera", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": true, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "itransformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.03133 val_mse 0.00757 best 0.00757@0 (10.7s)
+epoch 001 loss 0.01022 val_mse 0.00479 best 0.00479@1 (10.0s)
+epoch 002 loss 0.00737 val_mse 0.00462 best 0.00462@2 (10.1s)
+epoch 003 loss 0.00562 val_mse 0.00343 best 0.00343@3 (10.1s)
+epoch 004 loss 0.00551 val_mse 0.00345 best 0.00343@3 (10.9s)
+epoch 005 loss 0.00586 val_mse 0.00348 best 0.00343@3 (18.3s)
+epoch 006 loss 0.00542 val_mse 0.00332 best 0.00332@6 (18.9s)
+epoch 007 loss 0.00527 val_mse 0.00329 best 0.00329@7 (18.4s)
+epoch 008 loss 0.00491 val_mse 0.00334 best 0.00329@7 (18.8s)
+epoch 009 loss 0.00473 val_mse 0.00349 best 0.00329@7 (18.4s)
+epoch 010 loss 0.00470 val_mse 0.00334 best 0.00329@7 (18.5s)
+epoch 011 loss 0.00467 val_mse 0.00323 best 0.00323@11 (19.2s)
+epoch 012 loss 0.00451 val_mse 0.00334 best 0.00323@11 (20.3s)
+epoch 013 loss 0.00437 val_mse 0.00318 best 0.00318@13 (20.6s)
+epoch 014 loss 0.00423 val_mse 0.00343 best 0.00318@13 (20.2s)
+epoch 015 loss 0.00431 val_mse 0.00317 best 0.00317@15 (19.7s)
+epoch 016 loss 0.00425 val_mse 0.00333 best 0.00317@15 (19.4s)
+epoch 017 loss 0.00414 val_mse 0.00332 best 0.00317@15 (20.0s)
+epoch 018 loss 0.00411 val_mse 0.00330 best 0.00317@15 (19.7s)
+epoch 019 loss 0.00408 val_mse 0.00328 best 0.00317@15 (19.9s)
+epoch 020 loss 0.00404 val_mse 0.00314 best 0.00314@20 (19.7s)
+epoch 021 loss 0.00395 val_mse 0.00317 best 0.00314@20 (19.5s)
+epoch 022 loss 0.00400 val_mse 0.00310 best 0.00310@22 (19.8s)
+epoch 023 loss 0.00400 val_mse 0.00337 best 0.00310@22 (19.7s)
+epoch 024 loss 0.00400 val_mse 0.00289 best 0.00289@24 (19.6s)
+epoch 025 loss 0.00395 val_mse 0.00295 best 0.00289@24 (19.7s)
+epoch 026 loss 0.00388 val_mse 0.00309 best 0.00289@24 (19.7s)
+epoch 027 loss 0.00376 val_mse 0.00300 best 0.00289@24 (19.4s)
+epoch 028 loss 0.00379 val_mse 0.00293 best 0.00289@24 (19.7s)
+epoch 029 loss 0.00381 val_mse 0.00311 best 0.00289@24 (19.7s)
+epoch 030 loss 0.00379 val_mse 0.00296 best 0.00289@24 (19.2s)
+epoch 031 loss 0.00387 val_mse 0.00292 best 0.00289@24 (19.8s)
+epoch 032 loss 0.00381 val_mse 0.00295 best 0.00289@24 (19.9s)
+epoch 033 loss 0.00378 val_mse 0.00291 best 0.00289@24 (20.4s)
+epoch 034 loss 0.00362 val_mse 0.00286 best 0.00286@34 (19.0s)
+epoch 035 loss 0.00371 val_mse 0.00293 best 0.00286@34 (19.8s)
+epoch 036 loss 0.00370 val_mse 0.00291 best 0.00286@34 (19.5s)
+epoch 037 loss 0.00364 val_mse 0.00305 best 0.00286@34 (20.0s)
+epoch 038 loss 0.00365 val_mse 0.00285 best 0.00285@38 (19.0s)
+epoch 039 loss 0.00363 val_mse 0.00287 best 0.00285@38 (20.4s)
+  [identity                                  ] MSE 0.00286  MAE 0.03341
+  [random_dropout:0.3                        ] MSE 0.00295  MAE 0.03390
+  [random_dropout:0.5                        ] MSE 0.00315  MAE 0.03535
+  [random_dropout:0.7                        ] MSE 0.00415  MAE 0.04103
+  [variable_dropout:0.3                      ] MSE 0.00361  MAE 0.03863
+  [variable_dropout:0.5                      ] MSE 0.00494  MAE 0.04642
+  [temporal_stride:2                         ] MSE 0.00293  MAE 0.03361
+  [temporal_stride:3                         ] MSE 0.00308  MAE 0.03455
+  [temporal_stride:4                         ] MSE 0.00345  MAE 0.03715
+  [burst:0.3                                 ] MSE 0.00290  MAE 0.03343
+  [burst:0.5                                 ] MSE 0.00311  MAE 0.03443
+  [long_gap:0.4                              ] MSE 0.00314  MAE 0.03451
+  [variable_group_dropout:0.3                ] MSE 0.00372  MAE 0.03867
+  [density:0.5                               ] MSE 0.00301  MAE 0.03415
+  [random_dropout:0.5+variable_dropout:0.3   ] MSE 0.00406  MAE 0.04113
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00549  MAE 0.04460
+best {'val_mse': 0.0028512554708868265, 'epoch': 38} -> results/raw\activity_opera_s0\results.json
+summary {
+  "clean_mse": 0.0028583917301148176,
+  "mean_shift_mse": 0.003579395931834976,
+  "mean_degradation": 0.2522412145697037,
+  "worst_mse": 0.005491958931088448,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.0039055225594590106,
+  "mean_unseen_degradation": 0.36633566292263636,
+  "matched_density_0.5_spread": 0.002013345481827855,
+  "matched_density_0.5_values": {
+    "density:0.5": 0.0030096385162323713,
+    "temporal_stride:2": 0.0029271759558469057,
+    "burst:0.5": 0.003114228369668126,
+    "variable_dropout:0.5": 0.004940521437674761
+  }
+}

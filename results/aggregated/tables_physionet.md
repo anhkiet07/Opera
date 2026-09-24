@@ -11,6 +11,8 @@ Conditions marked * never occur in the training observation-process pool.
 | E2 + distillation | 1 | 0.0057 | 0.0064 | 0.0073 | 0.0070 | 0.0078 | 0.0059 | 0.0061 | 0.0060 | 0.0064 |
 | E3 + hard mining | 1 | 0.0056 | 0.0065 | 0.0074 | 0.0070 | 0.0076 | 0.0059 | 0.0060 | 0.0059 | 0.0063 |
 | E4 full OPERA | 1 | 0.0056 | 0.0064 | 0.0073 | 0.0068 | 0.0074 | 0.0059 | 0.0059 | 0.0060 | 0.0062 |
+| E3b_hard_mining_strong | 1 | 0.0056 | 0.0064 | 0.0071 | 0.0067 | 0.0072 | 0.0058 | 0.0060 | 0.0059 | 0.0062 |
+| E4b_opera_strong | 1 | 0.0059 | 0.0066 | 0.0073 | 0.0070 | 0.0075 | 0.0062 | 0.0062 | 0.0062 | 0.0064 |
 
 ## Table 2 - Component contribution
 
@@ -21,6 +23,8 @@ Conditions marked * never occur in the training observation-process pool.
 | E2 + distillation | 1 | 0.0057 | 0.0064 | 12.3 % | 0.0066 | 15.5 % | variable_dropout:0.5 |
 | E3 + hard mining | 1 | 0.0056 | 0.0064 | 14.8 % | 0.0066 | 18.0 % | variable_dropout:0.5 |
 | E4 full OPERA | 1 | 0.0056 | 0.0063 | 13.1 % | 0.0065 | 16.3 % | variable_dropout:0.5 |
+| E3b_hard_mining_strong | 1 | 0.0056 | 0.0063 | 11.4 % | 0.0064 | 13.8 % | variable_dropout:0.5 |
+| E4b_opera_strong | 1 | 0.0059 | 0.0065 | 10.7 % | 0.0067 | 13.1 % | variable_dropout:0.5 |
 
 ## Table 3 - Matched density (0.5), different structure (test MSE)
 
@@ -31,6 +35,8 @@ Conditions marked * never occur in the training observation-process pool.
 | E2 + distillation | 1 | 0.0058 | 0.0058 | - | 0.0060 | 0.0078 | 0.0020 |
 | E3 + hard mining | 1 | 0.0057 | 0.0058 | - | 0.0059 | 0.0076 | 0.0019 |
 | E4 full OPERA | 1 | 0.0057 | 0.0058 | - | 0.0060 | 0.0074 | 0.0017 |
+| E3b_hard_mining_strong | 1 | 0.0057 | 0.0058 | - | 0.0059 | 0.0072 | 0.0015 |
+| E4b_opera_strong | 1 | 0.0060 | 0.0061 | - | 0.0062 | 0.0075 | 0.0014 |
 
 ## Table 4 - Compute and parameter overhead
 
@@ -41,6 +47,8 @@ Conditions marked * never occur in the training observation-process pool.
 | E2 + distillation | 1 | 129153 | 45.3 | 40 | 6282 | 0.630 |
 | E3 + hard mining | 1 | 129153 | 111.1 | 36 | 6321 | 0.699 |
 | E4 full OPERA | 1 | 129153 | 486.5 | 37 | 6282 | 0.627 |
+| E3b_hard_mining_strong | 1 | 129153 | 82.3 | 40 | 6321 | 0.634 |
+| E4b_opera_strong | 1 | 129153 | 86.3 | 33 | 6282 | 0.629 |
 
 ## All test conditions (test MSE)
 
@@ -51,3 +59,5 @@ Conditions marked * never occur in the training observation-process pool.
 | E2 + distillation | 1 | 0.0057 | 0.0060 | 0.0064 | 0.0073 | 0.0070 | 0.0078 | 0.0058 | 0.0059 | 0.0060 | 0.0059 | 0.0060 | 0.0061 | 0.0064 | 0.0058 | 0.0076 | 0.0066 |
 | E3 + hard mining | 1 | 0.0056 | 0.0061 | 0.0065 | 0.0074 | 0.0070 | 0.0076 | 0.0058 | 0.0059 | 0.0060 | 0.0058 | 0.0059 | 0.0060 | 0.0063 | 0.0057 | 0.0075 | 0.0066 |
 | E4 full OPERA | 1 | 0.0056 | 0.0059 | 0.0064 | 0.0073 | 0.0068 | 0.0074 | 0.0058 | 0.0059 | 0.0060 | 0.0058 | 0.0060 | 0.0059 | 0.0062 | 0.0057 | 0.0073 | 0.0065 |
+| E3b_hard_mining_strong | 1 | 0.0056 | 0.0060 | 0.0064 | 0.0071 | 0.0067 | 0.0072 | 0.0058 | 0.0058 | 0.0059 | 0.0058 | 0.0059 | 0.0060 | 0.0062 | 0.0057 | 0.0072 | 0.0063 |
+| E4b_opera_strong | 1 | 0.0059 | 0.0062 | 0.0066 | 0.0073 | 0.0070 | 0.0075 | 0.0061 | 0.0062 | 0.0063 | 0.0061 | 0.0062 | 0.0062 | 0.0064 | 0.0060 | 0.0074 | 0.0067 |

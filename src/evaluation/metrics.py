@@ -61,3 +61,41 @@ def aggregate(sums, counts):
 def degradation(clean, shifted):
     """Relative degradation (OPERA section 27); positive means worse than clean."""
     return (shifted - clean) / clean if clean else float("nan")
+
+
+# ------------------------------------------------------------------ classification
+def classification_loss(logits, batch):
+    """Cross-entropy on the observed labels, plus accuracy for logging."""
+    import torch.nn.functional as F
+    y = batch["labels"]
+    ce = F.cross_entropy(logits, y)
+    acc = (logits.argmax(-1) == y).float().mean()
+    return ce, {"ce": ce.item(), "acc": acc.item()}
+
+
+def classification_metrics(logits, labels, n_class):
+    """AUROC / AUPRC for binary tasks, macro F1 / precision / recall for multi-class; accuracy always.
+
+    The reported 'mse' key mirrors the forecasting interface so the shared evaluation and aggregation code can
+    treat 'lower is better': for classification it holds the cross-entropy.
+    """
+    import numpy as np
+    import torch
+    import torch.nn.functional as F
+    from sklearn.metrics import (roc_auc_score, average_precision_score, f1_score,
+                                 precision_score, recall_score)
+    y = labels.detach().cpu().numpy().ravel()
+    probs = torch.softmax(logits, dim=-1).detach().cpu().numpy()
+    pred = probs.argmax(-1)
+    ce = float(F.cross_entropy(logits, labels).item())
+    out = {"mse": ce, "ce": ce, "acc": float((y == pred).mean() * 100)}
+    if n_class == 2:
+        out["auroc"] = float(roc_auc_score(y, probs[:, 1]) * 100)
+        out["auprc"] = float(average_precision_score(y, probs[:, 1]) * 100)
+        out["mae"] = 100.0 - out["auroc"]          # keep 'lower is better' for the shared tables
+    else:
+        out["f1"] = float(f1_score(y, pred, average="macro") * 100)
+        out["precision"] = float(precision_score(y, pred, average="macro", zero_division=0) * 100)
+        out["recall"] = float(recall_score(y, pred, average="macro", zero_division=0) * 100)
+        out["mae"] = 100.0 - out["f1"]
+    return out

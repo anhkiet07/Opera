@@ -98,3 +98,46 @@ def test_mining_does_not_touch_model_mode_or_grads():
     miner.mine(model, b, n_select=1)
     assert model.training, "the miner left the model in eval mode"
     assert model.dummy.grad is None, "candidate scoring produced gradients"
+
+
+class CEDensityModel(BaseIrregularEncoder):
+    """Classification stand-in whose logits get less confident as observations are removed."""
+
+    def __init__(self, n_class=2):
+        super().__init__()
+        self.task = "classification"
+        self.n_class = n_class
+        self.dummy = torch.nn.Parameter(torch.zeros(1))
+
+    def forward(self, batch, return_repr=False, obs_descriptor=None):
+        m = batch["observed_mask"]
+        density = (m > 0).float().reshape(m.shape[0], -1).mean(dim=1)
+        y = batch["labels"]
+        logits = torch.zeros(y.shape[0], self.n_class, device=m.device)
+        logits[torch.arange(y.shape[0]), y] = 6.0 * density      # sparser -> less confident -> higher CE
+        return (logits + self.dummy, logits) if return_repr else logits + self.dummy
+
+
+def test_miner_handles_classification_batches():
+    from tests.test_no_leakage import make_cls_batch
+    b = make_cls_batch(B=8)
+    gen = ObservationProcessGenerator(
+        seed=0, candidate_processes=["random_dropout:0.1", "random_dropout:0.5", "random_dropout:0.85"],
+        constraints={"min_density": 0.0})
+    model = CEDensityModel()
+    miner = HardMiner(gen, top_k=1, alpha=1.0)
+    (_, _, spec), = miner.mine(model, b, n_select=1)
+    assert spec == "random_dropout:0.85", f"picked {spec} instead of the hardest classification candidate"
+
+
+def test_classification_candidate_losses_are_per_sample():
+    from tests.test_no_leakage import make_cls_batch
+    b = make_cls_batch(B=6)
+    gen = ObservationProcessGenerator(seed=0, candidate_processes=["random_dropout:0.2", "random_dropout:0.8"],
+                                      constraints={"min_density": 0.0})
+    model = CEDensityModel()
+    miner = HardMiner(gen, top_k=1, alpha=1.0)
+    items, _ = gen.candidates(b["observed_data"], b["observed_tp"], b["observed_mask"])
+    losses = miner._candidate_losses(model, b, items)
+    assert losses.shape == (6, 2)
+    assert (losses[:, 1] > losses[:, 0]).all(), "the sparser candidate should have the higher loss"

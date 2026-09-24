@@ -1,0 +1,23 @@
+# E3b: hard mining with a candidate pool deliberately HARSHER than the training pool.
+#
+# Diagnosis for OPERA section 39 ("is the candidate pool too weak?"). In E3 the miner scores the same eight
+# processes the model already trains on, so "hardest of 8" is close to a random draw. Here the pool contains
+# severities and compositions absent from training, while the constraints still forbid degenerate
+# observations (>= 15 % of the original density, >= 30 % of variables, no gap over 60 % of the window).
+_base_: augmentation.yaml
+experiment: E3b_hard_mining_strong
+hard_mining:
+  enabled: true
+  candidate_pool: 8
+  top_k: 2
+  alpha: 0.5
+  warmup_epochs: 5
+  pool:
+    - "random_dropout:0.6"
+    - "random_dropout:0.8"
+    - "variable_dropout:0.4"
+    - "variable_dropout:0.6"
+    - "long_gap:0.5"
+    - "burst:0.6"
+    - "random_dropout:0.5+variable_dropout:0.3"
+    - "temporal_stride:3+variable_group_dropout:0.4"

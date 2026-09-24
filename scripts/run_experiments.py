@@ -11,9 +11,12 @@ import argparse
 import os
 import subprocess
 import sys
+import time
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
+sys.path.insert(0, os.path.join(ROOT, "scripts"))
+from train import load_yaml  # noqa: E402  (config resolution incl. _base_ inheritance)
 
 STAGES = {
     "baseline": ["configs/baseline.yaml", "configs/augmentation.yaml"],
@@ -22,6 +25,28 @@ STAGES = {
             "configs/hard_mining.yaml", "configs/opera.yaml"],
 }
 NEEDS_TEACHER = ("distillation", "opera")
+
+
+def wait_for_free_gpu(threshold_mb=1500, timeout_s=180):
+    """Block until the GPU is (nearly) idle.
+
+    A finished run can still hold GPU memory for a few seconds while its process and W&B sync tear down. On a
+    small card that overlap is enough to make the next run fail with an out-of-memory error even though its own
+    footprint fits, so the launcher waits rather than racing.
+    """
+    t0 = time.time()
+    last = None
+    while time.time() - t0 < timeout_s:
+        try:
+            out = subprocess.check_output(
+                ["nvidia-smi", "--query-gpu=memory.used", "--format=csv,noheader,nounits"], text=True)
+            last = int(out.strip().splitlines()[0])
+        except Exception:
+            return
+        if last <= threshold_mb:
+            return
+        time.sleep(5)
+    print(f"[warn] GPU still holds {last} MB after {timeout_s}s; starting anyway", flush=True)
 
 
 def main():
@@ -45,15 +70,13 @@ def main():
                 print(f"[skip] {name}", flush=True)
                 continue
             overrides = list(a.set)
-            if stem.endswith(NEEDS_TEACHER):
-                # The frozen rich-view teacher is the same-seed E0 run OF THE SAME DATASET: config stems are
-                # '<dataset>_distillation' / '<dataset>_opera' (or bare, for the default dataset), so the
-                # teacher is '<dataset>_baseline_s<seed>' / 'baseline_s<seed>'.
-                for suffix in NEEDS_TEACHER:
-                    if stem.endswith(suffix):
-                        prefix = stem[: -len(suffix)]
-                        break
-                teacher = f"{prefix}baseline_s{seed}"
+            # Any config that enables distillation needs a frozen rich-view teacher: the same-seed E0 run of the
+            # SAME dataset. Resolve it from the config's contents, not its filename, so variants like
+            # 'opera_strong' or 'ushcn_opera' are handled the same way.
+            resolved = load_yaml(cfg)
+            if (resolved.get("distillation") or {}).get("enabled"):
+                dataset = (resolved.get("data") or {}).get("name", "physionet")
+                teacher = f"baseline_s{seed}" if dataset == "physionet" else f"{dataset}_baseline_s{seed}"
                 ckpt = os.path.join(a.out, teacher, "model.pt")
                 if not os.path.exists(ckpt):
                     print(f"[warn] {name}: teacher checkpoint {ckpt} is missing; run its baseline first",
@@ -71,6 +94,7 @@ def main():
             print(" ".join(cmd), flush=True)
             if a.dry:
                 continue
+            wait_for_free_gpu()
             r = subprocess.run(cmd, cwd=ROOT)
             print(f"[{'done' if r.returncode == 0 else 'FAILED'}] {name} (exit {r.returncode})", flush=True)
     print("LAUNCHER DONE", flush=True)

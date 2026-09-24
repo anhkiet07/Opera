@@ -54,14 +54,16 @@ class QuITEEncoder(BaseIrregularEncoder):
         super().__init__()
         from models.quite import Model, VARIATE_MODELS
         self.net = Model(args)
+        self.task = getattr(args, "task", "forecasting")
         self.backbone = args.model
         self.patch_input = args.model not in VARIATE_MODELS or bool(getattr(args, "irr_emb", False))
         self.accepts_descriptor = bool(getattr(args, "observation_aware", False))
 
     def forward(self, batch, return_repr=False, obs_descriptor=None):
         data, tp, mask = self.observed(batch)
-        out = self.net.forecasting(batch["tp_to_predict"], data, tp, mask, return_repr=return_repr)
-        return out
+        if self.task == "classification":
+            return self.net.classification(data, tp, mask, batch.get("static"), return_repr=return_repr)
+        return self.net.forecasting(batch["tp_to_predict"], data, tp, mask, return_repr=return_repr)
 
 
 def build_model(cfg, data_info, device):
@@ -91,7 +93,11 @@ def build_model(cfg, data_info, device):
         seed=int(cfg.get("seed", 0)),
     )
     args.npatch = int(math.ceil((args.history - args.patch_size) / args.stride)) + 1
-    args.scale_patch_size = args.patch_size / (args.history + args.pred_window)
+    args.task = data_info.get("task", "forecasting")
+    args.n_class = data_info.get("n_class", 0)
+    args.d_static = data_info.get("d_static", 0)
+    denom = args.history + args.pred_window if args.task == "forecasting" else args.history
+    args.scale_patch_size = args.patch_size / denom
 
     def layer_of_patches(n):
         if n == 1:

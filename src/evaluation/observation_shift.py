@@ -8,18 +8,24 @@ import time
 
 import torch
 
-from src.evaluation.metrics import compute_error, aggregate, degradation
+from src.evaluation.metrics import compute_error, aggregate, degradation, classification_metrics
 from src.observation import ObservationProcessGenerator, TEST_CONDITIONS, UNSEEN_CONDITIONS, MATCHED_DENSITY
 
 
 @torch.no_grad()
-def evaluate(model, loader, n_batches, next_batch, condition="identity", gen=None, obs_gen=None, seed=12345):
-    """Mean masked MSE/MAE/MAPE over a split, optionally re-observing the inputs through `condition`."""
+def evaluate(model, loader, n_batches, next_batch, condition="identity", gen=None, obs_gen=None, seed=12345,
+             task="forecasting", n_class=0):
+    """Metrics over a split, optionally re-observing the *history* of the inputs through `condition`.
+
+    Forecasting: masked MSE / MAE / MAPE. Classification: cross-entropy, accuracy and AUROC/AUPRC (binary) or
+    macro F1 (multi-class); the 'mse' key carries the cross-entropy so the shared tables stay lower-is-better.
+    """
     model.eval()
     obs_gen = obs_gen or ObservationProcessGenerator(device="cpu")
     sums = {k: 0 for k in ("mse", "mae", "mape")}
     counts = {k: 0 for k in ("mse", "mae", "mape")}
     n_series, infer_s = 0, 0.0
+    logits_all, labels_all = [], []
 
     for _ in range(n_batches):
         batch = next_batch(loader)
@@ -39,13 +45,21 @@ def evaluate(model, loader, n_batches, next_batch, condition="identity", gen=Non
         infer_s += time.time() - t0
         n_series += pred.shape[0]
 
+        if task == "classification":
+            logits_all.append(pred.detach())
+            labels_all.append(batch["labels"].detach())
+            continue
+
         target, mask = batch["data_to_predict"], batch["mask_predicted_data"]
         for key, func in (("mse", "MSE"), ("mae", "MAE"), ("mape", "MAPE")):
             s, c = compute_error(target, pred, mask, func, "sum")
             sums[key] = sums[key] + s
             counts[key] = counts[key] + c
 
-    out = aggregate(sums, counts)
+    if task == "classification":
+        out = classification_metrics(torch.cat(logits_all), torch.cat(labels_all), n_class)
+    else:
+        out = aggregate(sums, counts)
     out["condition"] = condition
     out["n_series"] = n_series
     out["infer_ms_per_series"] = 1000.0 * infer_s / max(n_series, 1)
@@ -54,7 +68,7 @@ def evaluate(model, loader, n_batches, next_batch, condition="identity", gen=Non
 
 @torch.no_grad()
 def evaluate_conditions(model, loader, n_batches, next_batch, conditions=None, obs_gen=None, seed=12345,
-                        log=print):
+                        log=print, task="forecasting", n_class=0):
     """Evaluate every condition and summarise robustness.
 
     Returns {'per_condition': {spec: metrics}, 'summary': {...}} where the summary reports mean degradation over
@@ -65,9 +79,15 @@ def evaluate_conditions(model, loader, n_batches, next_batch, conditions=None, o
         conditions = ["identity"] + conditions
     per = {}
     for c in conditions:
-        per[c] = evaluate(model, loader, n_batches, next_batch, condition=c, obs_gen=obs_gen, seed=seed)
+        per[c] = evaluate(model, loader, n_batches, next_batch, condition=c, obs_gen=obs_gen, seed=seed,
+                          task=task, n_class=n_class)
         if log:
-            log(f"  [{c:42s}] MSE {per[c]['mse']:.5f}  MAE {per[c]['mae']:.5f}")
+            if task == "classification":
+                extra = (f"AUROC {per[c]['auroc']:.2f} AUPRC {per[c]['auprc']:.2f}" if n_class == 2
+                         else f"F1 {per[c]['f1']:.2f}")
+                log(f"  [{c:42s}] CE {per[c]['ce']:.4f}  acc {per[c]['acc']:.2f}  {extra}")
+            else:
+                log(f"  [{c:42s}] MSE {per[c]['mse']:.5f}  MAE {per[c]['mae']:.5f}")
 
     clean = per["identity"]["mse"]
     shifted = [c for c in conditions if c != "identity"]

@@ -1,0 +1,13 @@
+# P12 in-hospital mortality. Backbone follows the published classification protocol (PatchTST).
+# batch_size 16 (not 32): P12's attention already peaks at 4.7 GB with one view, so the two retained view
+# graphs of full OPERA do not fit in 8 GB. Both E0 and E4 use 16 so the comparison stays like-for-like.
+_base_: baseline.yaml
+data:
+  name: P12
+  history: 48
+  patch_size: 6
+  stride: 6
+  batch_size: 16
+  split_idx: 1
+model:
+  backbone: patchtst

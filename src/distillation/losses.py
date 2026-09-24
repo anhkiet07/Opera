@@ -47,7 +47,17 @@ def representation_distillation(z_student, z_teacher, kind="mse"):
 
 @torch.no_grad()
 def teacher_gap(pred_teacher, pred_student, batch):
-    """Diagnostic for OPERA section 39: is the teacher actually better than the student on this batch?"""
+    """Diagnostic for OPERA section 39: is the teacher actually better than the student on this batch?
+
+    Forecasting: masked MSE of each. Classification: cross-entropy of each. A positive `teacher_advantage`
+    means the teacher is better, i.e. there is something for distillation to transfer.
+    """
+    import torch.nn.functional as F
+    if "labels" in batch and batch.get("data_to_predict") is None:
+        ce_t = F.cross_entropy(pred_teacher, batch["labels"])
+        ce_s = F.cross_entropy(pred_student, batch["labels"])
+        return {"teacher_ce": ce_t.item(), "student_ce": ce_s.item(),
+                "teacher_advantage": (ce_s - ce_t).item()}
     from src.evaluation.metrics import compute_error
     target, mask = batch["data_to_predict"], batch["mask_predicted_data"]
     mse_t, _ = compute_error(target, pred_teacher, mask, "MSE", "mean")

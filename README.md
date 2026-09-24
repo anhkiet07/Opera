@@ -66,14 +66,26 @@ Each run saves its config, git commit, seed, checkpoint, log and metrics under `
 Prefix a config with a dataset (`ushcn_opera.yaml`) to run it elsewhere. E2/E4 use the same-seed E0 checkpoint
 of the same dataset as their frozen rich-view teacher.
 
-## Findings so far (seed 0 — see `results/EXPERIMENT_SUMMARY.md`)
+## Findings so far (seed 0, 22 runs, 5 datasets, 2 tasks, 2 backbones)
 
-- Observation-process shift is large on PhysioNet (**+107 %** mean degradation) and absent on USHCN (+1.9 %).
-- It is not explained by density: at equal 50 % density, degradation ranges from +34 % to +288 % depending on
-  *which* observations are removed.
-- Augmentation removes most of the degradation on PhysioNet (**+107 % -> +14 %**) at no in-distribution cost,
-  and transfers to observation processes never seen in training.
-- Distillation helps accuracy where the task is noisy (USHCN clean **-4.5 %**), not robustness.
-- Hard mining has not justified its cost on either dataset.
+See `results/EXPERIMENT_SUMMARY.md` for the full tables.
 
-All numbers are single-seed and provisional; the plan's protocol requires 5 seeds before any claim is final.
+- **Observation-process shift spans three orders of magnitude** across settings: Activity +1793 %, PhysioNet
+  +107 %, PAM +64 %, P12 +4.4 %, USHCN-12mo +3.7 %, P19 +2.9 %, USHCN-1mo +1.9 % mean degradation. The size
+  tracks how much predictive information lives in the irregular history.
+- **It is not explained by observation count**: processes removing ~50 % of observations differ by up to 2.9x
+  on PhysioNet and 3.5x on PAM depending on *what* is removed.
+- **Which shift hurts depends on the modality**: losing whole variables dominates on clinical data, while
+  temporal subsampling dominates on body-sensor data (Activity stride 4 = 32x clean error).
+- **Augmentation is the robustness mechanism**: PhysioNet +107 % -> +14 % and Activity +1793 % -> +25 % at no
+  in-distribution cost, transferring to observation-process types never trained on.
+- **Hard mining works only with a candidate pool harsher than the training pool**; with the default pool it is
+  indistinguishable from augmentation at 2.7x the cost.
+- **Distillation is an accuracy mechanism, not a robustness one**: -4.5 % clean MSE on noisy USHCN, and on P19
+  it lifts clean AUROC 82.1 -> 85.6 and AUPRC 16.9 -> 24.5.
+- **Benefit scales with baseline damage**: PAM recovers 11.1 accuracy points at 50 % variable loss; P12, which
+  barely degrades, gains 2.6 AUROC.
+- **Deployment cost is unchanged**: same parameter count, same inference latency; teacher and candidate pool
+  are training-time only.
+
+All numbers are single-seed and provisional; the protocol requires 5 seeds before any claim is final.

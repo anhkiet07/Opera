@@ -80,11 +80,20 @@ def build_teacher(cfg, student, device, build_fn=None, data_info=None):
 
 
 def assert_no_future_leakage(student_batch, teacher_batch):
-    """The teacher may differ from the student only in the observed history."""
-    for k in ("tp_to_predict", "data_to_predict", "mask_predicted_data"):
-        a, b = student_batch[k], teacher_batch[k]
-        if not torch.equal(a, b):
-            raise AssertionError(f"teacher/student disagree on '{k}': future information would leak")
+    """The teacher may differ from the student only in the observed history.
+
+    Forecasting: the prediction times, targets and target mask must be identical.
+    Classification: the labels must be identical (there is no future window; the "privileged" part must be the
+    observation, never the supervision).
+    """
+    keys = [k for k in ("tp_to_predict", "data_to_predict", "mask_predicted_data", "labels")
+            if k in student_batch and student_batch[k] is not None]
+    if not keys:
+        raise AssertionError("batch carries no supervision to compare; cannot verify leakage")
+    for k in keys:
+        a, b = student_batch[k], teacher_batch.get(k)
+        if b is None or not torch.equal(a, b):
+            raise AssertionError(f"teacher/student disagree on '{k}': supervision would leak")
     # The teacher's history must not extend beyond the student's history window.
     st, tt = student_batch["observed_tp"], teacher_batch["observed_tp"]
     if st.shape == tt.shape and not torch.equal(st, tt):
