@@ -141,6 +141,10 @@ def main():
     ap.add_argument("--dry_run", action="store_true")
     ap.add_argument("--quick", action="store_true", help="smoke only: cap records, hides OOM")
     ap.add_argument("--no_wandb", action="store_true")
+    ap.add_argument("--no_csv", action="store_true",
+                    help="skip the end-of-stage CSV rebuild. Required when one array task runs one cell: the "
+                         "rebuild ignores --out, writes into the repo, and 84 tasks would race on it. "
+                         "Aggregate once at the end with scripts/benchmark_csv.py --raw <out>.")
     a = ap.parse_args()
 
     settings = a.settings.split(",") if a.settings else list(SETTINGS)
@@ -226,7 +230,7 @@ def main():
     print(f"\nstage {a.stage}: {len(done)} ok, {len(failed)} failed")
     for n, why in failed:
         print(f"  FAILED {n}: {why}")
-    if not a.dry_run and a.stage != "smoke":
+    if not a.dry_run and a.stage != "smoke" and not a.no_csv:
         subprocess.call([PYTHON, "scripts/benchmark_csv.py"])
     return 1 if failed else 0
 
