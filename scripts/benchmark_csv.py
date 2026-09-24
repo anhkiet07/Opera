@@ -49,7 +49,7 @@ TASK = {"physionet": "forecast", "activity": "forecast", "ushcn": "forecast",
         "P12": "classify", "P19": "classify", "PAM": "classify"}
 
 FIELDS = [
-    "setting", "task", "n_vars", "history", "horizon", "time_unit",
+    "setting", "task", "n_vars", "history", "horizon", "time_unit", "run_group",
     "backbone", "method", "variant", "experiment", "seed", "batch_size",
     "condition", "condition_spec", "dimension", "seen_in_training",
     "primary_metric", "primary_value", "primary_error",
@@ -167,6 +167,7 @@ def rows_for_run(run_dir, main_only):
         "seed": cfg.get("seed", run.get("seed")), "batch_size": info.get("batch_size"),
         "params": cost.get("n_params"), "train_time_per_epoch_s": cost.get("train_time_per_epoch_s"),
         "epochs_run": cost.get("epochs_run"), "peak_gpu_mem_mb": cost.get("peak_gpu_mem_mb"),
+        "run_group": ("bench" if os.path.basename(run_dir).startswith("bench_") else "explore"),
         "run_dir": os.path.basename(run_dir), "git_commit": run.get("git_commit"),
     }
     out = []
@@ -263,26 +264,31 @@ def write_curated(rows, path, all_methods=False):
         method = r["method"]
         if not all_methods and method not in CURATED_METHODS:
             continue
-        keyed.setdefault((r["setting"], r["task"], r["backbone"], method, r["seed"]), {})[r["condition"]] = r
+        # run_group is part of the key: an exploratory run and a benchmark run can share
+        # (setting, backbone, method, seed) yet differ in batch size or condition set, and without this the
+        # later one silently overwrites the earlier one.
+        key = (r["run_group"], r["setting"], r["task"], r["backbone"], method, r["seed"])
+        keyed.setdefault(key, {})[r["condition"]] = r
 
-    fields = (["setting", "task", "history", "horizon", "time_unit", "backbone", "method", "seed", "metric"]
+    fields = (["run_group", "setting", "task", "history", "horizon", "time_unit", "backbone", "method",
+               "seed", "batch_size", "metric"]
               + [CURATED_COL[c] for c in ["clean"] + SHIFTS]
               + ["mean_4shifts", "delta_4shifts_pct"])
     order = {"vanilla": 0, "opera": 1, "opera++": 2}
     with open(path, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fields)
         w.writeheader()
-        for key in sorted(keyed, key=lambda k: (k[0], k[2], order.get(k[3], 99), k[4])):
-            setting, task, backbone, method, seed = key
+        for key in sorted(keyed, key=lambda k: (k[0], k[1], k[3], order.get(k[4], 99), k[5])):
+            group, setting, task, backbone, method, seed = key
             per = keyed[key]
             if "clean" not in per:
                 continue
             dec = 5 if task == "forecast" else 2
             ref = per["clean"]
-            row = {"setting": setting, "task": task, "history": ref["history"],
+            row = {"run_group": group, "setting": setting, "task": task, "history": ref["history"],
                    "horizon": ref["horizon"], "time_unit": ref["time_unit"],
-                   "backbone": backbone, "method": method,
-                   "seed": seed, "metric": ref["primary_metric"]}
+                   "backbone": backbone, "method": method, "seed": seed,
+                   "batch_size": ref["batch_size"], "metric": ref["primary_metric"]}
             errs = {}
             for cond in ["clean"] + SHIFTS:
                 col = CURATED_COL[cond]
