@@ -99,7 +99,31 @@ def fig1(out):
 
 
 # ------------------------------------------------------------------ Figure 2
+def _panel_mse(conditions):
+    """Real test MSE per condition, from the PhysioNet vanilla benchmark run.
+
+    Never fabricated: if the run is absent the figure is drawn without annotations rather than with made-up
+    numbers. The 5-condition benchmark run is preferred; the 15-condition exploratory run of the same config and
+    seed is the fallback (their shared conditions agree to 5 decimals).
+    """
+    import json
+    for run in ("results/raw/bench_physionet_itransformer_vanilla_s0/results.json",
+                "results/raw/baseline_s0/results.json"):
+        if not os.path.exists(run):
+            continue
+        per = json.load(open(run, encoding="utf-8")).get("per_condition") or {}
+        if all(c in per for c in conditions):
+            return {c: per[c]["mse"] for c in conditions}, os.path.basename(os.path.dirname(run))
+    return None, None
+
+
 def fig2(out, dataset="physionet"):
+    """One ICU history seen through the three dimensions of the observation process, with the downstream MSE.
+
+    Message: same underlying history and same target, different observations, different prediction error. The
+    trajectory drawn faintly is identical in all four panels by construction; only the markers -- what the model
+    actually receives -- change.
+    """
     import torch
     from src.observation import ObservationProcessGenerator
     path = {"physionet": "data/physionet/processed/set-a_0.0.pt"}.get(dataset)
@@ -113,22 +137,51 @@ def fig2(out, dataset="physionet"):
     keep = tt < 24
     tt, vals, mask = tt[keep], vals[keep], mask[keep]
     T = tt.view(1, -1, 1).expand(1, -1, vals.shape[1])
+
+    # Four panels: the reference process, then one per dimension of the observation process. These are exactly
+    # the conditions the main table reports, so figure and table tell one story.
+    views = [("(a) reference", "identity"),
+             ("(b) temporal subsampling", "temporal_stride:3"),
+             ("(c) variable removal", "variable_dropout:0.5"),
+             ("(d) density reduction", "random_dropout:0.7")]
+    mses, src = _panel_mse([spec for _, spec in views])
+    print(f"fig2 MSE annotations from {src}" if mses else "fig2: no run found, drawing without MSE")
+
     gen = ObservationProcessGenerator(device="cpu")
-    views = [("(a) original", "identity"), ("(b) random 50%", "random_dropout:0.5"),
-             ("(c) stride 3", "temporal_stride:3"), ("(d) long gap", "long_gap:0.4"),
-             ("(e) variable-specific", "variable_dropout:0.5")]
-    fig, axes = plt.subplots(1, len(views), figsize=(7.2, 1.7), sharey=True)
+
+    def draw(spec, seed):
+        _, m = gen.condition(vals.unsqueeze(0), T, mask.unsqueeze(0), spec, seed=seed)
+        return m[0]
+
+    # Variable removal is only legible if it removes one of the two plotted channels and keeps the other. The
+    # draw is random over 41 variables, so pick the first seed that does; documented rather than silently tuned.
+    var_seed = 12345
+    for cand in range(12345, 12445):
+        m = draw("variable_dropout:0.5", cand)
+        gone = [int((m[:, v] > 0).sum()) == 0 for v in (HR, MAP)]
+        if sum(gone) == 1:
+            var_seed = cand
+            break
+
+    fig, axes = plt.subplots(1, 4, figsize=(7.2, 1.9), sharey=True)
     for ax, (title, spec) in zip(axes, views):
-        _, m = gen.condition(vals.unsqueeze(0), T, mask.unsqueeze(0), spec)
-        m = m[0]
+        m = draw(spec, var_seed if spec.startswith("variable_dropout") else 12345)
         for var, col, lab in [(HR, C["E0_baseline"], "HR"), (MAP, C["E1_augmentation"], "MAP")]:
             idx = mask[:, var] > 0
-            ax.plot(tt[idx], vals[idx, var], color=col, lw=0.6, alpha=0.25)
+            ax.plot(tt[idx], vals[idx, var], color=col, lw=0.7, alpha=0.28)   # identical in every panel
             idx2 = m[:, var] > 0
-            ax.scatter(tt[idx2], vals[idx2, var], s=5, color=col, label=lab, zorder=3)
-        ax.set_title(title, fontsize=7.5); ax.set_xlabel("time (h)"); ax.set_xlim(0, 24)
-    axes[0].set_ylabel("value")
-    axes[0].legend(frameon=False, fontsize=6.5, loc="lower right")
+            ax.scatter(tt[idx2], vals[idx2, var], s=6, color=col, label=lab, zorder=3)
+        ax.set_title(title, fontsize=7.5)
+        ax.set_xlabel("time (h)", fontsize=7)
+        ax.set_xlim(0, 24)
+        ax.tick_params(labelsize=6)
+        if mses:
+            ax.text(0.97, 0.94, f"MSE {mses[spec]:.4f}", transform=ax.transAxes, ha="right", va="top",
+                    fontsize=6.2, color="0.35")
+    axes[0].set_ylabel("value", fontsize=7)
+    # upper-left is the only clear corner in panel (a): the MSE annotation owns upper-right and the
+    # observations fill the lower half.
+    axes[0].legend(frameon=False, fontsize=6.5, loc="upper left", handletextpad=0.3, borderpad=0.1)
     fig.savefig(os.path.join(out, "fig2_observation_shift.pdf"))
     print("fig2 done")
 
