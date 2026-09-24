@@ -41,11 +41,18 @@ PRIMARY = {  # setting -> primary metric key in the stored per-condition dict
     "physionet": "mse", "activity": "mse", "ushcn_1mo": "mse", "ushcn_12mo": "mse",
     "P12": "auroc", "P19": "auroc", "PAM": "acc",
 }
+# Time unit of the history/horizon columns. Forecast horizons follow the QuITE protocol: the clinical and
+# activity settings partition a FIXED window (48 h, 4000 ms), so a longer horizon is also a shorter history;
+# only USHCN varies the horizon at fixed history. Classification has no horizon.
+TIME_UNIT = {"physionet": "h", "activity": "ms", "ushcn_1mo": "mo", "ushcn_12mo": "mo",
+             "P12": "", "P19": "", "PAM": ""}
+
 TASK = {"physionet": "forecast", "activity": "forecast", "ushcn_1mo": "forecast", "ushcn_12mo": "forecast",
         "P12": "classify", "P19": "classify", "PAM": "classify"}
 
 FIELDS = [
-    "setting", "task", "n_vars", "backbone", "method", "variant", "experiment", "seed", "batch_size",
+    "setting", "task", "n_vars", "history", "horizon", "time_unit",
+    "backbone", "method", "variant", "experiment", "seed", "batch_size",
     "condition", "condition_spec", "dimension", "seen_in_training",
     "primary_metric", "primary_value", "primary_error",
     "mse", "mae", "ce", "acc", "auroc", "auprc", "f1",
@@ -140,6 +147,9 @@ def rows_for_run(run_dir, main_only):
     pkey = PRIMARY[sid]
     base = {
         "setting": sid, "task": TASK[sid], "n_vars": info.get("input_dim"),
+        "history": info.get("history"),
+        "horizon": (info.get("pred_window") if TASK[sid] == "forecast" else ""),
+        "time_unit": TIME_UNIT.get(sid, ""),
         "backbone": (cfg.get("model") or {}).get("backbone"),
         "method": method_id(cfg), "variant": variant_id(cfg), "experiment": cfg.get("experiment"),
         "seed": cfg.get("seed", run.get("seed")), "batch_size": info.get("batch_size"),
@@ -243,7 +253,7 @@ def write_curated(rows, path, all_methods=False):
             continue
         keyed.setdefault((r["setting"], r["task"], r["backbone"], method, r["seed"]), {})[r["condition"]] = r
 
-    fields = (["setting", "task", "backbone", "method", "seed", "metric"]
+    fields = (["setting", "task", "history", "horizon", "time_unit", "backbone", "method", "seed", "metric"]
               + [CURATED_COL[c] for c in ["clean"] + SHIFTS]
               + ["mean_4shifts", "delta_4shifts_pct"])
     order = {"vanilla": 0, "opera": 1, "opera++": 2}
@@ -256,8 +266,11 @@ def write_curated(rows, path, all_methods=False):
             if "clean" not in per:
                 continue
             dec = 5 if task == "forecast" else 2
-            row = {"setting": setting, "task": task, "backbone": backbone, "method": method,
-                   "seed": seed, "metric": per["clean"]["primary_metric"]}
+            ref = per["clean"]
+            row = {"setting": setting, "task": task, "history": ref["history"],
+                   "horizon": ref["horizon"], "time_unit": ref["time_unit"],
+                   "backbone": backbone, "method": method,
+                   "seed": seed, "metric": ref["primary_metric"]}
             errs = {}
             for cond in ["clean"] + SHIFTS:
                 col = CURATED_COL[cond]
