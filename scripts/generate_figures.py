@@ -167,8 +167,11 @@ def fig2(out, dataset="physionet"):
     print(f"fig2 MSE from {src}" if mses else "fig2: no run found, drawing without MSE")
 
     gen = ObservationProcessGenerator(device="cpu")
-    masks = {spec: gen.condition(batch["observed_data"], batch["observed_tp"], batch["observed_mask"],
-                                 spec, seed=12345)[1] for _, spec in views}
+    # BOTH the masked values and the mask must be passed: this encoder reads the values, so replacing only
+    # the mask leaves the input unchanged and every panel would show an identical forecast.
+    views_out = {spec: gen.condition(batch["observed_data"], batch["observed_tp"], batch["observed_mask"],
+                                     spec, seed=12345) for _, spec in views}
+    masks = {spec: mm for spec, (_, mm) in views_out.items()}
 
     # Pick the (sample, variable) with the most coverage such that `variables` removes the channel outright
     # while `composed` keeps some of it. Without that condition the two panels look the same, which misleads:
@@ -201,9 +204,9 @@ def fig2(out, dataset="physionet"):
 
     fig, axes = plt.subplots(1, len(views), figsize=(7.2, 2.05), sharey=True)
     for k, (ax, (title, spec)) in enumerate(zip(axes, views)):
-        m = masks[spec]
+        dd, m = views_out[spec]
         with torch.no_grad():
-            pred = model(model.with_observation(batch, batch["observed_data"], m))
+            pred = model(model.with_observation(batch, dd, m))
         keep = m[i, ..., VAR].reshape(-1) > 0
         gone = m_h & ~keep                 # recorded but withheld by this process
 
