@@ -193,6 +193,11 @@ SHIFTS = ["density", "timing", "variables", "composed"]
 
 # Explicit column headers for the curated table: the dimension, then the exact observation process applied.
 # Anyone reading the CSV can see what was done without consulting the protocol.
+# The curated table carries the benchmark arms only: the untreated baseline and the complete method. Ablation
+# arms (augmentation / distillation / mining alone, and the harsher mining pool) stay in benchmark.csv and come
+# back here with --all_methods once the ablation sweep is run.
+CURATED_METHODS = ["vanilla", "opera"]
+
 CURATED_COL = {
     "clean":     "clean=identity",
     "density":   "density=random_dropout:0.7",
@@ -202,7 +207,7 @@ CURATED_COL = {
 }
 
 
-def write_curated(rows, path):
+def write_curated(rows, path, all_methods=False):
     """Curated wide table: one row per (setting, backbone, method, seed), the clean reference and the four
     representative shifts. Column headers name the exact observation process applied.
 
@@ -217,6 +222,8 @@ def write_curated(rows, path):
         if r["condition"] not in ("clean",) + tuple(SHIFTS):
             continue
         method = r["method"] + ("+harsh_pool" if r["variant"] == "harsh_pool" else "")
+        if not all_methods and method not in CURATED_METHODS:
+            continue
         keyed.setdefault((r["setting"], r["task"], r["backbone"], method, r["seed"]), {})[r["condition"]] = r
 
     fields = (["setting", "task", "backbone", "method", "seed", "metric"]
@@ -259,6 +266,8 @@ def main():
     ap.add_argument("--out", default="results/benchmark.csv")
     ap.add_argument("--summary", default="results/benchmark_summary.csv")
     ap.add_argument("--curated", default="results/benchmark_curated.csv")
+    ap.add_argument("--all_methods", action="store_true",
+                    help="curated file: include the ablation arms, not just vanilla and full opera")
     ap.add_argument("--main-only", action="store_true", help="keep only the 5 protocol conditions")
     a = ap.parse_args()
 
@@ -278,11 +287,12 @@ def main():
             w.writerow({k: r.get(k, "") for k in FIELDS})
 
     n_groups = write_summary(rows, a.summary)
-    n_cur = write_curated(rows, a.curated)
+    n_cur = write_curated(rows, a.curated, all_methods=a.all_methods)
     cells = {(r["setting"], r["backbone"], r["method"], r["variant"], r["seed"]) for r in rows}
     print(f"{a.out}: {len(rows)} rows from {len(cells)} run cells")
     print(f"{a.summary}: {n_groups} groups")
-    print(f"{a.curated}: {n_cur} rows (curated: 4 shifts + clean, one row per seed)")
+    print(f"{a.curated}: {n_cur} rows (curated: 4 shifts + clean, one row per seed, "
+          f"{'all methods' if a.all_methods else 'vanilla + full opera'})")
     if skipped:
         print(f"skipped (no usable per-condition metrics): {', '.join(skipped)}")
     print("\ncoverage by setting x backbone x method:")
