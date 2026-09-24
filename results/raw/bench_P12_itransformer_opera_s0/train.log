@@ -1,0 +1,12 @@
+run bench_P12_itransformer_opera_s0 | device cuda:0 | params 110594 | commit b1b2ae2792a5371f98d6bcfe8b6147e7b1e9ffbf
+config: {"data": {"batch_size": 8, "history": 48, "n_records": 100000000, "name": "P12", "patch_size": 6, "split_idx": 1, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw\\bench_P12_itransformer_vanilla_s0\\model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "itransformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.68470 val_mse 0.60845 best 0.60845@0 (699.7s)
+epoch 001 loss 0.58345 val_mse 0.52794 best 0.52794@1 (697.7s)
+epoch 002 loss 0.57127 val_mse 0.54385 best 0.52794@1 (798.6s)
+epoch 003 loss 0.56568 val_mse 0.52192 best 0.52192@3 (682.9s)
+epoch 004 loss 0.56625 val_mse 0.54084 best 0.52192@3 (716.2s)
+epoch 005 loss 0.56165 val_mse 0.51863 best 0.51863@5 (734.5s)
+epoch 006 loss 0.55285 val_mse 0.49582 best 0.49582@6 (714.5s)
+epoch 007 loss 0.55090 val_mse 0.51673 best 0.49582@6 (728.2s)
+epoch 008 loss 0.54646 val_mse 0.49525 best 0.49525@8 (707.7s)
+epoch 009 loss 0.54980 val_mse 0.48228 best 0.48228@9 (614.5s)

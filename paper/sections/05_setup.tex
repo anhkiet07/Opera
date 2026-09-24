@@ -1,83 +1,102 @@
-%% Experimental setup: datasets, the disjoint observation-process splits, metrics, protocol.
+%% Experimental setup: datasets, backbones, the five evaluation conditions, metrics, protocol.
 %% Included by sigconf.tex. Do not add a preamble here.
 
 \section{Experimental Setup}
 \label{sec:setup}
 
-\subsection{Datasets and tasks}
-We use five datasets spanning three sensing modalities, two tasks and two backbones
+\subsection{Datasets, tasks and backbones}
+We use five datasets spanning three sensing modalities and two tasks, giving seven task settings
 (Table~\ref{tab:datasets}). Preprocessing, splits and normalisation are the unmodified published pipelines:
 t-PatchGNN \cite{zhang2024tpatchgnn} for the forecasting benchmarks (PhysioNet from the 2012 challenge
 \cite{silva2012physionet}) and Raindrop \cite{zhang2022raindrop} for classification, including the
 minority-class upsampling of the binary tasks. USHCN appears at two horizons because horizon length changes how
-much a model must rely on its history, which turns out to change its sensitivity to the shift.
+much a model must rely on its history.
+
+Every setting is run with \emph{all three} backbones: iTransformer \cite{liu2024itransformer}, which mixes across
+variables; PatchTST \cite{nie2023patchtst}, which attends across time patches; and a temporal MLP mixer over
+patches. All three consume irregular observations through the same query-based embedding \cite{lim2026quite}, so
+the comparison isolates how the encoder mixes information rather than how it ingests irregularity. Crossing
+backbone with task matters here: a setup that used one architecture for forecasting and another for
+classification could not tell an architecture effect from a task effect.
 
 \begin{table}[t]
-\caption{Datasets and task settings. Backbone follows the published protocol per task.}
+\caption{The seven task settings. Each is run with all three backbones, so the grid is 21 cells per arm.}
 \label{tab:datasets}
 \small
-\begin{tabular}{llrrll}
+\begin{tabular}{llrrrl}
 \toprule
-setting & task & vars & samples & backbone & metric \\
+setting & task & vars & samples & batch & metric \\
 \midrule
-PhysioNet 24h$\to$24h & forecast & 41 & 12{,}000 & iTransformer & MSE \\
-Activity 3000$\to$1000\,ms & forecast & 12 & 5{,}400 & iTransformer & MSE \\
-USHCN 24$\to$1 mo & forecast & 5 & 26{,}736 & iTransformer & MSE \\
-USHCN 24$\to$12 mo & forecast & 5 & 26{,}736 & iTransformer & MSE \\
-P12 mortality & classify (2) & 36 & 11{,}988 & PatchTST & AUROC \\
-P19 sepsis & classify (2) & 34 & 38{,}803 & PatchTST & AUROC \\
-PAM activity & classify (8) & 17 & 5{,}333 & PatchTST & accuracy \\
+PhysioNet 24h$\to$24h & forecast & 41 & 12{,}000 & 32 & MSE \\
+Activity 3000$\to$1000\,ms & forecast & 12 & 5{,}400 & 32 & MSE \\
+USHCN 24$\to$1 mo & forecast & 5 & 26{,}736 & 128 & MSE \\
+USHCN 24$\to$12 mo & forecast & 5 & 26{,}736 & 128 & MSE \\
+P12 mortality & classify (2) & 36 & 11{,}988 & 8 & AUROC \\
+P19 sepsis & classify (2) & 34 & 38{,}803 & 32 & AUROC \\
+PAM activity & classify (8) & 17 & 5{,}333 & 32 & accuracy \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Observation-process splits}
+Batch size is a property of the setting, not of the arm or the backbone, so every configuration compared within a
+setting is trained at the same size. P12 uses $8$ because iTransformer's variate attention flattens all patches
+into one sequence there and exhausts an 8\,GB card at $16$; holding it at $8$ for every backbone keeps the
+comparison about architecture rather than memory.
+
+\subsection{Five evaluation conditions}
 \label{sec:splits}
-Training and evaluation draw from \emph{disjoint} observation-process distributions, so that generalisation across
-observation processes is measured rather than assumed.
+Training and evaluation draw from \emph{disjoint} observation-process distributions. Each primary condition moves
+one dimension of Section~\ref{sec:family} well past what training covers, leaving the other two at the dataset's
+own setting, so an increase in error is attributable to that dimension.
 
-\textbf{Training pool} $P_{\mathrm{mix}}$ is deliberately mild: random dropout at $p\in\{0.1,0.25,0.4\}$, stride
-$2$, burst at $p\in\{0.2,0.3\}$, variable dropout at $p=0.2$ and local masking at $p=0.3$.
+\textbf{Training pool} $P_{\mathrm{mix}}$ is deliberately mild and spans all three dimensions: random dropout at
+$p\in\{0.1,0.25,0.4\}$, stride $2$, burst at $p\in\{0.2,0.3\}$, variable dropout at $p=0.2$ and local masking at
+$p=0.3$.
 
-\textbf{Evaluation conditions} are the clean condition plus 15 shifted processes, each applied by the
-re-observation protocol of Section~\ref{sec:reobs}. Nine are designated \emph{unseen} because their family never
-appears in the training pool: random dropout $0.7$, variable dropout $0.5$, stride $3$ and $4$, long gap $0.4$,
-burst $0.5$, variable-group dropout $0.3$, and two compositions (random $0.5$ $+$ variable $0.3$; stride $3$ $+$
-variable-group $0.3$). The remaining six re-use training families at severities outside the pool, together with
-density-controlled sampling at $\rho=0.5$. We report degradation over all fifteen shifted conditions and,
-separately, over the nine unseen ones.
+\textbf{Evaluation} is the clean condition plus four shifts, applied by the protocol of Section~\ref{sec:reobs}:
+\emph{density}, random dropout at $0.7$; \emph{timing}, stride $3$; \emph{variables}, variable dropout at $0.5$;
+and \emph{composed}, stride $3$ together with variable-group dropout at $0.3$. Each severity lies outside the
+training pool, and variable-group removal belongs to a family the pool never contains at all, so the composed
+condition is unseen in family rather than only in severity. It is our generalisation test.
+
+\textbf{Complete sweep.} The same protocol supports eleven further conditions, fifteen shifted processes in all:
+the remaining severities of each dimension, burst and long-gap timing, density-controlled sampling, and a second
+composition. We use the complete sweep only where a claim needs family-level resolution, namely the
+density-matched comparison and the seen-versus-unseen split.
 
 \textbf{Mining candidate pool.} OPERA++ mines from a pool strictly harsher than the training mixture: it adds
 severities and pairwise compositions beyond $P_{\mathrm{mix}}$ while remaining disjoint from the evaluation
-conditions, so no evaluation process is ever mined. The matched pool $\mathcal{P}=P_{\mathrm{mix}}$, which is the
-setting a reader would reach for first, is reported only as a control, because mining over the processes a model
-already trains on turns out to be close to inert (Section~\ref{sec:mining-results}).
+conditions, so no evaluation process is ever mined. The matched pool $\mathcal{P}=P_{\mathrm{mix}}$ is reported
+only as a control (Section~\ref{sec:mining-results}).
 
 \subsection{Metrics}
 Forecasting uses masked MSE and MAE over observed target entries, averaged per variable and then over variables
-with supervision. Binary classification uses AUROC and AUPRC; the eight-class task uses accuracy and macro F1. We
-summarise sensitivity by the relative degradation of a model with respect to its \emph{own} clean score,
+with supervision. Binary classification uses AUROC and AUPRC; the eight-class task uses accuracy and macro F1.
+We summarise sensitivity by the relative degradation of a model with respect to its \emph{own} clean score,
 \begin{equation}
-\Delta_{\mathrm{shift}}=\frac{1}{|\mathcal{E}|}\sum_{\Sobs\in\mathcal{E}}
+\Delta_{4}=\frac{1}{4}\sum_{\Sobs\in\mathcal{E}}
 \frac{\mathrm{err}_{\Sobs}-\mathrm{err}_{\mathrm{clean}}}{\mathrm{err}_{\mathrm{clean}}},
 \label{eq:degradation}
 \end{equation}
-over the shifted conditions $\mathcal{E}$, and report the same quantity restricted to the unseen subset. For
-classification we take $\mathrm{err}=1-\mathrm{AUROC}$ (or $1-\mathrm{accuracy}$) so that $\Delta$ is computed on
-the same metric used to judge the task; cross-entropy degradation can move in the opposite direction to AUROC and
-we do not use it as a headline number.
+averaged over the four shifted conditions $\mathcal{E}$. For classification we take
+$\mathrm{err}=1-\mathrm{AUROC}$ (or $1-\mathrm{accuracy}$), so that $\Delta_4$ is computed on the metric used to
+judge the task and is lower-is-better for both tasks. Cross-entropy degradation can move in the opposite
+direction to AUROC and we do not use it.
 
-Two cautions govern how we read Eq.~\ref{eq:degradation}. It is normalised by a model's own clean score, so a
-uniformly weaker model can post a flattering ratio, and it says nothing about attainable error. We therefore report
-clean, mean shifted and worst-case absolute performance in every table and treat $\Delta_{\mathrm{shift}}$ as a
-secondary summary that must be read beside them. We also report parameter count, training time per epoch, peak
-training memory and inference latency.
+Three cautions govern how $\Delta_4$ is read. It is normalised by a model's own clean score, so a uniformly weaker
+model can post a flattering ratio; we therefore report clean and shifted absolute performance beside it
+throughout. Its \emph{magnitude} is not comparable across metric families, because forecasting error is unbounded
+above while a binary classifier can only degrade to chance, capping $\Delta_4$ at a value fixed by the metric; its
+\emph{sign} is comparable, since higher always means greater loss. And a model that has collapsed to chance cannot
+degrade at all, so a near-zero $\Delta_4$ must be checked against the clean column before it is read as
+robustness.
 
 \subsection{Protocol}
 All models use the query-based irregular embedding with hidden width 64, four heads and three layers, trained with
-Adam at $10^{-3}$, batch 32 (128 for USHCN; 16 for P12, where a single view's attention already occupies
-4.7\,GB), an epoch cap of 40, early-stopping patience 10 and a minimum of 15 epochs. Configurations that are
-compared are trained at identical batch size. Runs execute sequentially on one 8\,GB GPU, and every run records
-its configuration, git commit, seed, checkpoint and metrics. \textbf{All reported numbers use a single seed} and
-are marked \prelim; the protocol calls for five paired seeds, and we regard nothing reported here as a statistical
-result. \todo{five paired seeds for the primary comparisons}
+Adam at $10^{-3}$, an epoch cap of 40, early-stopping patience 10 and a minimum of 15 epochs. Model selection is
+on the clean validation condition only, so no shifted data influences which checkpoint is kept. The
+re-observation draw is seeded independently of the run seed, so every backbone, arm and seed is scored on
+byte-identical shifted inputs. Runs execute sequentially on one 8\,GB GPU, and every run records its
+configuration, git commit, seed, checkpoint and metrics; all rows are aggregated into a single table from those
+records. \textbf{All reported numbers use a single seed} and are marked \prelim; the protocol calls for five
+paired seeds, and we regard nothing reported here as a statistical result. \todo{five paired seeds}
