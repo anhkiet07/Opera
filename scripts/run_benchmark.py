@@ -2,7 +2,7 @@
 
     python scripts/run_benchmark.py --stage smoke     # 1 epoch per backbone per task, catches OOM early
     python scripts/run_benchmark.py --stage A         # vanilla, seed 0,   21 runs
-    python scripts/run_benchmark.py --stage C         # opera,   seed 0,   21 runs (needs A)
+    python scripts/run_benchmark.py --stage C         # opera = aug + distillation, seed 0, 21 runs (needs A)
     python scripts/run_benchmark.py --stage B         # vanilla, seeds 1-4, 84 runs
     python scripts/run_benchmark.py --stage D         # opera,   seeds 1-4, 84 runs (needs B)
 
@@ -37,15 +37,29 @@ PYTHON = _python()
 
 BACKBONES = ["itransformer", "patchtst", "tmix"]
 
-# setting -> (vanilla config, opera config). Each config already carries its dataset's history/patch/batch.
+# setting -> {arm: config}. Each config already carries its dataset's history/patch/batch.
+#
+#   vanilla  no mechanism
+#   opera    augmentation + privileged distillation                        <- headline arm
+#   opera++  augmentation + privileged distillation + mining, harsh pool   <- headline arm, later stage
+#
+# Mining over the training mixture is an ablation, not an arm: the hardest of K draws from the pool the model
+# already trains on is barely harder than one draw.
 SETTINGS = {
-    "physionet":  ("configs/baseline.yaml",            "configs/opera.yaml"),
-    "activity":   ("configs/activity_baseline.yaml",   "configs/activity_opera.yaml"),
-    "ushcn_1mo":  ("configs/ushcn_baseline.yaml",      "configs/ushcn_opera.yaml"),
-    "ushcn_12mo": ("configs/ushcn_long_baseline.yaml", "configs/ushcn_long_opera.yaml"),
-    "P12":        ("configs/P12_baseline.yaml",         "configs/P12_opera.yaml"),
-    "P19":        ("configs/P19_baseline.yaml",         "configs/P19_opera.yaml"),
-    "PAM":        ("configs/PAM_baseline.yaml",         "configs/PAM_opera.yaml"),
+    "physionet":  {"vanilla": "configs/baseline.yaml",
+                   "opera":   "configs/distillation.yaml"},
+    "activity":   {"vanilla": "configs/activity_baseline.yaml",
+                   "opera":   "configs/activity_distillation.yaml"},
+    "ushcn_1mo":  {"vanilla": "configs/ushcn_baseline.yaml",
+                   "opera":   "configs/ushcn_distillation.yaml"},
+    "ushcn_12mo": {"vanilla": "configs/ushcn_long_baseline.yaml",
+                   "opera":   "configs/ushcn_long_distillation.yaml"},
+    "P12":        {"vanilla": "configs/P12_baseline.yaml",
+                   "opera":   "configs/P12_distillation.yaml"},
+    "P19":        {"vanilla": "configs/P19_baseline.yaml",
+                   "opera":   "configs/P19_distillation.yaml"},
+    "PAM":        {"vanilla": "configs/PAM_baseline.yaml",
+                   "opera":   "configs/PAM_distillation.yaml"},
 }
 
 CONDITIONS = ",".join([
@@ -136,7 +150,7 @@ def main():
             done.append(name)
             continue
 
-        cfg = SETTINGS[setting][0 if method == "vanilla" else 1]
+        cfg = SETTINGS[setting][method]
         overrides = [f"model.backbone={backbone}"]
         if a.stage == "smoke":
             # full data by default: the point of the smoke stage is to catch out-of-memory and patch-count
@@ -145,7 +159,7 @@ def main():
             if a.quick:
                 overrides.append("data.n_records=600")
 
-        if method == "opera":
+        if method != "vanilla":
             # the teacher must share the student's architecture: same setting, same backbone, same seed
             teacher = run_name(setting, backbone, "vanilla", seed)
             ckpt = os.path.join(a.out, teacher, "model.pt")

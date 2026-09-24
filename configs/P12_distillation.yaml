@@ -1,0 +1,13 @@
+# OPERA (augmentation + privileged-observation distillation) on P12 in-hospital mortality.
+# batch_size 16 matches P12_baseline.yaml: the comparison must stay like-for-like, and two retained view
+# graphs do not fit in 8 GB at 32.
+_base_: distillation.yaml
+data:
+  name: P12
+  history: 48
+  patch_size: 6
+  stride: 6
+  batch_size: 16
+  split_idx: 1
+model:
+  backbone: patchtst

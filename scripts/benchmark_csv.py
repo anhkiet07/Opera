@@ -62,30 +62,48 @@ def setting_id(cfg, info):
     return name
 
 
-def method_id(cfg):
-    """vanilla | augmentation | distillation | hard_mining | opera, from what is switched on."""
+def mechanisms(cfg):
+    """(augmentation, distillation, mining_pool) actually switched on. mining_pool is '', 'train' or 'harsh'."""
     obs = cfg.get("observation") or {}
     aug = list(obs.get("train_processes") or ["identity"]) != ["identity"] or int(obs.get("num_views", 1)) > 1
     distill = bool((cfg.get("distillation") or {}).get("enabled"))
-    mining = bool((cfg.get("hard_mining") or {}).get("enabled"))
-    if not (aug or distill or mining):
+    hm = cfg.get("hard_mining") or {}
+    pool = ("harsh" if hm.get("pool") else "train") if hm.get("enabled") else ""
+    return aug, distill, pool
+
+
+def method_id(cfg):
+    """Method label.
+
+    Naming, fixed after the mining result came in:
+        opera    = augmentation + privileged distillation                      (headline arm)
+        opera++  = augmentation + privileged distillation + mining, HARSH pool (headline arm)
+    Mining over the training mixture ('train' pool) is close to inert, because the hardest of K draws from the
+    pool the model already trains on is barely harder than a single draw. It is therefore an ablation, not part
+    of either headline arm, and is labelled explicitly so it can never be mistaken for one.
+    """
+    aug, distill, pool = mechanisms(cfg)
+    if not (aug or distill or pool):
         return "vanilla"
-    if distill and mining:
+    if aug and distill and pool == "harsh":
+        return "opera++"
+    if aug and distill and not pool:
         return "opera"
-    if distill:
-        return "distillation"
-    if mining:
-        return "hard_mining"
-    return "augmentation"
+    if aug and distill and pool == "train":
+        return "abl_opera+mining_trainpool"
+    if aug and pool == "harsh":
+        return "abl_aug+mining_harshpool"
+    if aug and pool == "train":
+        return "abl_aug+mining_trainpool"
+    if aug and not distill:
+        return "abl_augmentation"
+    return "abl_" + "+".join(x for x in ("aug" if aug else "", "distill" if distill else "",
+                                         f"mining_{pool}" if pool else "") if x)
 
 
 def variant_id(cfg):
-    """Distinguishes the mining candidate pool. Without an explicit pool the miner scores the training
-    mixture, which is a different mechanism in practice (BENCHMARK_PROTOCOL.md section 2)."""
-    hm = cfg.get("hard_mining") or {}
-    if not hm.get("enabled"):
-        return ""
-    return "harsh_pool" if hm.get("pool") else "train_pool"
+    """Raw mining candidate pool ('', 'train', 'harsh'), kept for traceability. The method label encodes it."""
+    return mechanisms(cfg)[2]
 
 
 def classify_condition(spec):
@@ -193,10 +211,9 @@ SHIFTS = ["density", "timing", "variables", "composed"]
 
 # Explicit column headers for the curated table: the dimension, then the exact observation process applied.
 # Anyone reading the CSV can see what was done without consulting the protocol.
-# The curated table carries the benchmark arms only: the untreated baseline and the complete method. Ablation
-# arms (augmentation / distillation / mining alone, and the harsher mining pool) stay in benchmark.csv and come
-# back here with --all_methods once the ablation sweep is run.
-CURATED_METHODS = ["vanilla", "opera"]
+# The curated table carries the benchmark arms only: the untreated baseline and the two headline methods.
+# Everything prefixed `abl_` is an ablation; it stays in benchmark.csv and returns here with --all_methods.
+CURATED_METHODS = ["vanilla", "opera", "opera++"]
 
 CURATED_COL = {
     "clean":     "clean=identity",
@@ -221,7 +238,7 @@ def write_curated(rows, path, all_methods=False):
     for r in rows:
         if r["condition"] not in ("clean",) + tuple(SHIFTS):
             continue
-        method = r["method"] + ("+harsh_pool" if r["variant"] == "harsh_pool" else "")
+        method = r["method"]
         if not all_methods and method not in CURATED_METHODS:
             continue
         keyed.setdefault((r["setting"], r["task"], r["backbone"], method, r["seed"]), {})[r["condition"]] = r
@@ -229,8 +246,7 @@ def write_curated(rows, path, all_methods=False):
     fields = (["setting", "task", "backbone", "method", "seed", "metric"]
               + [CURATED_COL[c] for c in ["clean"] + SHIFTS]
               + ["mean_4shifts", "delta_4shifts_pct"])
-    order = {"vanilla": 0, "augmentation": 1, "distillation": 2, "hard_mining": 3,
-             "hard_mining+harsh_pool": 4, "opera": 5, "opera+harsh_pool": 6}
+    order = {"vanilla": 0, "opera": 1, "opera++": 2}
     with open(path, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fields)
         w.writeheader()
@@ -292,7 +308,7 @@ def main():
     print(f"{a.out}: {len(rows)} rows from {len(cells)} run cells")
     print(f"{a.summary}: {n_groups} groups")
     print(f"{a.curated}: {n_cur} rows (curated: 4 shifts + clean, one row per seed, "
-          f"{'all methods' if a.all_methods else 'vanilla + full opera'})")
+          f"{'all methods' if a.all_methods else 'vanilla + opera + opera++'})")
     if skipped:
         print(f"skipped (no usable per-condition metrics): {', '.join(skipped)}")
     print("\ncoverage by setting x backbone x method:")
