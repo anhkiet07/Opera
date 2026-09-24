@@ -270,6 +270,20 @@ def write_curated(rows, path, all_methods=False):
         key = (r["run_group"], r["setting"], r["task"], r["backbone"], method, r["seed"])
         keyed.setdefault(key, {})[r["condition"]] = r
 
+    # One row per cell. A cell is (setting, task, backbone, method, seed); run_group is NOT part of it, so a
+    # benchmark run and an earlier exploratory run of the same cell are duplicates. Keep the benchmark one: it
+    # follows the fixed protocol (matched batch size across backbones, the five protocol conditions), whereas the
+    # exploratory run may differ in both. The table therefore upgrades itself as benchmark cells land.
+    dedup = {}
+    for (group, setting, task, backbone, method, seed), per in keyed.items():
+        cell = (setting, task, backbone, method, seed)
+        if cell in dedup and dedup[cell][0] == "bench":
+            continue                      # already have the benchmark run for this cell
+        if cell in dedup and group != "bench":
+            continue                      # keep whichever we saw first among non-benchmark runs
+        dedup[cell] = (group, per)
+    keyed = {(g,) + cell: per for cell, (g, per) in dedup.items()}
+
     fields = (["backbone", "setting", "method", "seed", "task", "history", "horizon", "time_unit",
                "batch_size", "metric"]
               + [CURATED_COL[c] for c in ["clean"] + SHIFTS]
