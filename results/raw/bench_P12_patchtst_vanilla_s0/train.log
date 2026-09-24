@@ -1,0 +1,37 @@
+run bench_P12_patchtst_vanilla_s0 | device cuda:0 | params 108802 | commit 8a88d9071466e02861183755c61eae9ce5a0c3c4
+config: {"data": {"batch_size": 8, "history": 48, "n_records": 100000000, "name": "P12", "patch_size": 6, "split_idx": 1, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "patchtst", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.56451 val_mse 0.62996 best 0.62996@0 (39.6s)
+epoch 001 loss 0.50697 val_mse 0.55347 best 0.55347@1 (39.3s)
+epoch 002 loss 0.48950 val_mse 0.57733 best 0.55347@1 (39.6s)
+epoch 003 loss 0.47163 val_mse 0.50874 best 0.50874@3 (40.1s)
+epoch 004 loss 0.46572 val_mse 0.45781 best 0.45781@4 (40.4s)
+epoch 005 loss 0.45886 val_mse 0.54028 best 0.45781@4 (43.5s)
+epoch 006 loss 0.45354 val_mse 0.47285 best 0.45781@4 (42.8s)
+epoch 007 loss 0.44310 val_mse 0.53213 best 0.45781@4 (41.8s)
+epoch 008 loss 0.43043 val_mse 0.43319 best 0.43319@8 (41.4s)
+epoch 009 loss 0.42986 val_mse 0.47611 best 0.43319@8 (41.1s)
+epoch 010 loss 0.41225 val_mse 0.63007 best 0.43319@8 (41.2s)
+epoch 011 loss 0.41590 val_mse 0.47331 best 0.43319@8 (41.2s)
+epoch 012 loss 0.40540 val_mse 0.51183 best 0.43319@8 (41.6s)
+epoch 013 loss 0.39155 val_mse 0.53486 best 0.43319@8 (41.1s)
+epoch 014 loss 0.38192 val_mse 0.47784 best 0.43319@8 (41.0s)
+epoch 015 loss 0.36550 val_mse 0.54613 best 0.43319@8 (41.6s)
+epoch 016 loss 0.36638 val_mse 0.59595 best 0.43319@8 (41.4s)
+epoch 017 loss 0.34771 val_mse 0.54341 best 0.43319@8 (41.5s)
+epoch 018 loss 0.32785 val_mse 0.52355 best 0.43319@8 (41.1s)
+early stop
+  [identity                                  ] CE 0.3983  acc 82.40  AUROC 85.87 AUPRC 51.43
+  [random_dropout:0.7                        ] CE 0.4097  acc 81.98  AUROC 84.06 AUPRC 44.64
+  [temporal_stride:3                         ] CE 0.4041  acc 80.90  AUROC 85.46 AUPRC 49.81
+  [variable_dropout:0.5                      ] CE 0.4265  acc 79.65  AUROC 80.42 AUPRC 41.45
+  [temporal_stride:3+variable_group_dropout:0.3] CE 0.4111  acc 81.23  AUROC 84.01 AUPRC 47.07
+best {'val_mse': 0.43319153785705566, 'epoch': 8} -> results/raw\bench_P12_patchtst_vanilla_s0\results.json
+summary {
+  "clean_mse": 0.39830920100212097,
+  "mean_shift_mse": 0.4128357842564583,
+  "mean_degradation": 0.03647061935247626,
+  "worst_mse": 0.4264824390411377,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.4128357842564583,
+  "mean_unseen_degradation": 0.03647061935247626
+}

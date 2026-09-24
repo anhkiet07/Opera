@@ -1,0 +1,35 @@
+run bench_P12_tmix_vanilla_s0 | device cuda:0 | params 1608962 | commit 8a88d9071466e02861183755c61eae9ce5a0c3c4
+config: {"data": {"batch_size": 8, "history": 48, "n_records": 100000000, "name": "P12", "patch_size": 6, "split_idx": 1, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "tmix", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.79567 val_mse 0.69860 best 0.69860@0 (35.2s)
+epoch 001 loss 0.55545 val_mse 0.65259 best 0.65259@1 (35.3s)
+epoch 002 loss 0.77078 val_mse 2.25147 best 0.65259@1 (35.3s)
+epoch 003 loss 0.53789 val_mse 0.54945 best 0.54945@3 (35.8s)
+epoch 004 loss 0.50831 val_mse 0.57061 best 0.54945@3 (36.1s)
+epoch 005 loss 0.50433 val_mse 0.53641 best 0.53641@5 (36.6s)
+epoch 006 loss 0.49719 val_mse 0.38961 best 0.38961@6 (37.0s)
+epoch 007 loss 0.53032 val_mse 0.40813 best 0.38961@6 (36.4s)
+epoch 008 loss 1.36640 val_mse 0.65743 best 0.38961@6 (36.4s)
+epoch 009 loss 0.69793 val_mse 0.69332 best 0.38961@6 (37.0s)
+epoch 010 loss 0.69321 val_mse 0.69340 best 0.38961@6 (38.0s)
+epoch 011 loss 0.69316 val_mse 0.69315 best 0.38961@6 (38.0s)
+epoch 012 loss 0.69315 val_mse 0.69315 best 0.38961@6 (38.0s)
+epoch 013 loss 0.69315 val_mse 0.69315 best 0.38961@6 (37.8s)
+epoch 014 loss 0.69315 val_mse 0.69315 best 0.38961@6 (38.1s)
+epoch 015 loss 0.69315 val_mse 0.69315 best 0.38961@6 (37.9s)
+epoch 016 loss 0.69315 val_mse 0.69315 best 0.38961@6 (38.0s)
+early stop
+  [identity                                  ] CE 0.3676  acc 86.07  AUROC 82.85 AUPRC 43.94
+  [random_dropout:0.7                        ] CE 0.3943  acc 84.90  AUROC 79.64 AUPRC 36.62
+  [temporal_stride:3                         ] CE 0.3737  acc 86.07  AUROC 82.39 AUPRC 42.86
+  [variable_dropout:0.5                      ] CE 0.3909  acc 84.74  AUROC 78.67 AUPRC 37.11
+  [temporal_stride:3+variable_group_dropout:0.3] CE 0.3826  acc 86.16  AUROC 81.15 AUPRC 40.79
+best {'val_mse': 0.38961225748062134, 'epoch': 6} -> results/raw\bench_P12_tmix_vanilla_s0\results.json
+summary {
+  "clean_mse": 0.36756426095962524,
+  "mean_shift_mse": 0.38536985218524933,
+  "mean_degradation": 0.04844211779224075,
+  "worst_mse": 0.3942834436893463,
+  "worst_condition": "random_dropout:0.7",
+  "mean_unseen_mse": 0.38536985218524933,
+  "mean_unseen_degradation": 0.04844211779224075
+}

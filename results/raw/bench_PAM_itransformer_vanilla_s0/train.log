@@ -1,0 +1,45 @@
+run bench_PAM_itransformer_vanilla_s0 | device cuda:0 | params 99224 | commit 3d3cac35d381bbd53d71b1f6b3169d97ee76ac22
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "PAM", "patch_size": 10, "split_idx": 1, "stride": 10}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "itransformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 1.30103 val_mse 0.71982 best 0.71982@0 (2.7s)
+epoch 001 loss 0.62335 val_mse 0.60838 best 0.60838@1 (2.4s)
+epoch 002 loss 0.52524 val_mse 0.56077 best 0.56077@2 (2.5s)
+epoch 003 loss 0.48688 val_mse 0.51513 best 0.51513@3 (2.4s)
+epoch 004 loss 0.46481 val_mse 0.49480 best 0.49480@4 (2.4s)
+epoch 005 loss 0.42386 val_mse 0.50449 best 0.49480@4 (2.4s)
+epoch 006 loss 0.38835 val_mse 0.46878 best 0.46878@6 (2.4s)
+epoch 007 loss 0.37761 val_mse 0.46274 best 0.46274@7 (2.3s)
+epoch 008 loss 0.36940 val_mse 0.50303 best 0.46274@7 (2.2s)
+epoch 009 loss 0.35166 val_mse 0.45109 best 0.45109@9 (2.3s)
+epoch 010 loss 0.32438 val_mse 0.44549 best 0.44549@10 (2.3s)
+epoch 011 loss 0.33232 val_mse 0.52277 best 0.44549@10 (2.3s)
+epoch 012 loss 0.30960 val_mse 0.44752 best 0.44549@10 (2.3s)
+epoch 013 loss 0.29935 val_mse 0.46130 best 0.44549@10 (2.3s)
+epoch 014 loss 0.28035 val_mse 0.44807 best 0.44549@10 (2.2s)
+epoch 015 loss 0.28106 val_mse 0.42566 best 0.42566@15 (2.3s)
+epoch 016 loss 0.27207 val_mse 0.41800 best 0.41800@16 (2.3s)
+epoch 017 loss 0.25830 val_mse 0.42044 best 0.41800@16 (2.3s)
+epoch 018 loss 0.26566 val_mse 0.43304 best 0.41800@16 (2.3s)
+epoch 019 loss 0.24377 val_mse 0.52754 best 0.41800@16 (2.3s)
+epoch 020 loss 0.24437 val_mse 0.50483 best 0.41800@16 (2.3s)
+epoch 021 loss 0.24137 val_mse 0.49227 best 0.41800@16 (2.3s)
+epoch 022 loss 0.22087 val_mse 0.50652 best 0.41800@16 (2.3s)
+epoch 023 loss 0.22901 val_mse 0.48910 best 0.41800@16 (2.3s)
+epoch 024 loss 0.21477 val_mse 0.48803 best 0.41800@16 (2.6s)
+epoch 025 loss 0.20139 val_mse 0.51134 best 0.41800@16 (2.3s)
+epoch 026 loss 0.20938 val_mse 0.51708 best 0.41800@16 (2.4s)
+early stop
+  [identity                                  ] CE 0.3405  acc 87.45  F1 89.05
+  [random_dropout:0.7                        ] CE 1.0927  acc 63.11  F1 64.10
+  [temporal_stride:3                         ] CE 0.6265  acc 77.15  F1 79.29
+  [variable_dropout:0.5                      ] CE 2.0152  acc 49.63  F1 46.77
+  [temporal_stride:3+variable_group_dropout:0.3] CE 1.7357  acc 55.81  F1 56.62
+best {'val_mse': 0.4180028736591339, 'epoch': 16} -> results/raw\bench_PAM_itransformer_vanilla_s0\results.json
+summary {
+  "clean_mse": 0.34045645594596863,
+  "mean_shift_mse": 1.3675537556409836,
+  "mean_degradation": 3.016824271524515,
+  "worst_mse": 2.015226364135742,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 1.3675537556409836,
+  "mean_unseen_degradation": 3.016824271524515
+}

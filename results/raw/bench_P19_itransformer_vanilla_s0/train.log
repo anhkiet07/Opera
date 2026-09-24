@@ -1,0 +1,46 @@
+run bench_P19_itransformer_vanilla_s0 | device cuda:0 | params 109544 | commit 3d3cac35d381bbd53d71b1f6b3169d97ee76ac22
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "P19", "patch_size": 3.75, "split_idx": 1, "stride": 3.75}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "itransformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.58787 val_mse 0.36546 best 0.36546@0 (6.8s)
+epoch 001 loss 0.48802 val_mse 0.42905 best 0.36546@0 (6.5s)
+epoch 002 loss 0.46328 val_mse 0.40498 best 0.36546@0 (6.6s)
+epoch 003 loss 0.44300 val_mse 0.34726 best 0.34726@3 (6.5s)
+epoch 004 loss 0.42841 val_mse 0.45488 best 0.34726@3 (6.5s)
+epoch 005 loss 0.41129 val_mse 0.50666 best 0.34726@3 (6.6s)
+epoch 006 loss 0.39599 val_mse 0.37750 best 0.34726@3 (6.6s)
+epoch 007 loss 0.37998 val_mse 0.41439 best 0.34726@3 (6.5s)
+epoch 008 loss 0.39956 val_mse 0.33892 best 0.33892@8 (6.6s)
+epoch 009 loss 0.36163 val_mse 0.31460 best 0.31460@9 (6.6s)
+epoch 010 loss 0.35764 val_mse 0.47497 best 0.31460@9 (6.6s)
+epoch 011 loss 0.34049 val_mse 0.28332 best 0.28332@11 (6.5s)
+epoch 012 loss 0.33451 val_mse 0.35399 best 0.28332@11 (6.6s)
+epoch 013 loss 0.31429 val_mse 0.38893 best 0.28332@11 (6.6s)
+epoch 014 loss 0.31575 val_mse 0.28902 best 0.28332@11 (6.6s)
+epoch 015 loss 0.28577 val_mse 0.38742 best 0.28332@11 (6.6s)
+epoch 016 loss 0.27790 val_mse 0.35273 best 0.28332@11 (6.6s)
+epoch 017 loss 0.27750 val_mse 0.27232 best 0.27232@17 (6.6s)
+epoch 018 loss 0.26439 val_mse 0.33006 best 0.27232@17 (6.6s)
+epoch 019 loss 0.25368 val_mse 0.30925 best 0.27232@17 (6.7s)
+epoch 020 loss 0.26130 val_mse 0.28673 best 0.27232@17 (6.6s)
+epoch 021 loss 0.23587 val_mse 0.30202 best 0.27232@17 (6.6s)
+epoch 022 loss 0.21155 val_mse 0.30251 best 0.27232@17 (6.6s)
+epoch 023 loss 0.23973 val_mse 0.38981 best 0.27232@17 (6.8s)
+epoch 024 loss 0.21074 val_mse 0.28296 best 0.27232@17 (6.8s)
+epoch 025 loss 0.20525 val_mse 0.28932 best 0.27232@17 (6.7s)
+epoch 026 loss 0.21011 val_mse 0.28301 best 0.27232@17 (6.7s)
+epoch 027 loss 0.18915 val_mse 0.37576 best 0.27232@17 (6.6s)
+early stop
+  [identity                                  ] CE 0.2812  acc 88.97  AUROC 87.50 AUPRC 52.10
+  [random_dropout:0.7                        ] CE 0.1956  acc 93.12  AUROC 83.92 AUPRC 48.35
+  [temporal_stride:3                         ] CE 0.2445  acc 91.16  AUROC 85.36 AUPRC 50.55
+  [variable_dropout:0.5                      ] CE 0.3221  acc 88.48  AUROC 80.47 AUPRC 45.75
+  [temporal_stride:3+variable_group_dropout:0.3] CE 0.2915  acc 89.05  AUROC 84.49 AUPRC 47.01
+best {'val_mse': 0.27231836318969727, 'epoch': 17} -> results/raw\bench_P19_itransformer_vanilla_s0\results.json
+summary {
+  "clean_mse": 0.28124043345451355,
+  "mean_shift_mse": 0.2634270079433918,
+  "mean_degradation": -0.06333877846907389,
+  "worst_mse": 0.3220730721950531,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.2634270079433918,
+  "mean_unseen_degradation": -0.06333877846907389
+}

@@ -1,0 +1,33 @@
+run bench_P12_itransformer_vanilla_s0 | device cuda:0 | params 110594 | commit 3d3cac35d381bbd53d71b1f6b3169d97ee76ac22
+config: {"data": {"batch_size": 8, "history": 48, "n_records": 100000000, "name": "P12", "patch_size": 6, "split_idx": 1, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "itransformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.61156 val_mse 0.67759 best 0.67759@0 (110.2s)
+epoch 001 loss 0.58882 val_mse 0.58136 best 0.58136@1 (111.3s)
+epoch 002 loss 0.54842 val_mse 0.53939 best 0.53939@2 (112.5s)
+epoch 003 loss 0.61218 val_mse 0.59343 best 0.53939@2 (113.3s)
+epoch 004 loss 0.63989 val_mse 0.59437 best 0.53939@2 (113.4s)
+epoch 005 loss 0.64476 val_mse 0.66016 best 0.53939@2 (113.6s)
+epoch 006 loss 0.64368 val_mse 0.65325 best 0.53939@2 (113.9s)
+epoch 007 loss 0.64418 val_mse 0.65189 best 0.53939@2 (113.3s)
+epoch 008 loss 0.64215 val_mse 0.59815 best 0.53939@2 (113.8s)
+epoch 009 loss 0.64320 val_mse 0.64724 best 0.53939@2 (113.8s)
+epoch 010 loss 0.64419 val_mse 0.66386 best 0.53939@2 (113.7s)
+epoch 011 loss 0.63953 val_mse 0.65552 best 0.53939@2 (113.8s)
+epoch 012 loss 0.64485 val_mse 0.66535 best 0.53939@2 (113.8s)
+epoch 013 loss 0.64311 val_mse 0.64131 best 0.53939@2 (113.7s)
+epoch 014 loss 0.64315 val_mse 0.67074 best 0.53939@2 (113.9s)
+early stop
+  [identity                                  ] CE 0.5302  acc 72.48  AUROC 81.58 AUPRC 38.49
+  [random_dropout:0.7                        ] CE 0.5742  acc 69.06  AUROC 78.91 AUPRC 34.89
+  [temporal_stride:3                         ] CE 0.5524  acc 70.23  AUROC 81.32 AUPRC 38.25
+  [variable_dropout:0.5                      ] CE 0.6169  acc 66.72  AUROC 74.80 AUPRC 29.11
+  [temporal_stride:3+variable_group_dropout:0.3] CE 0.5945  acc 67.97  AUROC 79.67 AUPRC 36.54
+best {'val_mse': 0.5393908619880676, 'epoch': 2} -> results/raw\bench_P12_itransformer_vanilla_s0\results.json
+summary {
+  "clean_mse": 0.530214250087738,
+  "mean_shift_mse": 0.5845034718513489,
+  "mean_degradation": 0.10239110275634283,
+  "worst_mse": 0.6169008612632751,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.5845034718513489,
+  "mean_unseen_degradation": 0.10239110275634283
+}

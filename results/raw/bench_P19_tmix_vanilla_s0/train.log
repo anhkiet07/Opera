@@ -1,0 +1,33 @@
+run bench_P19_tmix_vanilla_s0 | device cuda:0 | params 6330216 | commit 8a88d9071466e02861183755c61eae9ce5a0c3c4
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "P19", "patch_size": 3.75, "split_idx": 1, "stride": 3.75}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "tmix", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 2.94208 val_mse 0.78243 best 0.78243@0 (8.6s)
+epoch 001 loss 0.71064 val_mse 0.64205 best 0.64205@1 (8.4s)
+epoch 002 loss 0.67951 val_mse 0.61745 best 0.61745@2 (8.3s)
+epoch 003 loss 55.20636 val_mse 2.47517 best 0.61745@2 (8.1s)
+epoch 004 loss 1.43255 val_mse 0.45788 best 0.45788@4 (8.1s)
+epoch 005 loss 0.69220 val_mse 0.72848 best 0.45788@4 (8.1s)
+epoch 006 loss 0.64959 val_mse 0.77123 best 0.45788@4 (8.1s)
+epoch 007 loss 0.66101 val_mse 0.82232 best 0.45788@4 (8.4s)
+epoch 008 loss 0.65911 val_mse 0.68083 best 0.45788@4 (8.4s)
+epoch 009 loss 0.64182 val_mse 0.47587 best 0.45788@4 (8.6s)
+epoch 010 loss 0.60607 val_mse 0.54255 best 0.45788@4 (8.5s)
+epoch 011 loss 0.59726 val_mse 0.65006 best 0.45788@4 (8.6s)
+epoch 012 loss 0.58876 val_mse 0.60841 best 0.45788@4 (8.5s)
+epoch 013 loss 0.59444 val_mse 0.50928 best 0.45788@4 (8.7s)
+epoch 014 loss 0.56005 val_mse 0.53193 best 0.45788@4 (8.9s)
+early stop
+  [identity                                  ] CE 0.4601  acc 93.69  AUROC 49.10 AUPRC 4.27
+  [random_dropout:0.7                        ] CE 0.4471  acc 95.21  AUROC 51.27 AUPRC 5.08
+  [temporal_stride:3                         ] CE 0.4504  acc 94.77  AUROC 50.00 AUPRC 4.34
+  [variable_dropout:0.5                      ] CE 0.4550  acc 94.51  AUROC 49.85 AUPRC 4.32
+  [temporal_stride:3+variable_group_dropout:0.3] CE 0.4500  acc 94.90  AUROC 49.69 AUPRC 4.45
+best {'val_mse': 0.45788389444351196, 'epoch': 4} -> results/raw\bench_P19_tmix_vanilla_s0\results.json
+summary {
+  "clean_mse": 0.4600924849510193,
+  "mean_shift_mse": 0.45063742250204086,
+  "mean_degradation": -0.020550351849335236,
+  "worst_mse": 0.4550217092037201,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.45063742250204086,
+  "mean_unseen_degradation": -0.020550351849335236
+}
