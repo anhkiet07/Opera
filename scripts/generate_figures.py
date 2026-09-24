@@ -99,7 +99,7 @@ def fig1(out):
 
 
 # ------------------------------------------------------------------ Figure 2
-def _panel_mse(conditions):
+def _panel_mse(conditions, var=None):
     """Real test MSE per condition, from the PhysioNet vanilla benchmark run.
 
     Never fabricated: if the run is absent the figure is drawn without annotations rather than with made-up
@@ -113,69 +113,56 @@ def _panel_mse(conditions):
             continue
         per = json.load(open(run, encoding="utf-8")).get("per_condition") or {}
         if all(c in per for c in conditions):
-            return {c: per[c]["mse"] for c in conditions}, os.path.basename(os.path.dirname(run))
+            if var is None:
+                return {c: per[c]["mse"] for c in conditions}, os.path.basename(os.path.dirname(run))
+            if all("mse_per_var" in per[c] for c in conditions):
+                return ({c: per[c]["mse_per_var"][var] for c in conditions},
+                        os.path.basename(os.path.dirname(run)))
     return None, None
 
 
 def fig2(out, dataset="physionet"):
-    """One ICU stay: what the model is given, what it must predict, and what it actually predicts.
+    """One ICU channel seen through the five evaluation conditions, with the error that channel incurs.
 
-    Message: same underlying history and same target, different observations, different forecast. The input
-    markers are the only thing that changes between panels; the ground truth never does. The model's own
-    forecast is overlaid so the reader can see the prediction drift away from the target as the observation
-    process degrades, and the panel heading gives the test MSE of that condition.
+    Message: same underlying history and same target, different observations, different error. Filled markers are
+    what the model is given, hollow ones were recorded but withheld, so filled plus hollow is the same record in
+    every panel. The heading carries the evaluated test MSE for the plotted channel, not for all 41 variables, so
+    the picture and the number describe the same thing.
 
-    Runs the trained vanilla checkpoint on CPU; no GPU is touched, so this is safe to render during a sweep.
+    Needs no model: the masks come from the observation-process generator and the errors from the evaluated run.
     """
     import torch
     if dataset != "physionet":
         print("fig2 skipped (physionet only)"); return
-    ckpt_dir = "results/raw/bench_physionet_itransformer_vanilla_s0"
-    ckpt = os.path.join(ckpt_dir, "model.pt")
-    if not os.path.exists(ckpt):
-        print("fig2 skipped (no vanilla checkpoint)"); return
 
     # The processed dataset was serialised with CUDA tensors; force CPU so nothing lands on the card.
     _load = torch.load
     torch.load = lambda *a, **k: _load(*a, **{**k, "map_location": "cpu"})
     try:
-        sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__))))
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
         from train import load_yaml
         from src.datasets.registry import load as load_data, next_batch
-        from src.models.base import build_model
         from src.observation import ObservationProcessGenerator
-
         cfg = load_yaml("configs/baseline.yaml")
         data, info = load_data(cfg, "cpu", seed=0)
-        model, _ = build_model(cfg, info, "cpu")
-        model.load_state_dict(torch.load(ckpt)["model"])
-        model.eval()
         batch = next_batch(data["test_dataloader"])
     finally:
         torch.load = _load
 
     HRS = 48.0                    # times are normalised by the 48 h window
-
-    # Panel names and order are the benchmark's own condition names (BENCHMARK_PROTOCOL.md section 2), and each
-    # panel prints the exact process spec, so the figure and the results tables share one vocabulary.
     views = [("full observation", "identity"),
              ("density", "random_dropout:0.7"),
              ("timing", "temporal_stride:3"),
              ("variables", "variable_dropout:0.5"),
              ("composed", "temporal_stride:3+variable_group_dropout:0.3")]
-    mses, src = _panel_mse([spec for _, spec in views])
-    print(f"fig2 MSE from {src}" if mses else "fig2: no run found, drawing without MSE")
 
     gen = ObservationProcessGenerator(device="cpu")
-    # BOTH the masked values and the mask must be passed: this encoder reads the values, so replacing only
-    # the mask leaves the input unchanged and every panel would show an identical forecast.
-    views_out = {spec: gen.condition(batch["observed_data"], batch["observed_tp"], batch["observed_mask"],
-                                     spec, seed=12345) for _, spec in views}
-    masks = {spec: mm for spec, (_, mm) in views_out.items()}
+    masks = {spec: gen.condition(batch["observed_data"], batch["observed_tp"], batch["observed_mask"],
+                                 spec, seed=12345)[1] for _, spec in views}
 
     # Pick the (sample, variable) with the most coverage such that `variables` removes the channel outright
-    # while `composed` keeps some of it. Without that condition the two panels look the same, which misleads:
-    # composed removes contiguous variable GROUPS at 0.3, so it is not simply a harsher `variables`.
+    # while `composed` keeps some of it. Without that condition the two panels look identical, which hides the
+    # fact that `composed` removes contiguous variable GROUPS rather than being a harsher `variables`.
     VARS, COMP = "variable_dropout:0.5", "temporal_stride:3+variable_group_dropout:0.3"
     cand = []
     for si in range(batch["observed_data"].shape[0]):
@@ -190,12 +177,12 @@ def fig2(out, dataset="physionet"):
         print("fig2 skipped (no sample/variable satisfies the panel criterion)"); return
     _, i, VAR = max(cand)
     VNAME = {19: "heart rate", 23: "mean arterial pressure", 35: "systolic pressure"}.get(VAR, f"variable {VAR}")
-    print(f"fig2 plotting sample {i}, {VNAME}")
+    mses, src = _panel_mse([spec for _, spec in views], var=VAR)
+    print(f"fig2 sample {i}, {VNAME}" + (f", channel MSE from {src}" if mses else ", no run found"))
 
-    OBS = C["E0_baseline"]        # input observations AND ground truth: one colour, split by the shading
-    PRED = "#c0504d"              # the model's own forecast
-
-    tt_h = (batch["observed_tp"][i, ..., VAR].reshape(-1) * HRS)
+    OBS = C["E0_baseline"]
+    FLAG = "#c0504d"
+    tt_h = batch["observed_tp"][i, ..., VAR].reshape(-1) * HRS
     v_h = batch["observed_data"][i, ..., VAR].reshape(-1)
     m_h = batch["observed_mask"][i, ..., VAR].reshape(-1) > 0
     tt_f = batch["tp_to_predict"][i] * HRS
@@ -204,25 +191,18 @@ def fig2(out, dataset="physionet"):
 
     fig, axes = plt.subplots(1, len(views), figsize=(7.2, 2.05), sharey=True)
     for k, (ax, (title, spec)) in enumerate(zip(axes, views)):
-        dd, m = views_out[spec]
-        with torch.no_grad():
-            pred = model(model.with_observation(batch, dd, m))
-        keep = m[i, ..., VAR].reshape(-1) > 0
+        keep = masks[spec][i, ..., VAR].reshape(-1) > 0
         gone = m_h & ~keep                 # recorded but withheld by this process
 
         ax.axvspan(24, 48, color="0.93", zorder=0)
         ax.axvline(24, color="0.6", lw=0.8, ls="--", zorder=1)
-        # Only the WITHHELD observations are drawn pale, so nothing pale appears under the reference panel,
-        # where the process withholds nothing. Pale plus solid always equals the full record.
         # outlines, not translucent fills: overlapping semi-transparent markers stack into something that
         # looks solid, which made a fully removed channel look partly kept.
         ax.scatter(tt_h[gone], v_h[gone], s=10, facecolors="none", edgecolors=OBS, linewidths=0.6,
-                   alpha=0.55, zorder=2, label="removed by the process" if k == 1 else None)
+                   alpha=0.55, zorder=2, label="recorded, withheld" if k == 1 else None)
         ax.scatter(tt_h[keep], v_h[keep], s=11, color=OBS, zorder=4,
                    label="given to model / ground truth" if k == 0 else None)
         ax.plot(tt_f[m_f], v_f[m_f], color=OBS, lw=1.4, zorder=3)          # ground truth, same colour
-        ax.plot(tt_f[m_f], pred[i, m_f, VAR], color=PRED, lw=1.6, ls="--", zorder=5,
-                label="model forecast" if k == 0 else None)
         ax.set_xlim(0, 48); ax.set_xticks([0, 12, 24, 36, 48])
         ax.tick_params(labelsize=6)
         ax.set_xlabel("time (h)", fontsize=7)
@@ -232,14 +212,13 @@ def fig2(out, dataset="physionet"):
         ax.set_title(head, fontsize=7.2, linespacing=1.4)
         if int(keep.sum()) == 0:
             ax.text(0.03, 0.82, "channel removed", transform=ax.transAxes, ha="left", va="center",
-                    fontsize=6.2, color=PRED)
+                    fontsize=6.2, color=FLAG)
         ax.text(0.24, 0.045, "input", transform=ax.transAxes, ha="center", fontsize=6.2, color="0.45")
         ax.text(0.76, 0.045, "output", transform=ax.transAxes, ha="center", fontsize=6.2, color="0.45")
     axes[0].set_ylabel(f"{VNAME} (norm.)", fontsize=7)
-    # legend below the axes, clear of the x labels
     fig.subplots_adjust(bottom=0.34)
-    fig.legend(loc="lower center", ncol=3, frameon=False, fontsize=6.5, bbox_to_anchor=(0.5, -0.02),
-               handlelength=1.6, columnspacing=1.6)
+    fig.legend(loc="lower center", ncol=2, frameon=False, fontsize=6.8, bbox_to_anchor=(0.5, -0.02),
+               handlelength=1.6, columnspacing=1.8)
     fig.savefig(os.path.join(out, "fig2_observation_shift.pdf"))
     print("fig2 done")
 
