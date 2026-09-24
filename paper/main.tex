@@ -3,12 +3,13 @@
 %% requires 5 seeds before any claim is final. Do not remove a \prelim or a \todo without replacing the
 %% underlying measurement.
 \documentclass[sigconf,nonacm]{acmart}
-\usepackage{booktabs}
-\usepackage{amsmath}
-\usepackage{amssymb}
+%% acmart loads booktabs, graphicx and xcolor itself, and under XeLaTeX/LuaLaTeX it additionally loads
+%% amssymb + unicode-math. Requesting amssymb here therefore produced
+%%     LaTeX Error: Command \Bbbk already defined.
+%% The body uses no amsmath-only construct (no align, \boxed or \text), so this file compiles under
+%% pdfLaTeX, XeLaTeX and LuaLaTeX without adding any math package.
 \usepackage{algorithm}
 \usepackage{algpseudocode}
-\usepackage{xcolor}
 \newcommand{\todo}[1]{\textcolor{red}{[#1]}}
 \newcommand{\prelim}{\textsuperscript{\dag}}
 \newcommand{\Sobs}{\mathcal{S}}
@@ -170,10 +171,14 @@ $\Sobs\sim P_{\mathrm{obs}}$. A model $f_\theta$ maps $\Oobs$ to a task output $
 a future window, or a label.
 
 Training data are drawn from a joint distribution over $(X,\Sobs)$. We distinguish
-\begin{align}
-\text{process shift:}\quad & P_{\mathrm{train}}(X)\ \neq\ P_{\mathrm{test}}(X), \\
-\text{observation-process shift:}\quad & P_{\mathrm{train}}(\Sobs)\ \neq\ P_{\mathrm{test}}(\Sobs),
-\end{align}
+\begin{equation}
+P_{\mathrm{train}}(X)\ \neq\ P_{\mathrm{test}}(X)
+\qquad\textit{(process shift)},
+\end{equation}
+\begin{equation}
+P_{\mathrm{train}}(\Sobs)\ \neq\ P_{\mathrm{test}}(\Sobs)
+\qquad\textit{(observation-process shift)},
+\end{equation}
 with $P(X)$ comparable in the second case. This paper concerns the second. Two datasets may record the same
 underlying process while differing in observation density, in the temporal clustering of observations, in which
 variables are observed, or in sampling regularity.
@@ -289,7 +294,7 @@ Random exposure spends most of its budget on observation processes the model alr
 mechanism instead searches for the admissible process that the \emph{current} model handles worst,
 \begin{equation}
 \Sobs^{*}=\arg\max_{\Sobs\in\mathcal{A}}\ \ell\big(f_\theta(\Sobs(X)),Y\big),
-\qquad \mathcal{A}=\{\Sobs: \Sobs \text{ satisfies } \mathcal{C}\},
+\qquad \mathcal{A}=\{\Sobs:\ \Sobs\ \mathrm{satisfies}\ \mathcal{C}\},
 \label{eq:mining}
 \end{equation}
 with $\mathcal{C}$ from Eq.~\ref{eq:constraints}. We approximate the maximisation by scoring a finite candidate
@@ -312,7 +317,7 @@ hyper-parameter and report both choices (Section~\ref{sec:results}).
 \subsection{Objective and training procedure}
 The complete objective adds one term to the task loss,
 \begin{equation}
-\boxed{\ \mathcal{L}=\mathcal{L}_{\mathrm{task}}+\lambda_{d}\,\mathcal{L}_{\mathrm{distill}}\ }
+\fbox{$\displaystyle\ \mathcal{L}=\mathcal{L}_{\mathrm{task}}+\lambda_{d}\,\mathcal{L}_{\mathrm{distill}}\ $}
 \label{eq:objective}
 \end{equation}
 where mining determines \emph{which} observation processes contribute to $\mathcal{L}_{\mathrm{task}}$ in
