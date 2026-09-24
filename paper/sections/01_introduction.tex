@@ -24,15 +24,20 @@ observation process cannot see it.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/fig2_observation_shift.pdf}
-\caption{The 24\,h history of one ICU channel as five different observation processes deliver it, named as
-the results tables name them (Section~ef{sec:splits}). Filled markers are the observations handed to the
-model; hollow ones were recorded but withheld, so filled plus hollow is the same record in every panel and
-\emph{the underlying history never changes}. Only the input is drawn; each heading reports what that input
-costs, as this channel's evaluated test MSE\prelim, which rises from $0.0048$ under full observation to
-between $0.0135$ and $0.0368$ depending on which dimension of the process moves. In (d) the channel is
-removed outright; in (e) it survives thinned, because the composed condition removes contiguous variable
-\emph{groups} rather than being a harsher version of (d). Draws use the evaluation seed, unchanged across
-panels.}
+\caption{Systolic blood pressure over the 24\,h history of one PhysioNet 2012 ICU stay
+\cite{silva2012physionet}, as five observation processes deliver it. Filled markers are the observations
+handed to the model; hollow ones were recorded but withheld, so filled plus hollow is the same record in every
+panel and \emph{the underlying history never changes}. The processes are: (b) \emph{density}, each
+observation dropped independently with probability $0.7$; (c) \emph{timing}, every third observation of each
+variable retained; (d) \emph{variables}, half of the variables removed outright; (e) \emph{composed}, (c)
+together with the removal of contiguous variable groups.
+Each heading gives the evaluated test MSE \emph{for this channel alone}\prelim, not averaged over the 41
+variables, so the picture and the number describe the same quantity. Removing the channel itself costs the
+most, $0.0048$ to $0.0368$ in (d), where none of its $45$ observations survive.
+Comparing (c) and (e) shows that the cost is not set by this channel's own observations: both leave it exactly
+$15$, yet (e) also deletes $8$ whole variables and a third of the observations elsewhere, and the error on
+\emph{this} channel still nearly doubles, $0.0135$ to $0.0250$. What a process does to the other
+channels changes what can be predicted here. Draws use the evaluation seed, unchanged across panels.}
 \label{fig:views}
 \end{figure}
 
