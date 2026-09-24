@@ -118,81 +118,96 @@ def _panel_mse(conditions):
 
 
 def fig2(out, dataset="physionet"):
-    """One ICU stay: the input the model receives, the output it must predict, and what the observation
-    process costs.
+    """One ICU stay: what the model is given, what it must predict, and what it actually predicts.
 
-    Message: same underlying history and same target, different observations, different prediction error. The
-    faint trajectory and the whole right-hand region are identical in all four panels by construction; only the
-    markers in the left region -- what the model actually receives -- change.
+    Message: same underlying history and same target, different observations, different forecast. The input
+    markers are the only thing that changes between panels; the ground truth never does. The model's own
+    forecast is overlaid so the reader can see the prediction drift away from the target as the observation
+    process degrades, and the panel heading gives the test MSE of that condition.
 
-    Variables plotted are heart rate and systolic blood pressure, the two most-measured vitals in this stay. The
-    observation-process draw uses the evaluation seed (12345) unchanged in every panel: at that seed variable
-    removal happens to drop SysABP and keep HR, which is why one channel's markers vanish in (c). No seed was
-    searched for to produce that.
+    Runs the trained vanilla checkpoint on CPU; no GPU is touched, so this is safe to render during a sweep.
     """
     import torch
-    from src.observation import ObservationProcessGenerator
-    path = {"physionet": "data/physionet/processed/set-a_0.0.pt"}.get(dataset)
-    if not path or not os.path.exists(path):
-        print("fig2 skipped (no raw dataset)"); return
-    data = torch.load(path, map_location="cpu", weights_only=False)
-    HR, SBP = 19, 35                      # 'HR' and 'SysABP' in data/physionet.py params
-    HISTORY = 24.0                        # the model sees 0-24 h and forecasts 24-48 h
-    best = max(range(len(data)), key=lambda i: (data[i][3][:, HR].sum() + data[i][3][:, SBP].sum()).item())
-    _, tt, vals, mask = data[best]
-    tt, vals, mask = tt.float(), vals.float(), mask.float()
+    if dataset != "physionet":
+        print("fig2 skipped (physionet only)"); return
+    ckpt_dir = "results/raw/bench_physionet_itransformer_vanilla_s0"
+    ckpt = os.path.join(ckpt_dir, "model.pt")
+    if not os.path.exists(ckpt):
+        print("fig2 skipped (no vanilla checkpoint)"); return
 
-    hist = tt < HISTORY
-    th, vh, mh = tt[hist], vals[hist], mask[hist]
-    fut = tt >= HISTORY
-    tf, vf, mf = tt[fut], vals[fut], mask[fut]
-    Th = th.view(1, -1, 1).expand(1, -1, vh.shape[1])
+    # The processed dataset was serialised with CUDA tensors; force CPU so nothing lands on the card.
+    _load = torch.load
+    torch.load = lambda *a, **k: _load(*a, **{**k, "map_location": "cpu"})
+    try:
+        sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__))))
+        from train import load_yaml
+        from src.datasets.registry import load as load_data, next_batch
+        from src.models.base import build_model
+        from src.observation import ObservationProcessGenerator
+
+        cfg = load_yaml("configs/baseline.yaml")
+        data, info = load_data(cfg, "cpu", seed=0)
+        model, _ = build_model(cfg, info, "cpu")
+        model.load_state_dict(torch.load(ckpt)["model"])
+        model.eval()
+        batch = next_batch(data["test_dataloader"])
+    finally:
+        torch.load = _load
+
+    HR = 19                       # 'HR' in data/physionet.py params
+    HRS = 48.0                    # times are normalised by the 48 h window
+    # the sample with the most heart-rate coverage in both windows
+    obs_n = (batch["observed_mask"][..., HR] > 0).flatten(1).sum(1)
+    tgt_n = (batch["mask_predicted_data"][..., HR] > 0).sum(1)
+    i = int(torch.argmin(-(obs_n + tgt_n)))
 
     views = [("(a) reference", "identity"),
              ("(b) temporal subsampling", "temporal_stride:3"),
              ("(c) variable removal", "variable_dropout:0.5"),
              ("(d) density reduction", "random_dropout:0.7")]
     mses, src = _panel_mse([spec for _, spec in views])
-    print(f"fig2 MSE annotations from {src}" if mses else "fig2: no run found, drawing without MSE")
-
-    # This record codes some missing vitals as 0, which is physiologically impossible and would stretch the
-    # axis to zero. Crop the VIEW to the central range of the plotted channels; no observation is deleted, and
-    # the observation processes act on the full data regardless.
-    plotted = torch.cat([vh[mh[:, v] > 0, v] for v in (HR, SBP)] + [vf[mf[:, v] > 0, v] for v in (HR, SBP)])
-    plotted = plotted[plotted > 0]
-    lo, hi = float(np.percentile(plotted, 1)), float(np.percentile(plotted, 99))
-    pad = 0.08 * (hi - lo)
+    print(f"fig2 MSE from {src}" if mses else "fig2: no run found, drawing without MSE")
 
     gen = ObservationProcessGenerator(device="cpu")
-    TARGET = "#2f6f4e"                    # one colour for the output, whichever variable it belongs to
-    fig, axes = plt.subplots(1, 4, figsize=(7.2, 2.15), sharey=True)
+    OBS = C["E0_baseline"]        # input observations AND ground truth: one colour, split by the shading
+    PRED = "#c0504d"              # the model's own forecast
+
+    tt_h = (batch["observed_tp"][i, ..., HR].reshape(-1) * HRS)
+    v_h = batch["observed_data"][i, ..., HR].reshape(-1)
+    m_h = batch["observed_mask"][i, ..., HR].reshape(-1) > 0
+    tt_f = batch["tp_to_predict"][i] * HRS
+    v_f = batch["data_to_predict"][i, :, HR]
+    m_f = batch["mask_predicted_data"][i, :, HR] > 0
+
+    fig, axes = plt.subplots(1, 4, figsize=(7.2, 1.95), sharey=True)
     for k, (ax, (title, spec)) in enumerate(zip(axes, views)):
-        _, m = gen.condition(vh.unsqueeze(0), Th, mh.unsqueeze(0), spec, seed=12345)
-        m = m[0]
-        ax.axvspan(HISTORY, 48, color="0.92", zorder=0)             # output region
-        ax.axvline(HISTORY, color="0.55", lw=0.7, ls="--", zorder=1)
-        for var, col, lab in [(HR, C["E0_baseline"], "HR"), (SBP, C["E1_augmentation"], "SysABP")]:
-            idx = mh[:, var] > 0
-            ax.plot(th[idx], vh[idx, var], color=col, lw=0.7, alpha=0.28, zorder=2)   # same in every panel
-            got = m[:, var] > 0
-            ax.scatter(th[got], vh[got, var], s=6, color=col, label=lab if k == 0 else None, zorder=4)
-            fidx = mf[:, var] > 0                                    # target: identical in every panel
-            ax.plot(tf[fidx], vf[fidx, var], color=TARGET, lw=0.7, alpha=0.75, zorder=3,
-                    label="forecast target" if (k == 0 and var == HR) else None)
-        ax.set_xlim(0, 48)
-        ax.set_ylim(lo - pad, hi + pad)
-        ax.set_xticks([0, 12, 24, 36, 48])
+        d, m = gen.condition(batch["observed_data"], batch["observed_tp"], batch["observed_mask"],
+                             spec, seed=12345)
+        with torch.no_grad():
+            pred = model(model.with_observation(batch, d, m))
+        keep = m[i, ..., HR].reshape(-1) > 0
+
+        ax.axvspan(24, 48, color="0.93", zorder=0)
+        ax.axvline(24, color="0.6", lw=0.7, ls="--", zorder=1)
+        # everything the stay contains, faint: identical in every panel
+        ax.plot(tt_h[m_h], v_h[m_h], color=OBS, lw=0.7, alpha=0.25, zorder=2)
+        ax.scatter(tt_h[keep], v_h[keep], s=7, color=OBS, zorder=4,
+                   label="observed / ground truth" if k == 0 else None)
+        ax.plot(tt_f[m_f], v_f[m_f], color=OBS, lw=0.9, zorder=3)          # ground truth, same colour
+        ax.plot(tt_f[m_f], pred[i, m_f, HR], color=PRED, lw=1.0, ls="--", zorder=5,
+                label="model forecast" if k == 0 else None)
+        ax.set_xlim(0, 48); ax.set_xticks([0, 12, 24, 36, 48])
         ax.tick_params(labelsize=6)
         ax.set_xlabel("time (h)", fontsize=7)
-        head = title if not mses else title + "\n" + f"MSE {mses[spec]:.4f}"
+        head = title + (chr(10) + f"MSE {mses[spec]:.4f}" if mses else "")
         ax.set_title(head, fontsize=7.5, linespacing=1.35)
-    axes[0].set_ylabel("value", fontsize=7)
-    axes[0].legend(frameon=False, fontsize=6.2, loc="upper left", handletextpad=0.3, borderpad=0.1,
-                   labelspacing=0.25)
-    # name the two regions inside every panel, low enough not to collide with the data
-    for ax in axes:
-        ax.text(0.25, 0.04, "input", transform=ax.transAxes, ha="center", fontsize=6.2, color="0.45")
-        ax.text(0.75, 0.04, "output", transform=ax.transAxes, ha="center", fontsize=6.2, color=TARGET)
+        ax.text(0.24, 0.045, "input", transform=ax.transAxes, ha="center", fontsize=6.2, color="0.45")
+        ax.text(0.76, 0.045, "output", transform=ax.transAxes, ha="center", fontsize=6.2, color="0.45")
+    axes[0].set_ylabel("heart rate (norm.)", fontsize=7)
+    # legend below the axes, clear of the x labels
+    fig.subplots_adjust(bottom=0.34)
+    fig.legend(loc="lower center", ncol=2, frameon=False, fontsize=6.8, bbox_to_anchor=(0.5, -0.02),
+               handlelength=1.6, columnspacing=1.6)
     fig.savefig(os.path.join(out, "fig2_observation_shift.pdf"))
     print("fig2 done")
 
