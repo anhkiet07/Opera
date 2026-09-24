@@ -154,16 +154,11 @@ def fig2(out, dataset="physionet"):
     finally:
         torch.load = _load
 
-    HR = 19                       # 'HR' in data/physionet.py params
     HRS = 48.0                    # times are normalised by the 48 h window
-    # the sample with the most heart-rate coverage in both windows
-    obs_n = (batch["observed_mask"][..., HR] > 0).flatten(1).sum(1)
-    tgt_n = (batch["mask_predicted_data"][..., HR] > 0).sum(1)
-    i = int(torch.argmin(-(obs_n + tgt_n)))
 
     # Panel names and order are the benchmark's own condition names (BENCHMARK_PROTOCOL.md section 2), and each
     # panel prints the exact process spec, so the figure and the results tables share one vocabulary.
-    views = [("clean", "identity"),
+    views = [("full observation", "identity"),
              ("density", "random_dropout:0.7"),
              ("timing", "temporal_stride:3"),
              ("variables", "variable_dropout:0.5"),
@@ -172,49 +167,72 @@ def fig2(out, dataset="physionet"):
     print(f"fig2 MSE from {src}" if mses else "fig2: no run found, drawing without MSE")
 
     gen = ObservationProcessGenerator(device="cpu")
+    masks = {spec: gen.condition(batch["observed_data"], batch["observed_tp"], batch["observed_mask"],
+                                 spec, seed=12345)[1] for _, spec in views}
+
+    # Pick the (sample, variable) with the most coverage such that `variables` removes the channel outright
+    # while `composed` keeps some of it. Without that condition the two panels look the same, which misleads:
+    # composed removes contiguous variable GROUPS at 0.3, so it is not simply a harsher `variables`.
+    VARS, COMP = "variable_dropout:0.5", "temporal_stride:3+variable_group_dropout:0.3"
+    cand = []
+    for si in range(batch["observed_data"].shape[0]):
+        for v in range(batch["observed_data"].shape[-1]):
+            n_h = int((batch["observed_mask"][si, ..., v] > 0).sum())
+            n_t = int((batch["mask_predicted_data"][si, :, v] > 0).sum())
+            if n_h < 25 or n_t < 15:
+                continue
+            if int((masks[VARS][si, ..., v] > 0).sum()) == 0 < int((masks[COMP][si, ..., v] > 0).sum()):
+                cand.append((n_h + n_t, si, v))
+    if not cand:
+        print("fig2 skipped (no sample/variable satisfies the panel criterion)"); return
+    _, i, VAR = max(cand)
+    VNAME = {19: "heart rate", 23: "mean arterial pressure", 35: "systolic pressure"}.get(VAR, f"variable {VAR}")
+    print(f"fig2 plotting sample {i}, {VNAME}")
+
     OBS = C["E0_baseline"]        # input observations AND ground truth: one colour, split by the shading
     PRED = "#c0504d"              # the model's own forecast
 
-    tt_h = (batch["observed_tp"][i, ..., HR].reshape(-1) * HRS)
-    v_h = batch["observed_data"][i, ..., HR].reshape(-1)
-    m_h = batch["observed_mask"][i, ..., HR].reshape(-1) > 0
+    tt_h = (batch["observed_tp"][i, ..., VAR].reshape(-1) * HRS)
+    v_h = batch["observed_data"][i, ..., VAR].reshape(-1)
+    m_h = batch["observed_mask"][i, ..., VAR].reshape(-1) > 0
     tt_f = batch["tp_to_predict"][i] * HRS
-    v_f = batch["data_to_predict"][i, :, HR]
-    m_f = batch["mask_predicted_data"][i, :, HR] > 0
+    v_f = batch["data_to_predict"][i, :, VAR]
+    m_f = batch["mask_predicted_data"][i, :, VAR] > 0
 
     fig, axes = plt.subplots(1, len(views), figsize=(7.2, 2.05), sharey=True)
     for k, (ax, (title, spec)) in enumerate(zip(axes, views)):
-        d, m = gen.condition(batch["observed_data"], batch["observed_tp"], batch["observed_mask"],
-                             spec, seed=12345)
+        m = masks[spec]
         with torch.no_grad():
-            pred = model(model.with_observation(batch, d, m))
-        keep = m[i, ..., HR].reshape(-1) > 0
+            pred = model(model.with_observation(batch, batch["observed_data"], m))
+        keep = m[i, ..., VAR].reshape(-1) > 0
+        gone = m_h & ~keep                 # recorded but withheld by this process
 
         ax.axvspan(24, 48, color="0.93", zorder=0)
-        ax.axvline(24, color="0.6", lw=0.7, ls="--", zorder=1)
-        # everything the stay contains, faint: identical in every panel
-        ax.plot(tt_h[m_h], v_h[m_h], color=OBS, lw=0.7, alpha=0.25, zorder=2,
-                label="recorded, not given to model" if k == 0 else None)
-        ax.scatter(tt_h[keep], v_h[keep], s=7, color=OBS, zorder=4,
-                   label="observed / ground truth" if k == 0 else None)
-        ax.plot(tt_f[m_f], v_f[m_f], color=OBS, lw=0.9, zorder=3)          # ground truth, same colour
-        ax.plot(tt_f[m_f], pred[i, m_f, HR], color=PRED, lw=1.0, ls="--", zorder=5,
+        ax.axvline(24, color="0.6", lw=0.8, ls="--", zorder=1)
+        # Only the WITHHELD observations are drawn pale, so nothing pale appears under the reference panel,
+        # where the process withholds nothing. Pale plus solid always equals the full record.
+        # outlines, not translucent fills: overlapping semi-transparent markers stack into something that
+        # looks solid, which made a fully removed channel look partly kept.
+        ax.scatter(tt_h[gone], v_h[gone], s=10, facecolors="none", edgecolors=OBS, linewidths=0.6,
+                   alpha=0.55, zorder=2, label="removed by the process" if k == 1 else None)
+        ax.scatter(tt_h[keep], v_h[keep], s=11, color=OBS, zorder=4,
+                   label="given to model / ground truth" if k == 0 else None)
+        ax.plot(tt_f[m_f], v_f[m_f], color=OBS, lw=1.4, zorder=3)          # ground truth, same colour
+        ax.plot(tt_f[m_f], pred[i, m_f, VAR], color=PRED, lw=1.6, ls="--", zorder=5,
                 label="model forecast" if k == 0 else None)
         ax.set_xlim(0, 48); ax.set_xticks([0, 12, 24, 36, 48])
         ax.tick_params(labelsize=6)
         ax.set_xlabel("time (h)", fontsize=7)
-        # name (as in the tables), the exact spec, then the measured MSE
-        spec_short = spec.replace("temporal_stride", "stride").replace("random_dropout", "rnd drop")                          .replace("variable_group_dropout", "var-group").replace("variable_dropout", "var drop")
-        head = f"({chr(97 + k)}) {title}" + chr(10) + spec_short
+        head = f"({chr(97 + k)}) {title}"
         if mses:
             head += chr(10) + f"MSE {mses[spec]:.4f}"
-        ax.set_title(head, fontsize=6.6, linespacing=1.5)
+        ax.set_title(head, fontsize=7.2, linespacing=1.4)
         if int(keep.sum()) == 0:
-            ax.text(0.03, 0.80, "HR removed" + chr(10) + f"(0 of {int(m_h.sum())})",
-                    transform=ax.transAxes, ha="left", va="center", fontsize=6.0, color=PRED)
+            ax.text(0.03, 0.82, "channel removed", transform=ax.transAxes, ha="left", va="center",
+                    fontsize=6.2, color=PRED)
         ax.text(0.24, 0.045, "input", transform=ax.transAxes, ha="center", fontsize=6.2, color="0.45")
         ax.text(0.76, 0.045, "output", transform=ax.transAxes, ha="center", fontsize=6.2, color="0.45")
-    axes[0].set_ylabel("heart rate (norm.)", fontsize=7)
+    axes[0].set_ylabel(f"{VNAME} (norm.)", fontsize=7)
     # legend below the axes, clear of the x labels
     fig.subplots_adjust(bottom=0.34)
     fig.legend(loc="lower center", ncol=3, frameon=False, fontsize=6.5, bbox_to_anchor=(0.5, -0.02),

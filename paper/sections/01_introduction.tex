@@ -24,16 +24,17 @@ observation process cannot see it.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/fig2_observation_shift.pdf}
-\caption{Heart rate for one ICU stay under the five evaluation conditions of Section~ef{sec:splits}, named
-and specified exactly as the results tables report them. The model receives the unshaded region (markers, the
-24\,h history) and forecasts the shaded one; observations and ground truth share a colour and are separated
-only by the shading, the pale trace is what the record contains but the process withheld, and the model's own
-forecast is dashed. \emph{The history and the target are identical in every panel} --- only which observations
-reach the model changes. At this horizon the model predicts a near-constant level per patient rather than
-hour-to-hour dynamics, so what the observation process damages is its estimate of that level, and the forecast
-drifts further from the target as the process degrades. In (d) and (e) heart rate is itself among the removed
-variables, so none of its $50$ observations reach the model. Panel headings give the test MSE over all
-variables\prelim; draws use the evaluation seed, unchanged across panels.}
+\caption{Systolic pressure for one ICU stay under the five evaluation conditions of
+Section~ef{sec:splits}, named as the results tables name them. The model is given the filled markers over
+the 24\,h history and forecasts the shaded window; hollow markers were recorded but withheld by that
+process, so filled plus hollow is the same record in every panel. Ground truth shares the colour of the
+observations and is separated from them only by the shading; the model's own forecast is dashed.
+\emph{History and target are identical throughout} --- only which observations reach the model changes. At
+this horizon the model predicts a near-constant level rather than hour-to-hour dynamics, so what the
+observation process damages is its estimate of that level, and the forecast drifts further from the target as
+the process degrades. In (d) this channel is removed outright, while in (e) it survives thinned: the composed
+condition removes contiguous variable \emph{groups}, so it is not simply a harsher version of (d). Panel
+headings give the test MSE over all variables\prelim; draws use the evaluation seed, unchanged across panels.}
 \label{fig:views}
 \end{figure}
 
