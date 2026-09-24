@@ -8,6 +8,7 @@ from src.observation.metadata import ObservationMetadata, compute_metadata, desc
 from src.observation.constraints import ObservationConstraints
 from src.observation.generator import (
     ObservationProcessGenerator, TRAIN_POOL, TEST_CONDITIONS, UNSEEN_CONDITIONS, MATCHED_DENSITY,
+    MAIN_CONDITIONS,
 )
 
 __all__ = [
@@ -16,4 +17,5 @@ __all__ = [
     "DensityControlledSampling", "MixedObservationProcess", "Composite", "make_process", "apply", "REGISTRY",
     "ObservationMetadata", "compute_metadata", "descriptor", "DESCRIPTOR_FIELDS", "ObservationConstraints",
     "ObservationProcessGenerator", "TRAIN_POOL", "TEST_CONDITIONS", "UNSEEN_CONDITIONS", "MATCHED_DENSITY",
+    "MAIN_CONDITIONS",
 ]

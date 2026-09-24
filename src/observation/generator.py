@@ -46,6 +46,16 @@ UNSEEN_CONDITIONS = [
     "long_gap:0.4", "variable_group_dropout:0.3", "burst:0.5",
     "random_dropout:0.5+variable_dropout:0.3", "temporal_stride:3+variable_group_dropout:0.3",
 ]
+# The main benchmark protocol (BENCHMARK_PROTOCOL.md section 2): one condition per dimension of the observation
+# process, plus an unseen composition of two. Each moves ONE dimension past what the training pool covers.
+MAIN_CONDITIONS = [
+    "identity",                                        # clean reference
+    "random_dropout:0.7",                              # density  (train pool: <= 0.4)
+    "temporal_stride:3",                               # timing   (train pool: stride 2)
+    "variable_dropout:0.5",                            # variables(train pool: 0.2)
+    "temporal_stride:3+variable_group_dropout:0.3",    # composed (variable-group never trained on)
+]
+
 # Matched-density triples for the density-vs-structure ablation (OPERA section 29): same expected density,
 # different temporal / variable structure.
 MATCHED_DENSITY = {
