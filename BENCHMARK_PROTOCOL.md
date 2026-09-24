@@ -158,15 +158,21 @@ generated, never edited.
 
 ## 7. Run count and staging
 
+**The method needs no extra runs.** Its frozen rich-view teacher *is* the vanilla baseline: the baseline arm trains
+on the dataset's own full observation, which is exactly the rich view, and the launcher points a distillation run at
+the same-seed baseline checkpoint. Stage A's checkpoints therefore serve Stage C directly.
+`configs/teacher_rich.yaml` duplicates `baseline.yaml` and is not needed; delete it.
+
 | stage | arm | runs | estimate | leaves you with |
 |---|---|---|---|---|
 | A | vanilla, seed 0 | 21 | 3–4 h | the full main table, one seed |
+| C | opera, seed 0 | 21 | 7–10 h | method works on 3 backbones |
 | B | vanilla, seeds 1–4 | 84 | 10–16 h | the main table with error bars |
-| C | opera, seed 0 (+7 teachers) | 28 | 6–9 h | method works on 3 backbones |
-| D | opera, seeds 1–4 | 112 | 30–50 h | the complete benchmark |
+| D | opera, seeds 1–4 | 84 | 28–45 h | the complete benchmark |
 
-Totals: 245 runs, roughly 50–75 h of card time. Each stage ends at a complete, reportable result, so the sweep can
-stop after any stage.
+Totals: **210 runs**, roughly 50–75 h of card time. The method costs 2–2.5x per run, because it trains on two views
+and runs a teacher forward pass, but it does not cost more runs. Each stage ends at a complete, reportable result,
+so the sweep can stop after any stage. Stage C depends on Stage A; Stage D depends on Stage B.
 
 Recommended order is A, C, B, D: getting the method onto all three backbones at one seed is more informative than
 error bars on the baselines alone.
@@ -174,6 +180,18 @@ error bars on the baselines alone.
 ---
 
 ## 8. Known risks
+
+- **The teacher is resolved without the backbone.** `scripts/run_experiments.py` builds the teacher path from
+  dataset and seed only (`{dataset}_baseline_s{seed}`), so all three backbones would request the same checkpoint and
+  two would receive a teacher of the wrong architecture. `load_state_dict` is strict, so this raises rather than
+  loading silently, but it blocks two thirds of Stage C. **Run names and teacher resolution must both carry the
+  backbone** before Stage C: `bench_{setting}_{backbone}_{method}_s{seed}`.
+- **A missing teacher path crashes at load rather than at launch.** The launcher warns and continues, passing a
+  non-existent path, which fails later in `torch.load`. Loud, but it wastes the queue position. Make the launcher
+  abort on a missing teacher instead.
+- **`build_teacher` falls back to a copy of the student's initialisation** when `teacher_ckpt` is empty, which would
+  make the distillation term pure noise. The launcher never passes an empty path, so this is latent, but it should
+  raise instead of falling back.
 
 - **iTransformer on the mortality task** previously exhausted memory, surfacing as a misleading CUDA driver error.
   That is why classification moved to PatchTST. Expect to lower that setting's batch size for all arms.
@@ -209,6 +227,8 @@ python scripts/aggregate.py --csv results/benchmark.csv
 ## 10. What has to be built
 
 1. `MAIN_CONDITIONS` in `src/observation/generator.py`, the five specs above.
+0. Backbone-aware run names and teacher resolution, `bench_{setting}_{backbone}_{method}_s{seed}`, and abort
+   rather than warn when a teacher checkpoint is missing. Required before Stage C, see section 8.
 2. Degradation in `evaluate_conditions` computed on the primary metric, not cross-entropy.
 3. `scripts/run_benchmark.py`: the staged grid launcher, sequential, resumes by skipping finished run directories.
 4. `scripts/aggregate.py`: emit `results/benchmark.csv` and `results/benchmark_summary.csv` in the schema above.
