@@ -190,7 +190,8 @@ def fig2(out, dataset="physionet"):
         ax.axvspan(24, 48, color="0.93", zorder=0)
         ax.axvline(24, color="0.6", lw=0.7, ls="--", zorder=1)
         # everything the stay contains, faint: identical in every panel
-        ax.plot(tt_h[m_h], v_h[m_h], color=OBS, lw=0.7, alpha=0.25, zorder=2)
+        ax.plot(tt_h[m_h], v_h[m_h], color=OBS, lw=0.7, alpha=0.25, zorder=2,
+                label="recorded, not given to model" if k == 0 else None)
         ax.scatter(tt_h[keep], v_h[keep], s=7, color=OBS, zorder=4,
                    label="observed / ground truth" if k == 0 else None)
         ax.plot(tt_f[m_f], v_f[m_f], color=OBS, lw=0.9, zorder=3)          # ground truth, same colour
@@ -201,12 +202,15 @@ def fig2(out, dataset="physionet"):
         ax.set_xlabel("time (h)", fontsize=7)
         head = title + (chr(10) + f"MSE {mses[spec]:.4f}" if mses else "")
         ax.set_title(head, fontsize=7.5, linespacing=1.35)
+        if int(keep.sum()) == 0:
+            ax.text(0.24, 0.80, "HR removed" + chr(10) + f"0 of {int(m_h.sum())} kept",
+                    transform=ax.transAxes, ha="center", va="center", fontsize=6.2, color=PRED)
         ax.text(0.24, 0.045, "input", transform=ax.transAxes, ha="center", fontsize=6.2, color="0.45")
         ax.text(0.76, 0.045, "output", transform=ax.transAxes, ha="center", fontsize=6.2, color="0.45")
     axes[0].set_ylabel("heart rate (norm.)", fontsize=7)
     # legend below the axes, clear of the x labels
     fig.subplots_adjust(bottom=0.34)
-    fig.legend(loc="lower center", ncol=2, frameon=False, fontsize=6.8, bbox_to_anchor=(0.5, -0.02),
+    fig.legend(loc="lower center", ncol=3, frameon=False, fontsize=6.5, bbox_to_anchor=(0.5, -0.02),
                handlelength=1.6, columnspacing=1.6)
     fig.savefig(os.path.join(out, "fig2_observation_shift.pdf"))
     print("fig2 done")
