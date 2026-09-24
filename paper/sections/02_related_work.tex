@@ -1,41 +1,46 @@
-%% Related work, organised by scientific problem rather than by method lineage.
+%% Related work in three distinctions (CLAUDE_paper.md section 17): what encoders assume about observations,
+%% why observation patterns are not scalar missingness, and how our privileged signal differs from ordinary KD.
 %% Included by sigconf.tex. Do not add a preamble here.
 
 \section{Related Work}
-\paragraph{Irregular multivariate time series.}
+
+\paragraph{Irregular time-series representation learning, and what it assumes about observations.}
 Interpolation-based methods map observations onto a regular grid before encoding \cite{shukla2019ipn};
 continuous-time methods evolve a latent state between observations
 \cite{rubanova2019latentode,debrouwer2019gruodebayes,kidger2020ncde}; set-based methods aggregate an unordered
 observation set with attention \cite{horn2020seft,shukla2021mtand}; graph-based methods model inter-variable
-structure \cite{zhang2022raindrop,zhang2024tpatchgnn}. Query-based embeddings \cite{lim2026quite} aggregate the
-observations belonging to a variable or temporal patch into a fixed-size token, letting standard backbones
-\cite{liu2024itransformer,nie2023patchtst} be reused unchanged. We do not propose a new encoder; we ask how any
-such encoder behaves when the observation process moves.
+structure \cite{zhang2022raindrop,zhang2024tpatchgnn}; query-based embeddings pool the observations of a variable
+or temporal patch into a fixed-size token so that standard backbones \cite{liu2024itransformer,nie2023patchtst}
+can be reused \cite{lim2026quite}. These designs differ in how faithfully they represent a given observation set,
+and all of them are trained and evaluated under a single observation process. We do not propose a new encoder; we
+ask how such an encoder behaves when that process changes, and how training can prepare it.
 
-\paragraph{Missingness mechanisms.}
+\paragraph{Missingness mechanisms, and why a rate is not enough.}
 The statistical literature classifies missingness by its dependence on observed and unobserved values
-\cite{rubin1976missing}, and in clinical data the missingness pattern is itself informative
-\cite{lipton2016informative,che2018grud}. Learning work typically treats irregularity as a property of a dataset
-and probes robustness by varying a missingness \emph{rate}. We instead vary the observation \emph{process} at
-comparable density and study the case where it differs between training and deployment.
+\cite{rubin1976missing}, and in clinical data the pattern of missingness is itself predictive
+\cite{lipton2016informative,che2018grud}. Learning work generally treats irregularity as a fixed property of a
+dataset and probes robustness, if at all, by varying a scalar missingness \emph{rate}. Our measurements show that
+this is not a sufficient description: processes that remove the same fraction of observations differ in error by
+up to $3.8\times$, and which structure matters depends on the sensing modality. We therefore treat the
+observation process as a structured object that can be sampled, constrained, searched over and shifted.
 
-\paragraph{Robustness through exposure and through constraint.}
-Randomising nuisance factors during training is standard in sim-to-real transfer
-\cite{tobin2017domainrand} and time-series augmentation \cite{wen2021augmentation}; invariant-risk formulations
-instead constrain the representation across environments \cite{arjovsky2019irm}. Our observation views randomise
-the measurement process rather than the signal. We deliberately do not impose cross-view representation
-equality: objectives of that form are known to require explicit anti-collapse terms
-\cite{chen2020simclr,grill2020byol,bardes2022vicreg}, and the property we need is that different observation
-processes yield representations that remain \emph{useful}, not identical.
+\paragraph{Robustness by exposure, robustness by constraint.}
+Randomising nuisance factors during training underpins sim-to-real transfer \cite{tobin2017domainrand} and
+time-series augmentation \cite{wen2021augmentation}; selecting difficult examples sharpens training
+\cite{shrivastava2016ohem}; and training against a constrained worst case is the basis of adversarial robustness
+\cite{madry2018towards}. Our views randomise or search over the measurement process rather than perturbing the
+signal, which keeps every perturbation physically meaningful: each candidate is a valid way the same trajectory
+could have been recorded. Invariant-risk formulations instead constrain the representation across environments
+\cite{arjovsky2019irm}. We deliberately impose no cross-view representation equality: objectives of that form
+need explicit anti-collapse machinery \cite{chen2020simclr,grill2020byol,bardes2022vicreg}, and the property we
+require is that different observations of one trajectory remain \emph{useful} for the task, not that they map to
+the same point.
 
 \paragraph{Privileged information and distillation.}
-Learning with side information available only at training time is the LUPI setting \cite{vapnik2015lupi};
-distillation \cite{hinton2015distilling} is one way to realise it, and the two are formally connected
-\cite{lopezpaz2016unifying}. A richer observation of the same history is a natural privileged signal for
-irregular data, which is the form we adopt.
-
-\paragraph{Hard example and worst-case training.}
-Selecting difficult examples accelerates and sharpens training \cite{shrivastava2016ohem}, and training against
-a constrained worst case is the basis of adversarial robustness \cite{madry2018towards}. We apply the idea to
-the observation process rather than to the input values, which keeps the perturbation set physically meaningful:
-every candidate is a valid way the same trajectory could have been recorded.
+Side information available only during training defines the LUPI setting \cite{vapnik2015lupi}; distillation
+\cite{hinton2015distilling} is one way to realise it, and the two are formally connected
+\cite{lopezpaz2016unifying}. Our teacher is not a stronger model in the usual sense: it has the same capacity and
+objective as the student and differs only in receiving a richer observation of the same trajectory, which makes
+the setting self-distillation with an asymmetry in the observation rather than in the learner. Existing methods
+primarily improve the representation of the observations a model is given; we instead study the case where the
+observation process itself changes, and exploit richer training-time observations as privileged information.

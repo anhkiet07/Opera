@@ -2,12 +2,17 @@
 %% Included by sigconf.tex. Do not add a preamble here.
 
 \section{Conclusion}
-Irregularly sampled data should be treated as the product of a temporal process and an observation process, and
-the second can shift independently of the first. We formalised that shift, showed that its severity varies by
-three orders of magnitude across benchmarks in a way that tracks how much each task uses its irregular history,
-and showed that it is not reducible to how many observations are lost. Of the mechanisms we studied for acting
-on the observation process, randomising it during training is the most reliable and transfers to process
-families never seen; transferring task-level information from a richer observation of the same history improves
-accuracy where the task is noisy; and searching for worst-case observation processes helps only when the search
-space is harsher than what random exposure already supplies. None of them changes what deployment requires: one
-sparse observation and the student.
+Irregularly sampled data is the product of a temporal process and an observation process, and the second can shift
+independently of the first. We formalised that shift, gave a controlled protocol that re-observes held-out
+histories while preserving their targets, and found degradation ranging from a few percent to more than an order of
+magnitude across seven task settings, in a way that observation density alone does not explain. The method we
+propose exploits the one asymmetry the setting offers: during training, and only during training, the same history
+can be observed more richly than deployment allows. Privileged observation self-distillation turns that richer
+observation into a task-level target for a student restricted to the deployment view, and it improves absolute
+accuracy where the sparse view leaves the target ambiguous. Observation-process augmentation supplies the student's
+views and is what reduces sensitivity to the shift itself; hard observation-process mining improves worst-case
+error, but only when its candidate pool is harsher than the mixture augmentation already draws, which is why we
+report it as a conditional extension rather than a component. None of the three changes what deployment requires:
+one sparse observation and the student. The natural next questions are how the gain varies with the size of the
+teacher--student observation gap, and whether a shift between two real acquisition environments behaves like the
+synthetic re-observations studied here.

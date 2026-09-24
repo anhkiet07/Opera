@@ -1,0 +1,39 @@
+%% Discussion and limitations. Kept short: only the boundaries that sharpen the claims (CLAUDE_paper.md 16).
+%% Included by sigconf.tex. Do not add a preamble here.
+
+\section{Discussion and Limitations}
+\label{sec:discussion}
+
+\paragraph{Two mechanisms, two different jobs.}
+The results separate an effect we set out to measure from one we did not. Exposure to diverse observation processes
+is what reduces sensitivity to a change of observation process, and it does so without an in-distribution cost.
+Privileged observation self-distillation instead improves absolute accuracy, on clean and shifted conditions
+alike, in the settings where the task is information limited, and leaves relative degradation unchanged. Conflating
+the two would be easy, because both mechanisms involve sparse views of the same history, and it would make the
+paper's central claim untestable. We therefore state them separately, and we do not claim that the complete
+configuration is uniformly the best choice: on PhysioNet the best shifted error comes from augmentation with a
+harsher mining pool, and on USHCN at one month the best clean and mean shifted error come from augmentation plus
+distillation without mining.
+
+\paragraph{Reading the degradation ratio.}
+Eq.~\ref{eq:degradation} normalises by a model's own clean score, which makes a uniformly weaker model look robust.
+USHCN-1mo is the clear case: the baseline's ratio, $+1.9\%$, is close to the complete configuration's $+1.5\%$,
+yet its error is higher at every condition, and its clean error ($0.53787$) exceeds the complete configuration's
+error \emph{under shift} ($0.52871$). A second failure mode concerns the choice of metric. On P12, cross-entropy
+improves under mild shifts while AUROC and AUPRC fall, so a degradation ratio computed on cross-entropy is
+negative and uninterpretable there. We compute classification degradation on $1-\mathrm{AUROC}$ throughout, which
+makes P12 an ordinary mild case ($+11.4\%$ baseline, $+7.2\%$ with the method) rather than an anomaly, but the
+episode is a reminder that the summary metric has to be chosen before it is trusted.
+
+\paragraph{Limitations.}
+Every number here is single-seed and preliminary. The protocol calls for five paired seeds, and the smaller
+differences in Tables~\ref{tab:components}, \ref{tab:posd} and \ref{tab:unseen} are within the range we would
+expect seeds to move; the mining comparison in particular rests on a $0.00006$\,MSE margin and should not be read
+as established. Our observation processes are synthetic re-observations of real records, which is what makes the
+targets well defined but is weaker evidence than a shift between two genuinely different acquisition environments.
+Compositions are limited to pairs, and the unseen families are drawn from the same nine-primitive vocabulary as the
+training pool. The two backbones are tied to tasks rather than crossed with them, so architecture and task are not
+separated. USHCN is not min-max normalised by its published pipeline, so its errors are in raw units and not
+comparable in magnitude to the other forecasting settings. Finally, the teacher in our experiments observes the
+untouched record; we do not vary the richness of the teacher's view, so we cannot say how much of the distillation
+gain depends on the size of the teacher--student observation gap.

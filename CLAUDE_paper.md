@@ -1,1108 +1,1073 @@
-# Paper Writing Instructions
+# CLAUDE.md — Paper Development Instructions
 
-## 0. Role
+## Role
 
-You are writing a research paper for a top-tier machine learning/time-series venue.
+Act as a senior research scientist at Google DeepMind / a top-tier ML research lab preparing a paper for **ICLR, NeurIPS, or ICML**.
 
-Act as a senior researcher in:
+Your job is not merely to make the prose grammatical. You must make the manuscript read like a **coherent, technically mature machine-learning paper** written for expert reviewers.
 
-* irregular multivariate time-series modeling;
-* representation learning;
-* missing/partial observation modeling;
-* temporal distribution shift;
-* robust generalization;
-* causal representation learning.
+Be highly critical. Do not preserve weak framing simply because it already exists in the draft.
 
-Be scientifically conservative. Do not inflate claims.
+The paper should prioritize:
 
-The paper should read as an **independent research contribution**, not as an extension paper for QuITE.
+1. a sharp scientific question,
+2. a precise methodological contribution,
+3. strong experimental evidence,
+4. careful claims that are exactly supported by the experiments,
+5. concise, information-dense writing.
 
----
-
-# 1. Central Writing Principle
-
-The paper must NOT be framed as:
-
-> "We extend QuITE by adding X."
-
-Instead, the paper should identify a broader scientific problem and position QuITE only as one useful implementation/baseline.
-
-The central question is:
-
-> **How should temporal representations be learned when the underlying temporal process is only partially observed through heterogeneous and changing observation processes?**
-
-The paper should investigate whether robust representation learning can explicitly account for the **observation process** rather than treating irregular sampling merely as a preprocessing nuisance.
-
-The conceptual distinction is:
-
-```text
-Underlying temporal process
-          |
-          v
-   Observation process
-   /       |        \
- dense    sparse    bursty
-          |
-          v
-     observed data
-          |
-          v
-  temporal representation
-          |
-          v
- forecasting / classification
-```
-
-The scientific object of interest is therefore not only the underlying time series.
-
-It is the combination:
-
-$$
-\text{observed data}
-=
-\text{underlying process}
-+
-\text{observation process}.
-$$
-
-The paper should emphasize that two datasets can contain observations generated from the same underlying temporal process while exhibiting substantially different observation patterns.
+Avoid the style of a technical report, engineering document, benchmark paper, or project README.
 
 ---
 
-# 2. Primary Research Thesis
+# 1. Current scientific direction
 
-The paper should investigate the following thesis:
+The paper studies **observation-process shift in irregular time series**.
 
-> **Robust temporal representation learning requires explicitly reasoning about variation in the observation process, because models trained under one observation regime may fail when the same underlying process is observed differently.**
-
-This leads to three complementary questions:
-
-### Q1 — Sampling invariance
-
-Can representations remain useful when the same underlying trajectory is observed through different sampling patterns?
-
-### Q2 — Observation-aware adaptation
-
-Can representations adapt to the observation regime encountered by each sample?
-
-### Q3 — Structural prior
-
-Can known or externally estimated temporal structure provide a useful inductive bias when observations are sparse or shifted?
-
-These should initially be treated as **independent hypotheses**, not components of a single model.
-
----
-
-# 3. Do NOT Make QuITE the Main Contribution
-
-QuITE should appear in the paper as:
-
-* a strong irregular-time-series representation baseline;
-* an implementation substrate that naturally supports irregular observations;
-* one representative model used to test the broader hypotheses.
-
-Do NOT repeatedly write:
-
-> "QuITE++"
-> "QuITE extension"
-> "our QuITE module"
-> "we improve QuITE"
-
-unless technically necessary.
-
-Prefer:
-
-> "We instantiate the proposed observation-process modeling strategy within an irregular-time-series encoder."
-
-or:
-
-> "We use a query-based irregular encoder as the base architecture."
-
-The paper should remain meaningful if the reader replaces QuITE with another irregular-time-series encoder.
-
----
-
-# 4. Problem Formulation
-
-Define an underlying multivariate temporal process:
+The core setting is:
 
 $$
-X = \{x(t)\}_{t \in \mathcal T}.
-$$
-
-The model does not observe \(X\) directly.
-
-Instead, it receives:
-
-$$
-\mathcal O =
-\{(t_k, x(t_k), m_k)\}_{k=1}^{K},
+X \rightarrow S \rightarrow O \rightarrow Y
 $$
 
 where:
 
-* \(t_k\) are observation times;
-* \(x(t_k)\) are observed values;
-* \(m_k\) indicates variable availability.
+* \(X\) is the underlying temporal process,
+* \(S\) is the observation process,
+* \(O=S(X)\) is the observed irregular time series,
+* \(Y\) is the prediction target.
 
-Introduce an observation process:
-
-$$
-\mathcal S \sim P_{\mathrm{obs}}(\mathcal S).
-$$
-
-The observed sample can therefore be viewed as:
+The central distribution shift is:
 
 $$
-\mathcal O = \mathcal S(X).
+P_{\mathrm{train}}(S) \neq P_{\mathrm{test}}(S)
 $$
 
-The important distinction is between:
+while the underlying process \(P(X)\) remains comparable.
 
-### Process shift
+The paper asks:
 
-$$
-P(X)
-$$
+> Can a model trained on one observation process remain reliable when the same underlying temporal dynamics are observed through a different process?
 
-changes.
+The empirical results show that this shift can be substantial and highly heterogeneous across datasets.
 
-and:
+However, **do not make the paper primarily about a large benchmark of observation-process shift**.
 
-### Observation-process shift
+The main methodological contribution should be:
 
-$$
-P_{\mathrm{obs}}(\mathcal S)
-$$
+> **Privileged Observation Self-Distillation**: during training, a teacher receives a richer observation of the same underlying history, while the student receives only the sparse observation available at deployment. The richer observation provides privileged information that teaches the student which prediction-relevant information to preserve under observation loss.
 
-changes while the underlying process remains comparable.
+Use a concise name such as:
 
-The paper focuses primarily on the second setting.
+**Privileged Observation Self-Distillation (POSD)**
+
+or, if the existing method name is retained:
+
+**OPERA: Observation-Process Robust Representation Learning**
+
+with POSD clearly identified as the **central methodological mechanism**.
 
 ---
 
-# 5. Why Existing Missing-Data Framing Is Insufficient
+# 2. Reframe the contribution hierarchy
 
-Do not claim that existing time-series literature completely ignores sampling.
+Do NOT present the following as three equally important innovations:
 
-Instead make the narrower argument:
+* observation augmentation,
+* privileged distillation,
+* hard-process mining.
 
-Many approaches evaluate missingness or irregularity as a corruption level, density level, or preprocessing issue.
+Instead use the hierarchy:
 
-Our question is different:
+### Central contribution
 
-> What happens when the **distribution of the observation process itself changes?**
+**Privileged Observation Self-Distillation**
 
-Examples:
+### Supporting training mechanism
 
-* random missingness during training → bursty sampling during testing;
-* uniform sparse sampling → variable-specific sampling;
-* one sampling density → another density;
-* regular-ish sampling → highly clustered observations.
+**Observation-process augmentation**
 
-A model can perform well at a particular missingness rate while still failing under a different observation process with similar overall density.
+### Optional robustness enhancement
 
-This distinction should motivate the experiments.
+**Hard observation-process mining**
 
----
+The paper should make clear that the most scientifically interesting idea is:
 
-# 6. Main Methodological Ideas
+> A richer observation of the same trajectory can serve as privileged training information for a model that must operate from a poorer observation at deployment.
 
-The paper should present the three directions as mechanisms for studying observation-process robustness.
+The teacher is not simply "a stronger model."
 
-## 6.1 Sampling-Process Augmentation
+The teacher is stronger because it has **more information about the same underlying trajectory**.
 
-For an underlying trajectory \(X\), construct multiple observation views:
+This distinction must appear clearly in:
 
-$$
-\mathcal O_1 = \mathcal S_1(X),
-\qquad
-\mathcal O_2 = \mathcal S_2(X).
-$$
-
-The views can differ in:
-
-* observation density;
-* temporal spacing;
-* burstiness;
-* variable availability;
-* missingness structure.
-
-The primary training objective is:
-
-$$
-\mathcal L =
-\mathcal L_{\mathrm{task}}
-+
-\lambda
-\mathcal L_{\mathrm{cons}}.
-$$
-
-However, be careful with the interpretation.
-
-A representation should NOT be invariant to everything.
-
-It should ideally satisfy:
-
-$$
-z(\mathcal S_1(X))
-\approx
-z(\mathcal S_2(X))
-$$
-
-when the views correspond to the same underlying process,
-
-while maintaining:
-
-$$
-z(X_a) \neq z(X_b)
-$$
-
-when the underlying processes differ in task-relevant ways.
-
-This is **observation-process invariance**, not indiscriminate representation invariance.
+* abstract,
+* introduction,
+* method,
+* contribution list,
+* experimental analysis,
+* conclusion.
 
 ---
 
-# 7. Important Negative Result
+# 3. Do not oversell distillation
 
-An early experiment found that naive representation consistency can fail.
+The current results do NOT support claiming that distillation is the primary source of observation-shift robustness on every dataset.
 
-Cosine consistency between independently sampled views can drive representations toward excessive similarity/collapse without improving forecasting robustness.
+The current evidence indicates:
 
-Therefore:
+* On PhysioNet, augmentation produces most of the robustness improvement.
+* On USHCN, distillation is the strongest individual improvement.
+* On P19, distillation contributes meaningful clean-task improvement.
+* Hard mining is dataset/pool dependent.
+* The complete combination is not uniformly better than its strongest component.
 
-DO NOT hide this result.
+Therefore do NOT write:
 
-If confirmed across experiments, present it as evidence that:
+> "Our distillation method solves observation-process shift."
 
-> Simply forcing representations from different observation views to be identical is insufficient and can remove useful information.
+Instead write something closer to:
 
-This motivates observation-aware mechanisms rather than unconditional invariance.
+> "We introduce privileged observation self-distillation as a complementary mechanism that transfers prediction-relevant information from richer observations to a deployment-constrained student."
 
-Do not claim representation collapse unless the actual diagnostics support that claim.
+The paper should distinguish:
 
----
+### Robustness effect
 
-# 8. Observation-Aware Query Adaptation
+Primarily supported by observation-process augmentation.
 
-The second mechanism conditions the representation on the observation pattern.
+### Accuracy / information-transfer effect
 
-Instead of:
+Strongly supported by privileged observation distillation on several settings.
 
-$$
-q_i = q_i^{base},
-$$
+### Worst-case robustness effect
 
-use:
+Supported conditionally by hard-process mining when the candidate pool contains processes harsher than those seen during ordinary augmentation.
 
-$$
-q_i(X)
-=
-q_i^{base}
-+
-W_s s(\mathcal O),
-$$
-
-where \(s(\mathcal O)\) summarizes the observation regime.
-
-Possible statistics include:
-
-* observation density;
-* number of observations;
-* mean temporal gap;
-* variance of temporal gaps;
-* per-variable availability;
-* recent observation density.
-
-The conceptual motivation is:
-
-> The model should not assume that the same aggregation strategy is optimal for every observation regime.
-
-Do not describe this merely as "adding parameters."
-
-The scientific question is whether **conditioning representation formation on the observation process** improves cross-regime generalization.
+This distinction makes the paper more credible.
 
 ---
 
-# 9. Structural / Causal Prior
+# 4. The paper's central narrative
 
-The third direction investigates whether structural information can help organize irregular observations.
+The paper should follow this intellectual progression:
 
-Let:
+## Question
 
-$$
-M \in \mathbb R^{N\times N}
-$$
+Irregular time-series models are normally evaluated under the same observation process used for training.
 
-represent a variable-level structural prior.
+But observation processes can change independently of the underlying temporal dynamics.
 
-Use it as an additive attention bias:
+## Phenomenon
 
-$$
-A_{ij}
-=
-\operatorname{softmax}
-\left(
-\frac{Q_iK_j^\top}{\sqrt d}
-+
-\lambda M_{ij}
-\right).
-$$
+Changing only the observation process can produce large performance shifts.
 
-Start with a soft bias rather than a hard mask.
+Crucially:
 
-The paper MUST distinguish:
+> Observation density alone does not determine the severity of the shift.
 
-1. known/oracle structural information;
-2. estimated structure;
-3. arbitrary/random structure.
+Different ways of removing the same amount of data can produce very different failures.
 
-Do not call an attention matrix causal merely because it is used inside attention.
+## Insight
 
----
+If deployment observation is poorer than the observation available during training, richer observations can provide **privileged information** about what prediction-relevant structure exists in the underlying history.
 
-# 10. Synthetic Causal Experiment
+## Method
 
-The synthetic experiment uses a known structural dynamical system.
+Train a deployment-constrained student using:
 
-The graph is deliberately known during data generation.
+1. diverse observation-process views,
+2. a richer teacher observation for privileged prediction distillation,
+3. optionally, hard observation-process mining.
 
-Example:
+## Result
 
-$$
-0\rightarrow1\rightarrow2,
-$$
+The resulting student:
 
-$$
-0\rightarrow3,
-$$
+* preserves clean performance,
+* substantially reduces degradation under observation-process shift,
+* generalizes to observation-process families not explicitly used during training,
+* requires neither the teacher nor process search at inference.
 
-$$
-4\rightarrow2,
-$$
-
-$$
-5\rightarrow6,
-$$
-
-$$
-7\rightarrow8.
-$$
-
-Variable 9 is isolated.
-
-The synthetic variables are abstract temporal channels, NOT clinical variables.
-
-The simulator generates trajectories according to the structural dynamics and then applies irregular observation.
-
-The important distinction is:
-
-### Role 1
-
-The graph generates the synthetic data.
-
-### Role 2
-
-The graph may be supplied as a prior to the model.
-
-This is intentional.
-
-The experiment asks:
-
-> Does access to correct structural information help representation learning?
-
-It does NOT establish causal discovery.
-
-Therefore use language such as:
-
-> "oracle structural prior"
-
-rather than:
-
-> "we discovered the causal graph."
+This should be the paper's main story.
 
 ---
 
-# 11. Causal Controls
+# 5. Abstract requirements
 
-The following controls are essential:
+Rewrite the abstract from scratch if necessary.
 
-1. No structural bias
-2. Identity matrix
-3. Correct/oracle graph
-4. Random graph
-5. Shuffled graph
-6. Noisy graph
-7. Estimated graph, if implemented
+It should follow:
 
-The random and shuffled controls determine whether gains arise from meaningful structure or merely from introducing an additional structured attention bias.
+### Sentence 1: problem
 
-The noisy-graph experiment measures sensitivity to structural estimation error.
+Irregular time-series models depend on how observations are acquired.
 
----
+### Sentence 2: gap
 
-# 12. Graph Estimation
+Existing evaluations usually keep the observation process fixed, so robustness to observation-process shift is not measured.
 
-If graph estimation is implemented, begin with a simple statistical method such as Granger causality or sparse lagged regression.
+### Sentence 3: phenomenon
 
-Pipeline:
+Show that changing only the observation process can substantially degrade performance and that density alone does not explain the effect.
 
-```text
-irregular training observations
-          ↓
-regular-grid reconstruction
-          ↓
-Granger / sparse lagged regression
-          ↓
-candidate directed edges
-          ↓
-threshold
-          ↓
-estimated structural matrix
-          ↓
-soft structural bias
-```
+### Sentence 4: method
 
-Important caveat:
+Introduce the proposed method, emphasizing privileged observation self-distillation.
 
-Regular-grid reconstruction introduces artificial values and partially conflicts with the motivation for irregular modeling.
+### Sentence 5: empirical result
 
-Therefore explicitly characterize this as a limitation.
+Give the strongest quantitative evidence.
 
-Do NOT claim that Granger causality recovers the true causal DAG in general.
+### Sentence 6: practical consequence
 
-It identifies predictive temporal dependencies under assumptions.
+Inference uses only the deployment observation.
+
+Do NOT put every experimental observation into the abstract.
+
+Do NOT say:
+
+* "three mechanisms..."
+* "we establish a new paradigm..."
+* "three orders of magnitude..." unless the evidence is finalized with multiple seeds.
+* "reliable remedy."
+* "solves."
+
+The abstract should feel like an ML paper, not an executive summary of every experiment.
 
 ---
 
-# 13. LLM / Semantic Structural Priors
+# 6. Introduction requirements
 
-If an LLM-generated graph is tested, treat it as a **semantic prior**, not ground-truth causality.
+The current introduction is too expansive and occasionally reads like an empirical report.
 
-Potential experiment:
+Rewrite it around a sharper argument.
 
-```text
-variable names
-variable descriptions
-units / domain knowledge
-          ↓
-       LLM prior
-          ↓
-candidate structural matrix
-          ↓
-QuITE / irregular encoder
-```
+Recommended structure:
 
-Compare:
+### Paragraph 1 — Problem
 
-* data-driven graph;
-* LLM-derived graph;
-* oracle graph;
-* random graph;
-* no graph;
-* hybrid LLM + data graph.
+Irregular observations arise because measurements are generated by an observation process.
 
-The scientific question is whether external semantic knowledge can compensate when causal structure is difficult to estimate from irregular observations.
+Give 2–3 concise examples.
 
-Do not claim that an LLM "discovers causality" unless this is explicitly validated.
+Do not over-explain.
 
----
+### Paragraph 2 — Missing evaluation dimension
 
-# 14. Experimental Philosophy
+Most irregular-time-series methods model the observed data but assume the observation process is stable between training and deployment.
 
-The paper should prioritize **distribution-shift experiments** over small gains on standard benchmarks.
+Introduce observation-process shift.
 
-For every main method evaluate:
+### Paragraph 3 — Concrete phenomenon
 
-### In-distribution
-
-Training and testing use similar observation processes.
-
-### Cross-observation shift
-
-Train under one observation process and test under another.
-
-Examples:
-
-```text
-Train: random sparse
-Test: bursty
-
-Train: dense
-Test: sparse
-
-Train: random
-Test: variable-specific
-
-Train: moderate irregularity
-Test: highly irregular
-```
-
-### Unseen observation process
-
-Train on several regimes and test on a regime never encountered during training.
-
-This is especially important.
-
----
-
-# 15. Metrics
-
-Report:
-
-* task performance;
-* mean ± standard deviation across seeds;
-* parameter count;
-* training time;
-* GPU memory;
-* inference cost.
-
-For forecasting:
-
-* MSE;
-* MAE where appropriate.
-
-For classification:
-
-* AUROC;
-* AUPRC;
-* accuracy/F1 only where appropriate.
-
-The main robustness quantity should be explicitly defined.
+Give one compelling example.
 
 For example:
 
-$$
-\Delta_{\mathrm{shift}}
-=
-\frac{
-\mathrm{Perf}_{ID}-\mathrm{Perf}_{OOD}
-}{
-\mathrm{Perf}_{ID}
-}.
-$$
+> A model trained on one observation pattern can experience dramatic degradation when the same held-out histories are re-observed through another valid process.
 
-Be careful about metric direction.
+Then establish that:
 
-For MSE:
+* density is insufficient,
+* temporal vs variable removal can have different effects.
 
-$$
-\Delta_{\mathrm{shift}}
-=
-\frac{
-\mathrm{MSE}_{OOD}-\mathrm{MSE}_{ID}
-}{
-\mathrm{MSE}_{ID}
-}.
-$$
+Do not dump all seven datasets here.
 
-Do not rely only on absolute benchmark performance.
+### Paragraph 4 — Key insight
 
----
+This is where the paper should pivot to the method.
 
-# 16. Required Ablations
+Explain:
 
-Every proposed mechanism must answer:
+> During training we can construct a richer observation of the same history, even though such an observation will not be available at deployment.
 
-### Mechanism
+This naturally motivates privileged information.
 
-Is the gain caused by the proposed mechanism?
+### Paragraph 5 — Method
 
-### Capacity
+Introduce POSD/OPERA.
 
-Could the gain simply come from more parameters?
+Explain the student/teacher relationship in 3–4 sentences.
 
-### Distribution shift
+### Paragraph 6 — Supporting mechanisms
 
-Does it specifically help when the observation process changes?
+Briefly introduce observation augmentation and hard-process mining.
 
-### Density
+Do not give equal textual weight to them.
 
-Does it help because the model sees more observations?
+### Paragraph 7 — Results
 
-### Generalization
+State only the strongest evidence.
 
-Does it work on an unseen sampling pattern?
+### Contributions
 
-### Clean-data preservation
+Use **3 concise contributions**, not 4–5.
 
-Does it preserve performance when observations are dense/regular?
+Recommended form:
 
-### Seeds
+1. **Observation-process shift.**
+   We formalize observation-process shift for irregular time series and introduce a controlled evaluation protocol that re-observes held-out histories while preserving targets.
 
-Is the result consistent across multiple random seeds?
+2. **Privileged observation self-distillation.**
+   We introduce a training mechanism in which a richer observation of the same history provides privileged task-level supervision to a student restricted to the deployment observation.
+
+3. **Empirical robustness.**
+   Across forecasting and classification benchmarks, we show that diverse observation-process exposure substantially improves robustness and that privileged distillation provides complementary gains, including on datasets where the task itself is information limited.
+
+If hard mining remains in the final paper, mention it inside contribution 3 rather than making it a headline contribution.
 
 ---
 
-# 17. Results Interpretation Rules
+# 7. Method section requirements
 
-When writing results, distinguish:
+The method should read as a scientific method, not an implementation manual.
 
-### Observation
+Current sections are too verbose in places.
 
-"The model's MSE increased from X to Y."
+Use:
 
-### Interpretation
+## 3.1 Problem formulation
 
-"This suggests reduced robustness under the shifted observation process."
+Define:
 
-### Mechanistic claim
+$$
+O=S(X)
+$$
 
-"The improvement is consistent with the hypothesis that conditioning on the observation process helps aggregation."
+and:
 
-Do not jump directly from a numerical result to a strong causal/mechanistic conclusion.
+$$
+P_{\text{train}}(S)\neq P_{\text{test}}(S).
+$$
+
+Explain the controlled re-observation protocol.
+
+Keep this concise.
+
+## 3.2 Privileged Observation Self-Distillation
+
+This must be the centerpiece.
+
+Define:
+
+$$
+O_s=S_s(X), \qquad O_r=S_r(X)
+$$
+
+where:
+
+* \(O_s\) is the deployment-constrained observation,
+* \(O_r\) is the richer training-time observation.
+
+Teacher:
+
+$$
+\hat Y_T=f_{\theta_T}(O_r)
+$$
+
+Student:
+
+$$
+\hat Y_S=f_\theta(O_s)
+$$
+
+Objective:
+
+$$
+\mathcal L =
+\mathcal L_{\text{task}}(\hat Y_S,Y)
++
+\lambda
+D(\hat Y_S,\operatorname{sg}(\hat Y_T)).
+$$
+
+Explain why this is useful:
+
+> The teacher provides information about what can be predicted from a richer view of the same history, while the student is forced to learn what remains recoverable from its restricted observation.
+
+Explicitly state:
+
+> The student never receives the rich observation at inference.
+
+### Important conceptual distinction
+
+Do NOT say:
+
+> "The teacher tells the student what information will be available."
+
+Instead say:
+
+> "The teacher exposes the student to prediction-relevant information that is present in the underlying history but partially obscured by the deployment observation process."
+
+This is more scientifically accurate.
 
 ---
 
-# 18. Avoid These Claims
+# 8. Explain why this is self-distillation
 
-Do NOT write:
+Reviewers will ask this.
 
-> "Our method solves irregular time-series forecasting."
+Make the distinction explicit.
 
-> "We solve missing data."
+The teacher is not a separately trained expert solving another task.
 
-> "Causal attention discovers causal relationships."
+It is the same predictive model family evaluated on a richer view of the same sample.
 
-> "LLMs provide causal knowledge."
+The asymmetry is:
 
-> "The learned graph represents the true causal structure."
+$$
+\text{teacher: richer observation}
+$$
 
-> "Our model is invariant to sampling."
+versus
 
-unless the experiments actually establish these statements.
+$$
+\text{student: deployment observation}.
+$$
+
+Therefore call it:
+
+> privileged-observation self-distillation.
+
+Do not pretend that the concept of teacher/student distillation itself is novel.
+
+The novelty is the **source and structure of the privileged signal**.
+
+---
+
+# 9. Observation-process augmentation
+
+Present this as the mechanism that exposes the student to observation-process variation.
+
+Do not claim representation invariance.
+
+The desired property is:
+
+$$
+f_\theta(S_1(X))
+$$
+
+and
+
+$$
+f_\theta(S_2(X))
+$$
+
+remain useful for the task, not necessarily identical in latent space.
+
+This is important because the earlier representation-consistency experiment did not provide evidence for representation matching.
+
+Do not revive the old consistency objective as a main method.
+
+---
+
+# 10. Hard-process mining
+
+Treat this as optional/secondary.
+
+Define:
+
+$$
+S^*=\arg\max_{S\in\mathcal A}
+\ell(f_\theta(S(X)),Y).
+$$
+
+Explain that practical mining uses a finite candidate pool.
+
+The key empirical condition is:
+
+> Mining only helps when the candidate pool contains processes that are meaningfully harsher or structurally different from the ordinary augmentation pool.
+
+This is an interesting result, but it should not dominate the paper.
+
+Do not call the procedure "adversarial training" without qualification.
 
 Prefer:
 
-> "improves robustness to observation-process shift"
+> hard observation-process mining
 
-> "provides a structural inductive bias"
+or:
 
-> "improves cross-regime generalization"
-
-> "is consistent with observation-process invariance"
-
-> "uses externally supplied structural information"
+> approximate worst-case observation-process selection.
 
 ---
 
-# 19. Paper-Level Contribution Structure
+# 11. Experimental writing style
 
-The final paper should ideally have contributions along these lines:
+This is the biggest area requiring improvement.
 
-### Contribution 1 — Problem formulation
+Do NOT write experiments as a chronological diary:
 
-We distinguish changes in the underlying temporal process from changes in the observation process and study the latter as a source of distribution shift in irregular time-series learning.
+> "We first establish..."
+>
+> "We then..."
+>
+> "Two further observations..."
+>
+> "This is interesting because..."
 
-### Contribution 2 — Observation-process robustness
+Instead structure experiments around **claims**.
 
-We investigate whether training across diverse observation processes improves generalization to unseen sampling regimes.
+Every subsection should answer one scientific question.
 
-### Contribution 3 — Observation-aware representation mechanisms
+Good structure:
 
-We study complementary mechanisms for robustness, including observation-process augmentation and observation-aware query adaptation.
+## 4.1 Observation-process shift is a meaningful source of distribution shift
 
-### Contribution 4 — Structural priors
+Question:
 
-We investigate when structural information can improve irregular temporal representation learning, including sensitivity to structural misspecification.
+> How much can performance change when only the observation process changes?
 
-Only include a contribution if supported by final experiments.
+Evidence:
 
----
+* seven task settings,
+* clean vs shifted,
+* density-matched comparison.
 
-# 20. Suggested Paper Structure
+## 4.2 Diverse observation exposure improves robustness
 
-## 1. Introduction
+Question:
 
-Structure:
+> Does training over diverse observation processes improve generalization?
 
-1. Irregular observations are intrinsic to many real-world temporal systems.
-2. Existing approaches primarily focus on representing irregular observations.
-3. But the observation process itself can change across environments.
-4. This creates a distribution shift even when the underlying process is similar.
-5. We study observation-process robustness.
-6. Introduce the core hypotheses/mechanisms.
-7. Summarize experimental findings.
+Compare:
 
-The introduction should NOT begin with:
+* E0
+* E1
 
-> "QuITE is a recent method..."
+This is the main robustness experiment.
 
-Instead begin with the broader problem.
+## 4.3 Privileged observation self-distillation provides complementary information
 
----
+Question:
 
-## 2. Related Work
+> Does a richer training-time observation improve the deployment-constrained student?
 
-Organize by scientific problem rather than by QuITE.
+Compare:
 
-Suggested subsections:
+* E1
+* E2
 
-### Irregular Multivariate Time-Series Learning
+Use USHCN and P19 as particularly important evidence.
 
-Discuss interpolation-based, continuous-time, set-based, and query-based approaches.
+## 4.4 Hard-process mining targets difficult shifts
 
-### Missingness and Observation Processes
+Question:
 
-Discuss missing-data mechanisms and irregular sampling.
+> Can the model improve specifically on difficult observation processes?
 
-### Robust Time-Series Representation Learning
+Compare:
 
-Discuss distribution shift, augmentation, invariant representation learning.
+* E1
+* E3
+* E3b
 
-### Causal / Structural Time-Series Learning
+Explain why candidate-pool severity matters.
 
-Discuss causal discovery and structural priors.
+## 4.5 Generalization to unseen observation processes
 
-### Adaptive Representation Learning
+This should be a major experiment, not a sentence buried in the results.
 
-Discuss conditional/adaptive representations.
+Explicitly distinguish:
 
-QuITE should appear naturally as related work, not as the paper's identity.
+* seen families / unseen severity,
+* completely unseen families.
 
----
+## 4.6 Ablations and analysis
 
-# 21. Method Section
-
-Possible title:
-
-## Learning under Observation-Process Shift
-
-Start with the formal problem.
-
-Then introduce:
-
-### 3.1 Observation-process shift
-
-### 3.2 Sampling-process augmentation
-
-### 3.3 Observation-aware representation
-
-### 3.4 Structural priors
-
-Do not present all three as an inseparable architecture unless experiments justify doing so.
+Only after the main results.
 
 ---
 
-# 22. Experiments
+# 12. Do not use ratio metrics as the primary evidence
 
-Suggested structure:
+Relative degradation is useful but can be misleading.
 
-## 4. Experimental Setup
+Always present:
 
-Datasets, tasks, observation-process generation, metrics.
+* clean performance,
+* mean shifted performance,
+* worst shifted performance,
+* relative degradation.
 
-## 5. Does Observation-Process Shift Matter?
+For classification:
 
-First establish the phenomenon.
+* use AUROC/accuracy consistently for the main analysis,
+* do not use cross-entropy degradation as the headline metric when AUROC behaves differently.
 
-Show that:
+P12 is a warning case.
 
-* standard training can perform well in-distribution;
-* performance can deteriorate under changed observation processes;
-* the degradation is not explained solely by observation count.
-
-This section is scientifically important.
-
-## 6. Sampling-Process Augmentation
-
-Main experiments and ablations.
-
-## 7. Observation-Aware Representation
-
-Adaptive query experiments.
-
-## 8. Structural Priors
-
-Synthetic causal experiments and graph-quality sensitivity.
-
-## 9. Analysis
-
-Cross-dataset transfer, robustness, computational cost, failure cases.
+Do not force P12 into a degradation narrative that its metrics do not support.
 
 ---
 
-# 23. Critical Experimental Result From Current Work
+# 13. Correct interpretation of current results
 
-Current PhysioNet experiments suggest:
+The current evidence supports the following hierarchy.
 
-```text
-Plain QuITE
-clean:        ~0.0054
-random drop:  ~0.0164
-variable 30%: ~0.0166
-stride-3:     ~0.0105
-```
+### PhysioNet
 
-Mixed observation-view augmentation approximately produced:
+E0:
 
-```text
-clean:        ~0.0054
-random drop:  ~0.0070
-variable 30%: ~0.0068
-stride-3:     ~0.0057
-```
+* clean 0.00549
+* worst 0.02134
 
-The important result is NOT:
+E1:
 
-> "Our model gets lower MSE."
+* clean 0.00553
+* substantially lower shifted error
 
-The important observation is:
+E3b:
 
-> Training across observation processes substantially reduces degradation under observation-process shift while approximately preserving clean performance.
+* best deployable configuration
+* strongest absolute shifted/worst-case performance among current PhysioNet configurations.
 
-These numbers are preliminary and must be replaced by final multi-seed results before publication.
+Therefore say:
 
-Do not present preliminary values as definitive.
+> Observation-process augmentation provides the dominant robustness gain on PhysioNet, while hard mining from a stronger candidate pool provides an additional improvement.
+
+Do NOT claim that E4/complete OPERA is universally best.
+
+### Activity
+
+E0:
+
+* clean 0.00263
+* worst 0.08547
+
+E4:
+
+* clean 0.00286
+* worst 0.00549
+
+This is an extremely strong robustness result.
+
+But avoid claiming the method "solves" the problem.
+
+Say:
+
+> The observation-process shift is severe on Activity, and training across observation processes reduces the resulting degradation by more than an order of magnitude.
+
+### USHCN
+
+Distillation is particularly important.
+
+E0 → E2:
+
+* clean 0.5379 → 0.5135
+* shifted performance improves broadly.
+
+This is the strongest evidence that privileged observation distillation provides information beyond augmentation.
+
+Say:
+
+> On USHCN, privileged distillation improves both clean and shifted forecasting error, suggesting that the richer observation acts as a useful training signal when the forecasting task is information limited.
+
+### P19
+
+E0 → E4:
+
+* clean AUROC 82.13 → 85.59
+* shifted AUROC improves broadly.
+
+This supports a complementary accuracy benefit.
+
+### PAM
+
+Large robustness improvement under variable removal.
+
+Use this as evidence that observation-process structure matters in classification as well.
 
 ---
 
-# 24. Important Negative Finding
+# 14. Never claim "OPERA is better" without qualification
 
-Representation consistency with a simple cosine objective did not clearly improve robustness and may cause excessive similarity between representations.
+Do not use vague statements such as:
 
-This should be treated as a useful scientific finding rather than hidden.
+> "OPERA consistently outperforms the baseline."
 
-Potential interpretation:
+The evidence does not justify that statement in every clean condition or every mechanism.
 
-> Observation-process robustness is not equivalent to enforcing representation identity across observation views.
+Use precise claims:
 
-This motivates mechanisms that preserve task-relevant information while accounting for the observation regime.
+> "OPERA substantially reduces degradation under observation-process shift."
 
----
+or:
 
-# 25. Current Causal Experiment Interpretation
+> "The method improves shifted performance while keeping clean performance approximately unchanged on the most shift-sensitive benchmarks."
 
-Preliminary synthetic results suggest:
-
-* oracle structural information can improve forecasting;
-* incorrect/random structure can hurt;
-* shuffled structure may sometimes still improve clean performance;
-* therefore clean-data improvement alone is insufficient evidence for causal usefulness;
-* targeted removal of variables related to the target provides a more discriminative test.
-
-Do not claim the causal hypothesis is established until multiple seeds and controls are complete.
-
-The shuffled-graph result is particularly important.
-
-If a shuffled structural matrix performs similarly to the oracle graph, investigate whether the benefit comes from:
-
-* sparse attention;
-* additional inductive bias;
-* altered attention entropy;
-* parameterization effects;
-* regularization.
-
-This is a required analysis, not something to explain away.
+For cases where clean performance improves, state that separately.
 
 ---
 
-# 26. Writing Style
+# 15. Avoid overclaiming causality
 
-Write like a strong ICML/NeurIPS/ICLR paper.
+Do not write:
+
+> "This proves that observation density is not the cause."
+
+Instead:
+
+> "These controlled comparisons show that observation density alone does not explain the observed degradation."
+
+Do not write:
+
+> "Severity tracks predictive information."
+
+Unless this relationship is formally quantified and tested.
 
 Prefer:
 
-> "We investigate whether..."
+> "The magnitude of degradation varies substantially across tasks, consistent with differences in how much predictive information is carried by the observed history."
 
-> "Our experiments show..."
+---
 
-> "These results suggest..."
+# 16. The paper should not read like a negative-results paper
 
-> "This provides evidence that..."
+The current draft spends too much attention on what did not work.
+
+Negative results should be retained only when they sharpen the scientific claim.
+
+Keep:
+
+* mining with weak pool ≈ augmentation,
+* representation consistency not used,
+* mining depends on candidate severity.
+
+Remove lengthy discussion of failed ideas.
+
+Do not discuss old "Causal QuITE", "Adaptive QuITE", representation consistency, or other abandoned directions unless absolutely necessary.
+
+The final paper should feel like a **positive method paper with careful boundary analysis**, not a record of experiments attempted.
+
+---
+
+# 17. Related work
+
+The related-work section should not become a catalogue.
+
+Organize around 3 distinctions:
+
+### Irregular time-series representation learning
+
+What existing models assume about observations.
+
+### Missingness / observation mechanisms
+
+Why observation patterns are not merely scalar missingness rates.
+
+### Privileged information and distillation
+
+Why our setting differs from ordinary teacher-student distillation.
+
+Potential final sentence of related work:
+
+> Existing methods primarily improve representation of the observations available to the model; we instead study the case where the observation process itself changes and exploit richer training-time observations as privileged information.
+
+---
+
+# 18. Writing style
+
+Write like a top-tier ML paper.
+
+Prefer:
+
+> "We find that..."
+
+over:
+
+> "This interestingly shows..."
+
+Prefer:
+
+> "This result suggests..."
+
+over:
+
+> "This clearly demonstrates..."
+
+Prefer:
+
+> "We attribute this to..."
+
+only when the mechanism is supported by evidence.
 
 Avoid:
 
-> "Clearly..."
+* "remarkably"
+* "surprisingly"
+* "dramatically" unless quantitatively justified
+* "clearly"
+* "obviously"
+* "novel paradigm"
+* "fundamentally"
+* "revolutionary"
+* "powerful"
+* "robust solution"
+* "solves"
 
-> "Obviously..."
-
-> "This proves..."
-
-> "Remarkably..."
-
-> "We solve..."
-
-Use precise technical language.
-
-Do not overuse adjectives such as:
-
-* novel;
-* powerful;
-* groundbreaking;
-* significant;
-* effective;
-* robust.
-
-Let the experiments establish these properties.
+Use quantitative language instead.
 
 ---
 
-# 27. Figures
+# 19. Paragraph-level standard
 
-Prioritize conceptual figures over architecture diagrams.
+Every paragraph must have:
 
-### Figure 1 — Observation-process shift
+1. one main claim,
+2. evidence,
+3. interpretation.
 
-Show the same underlying trajectory observed under:
+Avoid paragraphs containing multiple unrelated claims.
 
-* dense;
-* random sparse;
-* bursty;
-* variable-specific sampling.
+A good result paragraph:
 
-### Figure 2 — Problem formulation
+> **Claim.** Observation-process augmentation substantially improves robustness.
+>
+> **Evidence.** On PhysioNet, shifted MSE falls from X to Y while clean MSE remains essentially unchanged.
+>
+> **Interpretation.** This indicates that exposing the model to process variation during training improves transfer to unseen observation patterns rather than merely trading clean accuracy for robustness.
+
+This is the desired writing style.
+
+---
+
+# 20. Tables
+
+Tables should communicate conclusions immediately.
+
+Do not overload tables with every metric if the same information can be shown in figures.
+
+Main paper should prioritize:
+
+### Table 1
+
+Dataset/task/protocol summary.
+
+### Table 2
+
+Main clean + shifted performance.
+
+### Table 3
+
+Component ablation:
+
+* E0
+* augmentation
+* +distillation
+* +hard mining
+
+### Table 4
+
+Unseen observation-process families.
+
+Additional detailed process-by-process results can go to appendix.
+
+Use boldface only for the relevant comparison.
+
+Do not bold every local minimum/maximum in a way that makes the table visually noisy.
+
+---
+
+# 21. Figures
+
+Prioritize 4 figures.
+
+### Figure 1 — Concept
+
+Underlying trajectory → different observation processes → deployment student / richer teacher.
+
+This should explain the method visually.
+
+### Figure 2 — Observation-process shift
+
+Same trajectory observed under:
+
+* random dropout,
+* temporal subsampling,
+* variable dropout,
+* burst/long-gap.
+
+Show that equal density does not imply equal difficulty.
+
+### Figure 3 — Main robustness result
+
+Performance degradation across observation-process severity/families.
+
+Use clean visual comparison between baseline and method.
+
+### Figure 4 — Privileged distillation
+
+Teacher sees rich history.
+
+Student sees sparse history.
 
 Show:
 
-```text
-Underlying process
-        ↓
-Observation process
-        ↓
-Irregular observations
-        ↓
-Representation
-        ↓
-Prediction
-```
+$$
+\text{rich teacher} \rightarrow \text{student}
+$$
 
-### Figure 3 — Cross-observation robustness
+and performance gains across datasets.
 
-Plot performance as observation process changes.
-
-### Figure 4 — Structural prior
-
-Show the synthetic causal graph and how structural information modifies aggregation.
+Do not create figures merely because a table exists.
 
 ---
 
-# 28. Tables
+# 22. Experimental rigor
 
-Main table should emphasize:
+Before final claims:
 
-| Method | ID | Sparse | Bursty | Variable shift | Unseen regime |
-| ------ | -: | -----: | -----: | -------------: | ------------: |
+* Run 5 seeds for all primary comparisons.
+* Report mean ± standard deviation.
+* Use paired seeds where possible.
+* Reuse identical re-observation masks across methods.
+* Report absolute metrics.
+* Report relative degradation only as a secondary summary.
+* Clearly separate seen and unseen observation-process families.
+* Verify that the teacher never sees future information.
+* Verify no test-time privileged information.
+* Report compute overhead.
+* Report whether teacher is frozen or EMA.
+* Report distillation coefficient.
+* Report candidate pool construction for mining.
 
-Avoid a table that only reports a standard benchmark score.
+Do not call a single-seed result statistically significant.
 
-For causal experiments:
-
-| Structure | Clean | Target-cause removal | Non-causal removal | Noisy graph |
-| --------- | ----: | -------------------: | -----------------: | ----------: |
-
-This makes the scientific question visible.
-
----
-
-# 29. What Counts as a Successful Paper?
-
-The paper does NOT require all three directions to work.
-
-Possible outcomes:
-
-### Outcome A
-
-Sampling-process augmentation works strongly.
-
-Then focus the paper around:
-
-> Observation-process robustness.
-
-### Outcome B
-
-Adaptive representation works while consistency does not.
-
-Then focus on:
-
-> Observation-aware representation learning.
-
-### Outcome C
-
-Structural priors produce a strong and robust effect.
-
-Then the paper can emphasize:
-
-> Structural priors under irregular observation.
-
-### Outcome D
-
-Different mechanisms work in complementary regimes.
-
-Then present a unified framework around:
-
-> Robust representation learning under observation-process shift.
-
-If an experiment fails, do not force it into the final method.
+Until 5 seeds exist, use "preliminary" internally and avoid strong claims.
 
 ---
 
-# 30. Most Important Positioning Constraint
+# 23. Important scientific correction
 
-The paper should answer this question:
+Do not assume that the final method must contain all three mechanisms.
 
-> **What scientific problem did we learn something new about?**
+The experiments should determine the final method.
 
-The answer should NOT be:
+If after five seeds:
 
-> "How to improve QuITE."
+* augmentation is consistently strong,
+* distillation is beneficial only on some datasets,
+* mining is unstable or expensive,
 
-Instead it should be something closer to:
+then the final paper should simplify.
 
-> "How observation-process variation affects irregular temporal representation learning, and which inductive biases improve generalization across observation regimes."
+A top-tier paper is better with **one compelling mechanism and strong evidence** than three mechanisms with weak incremental gains.
 
-QuITE is the experimental foundation, not the scientific contribution.
+The default hypothesis is:
+
+> **Privileged Observation Self-Distillation + diverse observation-process augmentation**
+
+with hard mining retained only if the multi-seed experiments establish a clear and reproducible benefit.
 
 ---
 
-# 31. Final Instruction to Claude
+# 24. What NOT to preserve from the current draft
 
-Before drafting any section, maintain the following hierarchy:
+The following should be aggressively revised or removed if they remain unsupported:
 
-```text
-Scientific problem
-      ↓
-Observation-process shift
-      ↓
-Hypothesis
-      ↓
-Method/mechanism
-      ↓
-Experiment
-      ↓
-Evidence
-      ↓
-Claim
-```
+* "accounts for most of the attainable robustness"
+* "tracks how much predictive information a task draws from its irregular history"
+* "three orders of magnitude" unless finalized with robust statistics
+* "the diagnostic is unambiguous"
+* "factor of thirty-two" if based on one preliminary seed
+* long discussion of negative results
+* implementation-level details in the main method narrative
+* optional observation-aware encoding if it is not part of the final contribution
+* claims that all three mechanisms form one equally important framework
+* any suggestion that distillation itself is the main source of robustness on PhysioNet
+* any claim that hard mining is generally beneficial.
 
-Never reverse this hierarchy into:
+---
 
-```text
-QuITE
- ↓
-new module
- ↓
-better number
- ↓
-claim
-```
+# 25. Final paper structure
 
-The paper should remain conceptually coherent even if the base irregular encoder is replaced.
+Use approximately:
 
-When evidence is insufficient, explicitly mark the claim as tentative and request the missing experiment rather than inventing evidence.
+1. **Introduction**
+2. **Related Work**
+3. **Observation-Process Shift**
 
-Do not invent:
+   * Problem formulation
+   * Observation-process evaluation
+4. **Privileged Observation Self-Distillation**
 
-* datasets;
-* results;
-* baselines;
-* statistical significance;
-* causal relationships;
-* graph-recovery accuracy;
-* ablation results;
-* computational measurements.
+   * Rich vs sparse observations
+   * Distillation objective
+   * Observation-process augmentation
+   * Optional hard-process mining
+5. **Experimental Setup**
+6. **Results**
 
-Use placeholders such as `[RESULT NEEDED]` when required.
+   * Does observation-process shift matter?
+   * Does augmentation improve robustness?
+   * Does privileged distillation help?
+   * Generalization to unseen processes
+   * Ablations / compute
+7. **Discussion and Limitations**
+8. **Conclusion**
 
-The final manuscript should be written as a scientific investigation, not as a product-style architecture paper.
+Do not create a giant "phenomenon" section followed by a giant "results" section that repeats the same story.
+
+---
+
+# 26. Final editorial test
+
+Before declaring the paper ready, ask:
+
+### Scientific question
+
+Can a reviewer state the paper's central question after reading the first page?
+
+### Novelty
+
+Can a reviewer explain in one sentence what is new?
+
+### Method
+
+Is privileged observation self-distillation clearly the central mechanism?
+
+### Evidence
+
+Does every major claim have a corresponding experiment?
+
+### Ablation
+
+Can the reviewer tell exactly what augmentation, distillation, and mining each contribute?
+
+### Generalization
+
+Is there evidence for observation-process families not seen during training?
+
+### Rigor
+
+Are the primary results multi-seed and statistically reported?
+
+### Restraint
+
+Are claims no stronger than the evidence?
+
+### Reproducibility
+
+Can the observation processes, constraints, training protocol, and evaluation protocol be reconstructed from the paper?
+
+### Readability
+
+Could a strong ML researcher understand the paper without reading the implementation?
+
+If any answer is "no", revise before polishing prose.
+
+---
+
+# 27. Most important instruction
+
+**Do not merely edit the existing manuscript. Re-architect the scientific narrative when necessary.**
+
+The target is not "better English."
+
+The target is:
+
+> **A coherent top-tier ML paper in which observation-process shift motivates the problem, privileged observation self-distillation provides the central methodological insight, augmentation provides robustness through exposure, and hard mining is a conditional extension rather than a co-equal contribution.**
+
+Every section, paragraph, equation, table, and figure should reinforce that hierarchy.

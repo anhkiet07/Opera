@@ -14,14 +14,14 @@ No LaTeX toolchain is installed in this repo, so the manuscript has not been bui
 ```
 sigconf.tex              driver: preamble, macros, title/authors, abstract wrapper, \input list, bibliography
 sections/abstract.tex    abstract body only (the abstract environment is in the driver)
-sections/01_introduction.tex   Figure 1 (observation-process shift on a real trajectory)
-sections/02_related_work.tex
-sections/03_problem.tex        formalisation: X, S, O = S(X); process family; descriptor; constraints
-sections/04_method.tex         the three mechanisms, the objective, Algorithm 1, deployment, Figure 2 (framework)
+sections/01_introduction.tex   problem, phenomenon, the privileged-observation insight, 3 contributions; Figure 2
+sections/02_related_work.tex   three distinctions: encoders, missingness mechanisms, privileged information
+sections/03_problem.tex        formalisation: X, S, O = S(X); process family; re-observation protocol; constraints
+sections/04_method.tex         POSD as the centrepiece, then augmentation, then optional mining; Algorithm 1, Figure 1
 sections/05_setup.tex          datasets, observation-process splits, metrics, protocol
-sections/06_phenomenon.tex     Tables 2-3: the phenomenon and the matched-density comparison
-sections/07_results.tex        Tables 4-6 and Figures 3-5: mechanism isolation, unseen split, cost
-sections/08_analysis.tex       negative results, the degradation-ratio pitfall, limitations
+sections/06_results_shift.tex  Results head; 6.1 does the shift matter, 6.2 does augmentation help; Tables 2-4
+sections/07_results_method.tex 6.3 POSD, 6.4 mining, 6.5 unseen families, 6.6 ablations and cost; Tables 5-7
+sections/08_discussion.tex     the two mechanisms' different jobs, the ratio pitfall, limitations
 sections/09_conclusion.tex
 refs.bib                 26 references, all cited, none unused
 figures/*.pdf            generated from results; see below
@@ -47,7 +47,7 @@ select pdfLaTeX and add `amsmath` only, never `amssymb`.
 ## Figures
 
 All five figures are generated from the results rather than drawn by hand, and all five are referenced in the
-text (`fig:views`, `fig:framework`, `fig:curve`, `fig:unseen`, `fig:ablation`). Regenerate after new runs:
+text (`fig:framework`, `fig:views`, `fig:curve`, `fig:unseen`, `fig:ablation`). Regenerate after new runs:
 
 ```bash
 python scripts/generate_figures.py --dataset physionet   # writes ../figures
@@ -56,7 +56,11 @@ cp ../figures/*.pdf figures/
 
 ## Conventions
 
-* `\prelim` (dagger) marks every number obtained from a single seed. The protocol requires five.
+* `\prelim` (dagger) marks every number obtained from a single seed. The protocol requires five paired seeds.
+* Contribution hierarchy (see `CLAUDE_paper.md`): privileged observation self-distillation is the central
+  mechanism, observation-process augmentation is the supporting one, hard mining is a conditional extension.
+  Do not restore the earlier framing in which the three were co-equal.
+* Classification degradation is computed on `1 - AUROC` (or `1 - accuracy`), never on cross-entropy.
 * `\todo{...}` marks a pending measurement. Do not delete either marker without replacing the number.
 * Numbers come from `results/raw/*/results.json`, aggregated into
   `results/aggregated/tables_<dataset>.md` by `scripts/aggregate.py`.
