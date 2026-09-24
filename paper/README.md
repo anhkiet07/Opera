@@ -14,13 +14,13 @@ No LaTeX toolchain is installed in this repo, so the manuscript has not been bui
 ```
 sigconf.tex              driver: preamble, macros, title/authors, abstract wrapper, \input list, bibliography
 sections/abstract.tex    abstract body only (the abstract environment is in the driver)
-sections/01_introduction.tex
+sections/01_introduction.tex   Figure 1 (observation-process shift on a real trajectory)
 sections/02_related_work.tex
 sections/03_problem.tex        formalisation: X, S, O = S(X); process family; descriptor; constraints
-sections/04_method.tex         the three mechanisms, the objective, Algorithm 1, deployment
+sections/04_method.tex         the three mechanisms, the objective, Algorithm 1, deployment, Figure 2 (framework)
 sections/05_setup.tex          datasets, observation-process splits, metrics, protocol
 sections/06_phenomenon.tex     Tables 2-3: the phenomenon and the matched-density comparison
-sections/07_results.tex        Tables 4-6: mechanism isolation, cross-setting, cost
+sections/07_results.tex        Tables 4-6 and Figures 3-5: mechanism isolation, unseen split, cost
 sections/08_analysis.tex       negative results, the degradation-ratio pitfall, limitations
 sections/09_conclusion.tex
 refs.bib                 26 references, all cited, none unused
@@ -46,7 +46,8 @@ select pdfLaTeX and add `amsmath` only, never `amssymb`.
 
 ## Figures
 
-Figures are generated from the results rather than drawn by hand:
+All five figures are generated from the results rather than drawn by hand, and all five are referenced in the
+text (`fig:views`, `fig:framework`, `fig:curve`, `fig:unseen`, `fig:ablation`). Regenerate after new runs:
 
 ```bash
 python scripts/generate_figures.py --dataset physionet   # writes ../figures

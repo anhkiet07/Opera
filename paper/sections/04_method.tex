@@ -3,8 +3,20 @@
 
 \section{OPERA}
 \label{sec:method}
-OPERA acts on $\Sobs$, not on the encoder. All three mechanisms manipulate the same object --- the observation
-process through which the model sees a trajectory --- and they differ in \emph{how} they choose it:
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig1_framework.pdf}
+\caption{OPERA acts on the observation process. A trajectory $X$ is recorded through processes drawn, mined or
+densified: the student sees sparse views (and, after warm-up, a mined worst case), while a frozen teacher sees
+a richer observation of the \emph{same history} and supplies a task-level target. Dashed: the distillation
+term. At deployment only the student and one sparse observation are required.}
+\label{fig:framework}
+\end{figure}
+
+OPERA acts on $\Sobs$, not on the encoder (Figure~\ref{fig:framework}). All three mechanisms manipulate the same
+object --- the observation process through which the model sees a trajectory --- and they differ in \emph{how}
+they choose it:
 augmentation samples it, distillation contrasts a sparse choice against a richer one, and mining searches for
 the worst admissible choice. The encoder, its parameter count and its inference path are untouched.
 

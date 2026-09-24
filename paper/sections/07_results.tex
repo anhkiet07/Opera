@@ -4,9 +4,19 @@
 \section{Results}
 \label{sec:results}
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig3_robustness_curve.pdf}
+\caption{Error against observation-process severity on PhysioNet\prelim, for three process families. Severity
+$0$ is the dataset's own observation process. Without any mechanism (blue) error grows steeply in every family;
+every OPERA configuration stays close to its clean error, including for stride subsampling, a family absent
+from the training pool.}
+\label{fig:curve}
+\end{figure}
+
 \paragraph{Exposure to diverse observation processes accounts for most of the attainable robustness.}
-Table~\ref{tab:components} isolates the mechanisms on PhysioNet. Augmentation alone reduces
-$\Delta_{\mathrm{shift}}$ from $+107\%$ to $+14\%$ and $\Delta_{\mathrm{unseen}}$ from $+130\%$ to $+18\%$ while
+Table~\ref{tab:components} and Figure~\ref{fig:curve} isolate the mechanisms on PhysioNet. Augmentation alone
+reduces $\Delta_{\mathrm{shift}}$ from $+107\%$ to $+14\%$ and $\Delta_{\mathrm{unseen}}$ from $+130\%$ to $+18\%$ while
 leaving clean error unchanged ($0.00553$ vs.\ $0.00549$), and it improves all sixteen conditions. It transfers to
 process families absent from training: stride subsampling, never trained on in any form, falls from $0.00923$ to
 $0.00572$. On Activity the same mechanism, combined with the others, reduces mean shifted error from $0.04983$ to
@@ -49,6 +59,23 @@ conditions, while $\Delta_{\mathrm{shift}}$ does not improve. On P19 the full fr
 $82.13\to85.59$ and AUPRC $16.89\to24.47$ ($+45\%$). The pattern is consistent with distillation acting as a
 smoother regression target rather than as a robustness mechanism.
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.85\linewidth]{figures/fig4_unseen_generalization.pdf}
+\caption{Generalisation across the observation-process split on PhysioNet\prelim. ``Seen'' averages families
+present in the training pool at unseen severities; ``unseen'' averages the nine conditions whose families never
+appear in training (Section~\ref{sec:splits}). The gap between the two bars is small for every OPERA
+configuration and large without any mechanism.}
+\label{fig:unseen}
+\end{figure}
+
+\paragraph{Robustness extends to unseen process families.}
+Figure~\ref{fig:unseen} separates conditions whose families appear in the training pool from those whose do
+not. Without a mechanism the unseen group is worse than the seen group ($0.01260$ vs.\ $0.00975$) and both are
+far above clean; with augmentation the three bars are nearly level ($0.00553$, $0.00604$, $0.00652$). The
+mechanism therefore generalises across the split defined in Section~\ref{sec:splits} rather than memorising the
+training pool.
+
 \paragraph{Across settings, benefit tracks baseline damage.}
 Table~\ref{tab:main} compares no mechanism against the full framework on every setting. Where degradation is
 large the gains are large; where the baseline is already insensitive there is little to recover, and the
@@ -79,8 +106,19 @@ P12 & AUROC & \textbf{83.53} & --- & 83.30 & --- \\
 \end{tabular}
 \end{table}
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig5_ablation.pdf}
+\caption{Contribution of each mechanism on PhysioNet\prelim: mean degradation under shift (left, lower is
+better) against in-distribution error (right). Robustness improves by roughly an order of magnitude while
+clean error moves within $0.0004$\,MSE, so the mechanisms are not trading in-distribution accuracy for
+robustness.}
+\label{fig:ablation}
+\end{figure}
+
 \paragraph{Cost.}
-Table~\ref{tab:cost} reports the overhead. Every mechanism is training-time only: parameter count is identical
+Figure~\ref{fig:ablation} summarises the trade and Table~\ref{tab:cost} the overhead. Every mechanism is
+training-time only: parameter count is identical
 across configurations and inference latency is unchanged at $0.63$\,ms per series. Augmentation costs
 $1.7\times$ time and $1.7\times$ peak memory for two views; mining adds $K$ forward passes per step.
 
