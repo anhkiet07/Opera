@@ -37,17 +37,15 @@ TRAIN_SEVERITY = {  # the exact severities the training pool draws
     "variable_dropout": {0.2}, "local_mask": {0.3},
 }
 
-PRIMARY = {  # setting -> primary metric key in the stored per-condition dict
-    "physionet": "mse", "activity": "mse", "ushcn_1mo": "mse", "ushcn_12mo": "mse",
-    "P12": "auroc", "P19": "auroc", "PAM": "acc",
-}
+# keyed by dataset family, since the setting id now carries the horizon
+PRIMARY = {"physionet": "mse", "activity": "mse", "ushcn": "mse",
+           "P12": "auroc", "P19": "auroc", "PAM": "acc"}
 # Time unit of the history/horizon columns. Forecast horizons follow the QuITE protocol: the clinical and
 # activity settings partition a FIXED window (48 h, 4000 ms), so a longer horizon is also a shorter history;
 # only USHCN varies the horizon at fixed history. Classification has no horizon.
-TIME_UNIT = {"physionet": "h", "activity": "ms", "ushcn_1mo": "mo", "ushcn_12mo": "mo",
-             "P12": "", "P19": "", "PAM": ""}
+TIME_UNIT = {"physionet": "h", "activity": "ms", "ushcn": "mo", "P12": "", "P19": "", "PAM": ""}
 
-TASK = {"physionet": "forecast", "activity": "forecast", "ushcn_1mo": "forecast", "ushcn_12mo": "forecast",
+TASK = {"physionet": "forecast", "activity": "forecast", "ushcn": "forecast",
         "P12": "classify", "P19": "classify", "PAM": "classify"}
 
 FIELDS = [
@@ -61,12 +59,25 @@ FIELDS = [
 ]
 
 
+# Unit suffix used in the setting id of each forecasting dataset.
+HORIZON_UNIT = {"physionet": "h", "activity": "ms", "ushcn": "mo"}
+
+
 def setting_id(cfg, info):
-    """Dataset name, with the USHCN horizon folded in so the two settings are distinct rows."""
+    """Dataset name with its forecast horizon folded in, e.g. physionet_24h, activity_1000ms, ushcn_12mo.
+
+    Every forecasting setting names its horizon, not just USHCN. Without this, the same dataset at different
+    horizons collapses into one setting id and rows from different tasks are averaged together -- and on the
+    fixed-window datasets a different horizon is a different history too, so they are genuinely different tasks.
+    """
     name = (cfg.get("data") or {}).get("name", "physionet")
-    if name == "ushcn":
-        return f"ushcn_{int(info.get('pred_window', 1))}mo"
-    return name
+    unit = HORIZON_UNIT.get(name)
+    if unit is None:
+        return name                      # classification: no horizon
+    h = info.get("pred_window")
+    if not h:
+        return name
+    return f"{name}_{int(h)}{unit}"
 
 
 def mechanisms(cfg):
@@ -142,14 +153,15 @@ def rows_for_run(run_dir, main_only):
         return []
     cost, run = r.get("cost") or {}, r.get("run") or {}
     sid = setting_id(cfg, info)
-    if sid not in PRIMARY:
+    fam = (cfg.get("data") or {}).get("name", "physionet")
+    if fam not in PRIMARY:
         return []
-    pkey = PRIMARY[sid]
+    pkey = PRIMARY[fam]
     base = {
-        "setting": sid, "task": TASK[sid], "n_vars": info.get("input_dim"),
+        "setting": sid, "task": TASK[fam], "n_vars": info.get("input_dim"),
         "history": info.get("history"),
-        "horizon": (info.get("pred_window") if TASK[sid] == "forecast" else ""),
-        "time_unit": TIME_UNIT.get(sid, ""),
+        "horizon": (info.get("pred_window") if TASK[fam] == "forecast" else ""),
+        "time_unit": TIME_UNIT.get(fam, ""),
         "backbone": (cfg.get("model") or {}).get("backbone"),
         "method": method_id(cfg), "variant": variant_id(cfg), "experiment": cfg.get("experiment"),
         "seed": cfg.get("seed", run.get("seed")), "batch_size": info.get("batch_size"),
@@ -173,7 +185,7 @@ def rows_for_run(run_dir, main_only):
             "n_series": m.get("n_series"), "infer_ms_per_series": m.get("infer_ms_per_series"),
         })
         # metric columns: blank, not zero, where the metric does not apply to the task
-        if TASK[sid] == "forecast":
+        if TASK[fam] == "forecast":
             row["mse"], row["mae"] = m.get("mse"), m.get("mae")
         else:
             row["ce"], row["acc"] = m.get("ce"), m.get("acc")
