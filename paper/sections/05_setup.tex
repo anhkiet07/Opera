@@ -1,0 +1,74 @@
+%% Experimental setup: datasets, the disjoint observation-process splits, metrics, protocol.
+%% Included by sigconf.tex. Do not add a preamble here.
+
+\section{Experimental Setup}
+\label{sec:setup}
+
+\subsection{Datasets and tasks}
+We use five datasets spanning three sensing modalities, two tasks and two backbones
+(Table~\ref{tab:datasets}). Preprocessing, splits and normalisation are the unmodified published pipelines:
+t-PatchGNN \cite{zhang2024tpatchgnn} for the forecasting benchmarks (PhysioNet from the 2012 challenge
+\cite{silva2012physionet}) and Raindrop \cite{zhang2022raindrop} for classification, including the minority-class upsampling of the binary tasks. USHCN appears at two horizons
+because, as Section~\ref{sec:phenomenon} shows, horizon length changes how much a model must rely on its
+history.
+
+\begin{table}[t]
+\caption{Datasets and task settings. Backbone follows the published protocol per task.}
+\label{tab:datasets}
+\small
+\begin{tabular}{llrrll}
+\toprule
+setting & task & vars & samples & backbone & metric \\
+\midrule
+PhysioNet 24h$\to$24h & forecast & 41 & 12{,}000 & iTransformer & MSE \\
+Activity 3000$\to$1000\,ms & forecast & 12 & 5{,}400 & iTransformer & MSE \\
+USHCN 24$\to$1 mo & forecast & 5 & 26{,}736 & iTransformer & MSE \\
+USHCN 24$\to$12 mo & forecast & 5 & 26{,}736 & iTransformer & MSE \\
+P12 mortality & classify (2) & 36 & 11{,}988 & PatchTST & AUROC \\
+P19 sepsis & classify (2) & 34 & 38{,}803 & PatchTST & AUROC \\
+PAM activity & classify (8) & 17 & 5{,}333 & PatchTST & accuracy \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Observation-process splits}
+\label{sec:splits}
+The central protocol decision is that training and evaluation draw from \emph{disjoint} observation-process
+distributions, so that generalisation across observation processes is measurable rather than assumed.
+
+\textbf{Training pool} $P_{\mathrm{mix}}$ is deliberately mild: random dropout at $p\in\{0.1,0.25,0.4\}$,
+stride $2$, burst at $p\in\{0.2,0.3\}$, variable dropout at $p=0.2$, and local masking at $p=0.3$.
+
+\textbf{Evaluation conditions} comprise 16 processes: the training families at unseen severities, plus families
+absent from training. Nine are \emph{unseen}: random dropout $0.7$, variable dropout $0.5$, stride $3$ and $4$,
+long gap $0.4$, burst $0.5$, variable-group dropout $0.3$, and two compositions (random $0.5$ $+$ variable
+$0.3$; stride $3$ $+$ variable-group $0.4$). We report degradation over all shifted conditions and separately
+over the unseen subset.
+
+\textbf{Evaluation procedure.} For each condition we re-observe the \emph{history} of every test input and leave
+the prediction targets and labels untouched. The pseudo-random draw is seeded identically for every model, so
+all models are compared on the same re-observed inputs. The clean condition is the dataset's own observation
+process.
+
+\subsection{Metrics}
+Forecasting uses masked MSE and MAE over observed target entries, averaged per variable then over variables with
+supervision. Binary classification uses AUROC and AUPRC; the eight-class task uses accuracy and macro F1. We
+summarise sensitivity by relative degradation with respect to a model's own clean score,
+\begin{equation}
+\Delta_{\mathrm{shift}}=\frac{1}{|\mathcal{E}|}\sum_{\Sobs\in\mathcal{E}}
+\frac{\mathrm{err}_{\Sobs}-\mathrm{err}_{\mathrm{clean}}}{\mathrm{err}_{\mathrm{clean}}},
+\label{eq:degradation}
+\end{equation}
+over the shifted conditions $\mathcal{E}$, and report $\Delta_{\mathrm{shift}}$ restricted to the unseen subset
+as well. $\Delta_{\mathrm{shift}}$ must be read \emph{beside} absolute error and never instead of it: because it
+is normalised by a model's own clean score, a uniformly weaker model can attain a flattering ratio. We therefore
+report clean, mean shifted and worst-case error in every table. We also report parameter count, training time
+per epoch, peak training memory and inference latency.
+
+\subsection{Protocol}
+All models use the query-based irregular embedding with hidden width 64, four heads and three layers, trained
+with Adam at $10^{-3}$, batch 32 (128 for USHCN; 16 for P12, where a single view's attention already occupies
+4.7\,GB), an epoch cap of 40, early-stopping patience 10 and a minimum of 15 epochs. Runs are executed
+sequentially on one 8\,GB GPU. Every run records its configuration, git commit, seed, checkpoint and metrics.
+\textbf{All reported numbers use a single seed} and are marked \prelim; the protocol calls for five, and we
+regard nothing here as a statistical result. \todo{five seeds for the primary comparisons}

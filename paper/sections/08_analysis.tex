@@ -1,0 +1,32 @@
+%% Analysis of the negative/partial results, the degradation-ratio pitfall, and limitations.
+%% Included by sigconf.tex. Do not add a preamble here.
+
+\section{Analysis and Limitations}
+\label{sec:analysis}
+
+\paragraph{What the negative and partial results delimit.}
+Two mechanisms did not behave as their motivation suggested, and both boundaries are informative. Mining's
+inertness under its natural default shows that "train on the worst case" is empty unless the search space
+exceeds what random exposure already covers. Distillation's profile shows that a richer observation helps when
+the student cannot fit the target, which is a statement about task noise rather than about observation-process
+shift; the two goals are separable and should not be conflated because both happen to involve sparse views.
+Conversely, augmentation's dominance is itself a finding: informing a model by \emph{showing} it varied
+observation processes was consistently more reliable than constraining what its representation must look like.
+
+\paragraph{When the ratio metric misleads.}
+P12's cross-entropy \emph{improves} under mild shifts while its AUROC and AUPRC fall, so
+$\Delta_{\mathrm{shift}}$ computed on cross-entropy is negative and meaningless there; we omit it in
+Table~\ref{tab:main} and read P12 from the ranking metrics. More generally, because
+Eq.~\ref{eq:degradation} normalises by a model's own clean score, a uniformly weaker model can post a better
+ratio. On USHCN-1mo the baseline's ratio ($+1.9\%$) is close to the framework's ($+1.5\%$) while its shifted
+error is higher everywhere, and its clean error exceeds the framework's error \emph{under shift}. Absolute
+error remains the quantity of interest. \todo{recompute degradation on AUROC for binary tasks}
+
+\paragraph{Limitations.}
+Every number is single-seed; the protocol requires five, and the smaller differences in
+Tables~\ref{tab:components} and \ref{tab:main} are within the range we would expect seeds to move. Observation
+processes are synthetic re-observations of real records, which is what makes the targets well defined but is
+weaker evidence than a shift between two real acquisition environments. Compositions are limited to pairs. The
+two backbones are tied to tasks rather than crossed with them. USHCN is not min-max normalised by its published
+pipeline, so its errors are in raw units and not comparable in magnitude to the other forecasting settings. The
+observation-aware encoder of Section~\ref{sec:method} is implemented but not evaluated here.

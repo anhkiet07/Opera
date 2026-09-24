@@ -1,0 +1,95 @@
+%%% OPERA: Robust Representation Learning for Irregular Time Series under Observation-Process Shift
+%%%
+%%% MAIN DRIVER. This file holds the preamble and front matter only; every section lives in sections/ and is
+%%% pulled in with \input below. Compile this file (not main.tex, which has been retired):
+%%%
+%%%     latexmk -pdf sigconf.tex          % or select sigconf.tex as the main document in Overleaf
+%%%
+%%% Conventions:
+%%%   \prelim (dagger) marks a number obtained from a single seed. The protocol requires five.
+%%%   \todo{...} marks a pending measurement. Do not delete either marker without replacing the number.
+%%%   Numbers come from results/raw/*/results.json via results/aggregated/tables_<dataset>.md.
+%%%
+%%% NOTE ON MATH PACKAGES: do not add amsmath or amssymb. Under XeLaTeX/LuaLaTeX acmart already loads
+%%% amssymb + unicode-math, and requesting amssymb here raises "Command \Bbbk already defined". The sections
+%%% deliberately avoid amsmath-only constructs (align, \boxed, \text), so this compiles under pdfLaTeX,
+%%% XeLaTeX and LuaLaTeX as is.
+
+%TC:macro \cite [option:text,text]
+%TC:macro \citep [option:text,text]
+%TC:macro \citet [option:text,text]
+%TC:envir table 0 1
+%TC:envir table* 0 1
+%TC:envir tabular [ignore] word
+%TC:envir displaymath 0 word
+%TC:envir math 0 word
+%TC:envir comment 0 0
+
+\documentclass[sigconf,nonacm]{acmart}
+%% acmart already provides booktabs, graphicx and xcolor.
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%% ---------------------------------------------------------------- shared macros
+\newcommand{\todo}[1]{\textcolor{red}{[#1]}}
+\newcommand{\prelim}{\textsuperscript{\dag}}
+\newcommand{\Sobs}{\mathcal{S}}
+\newcommand{\Oobs}{\mathcal{O}}
+
+\AtBeginDocument{\providecommand\BibTeX{{Bib\TeX}}}
+
+%% ---------------------------------------------------------------- venue metadata
+%% Switch \documentclass to [sigconf] (dropping nonacm) and fill these in for a real ACM submission.
+\settopmatter{printacmref=false}
+\renewcommand\footnotetextcopyrightpermission[1]{}
+\pagestyle{plain}
+% \setcopyright{acmlicensed}
+% \copyrightyear{2026}
+% \acmYear{2026}
+% \acmDOI{XXXXXXX.XXXXXXX}
+% \acmConference[Conference acronym 'XX]{Conference title}{Month DD--DD, YYYY}{City, Country}
+% \acmISBN{978-1-4503-XXXX-X/YY/MM}
+
+\begin{document}
+
+%% ---------------------------------------------------------------- front matter
+\title{OPERA: Robust Representation Learning for Irregular Time Series\\ under Observation-Process Shift}
+
+\author{Anonymous Authors}
+\affiliation{%
+  \institution{Anonymous Institution}
+  \country{}
+}
+
+\begin{abstract}
+\input{sections/abstract}
+\end{abstract}
+
+%% CCS concepts and keywords are required for a real ACM submission; generate the CCS XML at
+%% https://dl.acm.org/ccs and paste it here.
+%% \begin{CCSXML} ... \end{CCSXML}
+%% \ccsdesc[500]{Computing methodologies~Machine learning}
+\keywords{irregular time series, observation process, distribution shift, robustness,
+privileged information, data augmentation}
+
+\maketitle
+
+%% ---------------------------------------------------------------- body
+\input{sections/01_introduction}
+\input{sections/02_related_work}
+\input{sections/03_problem}
+\input{sections/04_method}
+\input{sections/05_setup}
+\input{sections/06_phenomenon}
+\input{sections/07_results}
+\input{sections/08_analysis}
+\input{sections/09_conclusion}
+
+%% ---------------------------------------------------------------- back matter
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{refs}
+
+%% \appendix
+%% \input{sections/A1_appendix}
+
+\end{document}

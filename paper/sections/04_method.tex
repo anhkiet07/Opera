@@ -1,0 +1,125 @@
+%% Method: the three mechanisms as three ways of choosing S, the objective, and the training algorithm.
+%% Included by sigconf.tex. Do not add a preamble here.
+
+\section{OPERA}
+\label{sec:method}
+OPERA acts on $\Sobs$, not on the encoder. All three mechanisms manipulate the same object --- the observation
+process through which the model sees a trajectory --- and they differ in \emph{how} they choose it:
+augmentation samples it, distillation contrasts a sparse choice against a richer one, and mining searches for
+the worst admissible choice. The encoder, its parameter count and its inference path are untouched.
+
+\subsection{Mechanism 1: observation-process augmentation}
+\label{sec:aug}
+The first mechanism treats the observation process as nuisance variation to be randomised over. For each
+training trajectory we draw $V$ processes from a mixture $P_{\mathrm{mix}}$ and train on all of the resulting
+views:
+\begin{equation}
+\Oobs_v=\Sobs_v(X),\quad \Sobs_v\sim P_{\mathrm{mix}},\qquad
+\mathcal{L}_{\mathrm{task}}=\frac1V\sum_{v=1}^{V}\ell\big(f_\theta(\Oobs_v),\,Y\big),
+\label{eq:aug}
+\end{equation}
+with $\ell$ the masked mean squared error for forecasting and cross-entropy for classification. The targets $Y$
+are shared across views and never modified: every view is a different recording of the same episode.
+
+We make no representation-level requirement. The intended property is that the representation of a trajectory
+stay \emph{task-useful} under a change of observation process, which is weaker than
+$z(\Sobs_1(X))=z(\Sobs_2(X))$ and, unlike it, does not admit the degenerate solution of collapsing all
+representations together.
+
+\subsection{Mechanism 2: privileged-observation distillation}
+\label{sec:distill}
+A sparse observation may simply not determine the target. During training, however, we can often construct a
+\emph{richer observation of the same history}. This is privileged information in the sense of
+\cite{vapnik2015lupi}: available at training time, absent at deployment.
+
+Let $\Sobs_{\mathrm{rich}}$ be a process at least as dense as the student's view, in our experiments the
+untouched record. A teacher $f_{\theta_T}$ is trained on rich observations and frozen; the student is trained on
+sparse views and additionally imitates the teacher's \emph{task output}:
+\begin{equation}
+\mathcal{L}_{\mathrm{distill}}
+=\big\| f_\theta(\Sobs_v(X))-\mathrm{sg}\big[f_{\theta_T}(\Sobs_{\mathrm{rich}}(X))\big] \big\|^2_{\Omega},
+\label{eq:distill}
+\end{equation}
+where $\mathrm{sg}[\cdot]$ is the stop-gradient and $\Omega$ restricts the norm to entries carrying supervision,
+so the student is never asked to imitate the teacher where no target exists. For probabilistic outputs we also
+support a KL form. We additionally implement an exponential-moving-average teacher,
+$\theta_T\leftarrow\alpha\theta_T+(1-\alpha)\theta$, and treat the choice as an empirical question.
+
+Distillation is deliberately at the level of predictions rather than representations. A representation-matching
+variant exists in our implementation but is reported only as an ablation: it reintroduces exactly the
+constraint that Section~\ref{sec:aug} declines to impose.
+
+\paragraph{Anti-leakage invariant.}
+Teacher and student must differ \emph{only} in the observation of the history. Both are evaluated on the same
+history window, the same prediction times and the same supervision; the teacher never sees a future value or a
+label the student cannot use. We enforce this with an assertion on every batch key that carries supervision and
+verify it in unit tests, for both forecasting and classification.
+
+\subsection{Mechanism 3: hard observation-process mining}
+\label{sec:mining}
+Random exposure spends most of its budget on observation processes the model already handles. The third
+mechanism instead searches for the admissible process that the \emph{current} model handles worst,
+\begin{equation}
+\Sobs^{*}=\arg\max_{\Sobs\in\mathcal{A}}\ \ell\big(f_\theta(\Sobs(X)),Y\big),
+\qquad \mathcal{A}=\{\Sobs:\ \Sobs\ \mathrm{satisfies}\ \mathcal{C}\},
+\label{eq:mining}
+\end{equation}
+with $\mathcal{C}$ from Eq.~\ref{eq:constraints}. We approximate the maximisation by scoring a finite candidate
+pool rather than differentiating through mask generation: $K$ candidates are drawn from a pool $\mathcal{P}$,
+evaluated under \texttt{no\_grad}, filtered through $\mathcal{C}$, and the hardest retained. Only the selected
+views enter the backward pass, so mining costs $K$ extra forward passes and no extra gradient memory.
+
+Two design points proved to matter. First, training exclusively on hard views destabilises optimisation and
+biases the model away from the deployment regime, so we mix,
+\begin{equation}
+P(\Sobs)=(1-\alpha)\,P_{\mathrm{mix}}+\alpha\,P_{\mathrm{hard}},
+\label{eq:alpha}
+\end{equation}
+and additionally hold $\alpha=0$ for a warm-up period, giving the curriculum: random exposure, then mixed random
+and mined. Second, and more consequentially, \emph{the candidate pool must be harsher than the training pool}.
+If $\mathcal{P}=P_{\mathrm{mix}}$ then the hardest of $K$ draws is close in severity to a random draw and mining
+degenerates to augmentation at $K$ times the cost. We therefore treat $\mathcal{P}$ as a separate
+hyper-parameter and report both choices (Section~\ref{sec:results}).
+
+\subsection{Objective and training procedure}
+The complete objective adds one term to the task loss,
+\begin{equation}
+\fbox{$\displaystyle\ \mathcal{L}=\mathcal{L}_{\mathrm{task}}+\lambda_{d}\,\mathcal{L}_{\mathrm{distill}}\ $}
+\label{eq:objective}
+\end{equation}
+where mining determines \emph{which} observation processes contribute to $\mathcal{L}_{\mathrm{task}}$ in
+Eq.~\ref{eq:aug}. No further loss is introduced, and in particular no representation-consistency term. Setting
+$\lambda_d=0$, $\alpha=0$ and $V=1$ recovers ordinary training.
+
+\begin{algorithm}[t]
+\caption{OPERA training step}
+\label{alg:opera}
+\begin{algorithmic}[1]
+\Require batch $(X,Y)$ with observation $(t,m)$; epoch $e$; mixture $P_{\mathrm{mix}}$; pool $\mathcal{P}$;
+constraints $\mathcal{C}$; frozen teacher $f_{\theta_T}$
+\If{$e<e_{\mathrm{warm}}$ \textbf{or} $\alpha=0$}
+  \State $\{\Sobs_v\}_{v=1}^{V}\sim P_{\mathrm{mix}}$ \Comment{stage 1: random exposure}
+\Else
+  \State draw $K$ candidates from $\mathcal{P}$; keep those satisfying $\mathcal{C}$
+  \State score survivors with $f_\theta$ under \texttt{no\_grad}; take the $\lceil\alpha V\rceil$ hardest
+  \State fill the remaining $V-\lceil\alpha V\rceil$ views from $P_{\mathrm{mix}}$
+\EndIf
+\State $\hat{Y}_T \gets \mathrm{sg}\big[f_{\theta_T}(\Sobs_{\mathrm{rich}}(X))\big]$ \Comment{same history}
+\State $\mathcal{L}\gets\frac1V\sum_v \ell(f_\theta(\Sobs_v(X)),Y) + \lambda_d\sum_v \mathcal{L}_{\mathrm{distill}}$
+\State one optimiser step on $\mathcal{L}$
+\end{algorithmic}
+\end{algorithm}
+
+Algorithm~\ref{alg:opera} is a single unified update: one loss, one backward pass, one optimiser step. The only
+staging is the mining warm-up and the fact that a frozen teacher is trained beforehand.
+
+\paragraph{Deployment.}
+At inference the model consumes one sparse observation and emits a prediction. The teacher, the rich view and
+the candidate pool are training-time constructs; parameter count and inference latency are identical to the
+unmodified encoder (Table~\ref{tab:cost}).
+
+\paragraph{Optional observation-aware encoding.}
+The descriptor $r=g(\Oobs)$ of Section~\ref{sec:descriptor} can also be supplied to the encoder, conditioning
+aggregation on the observation regime. We implement this but keep it outside the framework proper: the
+mechanisms above require no architectural change, and we prefer to establish them first. \todo{report the
+observation-aware ablation}

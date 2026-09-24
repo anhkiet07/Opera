@@ -1,0 +1,24 @@
+%% Abstract body only; the abstract environment lives in sigconf.tex.
+%% Included by sigconf.tex. Do not add a preamble here.
+
+An irregularly sampled time series is not a signal but the record of a measurement procedure: an underlying
+temporal process observed through a process that decides when, and which variables, get recorded. Methods for
+such data are evaluated almost exclusively under the observation process of the benchmark they are trained on.
+We ask what happens when that process changes while the underlying dynamics do not, and we formalise this
+\emph{observation-process shift} as a distinct axis of distribution shift. Measuring it across five datasets,
+two tasks and two backbones, we find that its severity spans three orders of magnitude and tracks how much
+predictive information a task draws from its irregular history: re-observing the test inputs of a wearable-sensor
+forecasting benchmark through processes never seen in training raises error by a factor of nineteen, a clinical
+forecasting benchmark by a factor of two, and a climate benchmark not at all. The damage is not a function of how
+many observations are lost; at matched density, error varies by up to $3.5\times$ depending on \emph{what} is
+removed, and the most damaging kind of loss differs by sensing modality. We then develop OPERA, which trains
+representations against this shift by exposing the encoder to diverse observation processes, transferring
+task-level information from richer observations of the same history, and concentrating training on the
+observation processes a model currently handles worst. Exposure to diverse observation processes accounts for
+most of the attainable robustness, reducing relative degradation from $+107\%$ to $+14\%$ on the clinical
+benchmark and from $+1793\%$ to $+25\%$ on the sensor benchmark at no in-distribution cost, and it transfers to
+observation-process \emph{families} absent from training. The other two mechanisms are not interchangeable with
+it: privileged-observation distillation improves accuracy where the task is noisy rather than robustness, and
+adversarial selection of observation processes helps only when its candidates are harsher than those the model
+already trains on. Inference requires neither privileged observations nor candidate search.
+\prelim All numbers are single-seed. \todo{finalise with five seeds}

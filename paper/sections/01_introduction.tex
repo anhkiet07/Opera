@@ -1,0 +1,65 @@
+%% Introduction: the problem, the phenomenon, and the contribution list.
+%% Included by sigconf.tex. Do not add a preamble here.
+
+\section{Introduction}
+Irregular sampling is intrinsic to how many temporal systems are recorded. Laboratory values are ordered when a
+clinician judges them necessary; environmental sensors fail, are serviced, and report at heterogeneous rates;
+wearable devices lose contact and cycle through power states. In all of these cases the data are not the process
+but the outcome of two processes: the temporal dynamics of the system, and the \emph{observation process} that
+samples them.
+
+A substantial literature builds encoders for such data, including recurrent models with decay
+\cite{che2018grud}, continuous-time latent models \cite{rubanova2019latentode,debrouwer2019gruodebayes,kidger2020ncde},
+set-function and attention aggregation \cite{horn2020seft,shukla2021mtand}, graph-guided models
+\cite{zhang2022raindrop,zhang2024tpatchgnn}, and query-based input embeddings that let standard multivariate
+backbones consume irregular observations without interpolation \cite{lim2026quite}. These methods differ in how
+they represent a given set of observations, and they are evaluated under the observation process of the
+benchmark on which they were trained.
+
+The observation process, however, is not a fixed property of a domain. A different hospital orders laboratory
+panels on a different schedule; a sensor network is redeployed with a different sampling policy; a firmware
+update changes when readings are logged. In each case the underlying dynamics are comparable while the
+observation process has moved. Our question is whether a representation learned under one observation process
+remains useful under another.
+
+We make the distinction explicit (Section~\ref{sec:problem}): the observed sample is $\Oobs=\Sobs(X)$ for an
+underlying trajectory $X$ and an observation process $\Sobs \sim P_{\mathrm{obs}}$. \emph{Process shift} changes
+$P(X)$; \emph{observation-process shift} changes $P_{\mathrm{obs}}$ while $P(X)$ is comparable. The second is
+invisible to a protocol that draws training and test data from a single $P_{\mathrm{obs}}$, which is what
+standard benchmarks do.
+
+\paragraph{The phenomenon is real, large, and heterogeneous.}
+Measuring it requires only re-observing the \emph{history} of held-out inputs through a different process while
+leaving the prediction targets untouched. Doing so across seven task settings (Section~\ref{sec:phenomenon}), we
+find mean relative degradations from $+1.9\%$ to $+1793\%$. The ordering is interpretable: severity grows with
+how much of a task's predictive signal lives in the irregular history. At one extreme, a climate benchmark
+forecasting one month ahead is \emph{improved} by deleting half of its observations, because its signal is
+carried by seasonal structure the model can recover without them. At the other, millisecond-resolution
+body-sensor dynamics degrade by a factor of thirty-two under regular subsampling alone.
+
+Two further observations shape the method. First, degradation is not a function of observation count: at matched
+density, the choice of which observations disappear changes error by up to $3.5\times$. Second, the most damaging
+kind of loss is modality-dependent. On clinical data, losing whole variables dominates and temporal
+subsampling is nearly free; on body-sensor data the reverse holds. Any mechanism that treats irregularity as a
+scalar corruption level cannot express this.
+
+\paragraph{Contributions.}
+\begin{itemize}
+\item We formalise observation-process shift as a distinct source of distribution shift for irregular time
+series, give a composable family of observation processes with validity constraints and a per-sample
+descriptor, and define a train/test split over observation processes that makes generalisation to unseen
+processes measurable (Sections~\ref{sec:problem}--\ref{sec:setup}).
+\item We establish the phenomenon empirically across five datasets, two tasks and two backbones, show that its
+severity spans three orders of magnitude and tracks how much a task uses its history, and show that it is not
+explained by observation density (Section~\ref{sec:phenomenon}).
+\item We develop OPERA, a training framework that acts on the observation process itself through three
+mechanisms, and evaluate each in isolation and in combination (Sections~\ref{sec:method}, \ref{sec:results}).
+\item We report where each mechanism does and does not help, including two negative results we retain because
+they delimit the claim: adversarial observation selection is inert unless its candidates exceed the training
+pool in severity, and privileged distillation buys accuracy rather than robustness
+(Section~\ref{sec:analysis}).
+\end{itemize}
+
+We use a query-based irregular encoder \cite{lim2026quite} as the experimental substrate because it consumes
+irregular observations natively and exposes a natural point at which to condition on the observation process.
+Nothing in the formulation depends on that choice, and we report results on a second backbone.

@@ -1,0 +1,81 @@
+%% Problem formalisation: X, S, O = S(X); the observation-process family; descriptor and constraints.
+%% Included by sigconf.tex. Do not add a preamble here.
+
+\section{Learning under Observation-Process Shift}
+\label{sec:problem}
+
+\subsection{Setting}
+Let $X=\{x(t)\}_{t\in\mathcal{T}}$, $x(t)\in\mathbb{R}^{N}$, be an underlying multivariate temporal process over
+a window $\mathcal{T}$. The learner never observes $X$. It receives a finite set of timestamped, partially
+observed measurements
+\begin{equation}
+\Oobs=\{(t_k,\,x(t_k),\,m_k)\}_{k=1}^{K},\qquad m_k\in\{0,1\}^{N},
+\end{equation}
+where $m_{k,i}=1$ iff variable $i$ was measured at time $t_k$. We call the mechanism that selects
+$\{(t_k,m_k)\}$ an \emph{observation process} $\Sobs$, write $\Oobs=\Sobs(X)$, and model it as a random variable
+$\Sobs\sim P_{\mathrm{obs}}$. A model $f_\theta$ maps $\Oobs$ to a task output $\hat{Y}$: a forecast of $x$ over
+a future window, or a label.
+
+Training data are drawn from a joint distribution over $(X,\Sobs)$. We distinguish
+\begin{equation}
+P_{\mathrm{train}}(X)\ \neq\ P_{\mathrm{test}}(X)
+\qquad\textit{(process shift)},
+\end{equation}
+\begin{equation}
+P_{\mathrm{train}}(\Sobs)\ \neq\ P_{\mathrm{test}}(\Sobs)
+\qquad\textit{(observation-process shift)},
+\end{equation}
+with $P(X)$ comparable in the second case. This paper concerns the second. Two datasets may record the same
+underlying process while differing in observation density, in the temporal clustering of observations, in which
+variables are observed, or in sampling regularity.
+
+\subsection{A composable family of observation processes}
+\label{sec:family}
+We need observation processes that are \emph{realisable}: each must correspond to a way the same trajectory
+could have been recorded, so that the target remains well defined. We therefore restrict attention to processes
+that act on the observation mask by \emph{removal} only. Formally, an observation process is a map
+\begin{equation}
+\Sobs:(t,m)\ \mapsto\ (t,\,m\odot\kappa),\qquad \kappa\in\{0,1\}^{K\times N},
+\end{equation}
+and values at removed entries are discarded rather than imputed, so $\Sobs(X)$ is always a sub-sample of the
+original record and no artificial value is ever introduced. This is what allows a single held-out set to be
+re-observed many times with the supervision untouched.
+
+We use nine primitive families, grouped by the structure they destroy:
+\begin{itemize}
+\item \textbf{unstructured}: \textsc{RandomDropout}$(p)$ removes each observation independently with
+probability $p$; \textsc{DensityControlledSampling}$(\rho)$ retains a fixed fraction $\rho$ of every variable's
+observations, fixing density independently of the original pattern.
+\item \textbf{temporal}: \textsc{TemporalStride}$(k)$ keeps every $k$-th observation of each variable, lowering
+the sampling \emph{rate} while keeping it regular; \textsc{BurstMissingness}$(p)$ removes contiguous windows
+covering a fraction $p$ of the observed span; \textsc{LongGapMissingness}$(p)$ is the single-window case;
+\textsc{LocalTemporalMask}$(p)$ removes one contiguous run per variable, matching random dropout in density but
+clustering the loss per channel.
+\item \textbf{variable-wise}: \textsc{VariableDropout}$(p)$ removes whole variables independently;
+\textsc{VariableGroupDropout}$(p)$ removes contiguous blocks of variables together, modelling a failed
+monitor or an unavailable panel.
+\end{itemize}
+Processes compose sequentially ($\Sobs_2\circ\Sobs_1$, written \texttt{a+b}) and mix
+($\Sobs\sim\mathrm{Unif}\{\Sobs_1,\dots\}$, written \texttt{a|b}), so an observation regime is fully described by
+a string and can be specified in configuration rather than code. \textsc{LocalTemporalMask} and
+\textsc{DensityControlledSampling} exist specifically to construct density-matched comparisons
+(Section~\ref{sec:phenomenon}).
+
+\subsection{Descriptor and validity constraints}
+\label{sec:descriptor}
+Two auxiliary objects are needed by the mechanisms. First, a per-sample \emph{descriptor}
+$r=g(\Oobs)\in\mathbb{R}^{8}$ summarising the realised observation process: observation count and density, the
+mean, standard deviation and maximum of inter-observation gaps, temporal coverage, variable coverage, and recent
+density. It is computed from the mask and timestamps alone, never from values, so it can be logged, used to
+select processes, or fed to the encoder without leaking supervision.
+
+Second, a set of \emph{validity constraints} $\mathcal{C}$, since a mechanism that searches over observation
+processes must be prevented from selecting degenerate ones. We constrain relative density, variable coverage,
+maximum gap, per-variable coverage and minimum observation count:
+\begin{equation}
+\mathcal{C}:\quad \rho_{\min}\le\frac{\rho(\Sobs(X))}{\rho(X)}\le\rho_{\max},\quad
+\Delta t_{\max}(\Sobs(X))\le G_{\max},\quad \dots
+\label{eq:constraints}
+\end{equation}
+A candidate violating any bound is discarded before selection. Throughout we use $\rho_{\min}=0.15$, variable
+coverage $\ge 0.3$, $G_{\max}=0.6$ of the window, and at least four observations per sample.
