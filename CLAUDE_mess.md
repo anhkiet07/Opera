@@ -83,33 +83,84 @@ so stage D only finds stage B's checkpoints if both used one root. Mixing roots 
 behind -- checkpoints are ~25 MB each and the repo is already carrying too many (§8). But do not delete them
 while any stage D or F run is still pending, because those read them.
 
-## 5. Launch
+## 5. Launch: submit SLURM jobs, one cell per task
 
-Sequential (what we ran locally):
+**Do not run the sweep on the login node.** Write `sbatch` scripts. Every cell is independent given its
+teacher, so the grid is a job array: `--settings`, `--backbones` and `--seeds` each take a subset, and one array
+task should be exactly one `(setting, backbone, seed)` cell.
 
-```bash
-python scripts/run_benchmark.py --stage B --out "$OPERA_RUN/raw" --no_wandb \
-  2>&1 | tee "$OPERA_RUN/logs/stageB.log"
-python scripts/run_benchmark.py --stage D --out "$OPERA_RUN/raw" --no_wandb \
-  2>&1 | tee "$OPERA_RUN/logs/stageD.log"
-```
-
-Finished cells are skipped, so a stage is always safe to re-run after an interruption.
-
-**You should parallelise instead.** Every cell is independent given its teacher. The one-at-a-time loop and the
-`wait_for_free_gpu()` gate in `scripts/run_benchmark.py` exist only because two jobs on one 8 GB card thrash --
-an epoch once went from 96 s to 9380 s with no error. On dedicated GPUs, drop both and submit per-cell jobs.
-Use `--settings` and `--backbones` to slice the grid, e.g.
+Save as `$OPERA_RUN/stage.sbatch`:
 
 ```bash
-python scripts/run_benchmark.py --stage B --settings physionet --backbones itransformer \
+#!/bin/bash
+#SBATCH --job-name=opera
+#SBATCH --partition=gpu
+#SBATCH --gres=gpu:1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=32G
+#SBATCH --time=08:00:00
+set -euo pipefail
+
+SETTINGS=(physionet activity ushcn_1mo ushcn_12mo P12 P19 PAM)   # 7
+BACKBONES=(itransformer patchtst tmix)                            # 3
+SEEDS=(1 2 3 4)                                                   # 4   -> 84 tasks
+
+i=$SLURM_ARRAY_TASK_ID
+s=$(( i % 7 )); i=$(( i / 7 ))
+b=$(( i % 3 )); i=$(( i / 3 ))
+d=$(( i % 4 ))
+
+cd "$REPO"
+source activate opera            # or: conda activate opera
+python scripts/run_benchmark.py --stage "$STAGE" \
+  --settings "${SETTINGS[$s]}" --backbones "${BACKBONES[$b]}" --seeds "${SEEDS[$d]}" \
   --out "$OPERA_RUN/raw" --no_wandb
 ```
 
-Still: **never two jobs on one GPU.** One job per GPU.
+Submit stage B (vanilla), then stage D once B has finished:
 
-Node guidance from `sinfo`: `l40s-f-[01-04]` (48 GB) for anything memory-hungry, `v100l-f-*` (32 GB) next,
-`v100-f-*` (16 GB) for everything else. `rtxp6000l-f-01` is down and `v100-f-07` is draining.
+```bash
+export REPO=$PWD
+sbatch --array=0-83 --export=ALL,STAGE=B,REPO="$REPO",OPERA_RUN="$OPERA_RUN" \
+       --output="$OPERA_RUN/logs/B-%A_%a.out" "$OPERA_RUN/stage.sbatch"
+
+# after B is complete (see below), same array for D:
+sbatch --array=0-83 --export=ALL,STAGE=D,REPO="$REPO",OPERA_RUN="$OPERA_RUN" \
+       --output="$OPERA_RUN/logs/D-%A_%a.out" "$OPERA_RUN/stage.sbatch"
+```
+
+`#SBATCH` directives do **not** expand shell variables, which is why `--output` and `--export` are passed on
+the command line rather than written into the script.
+
+**Stage D must not start until B is done for that cell.** Either wait for B to drain, or chain the arrays:
+
+```bash
+JB=$(sbatch --parsable --array=0-83 --export=ALL,STAGE=B,... "$OPERA_RUN/stage.sbatch")
+sbatch --dependency=afterok:$JB --array=0-83 --export=ALL,STAGE=D,... "$OPERA_RUN/stage.sbatch"
+```
+
+Per-task resources: `--gres=gpu:1` always, never two tasks on one GPU. 32 GB host memory and 4 CPUs is ample;
+the loaders are single-process. `--time=08:00:00` is generous for every cell except P12 + iTransformer (§6).
+
+Node guidance from your `sinfo`: `l40s-f-[01-04]` (48 GB) for the P12 cells, `v100l-f-*` (32 GB) next,
+`v100-f-*` (16 GB) for everything else. `rtxp6000l-f-01` is down and `v100-f-07` is draining. To pin the heavy
+cells, submit them as a separate small array with `--constraint=l40s` (or `--nodelist=l40s-f-[01-04]`, whichever
+the site supports) and exclude P12 from the main array by dropping it from `SETTINGS` and using 6 settings, 72
+tasks.
+
+Finished cells are skipped, so re-submitting an array after failures costs nothing and is the normal way to
+mop up. Check what is still missing with:
+
+```bash
+ls -d "$OPERA_RUN"/raw/bench_*/ | wc -l                                  # dirs created
+ls "$OPERA_RUN"/raw/bench_*/results.json 2>/dev/null | wc -l             # cells actually finished
+```
+
+A directory without `results.json` is an incomplete run and will be redone.
+
+The one-at-a-time loop and the `wait_for_free_gpu()` gate inside `scripts/run_benchmark.py` are harmless when
+each task owns its GPU: with one cell per task the loop runs once and the gate sees a free card. They exist only
+because two jobs on one 8 GB card thrash -- an epoch once went from 96 s to 9380 s with no error.
 
 ## 6. Traps that already cost us time
 

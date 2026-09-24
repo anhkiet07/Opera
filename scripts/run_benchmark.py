@@ -135,6 +135,9 @@ def main():
     ap.add_argument("--out", default="results/raw")
     ap.add_argument("--settings", default=None, help="comma-separated subset")
     ap.add_argument("--backbones", default=None, help="comma-separated subset")
+    ap.add_argument("--seeds", default=None,
+                    help="comma-separated subset of the stage's seeds, e.g. 2. Lets a cluster put one "
+                         "(setting, backbone, seed) cell in each array task.")
     ap.add_argument("--dry_run", action="store_true")
     ap.add_argument("--quick", action="store_true", help="smoke only: cap records, hides OOM")
     ap.add_argument("--no_wandb", action="store_true")
@@ -147,6 +150,13 @@ def main():
             sys.exit(f"unknown setting {s!r}; known: {', '.join(SETTINGS)}")
 
     cells = plan(a.stage, settings, backbones)
+    if a.seeds:
+        want = {int(x) for x in a.seeds.split(",")}
+        stage_seeds = set(STAGES[a.stage][1]) if a.stage in STAGES else {0}
+        unknown = want - stage_seeds
+        if unknown:
+            sys.exit(f"stage {a.stage} has seeds {sorted(stage_seeds)}; got {sorted(unknown)}")
+        cells = [c for c in cells if c[3] in want]
     print(f"stage {a.stage}: {len(cells)} cells", flush=True)
 
     done, failed, instant = [], [], 0
