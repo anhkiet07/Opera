@@ -118,11 +118,17 @@ def _panel_mse(conditions):
 
 
 def fig2(out, dataset="physionet"):
-    """One ICU history seen through the three dimensions of the observation process, with the downstream MSE.
+    """One ICU stay: the input the model receives, the output it must predict, and what the observation
+    process costs.
 
     Message: same underlying history and same target, different observations, different prediction error. The
-    trajectory drawn faintly is identical in all four panels by construction; only the markers -- what the model
-    actually receives -- change.
+    faint trajectory and the whole right-hand region are identical in all four panels by construction; only the
+    markers in the left region -- what the model actually receives -- change.
+
+    Variables plotted are heart rate and systolic blood pressure, the two most-measured vitals in this stay. The
+    observation-process draw uses the evaluation seed (12345) unchanged in every panel: at that seed variable
+    removal happens to drop SysABP and keep HR, which is why one channel's markers vanish in (c). No seed was
+    searched for to produce that.
     """
     import torch
     from src.observation import ObservationProcessGenerator
@@ -130,16 +136,18 @@ def fig2(out, dataset="physionet"):
     if not path or not os.path.exists(path):
         print("fig2 skipped (no raw dataset)"); return
     data = torch.load(path, map_location="cpu", weights_only=False)
-    HR, MAP = 19, 23
-    best = max(range(len(data)), key=lambda i: (data[i][3][:, HR].sum() + data[i][3][:, MAP].sum()).item())
+    HR, SBP = 19, 35                      # 'HR' and 'SysABP' in data/physionet.py params
+    HISTORY = 24.0                        # the model sees 0-24 h and forecasts 24-48 h
+    best = max(range(len(data)), key=lambda i: (data[i][3][:, HR].sum() + data[i][3][:, SBP].sum()).item())
     _, tt, vals, mask = data[best]
     tt, vals, mask = tt.float(), vals.float(), mask.float()
-    keep = tt < 24
-    tt, vals, mask = tt[keep], vals[keep], mask[keep]
-    T = tt.view(1, -1, 1).expand(1, -1, vals.shape[1])
 
-    # Four panels: the reference process, then one per dimension of the observation process. These are exactly
-    # the conditions the main table reports, so figure and table tell one story.
+    hist = tt < HISTORY
+    th, vh, mh = tt[hist], vals[hist], mask[hist]
+    fut = tt >= HISTORY
+    tf, vf, mf = tt[fut], vals[fut], mask[fut]
+    Th = th.view(1, -1, 1).expand(1, -1, vh.shape[1])
+
     views = [("(a) reference", "identity"),
              ("(b) temporal subsampling", "temporal_stride:3"),
              ("(c) variable removal", "variable_dropout:0.5"),
@@ -147,41 +155,44 @@ def fig2(out, dataset="physionet"):
     mses, src = _panel_mse([spec for _, spec in views])
     print(f"fig2 MSE annotations from {src}" if mses else "fig2: no run found, drawing without MSE")
 
+    # This record codes some missing vitals as 0, which is physiologically impossible and would stretch the
+    # axis to zero. Crop the VIEW to the central range of the plotted channels; no observation is deleted, and
+    # the observation processes act on the full data regardless.
+    plotted = torch.cat([vh[mh[:, v] > 0, v] for v in (HR, SBP)] + [vf[mf[:, v] > 0, v] for v in (HR, SBP)])
+    plotted = plotted[plotted > 0]
+    lo, hi = float(np.percentile(plotted, 1)), float(np.percentile(plotted, 99))
+    pad = 0.08 * (hi - lo)
+
     gen = ObservationProcessGenerator(device="cpu")
-
-    def draw(spec, seed):
-        _, m = gen.condition(vals.unsqueeze(0), T, mask.unsqueeze(0), spec, seed=seed)
-        return m[0]
-
-    # Variable removal is only legible if it removes one of the two plotted channels and keeps the other. The
-    # draw is random over 41 variables, so pick the first seed that does; documented rather than silently tuned.
-    var_seed = 12345
-    for cand in range(12345, 12445):
-        m = draw("variable_dropout:0.5", cand)
-        gone = [int((m[:, v] > 0).sum()) == 0 for v in (HR, MAP)]
-        if sum(gone) == 1:
-            var_seed = cand
-            break
-
-    fig, axes = plt.subplots(1, 4, figsize=(7.2, 1.9), sharey=True)
-    for ax, (title, spec) in zip(axes, views):
-        m = draw(spec, var_seed if spec.startswith("variable_dropout") else 12345)
-        for var, col, lab in [(HR, C["E0_baseline"], "HR"), (MAP, C["E1_augmentation"], "MAP")]:
-            idx = mask[:, var] > 0
-            ax.plot(tt[idx], vals[idx, var], color=col, lw=0.7, alpha=0.28)   # identical in every panel
-            idx2 = m[:, var] > 0
-            ax.scatter(tt[idx2], vals[idx2, var], s=6, color=col, label=lab, zorder=3)
-        ax.set_title(title, fontsize=7.5)
-        ax.set_xlabel("time (h)", fontsize=7)
-        ax.set_xlim(0, 24)
+    TARGET = "#2f6f4e"                    # one colour for the output, whichever variable it belongs to
+    fig, axes = plt.subplots(1, 4, figsize=(7.2, 2.15), sharey=True)
+    for k, (ax, (title, spec)) in enumerate(zip(axes, views)):
+        _, m = gen.condition(vh.unsqueeze(0), Th, mh.unsqueeze(0), spec, seed=12345)
+        m = m[0]
+        ax.axvspan(HISTORY, 48, color="0.92", zorder=0)             # output region
+        ax.axvline(HISTORY, color="0.55", lw=0.7, ls="--", zorder=1)
+        for var, col, lab in [(HR, C["E0_baseline"], "HR"), (SBP, C["E1_augmentation"], "SysABP")]:
+            idx = mh[:, var] > 0
+            ax.plot(th[idx], vh[idx, var], color=col, lw=0.7, alpha=0.28, zorder=2)   # same in every panel
+            got = m[:, var] > 0
+            ax.scatter(th[got], vh[got, var], s=6, color=col, label=lab if k == 0 else None, zorder=4)
+            fidx = mf[:, var] > 0                                    # target: identical in every panel
+            ax.plot(tf[fidx], vf[fidx, var], color=TARGET, lw=0.7, alpha=0.75, zorder=3,
+                    label="forecast target" if (k == 0 and var == HR) else None)
+        ax.set_xlim(0, 48)
+        ax.set_ylim(lo - pad, hi + pad)
+        ax.set_xticks([0, 12, 24, 36, 48])
         ax.tick_params(labelsize=6)
-        if mses:
-            ax.text(0.97, 0.94, f"MSE {mses[spec]:.4f}", transform=ax.transAxes, ha="right", va="top",
-                    fontsize=6.2, color="0.35")
+        ax.set_xlabel("time (h)", fontsize=7)
+        head = title if not mses else title + "\n" + f"MSE {mses[spec]:.4f}"
+        ax.set_title(head, fontsize=7.5, linespacing=1.35)
     axes[0].set_ylabel("value", fontsize=7)
-    # upper-left is the only clear corner in panel (a): the MSE annotation owns upper-right and the
-    # observations fill the lower half.
-    axes[0].legend(frameon=False, fontsize=6.5, loc="upper left", handletextpad=0.3, borderpad=0.1)
+    axes[0].legend(frameon=False, fontsize=6.2, loc="upper left", handletextpad=0.3, borderpad=0.1,
+                   labelspacing=0.25)
+    # name the two regions inside every panel, low enough not to collide with the data
+    for ax in axes:
+        ax.text(0.25, 0.04, "input", transform=ax.transAxes, ha="center", fontsize=6.2, color="0.45")
+        ax.text(0.75, 0.04, "output", transform=ax.transAxes, ha="center", fontsize=6.2, color=TARGET)
     fig.savefig(os.path.join(out, "fig2_observation_shift.pdf"))
     print("fig2 done")
 
