@@ -1,0 +1,41 @@
+run bench_P12_tmix_opera_s0 | device cuda:0 | params 1608962 | commit d88303f85fd7e099a4952f848a695590c30bfd2b
+config: {"data": {"batch_size": 8, "history": 48, "n_records": 100000000, "name": "P12", "patch_size": 6, "split_idx": 1, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw\\bench_P12_tmix_vanilla_s0\\model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "tmix", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 1.54729 val_mse 0.44627 best 0.44627@0 (83.1s)
+epoch 001 loss 0.64740 val_mse 0.42580 best 0.42580@1 (82.8s)
+epoch 002 loss 0.71569 val_mse 0.41902 best 0.41902@2 (82.8s)
+epoch 003 loss 0.62405 val_mse 0.42769 best 0.41902@2 (82.9s)
+epoch 004 loss 0.61850 val_mse 0.42875 best 0.41902@2 (83.0s)
+epoch 005 loss 0.61013 val_mse 0.43171 best 0.41902@2 (83.0s)
+epoch 006 loss 0.60577 val_mse 0.42779 best 0.41902@2 (82.9s)
+epoch 007 loss 0.61252 val_mse 0.40056 best 0.40056@7 (83.0s)
+epoch 008 loss 0.60897 val_mse 0.37664 best 0.37664@8 (83.1s)
+epoch 009 loss 0.60684 val_mse 0.37921 best 0.37664@8 (83.6s)
+epoch 010 loss 0.60468 val_mse 0.37373 best 0.37373@10 (83.0s)
+epoch 011 loss 0.60875 val_mse 0.38749 best 0.37373@10 (83.0s)
+epoch 012 loss 0.59966 val_mse 0.36748 best 0.36748@12 (83.0s)
+epoch 013 loss 0.60677 val_mse 0.39752 best 0.36748@12 (83.1s)
+epoch 014 loss 0.60943 val_mse 0.39261 best 0.36748@12 (82.9s)
+epoch 015 loss 0.59997 val_mse 0.38844 best 0.36748@12 (82.9s)
+epoch 016 loss 0.59515 val_mse 0.36773 best 0.36748@12 (83.4s)
+epoch 017 loss 0.58968 val_mse 0.40540 best 0.36748@12 (83.0s)
+epoch 018 loss 0.58494 val_mse 0.40049 best 0.36748@12 (83.3s)
+epoch 019 loss 0.58082 val_mse 0.42219 best 0.36748@12 (83.0s)
+epoch 020 loss 0.58539 val_mse 0.40415 best 0.36748@12 (83.2s)
+epoch 021 loss 0.58289 val_mse 0.38228 best 0.36748@12 (83.0s)
+epoch 022 loss 0.74883 val_mse 0.42753 best 0.36748@12 (82.8s)
+early stop
+  [identity                                  ] CE 0.3478  acc 86.24  AUROC 85.76 AUPRC 48.94
+  [random_dropout:0.7                        ] CE 0.3640  acc 87.07  AUROC 82.83 AUPRC 42.33
+  [temporal_stride:3                         ] CE 0.3502  acc 85.99  AUROC 85.57 AUPRC 48.47
+  [variable_dropout:0.5                      ] CE 0.3713  acc 85.07  AUROC 80.76 AUPRC 40.96
+  [temporal_stride:3+variable_group_dropout:0.3] CE 0.3594  acc 85.90  AUROC 83.89 AUPRC 46.04
+best {'val_mse': 0.3674796521663666, 'epoch': 12} -> results/raw\bench_P12_tmix_opera_s0\results.json
+summary {
+  "clean_mse": 0.34784814715385437,
+  "mean_shift_mse": 0.361238457262516,
+  "mean_degradation": 0.03849470011044524,
+  "worst_mse": 0.37132444977760315,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.361238457262516,
+  "mean_unseen_degradation": 0.03849470011044524
+}

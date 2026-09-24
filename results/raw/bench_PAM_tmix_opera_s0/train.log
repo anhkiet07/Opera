@@ -1,0 +1,48 @@
+run bench_PAM_tmix_opera_s0 | device cuda:0 | params 909784 | commit 8b0f79e5a962846d66e880b6794e668997208edd
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "PAM", "patch_size": 10, "split_idx": 1, "stride": 10}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw\\bench_PAM_tmix_vanilla_s0\\model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "tmix", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 41.40703 val_mse 1.54180 best 1.54180@0 (4.6s)
+epoch 001 loss 10.12743 val_mse 1.05234 best 1.05234@1 (4.2s)
+epoch 002 loss 6.88908 val_mse 0.98946 best 0.98946@2 (4.1s)
+epoch 003 loss 5.44890 val_mse 0.72162 best 0.72162@3 (4.0s)
+epoch 004 loss 4.35217 val_mse 0.68723 best 0.68723@4 (4.0s)
+epoch 005 loss 3.86526 val_mse 0.61130 best 0.61130@5 (4.1s)
+epoch 006 loss 3.43120 val_mse 0.65112 best 0.61130@5 (4.1s)
+epoch 007 loss 3.37729 val_mse 0.56400 best 0.56400@7 (4.0s)
+epoch 008 loss 3.06949 val_mse 0.54734 best 0.54734@8 (4.0s)
+epoch 009 loss 2.75105 val_mse 0.54291 best 0.54291@9 (4.0s)
+epoch 010 loss 2.59494 val_mse 0.58337 best 0.54291@9 (4.0s)
+epoch 011 loss 2.56377 val_mse 0.51451 best 0.51451@11 (4.0s)
+epoch 012 loss 2.60435 val_mse 0.52258 best 0.51451@11 (4.0s)
+epoch 013 loss 2.42435 val_mse 0.50497 best 0.50497@13 (4.0s)
+epoch 014 loss 2.28934 val_mse 0.50765 best 0.50497@13 (4.0s)
+epoch 015 loss 2.48634 val_mse 0.52976 best 0.50497@13 (4.1s)
+epoch 016 loss 2.48151 val_mse 0.50631 best 0.50497@13 (4.1s)
+epoch 017 loss 2.25850 val_mse 0.50560 best 0.50497@13 (4.1s)
+epoch 018 loss 2.30059 val_mse 0.50226 best 0.50226@18 (4.1s)
+epoch 019 loss 2.15378 val_mse 0.49299 best 0.49299@19 (4.0s)
+epoch 020 loss 2.13820 val_mse 0.52225 best 0.49299@19 (4.0s)
+epoch 021 loss 2.20677 val_mse 0.51190 best 0.49299@19 (4.1s)
+epoch 022 loss 2.08944 val_mse 0.50675 best 0.49299@19 (4.0s)
+epoch 023 loss 2.27926 val_mse 0.52810 best 0.49299@19 (4.1s)
+epoch 024 loss 2.23368 val_mse 0.52302 best 0.49299@19 (4.1s)
+epoch 025 loss 2.06858 val_mse 0.49624 best 0.49299@19 (4.0s)
+epoch 026 loss 2.13293 val_mse 0.52374 best 0.49299@19 (4.0s)
+epoch 027 loss 2.11663 val_mse 0.53393 best 0.49299@19 (4.0s)
+epoch 028 loss 2.07033 val_mse 0.52197 best 0.49299@19 (4.0s)
+epoch 029 loss 1.96930 val_mse 0.53206 best 0.49299@19 (4.1s)
+early stop
+  [identity                                  ] CE 0.4537  acc 85.96  F1 87.06
+  [random_dropout:0.7                        ] CE 0.5040  acc 85.21  F1 86.21
+  [temporal_stride:3                         ] CE 0.4647  acc 84.46  F1 85.78
+  [variable_dropout:0.5                      ] CE 1.3174  acc 55.99  F1 57.97
+  [temporal_stride:3+variable_group_dropout:0.3] CE 0.9441  acc 69.10  F1 71.64
+best {'val_mse': 0.4929898977279663, 'epoch': 19} -> results/raw\bench_PAM_tmix_opera_s0\results.json
+summary {
+  "clean_mse": 0.45369023084640503,
+  "mean_shift_mse": 0.8075524419546127,
+  "mean_degradation": 0.779964361251601,
+  "worst_mse": 1.3173668384552002,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.8075524419546127,
+  "mean_unseen_degradation": 0.779964361251601
+}

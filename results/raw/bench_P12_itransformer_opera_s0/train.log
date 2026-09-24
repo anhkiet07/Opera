@@ -10,3 +10,42 @@ epoch 006 loss 0.55285 val_mse 0.49582 best 0.49582@6 (714.5s)
 epoch 007 loss 0.55090 val_mse 0.51673 best 0.49582@6 (728.2s)
 epoch 008 loss 0.54646 val_mse 0.49525 best 0.49525@8 (707.7s)
 epoch 009 loss 0.54980 val_mse 0.48228 best 0.48228@9 (614.5s)
+run bench_P12_itransformer_opera_s0 | device cuda:0 | params 110594 | commit 8b0f79e5a962846d66e880b6794e668997208edd
+config: {"data": {"batch_size": 8, "history": 48, "n_records": 100000000, "name": "P12", "patch_size": 6, "split_idx": 1, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw\\bench_P12_itransformer_vanilla_s0\\model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "itransformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.68470 val_mse 0.60845 best 0.60845@0 (604.2s)
+epoch 001 loss 0.58345 val_mse 0.52794 best 0.52794@1 (601.2s)
+epoch 002 loss 0.57127 val_mse 0.54385 best 0.52794@1 (601.9s)
+epoch 003 loss 0.56568 val_mse 0.52192 best 0.52192@3 (601.1s)
+epoch 004 loss 0.56625 val_mse 0.54084 best 0.52192@3 (603.8s)
+epoch 005 loss 0.56165 val_mse 0.51863 best 0.51863@5 (604.7s)
+epoch 006 loss 0.55285 val_mse 0.49582 best 0.49582@6 (601.1s)
+epoch 007 loss 0.55090 val_mse 0.51673 best 0.49582@6 (611.1s)
+epoch 008 loss 0.54646 val_mse 0.49525 best 0.49525@8 (600.8s)
+epoch 009 loss 0.54980 val_mse 0.48228 best 0.48228@9 (601.2s)
+epoch 010 loss 0.54403 val_mse 0.47803 best 0.47803@10 (600.7s)
+epoch 011 loss 0.53687 val_mse 0.47937 best 0.47803@10 (602.0s)
+epoch 012 loss 0.54259 val_mse 0.48302 best 0.47803@10 (601.4s)
+epoch 013 loss 0.53905 val_mse 0.48702 best 0.47803@10 (601.0s)
+epoch 014 loss 0.53703 val_mse 0.48486 best 0.47803@10 (601.6s)
+epoch 015 loss 0.53454 val_mse 0.50045 best 0.47803@10 (601.0s)
+epoch 016 loss 0.53088 val_mse 0.48882 best 0.47803@10 (601.2s)
+epoch 017 loss 0.53051 val_mse 0.48528 best 0.47803@10 (602.1s)
+epoch 018 loss 0.52424 val_mse 0.48951 best 0.47803@10 (601.5s)
+epoch 019 loss 0.51571 val_mse 0.52844 best 0.47803@10 (602.7s)
+epoch 020 loss 0.51687 val_mse 0.48196 best 0.47803@10 (601.1s)
+early stop
+  [identity                                  ] CE 0.4628  acc 77.06  AUROC 84.81 AUPRC 45.97
+  [random_dropout:0.7                        ] CE 0.4595  acc 76.15  AUROC 84.26 AUPRC 43.58
+  [temporal_stride:3                         ] CE 0.4672  acc 76.06  AUROC 85.04 AUPRC 45.53
+  [variable_dropout:0.5                      ] CE 0.4846  acc 74.81  AUROC 80.62 AUPRC 39.61
+  [temporal_stride:3+variable_group_dropout:0.3] CE 0.4815  acc 75.06  AUROC 83.55 AUPRC 42.56
+best {'val_mse': 0.478032648563385, 'epoch': 10} -> results/raw\bench_P12_itransformer_opera_s0\results.json
+summary {
+  "clean_mse": 0.4627515375614166,
+  "mean_shift_mse": 0.4732184559106827,
+  "mean_degradation": 0.02261887319580624,
+  "worst_mse": 0.48464977741241455,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.4732184559106827,
+  "mean_unseen_degradation": 0.02261887319580624
+}
