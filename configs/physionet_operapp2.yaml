@@ -1,0 +1,10 @@
+# OPERA++ on physionet: OPERA (augmentation + privileged distillation) plus conditioning on the
+# observation process. The encoder is FiLM-modulated by r = g(S), built from the full observation descriptor (density, log #obs, mean/median/max/std gap, temporal and\n# variable coverage, recent density, observed-timestep ratio).
+#
+# r is computed inside the encoder from the mask and timestamps of the input it is actually given, so it is
+# identical in training, in every shifted evaluation condition and at deployment, and never reads the values
+# or the target. The FiLM head is zero-initialised, so at initialisation this model IS the OPERA model.
+_base_: distillation.yaml
+model:
+  observation_aware: true
+  descriptor_mode: full

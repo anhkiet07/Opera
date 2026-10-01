@@ -1,0 +1,10 @@
+# OPERA++ on activity: OPERA (augmentation + privileged distillation) plus conditioning on the
+# observation process. The encoder is FiLM-modulated by r = g(S), built from observation density alone -- ablation A, testing whether conditioning needs the STRUCTURE of the\n# observation process or only how much of it is missing.
+#
+# r is computed inside the encoder from the mask and timestamps of the input it is actually given, so it is
+# identical in training, in every shifted evaluation condition and at deployment, and never reads the values
+# or the target. The FiLM head is zero-initialised, so at initialisation this model IS the OPERA model.
+_base_: activity_distillation.yaml
+model:
+  observation_aware: true
+  descriptor_mode: scalar

@@ -228,8 +228,24 @@ class Model(nn.Module):
     # ================================================================
     # Forecasting head (cross-attention decoder + MLP regressor)
     # ================================================================
-    def forecasting(self, time_steps_to_predict, X, truth_time_steps, mask=None, return_repr=False):
+    @staticmethod
+    def _apply_film(irr_z_flat, film, B, N):
+        """FiLM-modulate the encoded history by the observation descriptor: h' = gamma*h + beta.
+
+        irr_z_flat is (B*N, M_eff, D); gamma/beta arrive as (B, D) and are broadcast over the variate and
+        patch axes, so one descriptor conditions the whole encoding of that sample.
+        """
+        if film is None:
+            return irr_z_flat
+        gamma, beta = film
+        D = irr_z_flat.shape[-1]
+        gamma = gamma.reshape(B, 1, 1, D).expand(B, N, 1, D).reshape(B * N, 1, D)
+        beta = beta.reshape(B, 1, 1, D).expand(B, N, 1, D).reshape(B * N, 1, D)
+        return gamma * irr_z_flat + beta
+
+    def forecasting(self, time_steps_to_predict, X, truth_time_steps, mask=None, return_repr=False, film=None):
         irr_z_flat, B, _, N = self._embed_encode(X, truth_time_steps, mask)
+        irr_z_flat = self._apply_film(irr_z_flat, film, B, N)
 
         L_pred = time_steps_to_predict.shape[1]
         te_pred = self.te(time_steps_to_predict.unsqueeze(-1))                # (B, L_pred, D)
@@ -246,8 +262,10 @@ class Model(nn.Module):
     # ================================================================
     # Classification head (sum-over-D pool + MLP classifier)
     # ================================================================
-    def classification(self, X, truth_time_steps, mask=None, P_static=None, feature=False, return_repr=False):
+    def classification(self, X, truth_time_steps, mask=None, P_static=None, feature=False, return_repr=False,
+                       film=None):
         irr_z_flat, B, M_eff, N = self._embed_encode(X, truth_time_steps, mask)
+        irr_z_flat = self._apply_film(irr_z_flat, film, B, N)
         irr_z = irr_z_flat.reshape(B, N, M_eff * self.d_model)
 
         if feature:

@@ -22,7 +22,13 @@ DESCRIPTOR_FIELDS = (
     "temporal_coverage",    # observed span / window
     "variable_coverage",    # fraction of variables with >= 1 observation
     "recent_density",       # density in the last quarter of the window
+    "median_gap",           # median inter-observation gap (robust to a single long gap)
+    "observed_timestep_ratio",  # fraction of time indices with >= 1 observed variable
 )
+
+# Ablation A of OPERA++: does conditioning need the *structure* of the observation process, or only
+# "how much is missing"? SCALAR_FIELDS is the how-much-only descriptor.
+SCALAR_FIELDS = ("density",)
 
 
 @dataclass
@@ -38,6 +44,8 @@ class ObservationMetadata:
     per_variable_density: torch.Tensor          # (B, N)
     recent_density: torch.Tensor                # (B,)
     log_n_obs: torch.Tensor                     # (B,)
+    median_gap: torch.Tensor = None             # (B,)
+    observed_timestep_ratio: torch.Tensor = None  # (B,)
     sampling_regime: Optional[str] = None       # the spec string that produced it, when known
     extra: dict = field(default_factory=dict)
 
@@ -99,6 +107,16 @@ def compute_metadata(tp, mask, regime=None, window=1.0):
     gap_std = var_gap.clamp_min(0).sqrt()
     max_gap = torch.where(valid, d, torch.full_like(d, -1.0)).max(dim=1).values.clamp_min(0)
 
+    # median gap over the *observed* gaps only. Padding entries were set to 0 above, so a plain median over
+    # `d` would be dragged to 0 by them; push them to +inf, sort, and index the per-row valid count.
+    d_sorted = torch.where(valid, d, big[:, :d.shape[1]]).sort(dim=1).values
+    idx = ((cnt - 1) / 2).floor().long().clamp(min=0, max=max(d.shape[1] - 1, 0))
+    median_gap = d_sorted.gather(1, idx.unsqueeze(1)).squeeze(1)
+    median_gap = torch.where(torch.isfinite(median_gap), median_gap, torch.zeros_like(median_gap))
+
+    # fraction of time indices carrying at least one observation
+    observed_timestep_ratio = obs.float().mean(dim=1)
+
     tail = max(T // 4, 1)
     recent_density = flat_m[:, -tail:, :].float().reshape(B, -1).mean(dim=1)
 
@@ -107,6 +125,8 @@ def compute_metadata(tp, mask, regime=None, window=1.0):
         mean_gap=mean_gap / window,
         max_gap=max_gap / window,
         gap_std=gap_std / window,
+        median_gap=median_gap / window,
+        observed_timestep_ratio=observed_timestep_ratio,
         variable_coverage=variable_coverage,
         temporal_coverage=(span / window).clamp(0, 1),
         missing_fraction=1.0 - density,
@@ -117,17 +137,47 @@ def compute_metadata(tp, mask, regime=None, window=1.0):
     )
 
 
-def descriptor(tp, mask, window=1.0, meta=None):
-    """r = g(S): a normalised (B, len(DESCRIPTOR_FIELDS)) descriptor of the observation process."""
+def descriptor(tp, mask, window=1.0, meta=None, mode="full", per_variable=False):
+    """r = g(S): a normalised descriptor of the observation process, computed from mask + timestamps only.
+
+    mode="full"   -> (B, len(DESCRIPTOR_FIELDS)), the structure of the observation process
+    mode="scalar" -> (B, 1), observation density alone
+
+    The two modes are ablation A vs B of OPERA++: whether conditioning needs the *structure* of the
+    observation process, or only how much of it is missing.
+
+    per_variable=True appends the per-variable observation ratios (B, N). This is the part that should
+    matter for variable-dropout shift, where the damage is concentrated -- but it makes the descriptor
+    width dataset-dependent, so the conditioning MLP is sized per setting.
+
+    Nothing here reads the values or the target: only `mask` and `tp`, both of which describe the input the
+    model is actually given. That is what makes the descriptor available at inference time.
+    """
     meta = meta or compute_metadata(tp, mask, window=window)
-    cols = [
-        meta.density,
-        meta.log_n_obs / 8.0,                 # log1p(#obs) rarely exceeds 8 in these datasets
-        meta.mean_gap.clamp(0, 1),
-        meta.max_gap.clamp(0, 1),
-        meta.gap_std.clamp(0, 1),
-        meta.temporal_coverage,
-        meta.variable_coverage,
-        meta.recent_density,
-    ]
-    return torch.stack(cols, dim=-1).float()
+    if mode == "scalar":
+        cols = [meta.density]
+    elif mode == "full":
+        cols = [
+            meta.density,
+            meta.log_n_obs / 8.0,             # log1p(#obs) rarely exceeds 8 in these datasets
+            meta.mean_gap.clamp(0, 1),
+            meta.max_gap.clamp(0, 1),
+            meta.gap_std.clamp(0, 1),
+            meta.temporal_coverage,
+            meta.variable_coverage,
+            meta.recent_density,
+            meta.median_gap.clamp(0, 1),
+            meta.observed_timestep_ratio,
+        ]
+    else:
+        raise ValueError(f"unknown descriptor mode {mode!r}; expected 'full' or 'scalar'")
+    r = torch.stack(cols, dim=-1).float()
+    if per_variable:
+        r = torch.cat([r, meta.per_variable_density.float()], dim=-1)
+    return r
+
+
+def descriptor_width(n_vars, mode="full", per_variable=False):
+    """Width of `descriptor` output, so a conditioning module can be sized before the first batch."""
+    base = 1 if mode == "scalar" else len(DESCRIPTOR_FIELDS)
+    return base + (n_vars if per_variable else 0)
