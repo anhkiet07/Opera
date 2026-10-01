@@ -49,16 +49,24 @@ BACKBONES = ["itransformer", "patchtst", "tmix"]
 SETTINGS = {
     "physionet":  {"vanilla": "configs/baseline.yaml",
                    "opera":   "configs/distillation.yaml",
-                 "operapp": "configs/opera_strong.yaml"},
+                 "operapp": "configs/opera_strong.yaml",
+                   "operapp2":        "configs/physionet_operapp2.yaml",
+                   "operapp2_scalar": "configs/physionet_operapp2_scalar.yaml"},
     "activity":   {"vanilla": "configs/activity_baseline.yaml",
                    "opera":   "configs/activity_distillation.yaml",
-                "operapp": "configs/activity_operapp.yaml"},
+                "operapp": "configs/activity_operapp.yaml",
+                   "operapp2":        "configs/activity_operapp2.yaml",
+                   "operapp2_scalar": "configs/activity_operapp2_scalar.yaml"},
     "ushcn_1mo":  {"vanilla": "configs/ushcn_baseline.yaml",
                    "opera":   "configs/ushcn_distillation.yaml",
-                 "operapp": "configs/ushcn_operapp.yaml"},
+                 "operapp": "configs/ushcn_operapp.yaml",
+                   "operapp2":        "configs/ushcn_1mo_operapp2.yaml",
+                   "operapp2_scalar": "configs/ushcn_1mo_operapp2_scalar.yaml"},
     "ushcn_12mo": {"vanilla": "configs/ushcn_long_baseline.yaml",
                    "opera":   "configs/ushcn_long_distillation.yaml",
-                  "operapp": "configs/ushcn_long_operapp.yaml"},
+                  "operapp": "configs/ushcn_long_operapp.yaml",
+                   "operapp2":        "configs/ushcn_12mo_operapp2.yaml",
+                   "operapp2_scalar": "configs/ushcn_12mo_operapp2_scalar.yaml"},
     "P12":        {"vanilla": "configs/P12_baseline.yaml",
                    "opera":   "configs/P12_distillation.yaml",
            "operapp": "configs/P12_operapp.yaml"},
@@ -68,7 +76,45 @@ SETTINGS = {
     "PAM":        {"vanilla": "configs/PAM_baseline.yaml",
                    "opera":   "configs/PAM_distillation.yaml",
            "operapp": "configs/PAM_operapp.yaml"},
+
+    # --- forecast-horizon axis -------------------------------------------------------------------
+    # One entry per (dataset, horizon), exactly as ushcn_1mo / ushcn_12mo already do, because run
+    # names do not encode the horizon: overriding data.history with --set on an existing setting
+    # would reuse that setting's run name and either skip the cell as finished or overwrite a good
+    # result. The horizon is derived per dataset in data/parse.py -- physionet: 48 - history,
+    # activity: 4000 - history, ushcn: data.pred_window -- and npatch follows from history in
+    # src/datasets/registry.py. patch_size and stride are held at each dataset's existing values so
+    # the horizon is the only axis that moves. Classification settings have no horizon.
+    # No operapp arm here: this axis runs vanilla and opera only.
+    "physionet_h12":  {"vanilla": "configs/physionet_h12_baseline.yaml",      # 12 h -> 36 h
+                       "opera":   "configs/physionet_h12_distillation.yaml"},
+    "physionet_h36":  {"vanilla": "configs/physionet_h36_baseline.yaml",      # 36 h -> 12 h
+                       "opera":   "configs/physionet_h36_distillation.yaml"},
+    "activity_h2000": {"vanilla": "configs/activity_h2000_baseline.yaml",     # 2000 ms -> 2000 ms
+                       "opera":   "configs/activity_h2000_distillation.yaml"},
+    "activity_h1000": {"vanilla": "configs/activity_h1000_baseline.yaml",     # 1000 ms -> 3000 ms
+                       "opera":   "configs/activity_h1000_distillation.yaml"},
+    "ushcn_6mo":      {"vanilla": "configs/ushcn_6mo_baseline.yaml",          # 24 mo -> 6 mo
+                       "opera":   "configs/ushcn_6mo_distillation.yaml"},
+
+    # --- native distribution shift (no synthetic corruption in the split itself) -------------------
+    # Sepsis 2019 across hospital systems: train + validate on A, test on the unseen B. Same records and
+    # preprocessing as P19, so the contrast against P19 isolates the shift. The 5 observation conditions
+    # are still applied on top, which layers observation-process shift over real covariate shift.
+    "P19_hospB":      {"vanilla": "configs/P19_hospB_baseline.yaml",
+                       "opera":   "configs/P19_hospB_distillation.yaml"},
+    # eICU demo, mortality with a held-out hospital region. Underpowered by construction (57 deaths in
+    # the test region); reportable as a large-effect check, not as an arm-vs-arm comparison.
+    "eicu_demo":      {"vanilla": "configs/eicu_demo_baseline.yaml",
+                       "opera":   "configs/eicu_demo_distillation.yaml"},
 }
+
+# Cheap settings first, so a configuration error surfaces in minutes rather than after an hour.
+# A setting missing from this list is silently dropped by plan(), so every SETTINGS key must appear.
+ORDER = ["eicu_demo", "PAM", "ushcn_12mo", "ushcn_6mo", "P19", "P19_hospB", "activity",
+         "activity_h2000", "activity_h1000", "P12", "ushcn_1mo", "physionet", "physionet_h12",
+         "physionet_h36"]
+assert set(ORDER) == set(SETTINGS), f"ORDER/SETTINGS mismatch: {set(ORDER) ^ set(SETTINGS)}"
 
 CONDITIONS = ",".join([
     "identity",
@@ -85,6 +131,13 @@ STAGES = {
     "D": ("opera", [1, 2, 3, 4]),
     "E": ("operapp", [0]),          # OPERA++ = OPERA + mining from the harsher pool
     "F": ("operapp", [1, 2, 3, 4]),
+    # OPERA++ = OPERA + conditioning on the observation descriptor r = g(S). G is the full descriptor,
+    # H the scalar-density ablation. Both run all 5 seeds in one stage; the teacher is the same-cell
+    # vanilla checkpoint, exactly as for opera.
+    # Seeds 1-4, not 0-4: the seed-0 vanilla checkpoints were trained on the other machine and are not on
+    # scratch, and stage D/F already use 1-4, so the three arms stay paired on identical teachers.
+    "G": ("operapp2", [1, 2, 3, 4]),
+    "H": ("operapp2_scalar", [1, 2, 3, 4]),
 }
 
 
@@ -116,22 +169,20 @@ def plan(stage, settings, backbones):
     """The (setting, backbone, method, seed) cells this stage runs, in a sensible order."""
     if stage == "smoke":
         cells = []
-        order = ["PAM", "ushcn_12mo", "P19", "activity", "P12", "ushcn_1mo", "physionet"]
         for backbone in backbones:
-            for setting in order:
+            for setting in ORDER:
                 if setting in settings:
                     cells.append((setting, backbone, "vanilla", 0))
         return cells
     method, seeds = STAGES[stage]
-    # cheap settings first, so a configuration error surfaces in minutes rather than after an hour
-    order = ["PAM", "ushcn_12mo", "P19", "activity", "P12", "ushcn_1mo", "physionet"]
     return [(s, b, method, seed) for seed in seeds for b in backbones
-            for s in order if s in settings]
+            for s in ORDER if s in settings]
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--stage", required=True, choices=["smoke", "A", "B", "C", "D", "E", "F"])
+    ap.add_argument("--stage", required=True,
+                    choices=["smoke", "A", "B", "C", "D", "E", "F", "G", "H"])
     ap.add_argument("--out", default="results/raw")
     ap.add_argument("--settings", default=None, help="comma-separated subset")
     ap.add_argument("--backbones", default=None, help="comma-separated subset")

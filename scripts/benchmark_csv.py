@@ -39,21 +39,28 @@ TRAIN_SEVERITY = {  # the exact severities the training pool draws
 
 # keyed by dataset family, since the setting id now carries the horizon
 PRIMARY = {"physionet": "mse", "activity": "mse", "ushcn": "mse",
-           "P12": "auroc", "P19": "auroc", "PAM": "acc"}
+           "P12": "auroc", "P19": "auroc", "PAM": "acc",
+           # native-shift variants reuse their source dataset's task and primary metric
+           "P19_hospB": "auroc", "eicu_demo": "auroc"}
 # Time unit of the history/horizon columns. Forecast horizons follow the QuITE protocol: the clinical and
 # activity settings partition a FIXED window (48 h, 4000 ms), so a longer horizon is also a shorter history;
 # only USHCN varies the horizon at fixed history. Classification has no horizon.
-TIME_UNIT = {"physionet": "h", "activity": "ms", "ushcn": "mo", "P12": "", "P19": "", "PAM": ""}
+TIME_UNIT = {"physionet": "h", "activity": "ms", "ushcn": "mo", "P12": "", "P19": "", "PAM": "",
+             "P19_hospB": "", "eicu_demo": ""}
 
 TASK = {"physionet": "forecast", "activity": "forecast", "ushcn": "forecast",
-        "P12": "classify", "P19": "classify", "PAM": "classify"}
+        "P12": "classify", "P19": "classify", "PAM": "classify",
+        "P19_hospB": "classify", "eicu_demo": "classify"}
+# A dataset name absent from these maps is dropped from the CSV without warning (rows_for_run returns []),
+# so every new setting must be registered here as well as in run_benchmark.ORDER.
+assert set(PRIMARY) == set(TASK) == set(TIME_UNIT), "PRIMARY/TASK/TIME_UNIT disagree"
 
 FIELDS = [
     "setting", "task", "n_vars", "history", "horizon", "time_unit", "run_group",
     "backbone", "method", "variant", "experiment", "seed", "batch_size",
     "condition", "condition_spec", "dimension", "seen_in_training",
     "primary_metric", "primary_value", "primary_error",
-    "mse", "mae", "ce", "acc", "auroc", "auprc", "f1",
+    "mse", "mae", "ce", "acc", "auroc", "auprc", "f1", "precision", "recall",
     "n_series", "infer_ms_per_series", "params", "train_time_per_epoch_s", "epochs_run", "peak_gpu_mem_mb",
     "run_dir", "git_commit",
 ]
@@ -101,10 +108,19 @@ def method_id(cfg):
     of either headline arm, and is labelled explicitly so it can never be mistaken for one.
     """
     aug, distill, pool = mechanisms(cfg)
-    if not (aug or distill or pool):
+    m = cfg.get("model") or {}
+    oa = bool(m.get("observation_aware"))
+    if not (aug or distill or pool or oa):
         return "vanilla"
+    # OPERA++ is augmentation + distillation + conditioning on the observation descriptor r = g(S).
+    # The scalar-descriptor variant is ablation A: does conditioning need the structure of the observation
+    # process, or only "how much is missing"?
+    if aug and distill and oa and not pool:
+        return "opera++" if m.get("descriptor_mode", "full") == "full" else "abl_opera++_scalar"
+    # Harsh-pool mining was formerly labelled opera++. It is an ablation, not the headline second arm:
+    # it bought ~+1.3% over opera against opera's ~+10% over the baseline.
     if aug and distill and pool == "harsh":
-        return "opera++"
+        return "abl_mining"
     if aug and distill and not pool:
         return "opera"
     if aug and distill and pool == "train":
@@ -191,7 +207,9 @@ def rows_for_run(run_dir, main_only):
         else:
             row["ce"], row["acc"] = m.get("ce"), m.get("acc")
             row["auroc"], row["auprc"] = m.get("auroc"), m.get("auprc")
-            row["f1"] = m.get("f1")
+            # macro-averaged on every classification task. Runs evaluated before these were added to the
+            # binary branch of classification_metrics have no value and stay blank rather than zero.
+            row["f1"], row["precision"], row["recall"] = m.get("f1"), m.get("precision"), m.get("recall")
         out.append(row)
     return out
 
