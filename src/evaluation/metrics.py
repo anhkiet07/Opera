@@ -74,7 +74,16 @@ def classification_loss(logits, batch):
 
 
 def classification_metrics(logits, labels, n_class):
-    """AUROC / AUPRC for binary tasks, macro F1 / precision / recall for multi-class; accuracy always.
+    """AUROC / AUPRC for binary tasks; macro F1 / precision / recall for every classification task;
+    accuracy always.
+
+    F1, precision and recall are macro-averaged for binary as well as multi-class, so the column means
+    the same thing in every classification row. Macro weights each class equally, which is what makes it
+    informative on the imbalanced binary tasks (P12 mortality, P19 sepsis) where accuracy and AUROC can
+    both look healthy while the minority class is served badly.
+
+    `primary_metric` is unaffected: it stays AUROC for the binary tasks and accuracy for the multi-class
+    one, so no headline number or degradation changes.
 
     The reported 'mse' key mirrors the forecasting interface so the shared evaluation and aggregation code can
     treat 'lower is better': for classification it holds the cross-entropy.
@@ -89,13 +98,13 @@ def classification_metrics(logits, labels, n_class):
     pred = probs.argmax(-1)
     ce = float(F.cross_entropy(logits, labels).item())
     out = {"mse": ce, "ce": ce, "acc": float((y == pred).mean() * 100)}
+    out["f1"] = float(f1_score(y, pred, average="macro") * 100)
+    out["precision"] = float(precision_score(y, pred, average="macro", zero_division=0) * 100)
+    out["recall"] = float(recall_score(y, pred, average="macro", zero_division=0) * 100)
     if n_class == 2:
         out["auroc"] = float(roc_auc_score(y, probs[:, 1]) * 100)
         out["auprc"] = float(average_precision_score(y, probs[:, 1]) * 100)
         out["mae"] = 100.0 - out["auroc"]          # keep 'lower is better' for the shared tables
     else:
-        out["f1"] = float(f1_score(y, pred, average="macro") * 100)
-        out["precision"] = float(precision_score(y, pred, average="macro", zero_division=0) * 100)
-        out["recall"] = float(recall_score(y, pred, average="macro", zero_division=0) * 100)
         out["mae"] = 100.0 - out["f1"]
     return out

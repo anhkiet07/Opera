@@ -83,11 +83,11 @@ def main():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     dsname = cfg.get("data", {}).get("name", "physionet")
-    if dsname in ("P12", "P19", "PAM"):
-        from src.datasets import classification as ds_cls
-        mod = ds_cls
-    else:
-        mod = ds_registry
+    # Route on the classification registry itself rather than a hardcoded tuple, so a new classification
+    # setting only has to be added to src/datasets/classification.CFG. A hardcoded list silently sent any
+    # new name to the forecasting registry, which failed with "unknown dataset".
+    from src.datasets import classification as ds_cls
+    mod = ds_cls if dsname in ds_cls.CFG else ds_registry
     data_obj, info = mod.load(cfg, device, seed=a.seed)
     model, model_args = build_model(cfg, info, device)
 

@@ -73,7 +73,14 @@ def build_teacher(cfg, student, device, build_fn=None, data_info=None):
         return EMATeacher(student, alpha=float(dc.get("ema_alpha", 0.999))).to(device)
     ckpt = dc.get("teacher_ckpt")
     if ckpt:
-        model, _ = build_fn(cfg, data_info, device) if build_fn else (copy.deepcopy(student), None)
+        # The frozen teacher is the same cell's VANILLA checkpoint, which carries no observation-conditioning
+        # head. Building it from the student's config unchanged would give it FiLM parameters the checkpoint
+        # cannot supply, and load_state_dict is strict:
+        #     Missing key(s) in state_dict: "film.0.weight", ...
+        # The teacher is architecturally the baseline, so strip the student-only conditioning before building.
+        tcfg = copy.deepcopy(cfg)
+        tcfg.setdefault("model", {})["observation_aware"] = False
+        model, _ = build_fn(tcfg, data_info, device) if build_fn else (copy.deepcopy(student), None)
         return FrozenTeacher(model, ckpt=ckpt, device=device).to(device)
     # No checkpoint: a frozen copy of the current student (only sensible for smoke tests).
     return FrozenTeacher(copy.deepcopy(student), device=device).to(device)

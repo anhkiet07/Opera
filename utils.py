@@ -13,7 +13,8 @@ from torch.nn.utils.rnn import pad_sequence
 # Classification data loading & normalization (P12 / P19 / PAM)
 # ============================================================
 def get_data_split(base_path='./data/P12', split_path='', dataset='P12'):
-    if dataset in ('P12', 'PAM'):
+    # eicu_demo is written by scripts/prepare_eicu_demo.py in this same layout
+    if dataset in ('P12', 'PAM', 'eicu_demo'):
         Pdict_list = np.load(base_path + '/processed_data/PTdict_list.npy', allow_pickle=True)
         arr_outcomes = np.load(base_path + '/processed_data/arr_outcomes.npy', allow_pickle=True)
     elif dataset == 'P19':
@@ -40,7 +41,14 @@ def getStats(P_tensor):
         vals_f = Pf[f, :]
         vals_f = vals_f[vals_f > 0]
         mf[f] = np.mean(vals_f) if vals_f.size > 0 else 0.0
-        stdf[f] = np.std(vals_f)
+        # A variable can be absent from the training split entirely -- hospital system A in the Sepsis
+        # hospital-shift setting never records variable 7 -- and np.std of an empty slice is NaN, which
+        # propagates through mask_normalize into the logits and kills the run. A constant variable gives
+        # std 0 and divides to inf the same way. Fall back to 1.0: the variable is all-zeros, i.e. missing
+        # everywhere, so a no-op scale keeps it that way. Unchanged for any variable that is observed,
+        # so no existing result moves.
+        s = np.std(vals_f) if vals_f.size > 0 else 0.0
+        stdf[f] = s if np.isfinite(s) and s > 0 else 1.0
     return mf, stdf
 
 
@@ -54,6 +62,8 @@ def getStats_static(P_tensor, dataset='P12'):
         bool_categorical = [0, 1, 1, 0, 1, 1, 1, 1, 0]
     elif dataset == 'P19':
         bool_categorical = [0, 1, 0, 0, 0, 0]
+    elif dataset == 'eicu_demo':
+        bool_categorical = [0, 1, 0]          # age, gender (categorical), admission weight
     else:
         bool_categorical = [0] * S
 
@@ -61,8 +71,10 @@ def getStats_static(P_tensor, dataset='P12'):
         if bool_categorical[s] == 0:
             vals_s = Ps[s, :]
             vals_s = vals_s[vals_s > 0]
-            ms[s] = np.mean(vals_s)
-            ss[s] = np.std(vals_s)
+            # same guard as getStats: an absent or constant static feature must not produce NaN/inf
+            ms[s] = np.mean(vals_s) if vals_s.size > 0 else 0.0
+            sd = np.std(vals_s) if vals_s.size > 0 else 0.0
+            ss[s] = sd if np.isfinite(sd) and sd > 0 else 1.0
     return ms, ss
 
 
