@@ -1,0 +1,58 @@
+data:
+  batch_size: 32
+  history: 24
+  n_records: 100000000
+  name: eicu_demo
+  patch_size: 3.75
+  split_idx: 1
+  stride: 3.75
+distillation:
+  enabled: true
+  loss: prediction
+  prediction_loss: mse
+  teacher_ckpt: /scratch/s223669184/opera_bench/raw/bench_eicu_demo_tmix_vanilla_s0/model.pt
+  teacher_type: frozen
+  weight: 1.0
+experiment: E2_distillation
+hard_mining:
+  alpha: 0.5
+  candidate_pool: 8
+  enabled: false
+  top_k: 2
+  warmup_epochs: 5
+model:
+  adaptive_query: none
+  backbone: tmix
+  dropout: 0.1
+  embedding: quite
+  hid_dim: 64
+  irr_emb: true
+  nhead: 4
+  nlayer: 3
+  observation_aware: false
+observation:
+  constraints:
+    max_gap: 0.6
+    min_density: 0.15
+    min_obs_per_sample: 4
+    min_variable_coverage: 0.3
+  num_views: 2
+  rich_process: identity
+  train_processes:
+  - random_dropout:0.1
+  - random_dropout:0.25
+  - random_dropout:0.4
+  - temporal_stride:2
+  - burst:0.2
+  - burst:0.3
+  - variable_dropout:0.2
+  - local_mask:0.3
+seed: 0
+training:
+  epochs: 40
+  lr: 0.001
+  min_epochs: 15
+  patience: 10
+wandb:
+  enabled: true
+  project: opera

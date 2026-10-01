@@ -1,0 +1,90 @@
+OPERA arm comparison — regenerated from results.json, never hand-entered
+source: /scratch/s223669184/opera_bench/raw
+cells loaded: 810
+primary_error: MSE (forecasting) or 1-AUROC/1-acc (classification); lower is better
+every comparison is paired within (setting, backbone, seed)
+====================================================================================================
+
+## 1. HEADLINE — OPERA vs baseline, QuITE backbones
+
+all settings, all three backbones  (n=210 paired runs)
+  arm                                CLEAN vs vanilla                 SHIFTED vs vanilla
+  OPERA            med  -2.20% mean  -4.40%  69/210 p=0.000    med  +15.84% 184/210 p=0.000 
+
+all settings, EXCLUDING TMix  (n=140 paired runs)
+  arm                                CLEAN vs vanilla                 SHIFTED vs vanilla
+  OPERA            med  -1.35% mean  -0.87%  53/140 p=0.022    med  +17.55% 132/140 p=0.000 
+
+
+## 2. FORECASTING vs CLASSIFICATION — where the clean cost lives
+
+forecasting, all backbones  (n=135 paired runs)
+  arm                                CLEAN vs vanilla                 SHIFTED vs vanilla
+  OPERA            med  -2.71% mean  -4.00%  26/135 p=0.000    med  +38.65% 130/135 p=0.000 
+
+forecasting, EXCLUDING TMix  (n=90 paired runs)
+  arm                                CLEAN vs vanilla                 SHIFTED vs vanilla
+  OPERA            med  -2.34% mean  -2.84%  19/90 p=0.000    med  +37.47%  90/90 p=0.000 
+
+classification, all backbones  (n=75 paired runs)
+  arm                                CLEAN vs vanilla                 SHIFTED vs vanilla
+  OPERA            med  +1.85% mean  -5.13%  43/75 p=0.516    med   +7.02%  54/75 p=0.000 
+
+classification, EXCLUDING TMix  (n=50 paired runs)
+  arm                                CLEAN vs vanilla                 SHIFTED vs vanilla
+  OPERA            med  +4.10% mean  +2.67%  34/50 p=0.016    med   +8.71%  42/50 p=0.000 
+
+
+## 3. OPERA++ — conditioning on the observation descriptor r = g(S)
+   hypothesis: if the clean cost is observation-process mixture bias, telling the model which
+   process it is in should remove it.
+
+forecasting, all backbones  (n=48 paired runs)
+  arm                                CLEAN vs vanilla                 SHIFTED vs vanilla
+  OPERA            med  -2.45% mean  -5.12%  15/48 p=0.001    med  +24.01%  45/48 p=0.000 
+  OPERA++ scalar   med  -2.16% mean  -4.27%  13/48 p=0.001    med  +25.25%  45/48 p=0.000 
+  OPERA++ full     med  -1.58% mean  -4.15%  15/48 p=0.000    med  +27.97%  45/48 p=0.000 
+
+forecasting, EXCLUDING TMix  (n=32 paired runs)
+  arm                                CLEAN vs vanilla                 SHIFTED vs vanilla
+  OPERA            med  -1.50% mean  -2.26%  10/32 p=0.007    med  +18.47%  32/32 p=0.000 
+  OPERA++ scalar   med  -1.32% mean  -1.44%   9/32 p=0.016    med  +19.38%  32/32 p=0.000 
+  OPERA++ full     med  -1.06% mean  -1.56%  12/32 p=0.028    med  +22.47%  32/32 p=0.000 
+
+head-to-head (all backbones):
+  OPERA++ full     vs OPERA            clean  med  +0.10%   25/48  wilcoxon p=0.243  t p=0.210
+  OPERA++ full     vs OPERA            shift  med  +0.58%   28/48  wilcoxon p=0.179  t p=0.463
+  OPERA++ scalar   vs OPERA            clean  med  +0.38%   27/48  wilcoxon p=0.058  t p=0.042
+  OPERA++ scalar   vs OPERA            shift  med  +0.38%   27/48  wilcoxon p=0.512  t p=0.564
+  OPERA++ full     vs OPERA++ scalar   clean  med  -0.22%   21/48  wilcoxon p=0.703  t p=0.932
+  OPERA++ full     vs OPERA++ scalar   shift  med  +0.38%   30/48  wilcoxon p=0.042  t p=0.058
+
+head-to-head (EXCLUDING TMix):
+  OPERA++ full     vs OPERA            clean  med  +0.10%   17/32  wilcoxon p=0.400  t p=0.122
+  OPERA++ full     vs OPERA            shift  med  +0.26%   18/32  wilcoxon p=0.638  t p=0.893
+  OPERA++ scalar   vs OPERA            clean  med  +0.50%   19/32  wilcoxon p=0.124  t p=0.115
+  OPERA++ scalar   vs OPERA            shift  med  +0.10%   17/32  wilcoxon p=0.747  t p=0.496
+
+per setting (all backbones):
+  setting          n          OPERA  OPERA++ scala   OPERA++ full
+  activity        12  clean -8.56%/sh +93.25% clean -5.43%/sh +93.07% clean -7.50%/sh +92.97%
+  physionet       12  clean -3.43%/sh +38.83% clean -2.74%/sh +39.43% clean -2.84%/sh +47.22%
+  ushcn_12mo      12  clean -0.83%/sh  +2.72% clean -1.26%/sh  +2.44% clean -1.08%/sh  +2.53%
+  ushcn_1mo       12  clean +0.87%/sh  +4.06% clean +0.76%/sh  +4.58% clean +0.65%/sh  +4.06%
+
+  ablation A vs B: 'OPERA++ scalar' conditions on observation density alone; 'full' adds the
+  structure (gaps, coverage, timestep ratio). random_dropout:0.7 and variable_dropout:0.5 have
+  near-identical density (0.075 vs 0.087) but variable coverage 0.95 vs 0.33, so the full
+  descriptor can separate them and the scalar cannot. A null here is therefore informative.
+
+
+## 4. abl_mining (formerly labelled opera++) — harsh-pool candidate mining
+
+all settings, all backbones  (n=84 paired runs)
+  arm                                CLEAN vs vanilla                 SHIFTED vs vanilla
+  OPERA            med  -1.39% mean  -6.45%  35/84 p=0.037    med  +10.17%  75/84 p=0.000 
+  abl_mining       med  -2.70% mean -13.47%  32/84 p=0.000    med   +9.57%  73/84 p=0.000 
+
+head-to-head:
+  abl_mining       vs OPERA            clean  med  -0.77%   24/84  wilcoxon p=0.000  t p=0.000
+  abl_mining       vs OPERA            shift  med  +1.34%   57/84  wilcoxon p=0.001  t p=0.301

@@ -1,0 +1,183 @@
+{
+  "config": {
+    "experiment": "E2_distillation",
+    "data": {
+      "name": "PAM",
+      "history": 24,
+      "patch_size": 10,
+      "stride": 10,
+      "batch_size": 32,
+      "n_records": 100000000,
+      "split_idx": 1
+    },
+    "model": {
+      "backbone": "itransformer",
+      "embedding": "quite",
+      "irr_emb": true,
+      "hid_dim": 64,
+      "nhead": 4,
+      "nlayer": 3,
+      "dropout": 0.1,
+      "observation_aware": false,
+      "adaptive_query": "none"
+    },
+    "training": {
+      "epochs": 40,
+      "patience": 10,
+      "min_epochs": 15,
+      "lr": 0.001
+    },
+    "observation": {
+      "train_processes": [
+        "random_dropout:0.1",
+        "random_dropout:0.25",
+        "random_dropout:0.4",
+        "temporal_stride:2",
+        "burst:0.2",
+        "burst:0.3",
+        "variable_dropout:0.2",
+        "local_mask:0.3"
+      ],
+      "num_views": 2,
+      "rich_process": "identity",
+      "constraints": {
+        "min_density": 0.15,
+        "min_variable_coverage": 0.3,
+        "max_gap": 0.6,
+        "min_obs_per_sample": 4
+      }
+    },
+    "distillation": {
+      "enabled": true,
+      "teacher_type": "frozen",
+      "teacher_ckpt": "/scratch/s223669184/opera_bench/raw/bench_PAM_itransformer_vanilla_s2/model.pt",
+      "loss": "prediction",
+      "prediction_loss": "mse",
+      "weight": 1.0
+    },
+    "hard_mining": {
+      "enabled": false,
+      "candidate_pool": 8,
+      "top_k": 2,
+      "alpha": 0.5,
+      "warmup_epochs": 5
+    },
+    "wandb": {
+      "enabled": true,
+      "project": "opera"
+    },
+    "seed": 2
+  },
+  "info": {
+    "name": "PAM",
+    "task": "classification",
+    "input_dim": 17,
+    "n_class": 8,
+    "d_static": 0,
+    "history": 60,
+    "pred_window": 0,
+    "patch_size": 10.0,
+    "stride": 10.0,
+    "npatch": 6,
+    "maxlen": 0,
+    "batch_size": 32,
+    "split_idx": 1,
+    "n_train": 4266,
+    "n_val": 533,
+    "n_test": 534,
+    "n_train_batches": 133,
+    "n_val_batches": 17,
+    "n_test_batches": 17
+  },
+  "per_condition": {
+    "identity": {
+      "mse": 0.40774741768836975,
+      "ce": 0.40774741768836975,
+      "acc": 88.20224719101124,
+      "f1": 89.20570225170981,
+      "precision": 88.38337400188966,
+      "recall": 90.6406766097543,
+      "mae": 10.794297748290191,
+      "condition": "identity",
+      "n_series": 534,
+      "infer_ms_per_series": 0.15755583730976233
+    },
+    "random_dropout:0.7": {
+      "mse": 0.45770373940467834,
+      "ce": 0.45770373940467834,
+      "acc": 85.2059925093633,
+      "f1": 86.22805089468002,
+      "precision": 86.14061682025367,
+      "recall": 86.51292844633163,
+      "mae": 13.771949105319976,
+      "condition": "random_dropout:0.7",
+      "n_series": 534,
+      "infer_ms_per_series": 0.15511762783321995
+    },
+    "temporal_stride:3": {
+      "mse": 0.4254509508609772,
+      "ce": 0.4254509508609772,
+      "acc": 87.26591760299625,
+      "f1": 88.40815029462725,
+      "precision": 87.76479195132005,
+      "recall": 89.57421753136403,
+      "mae": 11.591849705372752,
+      "condition": "temporal_stride:3",
+      "n_series": 534,
+      "infer_ms_per_series": 0.15471847762775778
+    },
+    "variable_dropout:0.5": {
+      "mse": 1.21726393699646,
+      "ce": 1.21726393699646,
+      "acc": 64.41947565543072,
+      "f1": 66.75384529736476,
+      "precision": 71.90338454010772,
+      "recall": 64.09123149721283,
+      "mae": 33.24615470263524,
+      "condition": "variable_dropout:0.5",
+      "n_series": 534,
+      "infer_ms_per_series": 0.15639053301864794
+    },
+    "temporal_stride:3+variable_group_dropout:0.3": {
+      "mse": 1.104546308517456,
+      "ce": 1.104546308517456,
+      "acc": 71.53558052434457,
+      "f1": 74.36949566209793,
+      "precision": 78.48174120437773,
+      "recall": 72.38013116527557,
+      "mae": 25.630504337902067,
+      "condition": "temporal_stride:3+variable_group_dropout:0.3",
+      "n_series": 534,
+      "infer_ms_per_series": 0.15555383560809302
+    }
+  },
+  "summary": {
+    "clean_mse": 0.40774741768836975,
+    "mean_shift_mse": 0.8012412339448929,
+    "mean_degradation": 0.9650430614308875,
+    "worst_mse": 1.21726393699646,
+    "worst_condition": "variable_dropout:0.5",
+    "mean_unseen_mse": 0.8012412339448929,
+    "mean_unseen_degradation": 0.9650430614308875
+  },
+  "cost": {
+    "n_params": 99224,
+    "train_time_per_epoch_s": 5.764177668094635,
+    "total_train_time_s": 230.5671067237854,
+    "epochs_run": 40,
+    "peak_gpu_mem_mb": 562.177734375,
+    "infer_ms_per_series": 0.15755583730976233
+  },
+  "best": {
+    "val_mse": 0.4164382219314575,
+    "epoch": 39
+  },
+  "run": {
+    "name": "bench_PAM_itransformer_opera_s2",
+    "seed": 2,
+    "config_path": "configs/PAM_distillation.yaml",
+    "git_commit": "ce9a1cccbd514390f4c1e76e2a06bf070c86e6fc",
+    "experiment": "E2_distillation",
+    "dataset": "PAM"
+  }
+}

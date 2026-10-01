@@ -1,0 +1,186 @@
+{
+  "config": {
+    "experiment": "E0_baseline",
+    "data": {
+      "name": "P19",
+      "history": 24,
+      "patch_size": 3.75,
+      "stride": 3.75,
+      "batch_size": 32,
+      "n_records": 100000000,
+      "split_idx": 1
+    },
+    "model": {
+      "backbone": "itransformer",
+      "embedding": "quite",
+      "irr_emb": true,
+      "hid_dim": 64,
+      "nhead": 4,
+      "nlayer": 3,
+      "dropout": 0.1,
+      "observation_aware": false,
+      "adaptive_query": "none"
+    },
+    "training": {
+      "epochs": 40,
+      "patience": 10,
+      "min_epochs": 15,
+      "lr": 0.001
+    },
+    "observation": {
+      "train_processes": [
+        "identity"
+      ],
+      "num_views": 1,
+      "rich_process": "identity",
+      "constraints": {
+        "min_density": 0.15,
+        "min_variable_coverage": 0.3,
+        "max_gap": 0.6,
+        "min_obs_per_sample": 4
+      }
+    },
+    "distillation": {
+      "enabled": false,
+      "teacher_type": "frozen",
+      "teacher_ckpt": null,
+      "loss": "prediction",
+      "prediction_loss": "mse",
+      "weight": 1.0
+    },
+    "hard_mining": {
+      "enabled": false,
+      "candidate_pool": 8,
+      "top_k": 2,
+      "alpha": 0.5,
+      "warmup_epochs": 5
+    },
+    "wandb": {
+      "enabled": true,
+      "project": "opera"
+    },
+    "seed": 3
+  },
+  "info": {
+    "name": "P19",
+    "task": "classification",
+    "input_dim": 34,
+    "n_class": 2,
+    "d_static": 6,
+    "history": 60,
+    "pred_window": 0,
+    "patch_size": 3.75,
+    "stride": 3.75,
+    "npatch": 16,
+    "maxlen": 0,
+    "batch_size": 32,
+    "split_idx": 1,
+    "n_train": 31042,
+    "n_val": 3880,
+    "n_test": 3881,
+    "n_train_batches": 245,
+    "n_val_batches": 122,
+    "n_test_batches": 122
+  },
+  "per_condition": {
+    "identity": {
+      "mse": 0.34106743335723877,
+      "ce": 0.34106743335723877,
+      "acc": 87.37438804431848,
+      "f1": 63.75297533275695,
+      "precision": 60.55193455903627,
+      "recall": 81.26921326174931,
+      "auroc": 89.75126425600638,
+      "auprc": 58.86609120953176,
+      "mae": 10.24873574399362,
+      "condition": "identity",
+      "n_series": 3881,
+      "infer_ms_per_series": 0.21150418699048776
+    },
+    "random_dropout:0.7": {
+      "mse": 0.22517552971839905,
+      "ce": 0.22517552971839905,
+      "acc": 94.09945890234475,
+      "f1": 70.85117931915494,
+      "precision": 68.11567295528923,
+      "recall": 74.86944335322472,
+      "auroc": 86.10113424496947,
+      "auprc": 54.45924089159219,
+      "mae": 13.898865755030528,
+      "condition": "random_dropout:0.7",
+      "n_series": 3881,
+      "infer_ms_per_series": 0.14082570261514177
+    },
+    "temporal_stride:3": {
+      "mse": 0.2902146279811859,
+      "ce": 0.2902146279811859,
+      "acc": 91.05900541097655,
+      "f1": 67.72159559518435,
+      "precision": 63.532015887264784,
+      "recall": 79.89108068166938,
+      "auroc": 89.0731491354422,
+      "auprc": 57.36170178296026,
+      "mae": 10.926850864557807,
+      "condition": "temporal_stride:3",
+      "n_series": 3881,
+      "infer_ms_per_series": 0.1407949250557164
+    },
+    "variable_dropout:0.5": {
+      "mse": 0.29530996084213257,
+      "ce": 0.29530996084213257,
+      "acc": 90.49214120072146,
+      "f1": 65.89082646488248,
+      "precision": 62.169926701687906,
+      "recall": 77.11462795642603,
+      "auroc": 85.09643264680022,
+      "auprc": 52.76629457236813,
+      "mae": 14.903567353199776,
+      "condition": "variable_dropout:0.5",
+      "n_series": 3881,
+      "infer_ms_per_series": 0.14051288957603197
+    },
+    "temporal_stride:3+variable_group_dropout:0.3": {
+      "mse": 0.28290653228759766,
+      "ce": 0.28290653228759766,
+      "acc": 91.96083483638238,
+      "f1": 68.5190153807756,
+      "precision": 64.42595606763061,
+      "recall": 78.43430233645734,
+      "auroc": 87.40685660125584,
+      "auprc": 56.191915416643866,
+      "mae": 12.59314339874416,
+      "condition": "temporal_stride:3+variable_group_dropout:0.3",
+      "n_series": 3881,
+      "infer_ms_per_series": 0.14070799841582238
+    }
+  },
+  "summary": {
+    "clean_mse": 0.34106743335723877,
+    "mean_shift_mse": 0.2734016627073288,
+    "mean_degradation": -0.1983941122254141,
+    "worst_mse": 0.29530996084213257,
+    "worst_condition": "variable_dropout:0.5",
+    "mean_unseen_mse": 0.2734016627073288,
+    "mean_unseen_degradation": -0.1983941122254141
+  },
+  "cost": {
+    "n_params": 109544,
+    "train_time_per_epoch_s": 8.733171780904135,
+    "total_train_time_s": 130.997576713562,
+    "epochs_run": 15,
+    "peak_gpu_mem_mb": 1451.78515625,
+    "infer_ms_per_series": 0.1502389055157224
+  },
+  "best": {
+    "val_mse": 0.33465027809143066,
+    "epoch": 4
+  },
+  "run": {
+    "name": "bench_P19_itransformer_vanilla_s3",
+    "seed": 3,
+    "config_path": "configs/P19_baseline.yaml",
+    "git_commit": "183dcb4a819a53a3f2f95a880c4c88135333d357",
+    "experiment": "E0_baseline",
+    "dataset": "P19"
+  }
+}

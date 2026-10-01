@@ -1,0 +1,193 @@
+{
+  "config": {
+    "experiment": "E2_distillation",
+    "data": {
+      "name": "eicu_demo",
+      "history": 24,
+      "patch_size": 3.75,
+      "stride": 3.75,
+      "batch_size": 32,
+      "n_records": 100000000,
+      "split_idx": 1
+    },
+    "model": {
+      "backbone": "tmix",
+      "embedding": "quite",
+      "irr_emb": true,
+      "hid_dim": 64,
+      "nhead": 4,
+      "nlayer": 3,
+      "dropout": 0.1,
+      "observation_aware": false,
+      "adaptive_query": "none"
+    },
+    "training": {
+      "epochs": 40,
+      "patience": 10,
+      "min_epochs": 15,
+      "lr": 0.001
+    },
+    "observation": {
+      "train_processes": [
+        "random_dropout:0.1",
+        "random_dropout:0.25",
+        "random_dropout:0.4",
+        "temporal_stride:2",
+        "burst:0.2",
+        "burst:0.3",
+        "variable_dropout:0.2",
+        "local_mask:0.3"
+      ],
+      "num_views": 2,
+      "rich_process": "identity",
+      "constraints": {
+        "min_density": 0.15,
+        "min_variable_coverage": 0.3,
+        "max_gap": 0.6,
+        "min_obs_per_sample": 4
+      }
+    },
+    "distillation": {
+      "enabled": true,
+      "teacher_type": "frozen",
+      "teacher_ckpt": "/scratch/s223669184/opera_bench/raw/bench_eicu_demo_tmix_vanilla_s1/model.pt",
+      "loss": "prediction",
+      "prediction_loss": "mse",
+      "weight": 1.0
+    },
+    "hard_mining": {
+      "enabled": false,
+      "candidate_pool": 8,
+      "top_k": 2,
+      "alpha": 0.5,
+      "warmup_epochs": 5
+    },
+    "wandb": {
+      "enabled": true,
+      "project": "opera"
+    },
+    "seed": 1
+  },
+  "info": {
+    "name": "eicu_demo",
+    "task": "classification",
+    "input_dim": 8,
+    "n_class": 2,
+    "d_static": 3,
+    "history": 60,
+    "pred_window": 0,
+    "patch_size": 3.75,
+    "stride": 3.75,
+    "npatch": 16,
+    "maxlen": 0,
+    "batch_size": 32,
+    "split_idx": 1,
+    "n_train": 1408,
+    "n_val": 176,
+    "n_test": 761,
+    "n_train_batches": 24,
+    "n_val_batches": 6,
+    "n_test_batches": 24
+  },
+  "per_condition": {
+    "identity": {
+      "mse": 0.37149468064308167,
+      "ce": 0.37149468064308167,
+      "acc": 91.98423127463863,
+      "f1": 49.496828660639494,
+      "precision": 54.624724061810156,
+      "recall": 50.52207934609251,
+      "auroc": 67.18500797448166,
+      "auprc": 16.200961771368018,
+      "mae": 32.814992025518336,
+      "condition": "identity",
+      "n_series": 761,
+      "infer_ms_per_series": 0.0623989355861749
+    },
+    "random_dropout:0.7": {
+      "mse": 0.2749364674091339,
+      "ce": 0.2749364674091339,
+      "acc": 92.64126149802891,
+      "f1": 49.81156962502355,
+      "precision": 96.3157894736842,
+      "recall": 50.877192982456144,
+      "auroc": 62.35047846889952,
+      "auprc": 15.36301373986908,
+      "mae": 37.64952153110048,
+      "condition": "random_dropout:0.7",
+      "n_series": 761,
+      "infer_ms_per_series": 0.061300831618039585
+    },
+    "temporal_stride:3": {
+      "mse": 0.29964345693588257,
+      "ce": 0.29964345693588257,
+      "acc": 92.24704336399473,
+      "f1": 49.62017930678516,
+      "precision": 58.80118890356671,
+      "recall": 50.66412480063796,
+      "auroc": 61.50568181818181,
+      "auprc": 13.942429603908794,
+      "mae": 38.49431818181819,
+      "condition": "temporal_stride:3",
+      "n_series": 761,
+      "infer_ms_per_series": 0.06163574549591024
+    },
+    "variable_dropout:0.5": {
+      "mse": 0.37905389070510864,
+      "ce": 0.37905389070510864,
+      "acc": 91.85282522996057,
+      "f1": 47.87671232876713,
+      "precision": 46.230158730158735,
+      "recall": 49.64488636363637,
+      "auroc": 61.590410685805416,
+      "auprc": 16.333719404030454,
+      "mae": 38.409589314194584,
+      "condition": "variable_dropout:0.5",
+      "n_series": 761,
+      "infer_ms_per_series": 0.06141393162731115
+    },
+    "temporal_stride:3+variable_group_dropout:0.3": {
+      "mse": 0.29966774582862854,
+      "ce": 0.29966774582862854,
+      "acc": 92.24704336399473,
+      "f1": 49.62017930678516,
+      "precision": 58.80118890356671,
+      "recall": 50.66412480063796,
+      "auroc": 59.712669457735245,
+      "auprc": 14.800176783308475,
+      "mae": 40.287330542264755,
+      "condition": "temporal_stride:3+variable_group_dropout:0.3",
+      "n_series": 761,
+      "infer_ms_per_series": 0.0626169898976791
+    }
+  },
+  "summary": {
+    "clean_mse": 0.37149468064308167,
+    "mean_shift_mse": 0.3133253902196884,
+    "mean_degradation": -0.1565817586477911,
+    "worst_mse": 0.37905389070510864,
+    "worst_condition": "variable_dropout:0.5",
+    "mean_unseen_mse": 0.3133253902196884,
+    "mean_unseen_degradation": -0.1565817586477911
+  },
+  "cost": {
+    "n_params": 6319610,
+    "train_time_per_epoch_s": 0.9942127545674642,
+    "total_train_time_s": 14.913191318511963,
+    "epochs_run": 15,
+    "peak_gpu_mem_mb": 307.705078125,
+    "infer_ms_per_series": 0.0623989355861749
+  },
+  "best": {
+    "val_mse": 0.2848109304904938,
+    "epoch": 0
+  },
+  "run": {
+    "name": "bench_eicu_demo_tmix_opera_s1",
+    "seed": 1,
+    "config_path": "configs/eicu_demo_distillation.yaml",
+    "git_commit": "ce9a1cccbd514390f4c1e76e2a06bf070c86e6fc",
+    "experiment": "E2_distillation",
+    "dataset": "eicu_demo"
+  }
+}

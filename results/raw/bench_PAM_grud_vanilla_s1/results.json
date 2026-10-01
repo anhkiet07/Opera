@@ -1,0 +1,176 @@
+{
+  "config": {
+    "experiment": "E0_baseline",
+    "data": {
+      "name": "PAM",
+      "history": 24,
+      "patch_size": 10,
+      "stride": 10,
+      "batch_size": 32,
+      "n_records": 100000000,
+      "split_idx": 1
+    },
+    "model": {
+      "backbone": "grud",
+      "embedding": "quite",
+      "irr_emb": true,
+      "hid_dim": 64,
+      "nhead": 4,
+      "nlayer": 3,
+      "dropout": 0.1,
+      "observation_aware": false,
+      "adaptive_query": "none"
+    },
+    "training": {
+      "epochs": 40,
+      "patience": 10,
+      "min_epochs": 15,
+      "lr": 0.001
+    },
+    "observation": {
+      "train_processes": [
+        "identity"
+      ],
+      "num_views": 1,
+      "rich_process": "identity",
+      "constraints": {
+        "min_density": 0.15,
+        "min_variable_coverage": 0.3,
+        "max_gap": 0.6,
+        "min_obs_per_sample": 4
+      }
+    },
+    "distillation": {
+      "enabled": false,
+      "teacher_type": "frozen",
+      "teacher_ckpt": null,
+      "loss": "prediction",
+      "prediction_loss": "mse",
+      "weight": 1.0
+    },
+    "hard_mining": {
+      "enabled": false,
+      "candidate_pool": 8,
+      "top_k": 2,
+      "alpha": 0.5,
+      "warmup_epochs": 5
+    },
+    "wandb": {
+      "enabled": true,
+      "project": "opera"
+    },
+    "seed": 1
+  },
+  "info": {
+    "name": "PAM",
+    "task": "classification",
+    "input_dim": 17,
+    "n_class": 8,
+    "d_static": 0,
+    "history": 60,
+    "pred_window": 0,
+    "patch_size": 10.0,
+    "stride": 10.0,
+    "npatch": 6,
+    "maxlen": 0,
+    "batch_size": 32,
+    "split_idx": 1,
+    "n_train": 4266,
+    "n_val": 533,
+    "n_test": 534,
+    "n_train_batches": 133,
+    "n_val_batches": 17,
+    "n_test_batches": 17
+  },
+  "per_condition": {
+    "identity": {
+      "mse": 0.41309091448783875,
+      "ce": 0.41309091448783875,
+      "acc": 88.57677902621724,
+      "f1": 89.3922289478705,
+      "precision": 89.99602908376974,
+      "recall": 89.26022424102396,
+      "mae": 10.607771052129493,
+      "condition": "identity",
+      "n_series": 534,
+      "infer_ms_per_series": 0.9756521339273632
+    },
+    "random_dropout:0.7": {
+      "mse": 0.8907835483551025,
+      "ce": 0.8907835483551025,
+      "acc": 70.97378277153558,
+      "f1": 74.03752219943891,
+      "precision": 83.05476579094275,
+      "recall": 71.62769988599914,
+      "mae": 25.96247780056109,
+      "condition": "random_dropout:0.7",
+      "n_series": 534,
+      "infer_ms_per_series": 0.9743653879629985
+    },
+    "temporal_stride:3": {
+      "mse": 0.4770945906639099,
+      "ce": 0.4770945906639099,
+      "acc": 85.95505617977528,
+      "f1": 87.27483485395729,
+      "precision": 88.38164173371361,
+      "recall": 87.05418143441504,
+      "mae": 12.725165146042713,
+      "condition": "temporal_stride:3",
+      "n_series": 534,
+      "infer_ms_per_series": 0.9705131866512228
+    },
+    "variable_dropout:0.5": {
+      "mse": 2.4982855319976807,
+      "ce": 2.4982855319976807,
+      "acc": 47.752808988764045,
+      "f1": 50.13039398998147,
+      "precision": 69.93122386521111,
+      "recall": 44.982232465227106,
+      "mae": 49.86960601001853,
+      "condition": "variable_dropout:0.5",
+      "n_series": 534,
+      "infer_ms_per_series": 0.9739233759905068
+    },
+    "temporal_stride:3+variable_group_dropout:0.3": {
+      "mse": 1.6351292133331299,
+      "ce": 1.6351292133331299,
+      "acc": 64.04494382022472,
+      "f1": 67.32429997148111,
+      "precision": 79.43939384602683,
+      "recall": 62.65673786823069,
+      "mae": 32.67570002851889,
+      "condition": "temporal_stride:3+variable_group_dropout:0.3",
+      "n_series": 534,
+      "infer_ms_per_series": 0.9719932570439599
+    }
+  },
+  "summary": {
+    "clean_mse": 0.41309091448783875,
+    "mean_shift_mse": 1.3753232210874557,
+    "mean_degradation": 2.329347542762151,
+    "worst_mse": 2.4982855319976807,
+    "worst_condition": "variable_dropout:0.5",
+    "mean_unseen_mse": 1.3753232210874557,
+    "mean_unseen_degradation": 2.329347542762151
+  },
+  "cost": {
+    "n_params": 25355,
+    "train_time_per_epoch_s": 10.918388190092864,
+    "total_train_time_s": 294.7964811325073,
+    "epochs_run": 27,
+    "peak_gpu_mem_mb": 135.533203125,
+    "infer_ms_per_series": 0.9756521339273632
+  },
+  "best": {
+    "val_mse": 0.4717874228954315,
+    "epoch": 16
+  },
+  "run": {
+    "name": "bench_PAM_grud_vanilla_s1",
+    "seed": 1,
+    "config_path": "configs/PAM_baseline.yaml",
+    "git_commit": "ce9a1cccbd514390f4c1e76e2a06bf070c86e6fc",
+    "experiment": "E0_baseline",
+    "dataset": "PAM"
+  }
+}

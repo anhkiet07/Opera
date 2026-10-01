@@ -1,0 +1,193 @@
+{
+  "config": {
+    "experiment": "E4b_opera_strong",
+    "data": {
+      "name": "PAM",
+      "history": 24,
+      "patch_size": 10,
+      "stride": 10,
+      "batch_size": 32,
+      "n_records": 100000000,
+      "split_idx": 1
+    },
+    "model": {
+      "backbone": "patchtst",
+      "embedding": "quite",
+      "irr_emb": true,
+      "hid_dim": 64,
+      "nhead": 4,
+      "nlayer": 3,
+      "dropout": 0.1,
+      "observation_aware": false,
+      "adaptive_query": "none"
+    },
+    "training": {
+      "epochs": 40,
+      "patience": 10,
+      "min_epochs": 15,
+      "lr": 0.001
+    },
+    "observation": {
+      "train_processes": [
+        "random_dropout:0.1",
+        "random_dropout:0.25",
+        "random_dropout:0.4",
+        "temporal_stride:2",
+        "burst:0.2",
+        "burst:0.3",
+        "variable_dropout:0.2",
+        "local_mask:0.3"
+      ],
+      "num_views": 2,
+      "rich_process": "identity",
+      "constraints": {
+        "min_density": 0.15,
+        "min_variable_coverage": 0.3,
+        "max_gap": 0.6,
+        "min_obs_per_sample": 4
+      }
+    },
+    "distillation": {
+      "enabled": true,
+      "teacher_type": "frozen",
+      "teacher_ckpt": "/scratch/s223669184/opera_bench/raw/bench_PAM_patchtst_vanilla_s2/model.pt",
+      "loss": "prediction",
+      "prediction_loss": "mse",
+      "weight": 1.0
+    },
+    "hard_mining": {
+      "enabled": true,
+      "candidate_pool": 8,
+      "top_k": 2,
+      "alpha": 0.5,
+      "warmup_epochs": 5,
+      "pool": [
+        "random_dropout:0.6",
+        "random_dropout:0.8",
+        "variable_dropout:0.4",
+        "variable_dropout:0.6",
+        "long_gap:0.5",
+        "burst:0.6",
+        "random_dropout:0.5+variable_dropout:0.3",
+        "temporal_stride:3+variable_group_dropout:0.4"
+      ]
+    },
+    "wandb": {
+      "enabled": true,
+      "project": "opera"
+    },
+    "seed": 2
+  },
+  "info": {
+    "name": "PAM",
+    "task": "classification",
+    "input_dim": 17,
+    "n_class": 8,
+    "d_static": 0,
+    "history": 60,
+    "pred_window": 0,
+    "patch_size": 10.0,
+    "stride": 10.0,
+    "npatch": 6,
+    "maxlen": 0,
+    "batch_size": 32,
+    "split_idx": 1,
+    "n_train": 4266,
+    "n_val": 533,
+    "n_test": 534,
+    "n_train_batches": 133,
+    "n_val_batches": 17,
+    "n_test_batches": 17
+  },
+  "per_condition": {
+    "identity": {
+      "mse": 0.48477745056152344,
+      "ce": 0.48477745056152344,
+      "acc": 85.0187265917603,
+      "f1": 86.83366475263544,
+      "precision": 86.52991784305416,
+      "recall": 87.27678360419551,
+      "mae": 13.166335247364557,
+      "condition": "identity",
+      "n_series": 534,
+      "infer_ms_per_series": 0.11655409237865205
+    },
+    "random_dropout:0.7": {
+      "mse": 0.6416559815406799,
+      "ce": 0.6416559815406799,
+      "acc": 74.71910112359551,
+      "f1": 76.76323042682371,
+      "precision": 77.10485422870926,
+      "recall": 77.00945971521679,
+      "mae": 23.23676957317629,
+      "condition": "random_dropout:0.7",
+      "n_series": 534,
+      "infer_ms_per_series": 0.10923544565836589
+    },
+    "temporal_stride:3": {
+      "mse": 0.5137553215026855,
+      "ce": 0.5137553215026855,
+      "acc": 82.77153558052434,
+      "f1": 84.87561660022406,
+      "precision": 84.71402617148236,
+      "recall": 85.1852436694424,
+      "mae": 15.124383399775937,
+      "condition": "temporal_stride:3",
+      "n_series": 534,
+      "infer_ms_per_series": 0.1086291302455945
+    },
+    "variable_dropout:0.5": {
+      "mse": 1.475426197052002,
+      "ce": 1.475426197052002,
+      "acc": 53.93258426966292,
+      "f1": 55.4333267711697,
+      "precision": 63.933388170382955,
+      "recall": 52.58572951753311,
+      "mae": 44.5666732288303,
+      "condition": "variable_dropout:0.5",
+      "n_series": 534,
+      "infer_ms_per_series": 0.10859921630402183
+    },
+    "temporal_stride:3+variable_group_dropout:0.3": {
+      "mse": 1.0715242624282837,
+      "ce": 1.0715242624282837,
+      "acc": 65.73033707865169,
+      "f1": 68.14989158319568,
+      "precision": 73.47549429887496,
+      "recall": 65.49513909153696,
+      "mae": 31.850108416804318,
+      "condition": "temporal_stride:3+variable_group_dropout:0.3",
+      "n_series": 534,
+      "infer_ms_per_series": 0.10910953921771674
+    }
+  },
+  "summary": {
+    "clean_mse": 0.48477745056152344,
+    "mean_shift_mse": 0.9255904406309128,
+    "mean_degradation": 0.9093100134067508,
+    "worst_mse": 1.475426197052002,
+    "worst_condition": "variable_dropout:0.5",
+    "mean_unseen_mse": 0.9255904406309128,
+    "mean_unseen_degradation": 0.9093100134067508
+  },
+  "cost": {
+    "n_params": 98520,
+    "train_time_per_epoch_s": 11.489953740437825,
+    "total_train_time_s": 172.34930610656738,
+    "epochs_run": 15,
+    "peak_gpu_mem_mb": 420.84130859375,
+    "infer_ms_per_series": 0.11655409237865205
+  },
+  "best": {
+    "val_mse": 0.5904374718666077,
+    "epoch": 3
+  },
+  "run": {
+    "name": "bench_PAM_patchtst_operapp_s2",
+    "seed": 2,
+    "config_path": "configs/PAM_operapp.yaml",
+    "git_commit": "ce9a1cccbd514390f4c1e76e2a06bf070c86e6fc",
+    "experiment": "E4b_opera_strong",
+    "dataset": "PAM"
+  }
+}

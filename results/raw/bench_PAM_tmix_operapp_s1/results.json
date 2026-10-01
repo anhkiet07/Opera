@@ -1,0 +1,193 @@
+{
+  "config": {
+    "experiment": "E4b_opera_strong",
+    "data": {
+      "name": "PAM",
+      "history": 24,
+      "patch_size": 10,
+      "stride": 10,
+      "batch_size": 32,
+      "n_records": 100000000,
+      "split_idx": 1
+    },
+    "model": {
+      "backbone": "tmix",
+      "embedding": "quite",
+      "irr_emb": true,
+      "hid_dim": 64,
+      "nhead": 4,
+      "nlayer": 3,
+      "dropout": 0.1,
+      "observation_aware": false,
+      "adaptive_query": "none"
+    },
+    "training": {
+      "epochs": 40,
+      "patience": 10,
+      "min_epochs": 15,
+      "lr": 0.001
+    },
+    "observation": {
+      "train_processes": [
+        "random_dropout:0.1",
+        "random_dropout:0.25",
+        "random_dropout:0.4",
+        "temporal_stride:2",
+        "burst:0.2",
+        "burst:0.3",
+        "variable_dropout:0.2",
+        "local_mask:0.3"
+      ],
+      "num_views": 2,
+      "rich_process": "identity",
+      "constraints": {
+        "min_density": 0.15,
+        "min_variable_coverage": 0.3,
+        "max_gap": 0.6,
+        "min_obs_per_sample": 4
+      }
+    },
+    "distillation": {
+      "enabled": true,
+      "teacher_type": "frozen",
+      "teacher_ckpt": "/scratch/s223669184/opera_bench/raw/bench_PAM_tmix_vanilla_s1/model.pt",
+      "loss": "prediction",
+      "prediction_loss": "mse",
+      "weight": 1.0
+    },
+    "hard_mining": {
+      "enabled": true,
+      "candidate_pool": 8,
+      "top_k": 2,
+      "alpha": 0.5,
+      "warmup_epochs": 5,
+      "pool": [
+        "random_dropout:0.6",
+        "random_dropout:0.8",
+        "variable_dropout:0.4",
+        "variable_dropout:0.6",
+        "long_gap:0.5",
+        "burst:0.6",
+        "random_dropout:0.5+variable_dropout:0.3",
+        "temporal_stride:3+variable_group_dropout:0.4"
+      ]
+    },
+    "wandb": {
+      "enabled": true,
+      "project": "opera"
+    },
+    "seed": 1
+  },
+  "info": {
+    "name": "PAM",
+    "task": "classification",
+    "input_dim": 17,
+    "n_class": 8,
+    "d_static": 0,
+    "history": 60,
+    "pred_window": 0,
+    "patch_size": 10.0,
+    "stride": 10.0,
+    "npatch": 6,
+    "maxlen": 0,
+    "batch_size": 32,
+    "split_idx": 1,
+    "n_train": 4266,
+    "n_val": 533,
+    "n_test": 534,
+    "n_train_batches": 133,
+    "n_val_batches": 17,
+    "n_test_batches": 17
+  },
+  "per_condition": {
+    "identity": {
+      "mse": 0.5336953997612,
+      "ce": 0.5336953997612,
+      "acc": 82.77153558052434,
+      "f1": 84.13764953204567,
+      "precision": 83.40396235708735,
+      "recall": 85.29773474173456,
+      "mae": 15.862350467954329,
+      "condition": "identity",
+      "n_series": 534,
+      "infer_ms_per_series": 0.07182783848337466
+    },
+    "random_dropout:0.7": {
+      "mse": 0.5784454941749573,
+      "ce": 0.5784454941749573,
+      "acc": 80.14981273408239,
+      "f1": 81.16129803450265,
+      "precision": 81.74737178685989,
+      "recall": 81.11943826500206,
+      "mae": 18.83870196549735,
+      "condition": "random_dropout:0.7",
+      "n_series": 534,
+      "infer_ms_per_series": 0.07143449247553108
+    },
+    "temporal_stride:3": {
+      "mse": 0.5468993186950684,
+      "ce": 0.5468993186950684,
+      "acc": 83.33333333333334,
+      "f1": 84.85168542027512,
+      "precision": 83.99800875613505,
+      "recall": 86.09519910398805,
+      "mae": 15.148314579724882,
+      "condition": "temporal_stride:3",
+      "n_series": 534,
+      "infer_ms_per_series": 0.07155682710226109
+    },
+    "variable_dropout:0.5": {
+      "mse": 1.1357698440551758,
+      "ce": 1.1357698440551758,
+      "acc": 61.04868913857678,
+      "f1": 63.8238647047761,
+      "precision": 71.07879756779302,
+      "recall": 60.222823436712034,
+      "mae": 36.1761352952239,
+      "condition": "variable_dropout:0.5",
+      "n_series": 534,
+      "infer_ms_per_series": 0.07186177071560634
+    },
+    "temporal_stride:3+variable_group_dropout:0.3": {
+      "mse": 0.8575291037559509,
+      "ce": 0.8575291037559509,
+      "acc": 69.28838951310861,
+      "f1": 72.52497502919985,
+      "precision": 77.04816101532526,
+      "recall": 69.82628369401151,
+      "mae": 27.47502497080015,
+      "condition": "temporal_stride:3+variable_group_dropout:0.3",
+      "n_series": 534,
+      "infer_ms_per_series": 0.0717126474844829
+    }
+  },
+  "summary": {
+    "clean_mse": 0.5336953997612,
+    "mean_shift_mse": 0.7796609401702881,
+    "mean_degradation": 0.46087251364569476,
+    "worst_mse": 1.1357698440551758,
+    "worst_condition": "variable_dropout:0.5",
+    "mean_unseen_mse": 0.7796609401702881,
+    "mean_unseen_degradation": 0.46087251364569476
+  },
+  "cost": {
+    "n_params": 909784,
+    "train_time_per_epoch_s": 8.175247007608414,
+    "total_train_time_s": 327.00988030433655,
+    "epochs_run": 40,
+    "peak_gpu_mem_mb": 386.61083984375,
+    "infer_ms_per_series": 0.07182783848337466
+  },
+  "best": {
+    "val_mse": 0.5615185499191284,
+    "epoch": 36
+  },
+  "run": {
+    "name": "bench_PAM_tmix_operapp_s1",
+    "seed": 1,
+    "config_path": "configs/PAM_operapp.yaml",
+    "git_commit": "ce9a1cccbd514390f4c1e76e2a06bf070c86e6fc",
+    "experiment": "E4b_opera_strong",
+    "dataset": "PAM"
+  }
+}

@@ -1,0 +1,232 @@
+{
+  "config": {
+    "experiment": "E2_distillation",
+    "data": {
+      "name": "ushcn",
+      "history": 24,
+      "patch_size": 1.5,
+      "stride": 1.5,
+      "batch_size": 128,
+      "n_records": 100000000,
+      "pred_window": 1
+    },
+    "model": {
+      "backbone": "warpformer",
+      "embedding": "quite",
+      "irr_emb": true,
+      "hid_dim": 64,
+      "nhead": 4,
+      "nlayer": 3,
+      "dropout": 0.1,
+      "observation_aware": false,
+      "adaptive_query": "none"
+    },
+    "training": {
+      "epochs": 40,
+      "patience": 10,
+      "min_epochs": 15,
+      "lr": 0.001
+    },
+    "observation": {
+      "train_processes": [
+        "random_dropout:0.1",
+        "random_dropout:0.25",
+        "random_dropout:0.4",
+        "temporal_stride:2",
+        "burst:0.2",
+        "burst:0.3",
+        "variable_dropout:0.2",
+        "local_mask:0.3"
+      ],
+      "num_views": 2,
+      "rich_process": "identity",
+      "constraints": {
+        "min_density": 0.15,
+        "min_variable_coverage": 0.3,
+        "max_gap": 0.6,
+        "min_obs_per_sample": 4
+      }
+    },
+    "distillation": {
+      "enabled": true,
+      "teacher_type": "frozen",
+      "teacher_ckpt": "/scratch/s223669184/opera_bench/raw/bench_ushcn_1mo_warpformer_vanilla_s4/model.pt",
+      "loss": "prediction",
+      "prediction_loss": "mse",
+      "weight": 1.0
+    },
+    "hard_mining": {
+      "enabled": false,
+      "candidate_pool": 8,
+      "top_k": 2,
+      "alpha": 0.5,
+      "warmup_epochs": 5
+    },
+    "wandb": {
+      "enabled": true,
+      "project": "opera"
+    },
+    "seed": 4
+  },
+  "info": {
+    "name": "ushcn",
+    "input_dim": 5,
+    "history": 24,
+    "pred_window": 1,
+    "patch_size": 1.5,
+    "stride": 1.5,
+    "npatch": 16,
+    "maxlen": 0,
+    "batch_size": 128,
+    "n_records": 100000000,
+    "n_train_batches": 126,
+    "n_val_batches": 42,
+    "n_test_batches": 42
+  },
+  "per_condition": {
+    "identity": {
+      "mse": 0.5575276613235474,
+      "mse_per_var": [
+        1.0656437873840332,
+        0.8331798911094666,
+        0.24129559099674225,
+        0.32981643080711365,
+        0.3177027404308319
+      ],
+      "mae": 0.34782177209854126,
+      "mae_per_var": [
+        0.46231263875961304,
+        0.20538990199565887,
+        0.1758100688457489,
+        0.45109298825263977,
+        0.44450318813323975
+      ],
+      "mape": -0.617701530456543,
+      "rmse": 0.7466777493159599,
+      "condition": "identity",
+      "n_series": 5352,
+      "infer_ms_per_series": 0.010320201226592243
+    },
+    "random_dropout:0.7": {
+      "mse": 0.595089316368103,
+      "mse_per_var": [
+        1.0658825635910034,
+        0.8399598598480225,
+        0.30560821294784546,
+        0.39652472734451294,
+        0.36747148633003235
+      ],
+      "mae": 0.37357988953590393,
+      "mae_per_var": [
+        0.45588603615760803,
+        0.22745506465435028,
+        0.21705585718154907,
+        0.4922659993171692,
+        0.4752365052700043
+      ],
+      "mape": -0.6949338912963867,
+      "rmse": 0.7714203240569327,
+      "condition": "random_dropout:0.7",
+      "n_series": 5352,
+      "infer_ms_per_series": 0.010263358530976848
+    },
+    "temporal_stride:3": {
+      "mse": 0.5692795515060425,
+      "mse_per_var": [
+        1.0651153326034546,
+        0.8363944292068481,
+        0.26988065242767334,
+        0.3457429111003876,
+        0.329264372587204
+      ],
+      "mae": 0.35703572630882263,
+      "mae_per_var": [
+        0.459852010011673,
+        0.21632999181747437,
+        0.19481168687343597,
+        0.4639674425125122,
+        0.45021751523017883
+      ],
+      "mape": -0.6466947197914124,
+      "rmse": 0.75450616399473,
+      "condition": "temporal_stride:3",
+      "n_series": 5352,
+      "infer_ms_per_series": 0.01024006015338527
+    },
+    "variable_dropout:0.5": {
+      "mse": 0.596482515335083,
+      "mse_per_var": [
+        1.0665597915649414,
+        0.8361060619354248,
+        0.30890581011772156,
+        0.3830287456512451,
+        0.38781213760375977
+      ],
+      "mae": 0.37009185552597046,
+      "mae_per_var": [
+        0.4624561667442322,
+        0.21448452770709991,
+        0.2031591534614563,
+        0.48380517959594727,
+        0.48655444383621216
+      ],
+      "mape": -0.6673935651779175,
+      "rmse": 0.772322805137258,
+      "condition": "variable_dropout:0.5",
+      "n_series": 5352,
+      "infer_ms_per_series": 0.010283805864274234
+    },
+    "temporal_stride:3+variable_group_dropout:0.3": {
+      "mse": 0.6064764261245728,
+      "mse_per_var": [
+        1.0672026872634888,
+        0.845147430896759,
+        0.3440195918083191,
+        0.38926398754119873,
+        0.38674816489219666
+      ],
+      "mae": 0.375631183385849,
+      "mae_per_var": [
+        0.46120941638946533,
+        0.22201895713806152,
+        0.21728849411010742,
+        0.4912165403366089,
+        0.4864225387573242
+      ],
+      "mape": -0.6718665361404419,
+      "rmse": 0.7787659636402793,
+      "condition": "temporal_stride:3+variable_group_dropout:0.3",
+      "n_series": 5352,
+      "infer_ms_per_series": 0.010185489383691808
+    }
+  },
+  "summary": {
+    "clean_mse": 0.5575276613235474,
+    "mean_shift_mse": 0.5918319523334503,
+    "mean_degradation": 0.06152930767321212,
+    "worst_mse": 0.6064764261245728,
+    "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+    "mean_unseen_mse": 0.5918319523334503,
+    "mean_unseen_degradation": 0.06152930767321212
+  },
+  "cost": {
+    "n_params": 84613,
+    "train_time_per_epoch_s": 6.897964173349841,
+    "total_train_time_s": 200.04096102714539,
+    "epochs_run": 29,
+    "peak_gpu_mem_mb": 1443.4658203125,
+    "infer_ms_per_series": 0.010320201226592243
+  },
+  "best": {
+    "val_mse": 0.7352597117424011,
+    "epoch": 18
+  },
+  "run": {
+    "name": "bench_ushcn_1mo_warpformer_opera_s4",
+    "seed": 4,
+    "config_path": "configs/ushcn_distillation.yaml",
+    "git_commit": "ce9a1cccbd514390f4c1e76e2a06bf070c86e6fc",
+    "experiment": "E2_distillation",
+    "dataset": "ushcn"
+  }
+}

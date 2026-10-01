@@ -1,0 +1,193 @@
+{
+  "config": {
+    "experiment": "E2_distillation",
+    "data": {
+      "name": "P19",
+      "history": 24,
+      "patch_size": 3.75,
+      "stride": 3.75,
+      "batch_size": 32,
+      "n_records": 100000000,
+      "split_idx": 1
+    },
+    "model": {
+      "backbone": "tmix",
+      "embedding": "quite",
+      "irr_emb": true,
+      "hid_dim": 64,
+      "nhead": 4,
+      "nlayer": 3,
+      "dropout": 0.1,
+      "observation_aware": false,
+      "adaptive_query": "none"
+    },
+    "training": {
+      "epochs": 40,
+      "patience": 10,
+      "min_epochs": 15,
+      "lr": 0.001
+    },
+    "observation": {
+      "train_processes": [
+        "random_dropout:0.1",
+        "random_dropout:0.25",
+        "random_dropout:0.4",
+        "temporal_stride:2",
+        "burst:0.2",
+        "burst:0.3",
+        "variable_dropout:0.2",
+        "local_mask:0.3"
+      ],
+      "num_views": 2,
+      "rich_process": "identity",
+      "constraints": {
+        "min_density": 0.15,
+        "min_variable_coverage": 0.3,
+        "max_gap": 0.6,
+        "min_obs_per_sample": 4
+      }
+    },
+    "distillation": {
+      "enabled": true,
+      "teacher_type": "frozen",
+      "teacher_ckpt": "/scratch/s223669184/opera_bench/raw/bench_P19_tmix_vanilla_s2/model.pt",
+      "loss": "prediction",
+      "prediction_loss": "mse",
+      "weight": 1.0
+    },
+    "hard_mining": {
+      "enabled": false,
+      "candidate_pool": 8,
+      "top_k": 2,
+      "alpha": 0.5,
+      "warmup_epochs": 5
+    },
+    "wandb": {
+      "enabled": true,
+      "project": "opera"
+    },
+    "seed": 2
+  },
+  "info": {
+    "name": "P19",
+    "task": "classification",
+    "input_dim": 34,
+    "n_class": 2,
+    "d_static": 6,
+    "history": 60,
+    "pred_window": 0,
+    "patch_size": 3.75,
+    "stride": 3.75,
+    "npatch": 16,
+    "maxlen": 0,
+    "batch_size": 32,
+    "split_idx": 1,
+    "n_train": 31042,
+    "n_val": 3880,
+    "n_test": 3881,
+    "n_train_batches": 245,
+    "n_val_batches": 122,
+    "n_test_batches": 122
+  },
+  "per_condition": {
+    "identity": {
+      "mse": 0.5998249053955078,
+      "ce": 0.5998249053955078,
+      "acc": 86.42102550888946,
+      "f1": 49.86507139854371,
+      "precision": 50.34420814657488,
+      "recall": 50.73719687474668,
+      "auroc": 55.83334892218667,
+      "auprc": 5.224792461814138,
+      "mae": 44.16665107781333,
+      "condition": "identity",
+      "n_series": 3881,
+      "infer_ms_per_series": 0.20705409591820276
+    },
+    "random_dropout:0.7": {
+      "mse": 0.6101224422454834,
+      "ce": 0.6101224422454834,
+      "acc": 93.71296057717083,
+      "f1": 50.71838362643219,
+      "precision": 51.415932291567536,
+      "recall": 50.695808469112244,
+      "auroc": 54.17804652960946,
+      "auprc": 5.032491128369046,
+      "mae": 45.82195347039054,
+      "condition": "random_dropout:0.7",
+      "n_series": 3881,
+      "infer_ms_per_series": 0.16975021952054328
+    },
+    "temporal_stride:3": {
+      "mse": 0.6084957122802734,
+      "ce": 0.6084957122802734,
+      "acc": 91.8062355063128,
+      "f1": 51.093014408673746,
+      "precision": 51.11247617849922,
+      "recall": 51.07563088089492,
+      "auroc": 55.020468164443706,
+      "auprc": 5.324185972015918,
+      "mae": 44.979531835556294,
+      "condition": "temporal_stride:3",
+      "n_series": 3881,
+      "infer_ms_per_series": 0.17006235680485535
+    },
+    "variable_dropout:0.5": {
+      "mse": 0.6105343699455261,
+      "ce": 0.6105343699455261,
+      "acc": 88.97191445503736,
+      "f1": 50.14107606821598,
+      "precision": 50.26393736606713,
+      "recall": 50.4189504336819,
+      "auroc": 52.48042040019705,
+      "auprc": 4.569490954767417,
+      "mae": 47.51957959980295,
+      "condition": "variable_dropout:0.5",
+      "n_series": 3881,
+      "infer_ms_per_series": 0.1695810965243396
+    },
+    "temporal_stride:3+variable_group_dropout:0.3": {
+      "mse": 0.6118415594100952,
+      "ce": 0.6118415594100952,
+      "acc": 92.57923215666065,
+      "f1": 51.31490457489921,
+      "precision": 51.52804967273734,
+      "recall": 51.20462864233558,
+      "auroc": 53.578109508576986,
+      "auprc": 5.214274807578617,
+      "mae": 46.421890491423014,
+      "condition": "temporal_stride:3+variable_group_dropout:0.3",
+      "n_series": 3881,
+      "infer_ms_per_series": 0.1699955799443855
+    }
+  },
+  "summary": {
+    "clean_mse": 0.5998249053955078,
+    "mean_shift_mse": 0.6102485209703445,
+    "mean_degradation": 0.017377763879216867,
+    "worst_mse": 0.6118415594100952,
+    "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+    "mean_unseen_mse": 0.6102485209703445,
+    "mean_unseen_degradation": 0.017377763879216867
+  },
+  "cost": {
+    "n_params": 6330216,
+    "train_time_per_epoch_s": 10.181746896107992,
+    "total_train_time_s": 152.72620344161987,
+    "epochs_run": 15,
+    "peak_gpu_mem_mb": 1695.11083984375,
+    "infer_ms_per_series": 0.17667682906212004
+  },
+  "best": {
+    "val_mse": 0.5967178344726562,
+    "epoch": 0
+  },
+  "run": {
+    "name": "bench_P19_tmix_opera_s2",
+    "seed": 2,
+    "config_path": "configs/P19_distillation.yaml",
+    "git_commit": "ce9a1cccbd514390f4c1e76e2a06bf070c86e6fc",
+    "experiment": "E2_distillation",
+    "dataset": "P19"
+  }
+}

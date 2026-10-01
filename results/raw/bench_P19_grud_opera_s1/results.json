@@ -1,0 +1,193 @@
+{
+  "config": {
+    "experiment": "E2_distillation",
+    "data": {
+      "name": "P19",
+      "history": 24,
+      "patch_size": 3.75,
+      "stride": 3.75,
+      "batch_size": 32,
+      "n_records": 100000000,
+      "split_idx": 1
+    },
+    "model": {
+      "backbone": "grud",
+      "embedding": "quite",
+      "irr_emb": true,
+      "hid_dim": 64,
+      "nhead": 4,
+      "nlayer": 3,
+      "dropout": 0.1,
+      "observation_aware": false,
+      "adaptive_query": "none"
+    },
+    "training": {
+      "epochs": 40,
+      "patience": 10,
+      "min_epochs": 15,
+      "lr": 0.001
+    },
+    "observation": {
+      "train_processes": [
+        "random_dropout:0.1",
+        "random_dropout:0.25",
+        "random_dropout:0.4",
+        "temporal_stride:2",
+        "burst:0.2",
+        "burst:0.3",
+        "variable_dropout:0.2",
+        "local_mask:0.3"
+      ],
+      "num_views": 2,
+      "rich_process": "identity",
+      "constraints": {
+        "min_density": 0.15,
+        "min_variable_coverage": 0.3,
+        "max_gap": 0.6,
+        "min_obs_per_sample": 4
+      }
+    },
+    "distillation": {
+      "enabled": true,
+      "teacher_type": "frozen",
+      "teacher_ckpt": "/scratch/s223669184/opera_bench/raw/bench_P19_grud_vanilla_s1/model.pt",
+      "loss": "prediction",
+      "prediction_loss": "mse",
+      "weight": 1.0
+    },
+    "hard_mining": {
+      "enabled": false,
+      "candidate_pool": 8,
+      "top_k": 2,
+      "alpha": 0.5,
+      "warmup_epochs": 5
+    },
+    "wandb": {
+      "enabled": true,
+      "project": "opera"
+    },
+    "seed": 1
+  },
+  "info": {
+    "name": "P19",
+    "task": "classification",
+    "input_dim": 34,
+    "n_class": 2,
+    "d_static": 6,
+    "history": 60,
+    "pred_window": 0,
+    "patch_size": 3.75,
+    "stride": 3.75,
+    "npatch": 16,
+    "maxlen": 0,
+    "batch_size": 32,
+    "split_idx": 1,
+    "n_train": 31042,
+    "n_val": 3880,
+    "n_test": 3881,
+    "n_train_batches": 245,
+    "n_val_batches": 122,
+    "n_test_batches": 122
+  },
+  "per_condition": {
+    "identity": {
+      "mse": 0.2058560699224472,
+      "ce": 0.2058560699224472,
+      "acc": 93.73872713218243,
+      "f1": 71.98009603177408,
+      "precision": 68.03299045984477,
+      "recall": 79.08919006553555,
+      "auroc": 89.42935443440521,
+      "auprc": 54.41747775990445,
+      "mae": 10.570645565594788,
+      "condition": "identity",
+      "n_series": 3881,
+      "infer_ms_per_series": 1.574942513367344
+    },
+    "random_dropout:0.7": {
+      "mse": 0.38296887278556824,
+      "ce": 0.38296887278556824,
+      "acc": 86.49832517392426,
+      "f1": 61.513404915034585,
+      "precision": 59.01794189745997,
+      "recall": 76.95328332429179,
+      "auroc": 83.9997568138878,
+      "auprc": 37.28518947530194,
+      "mae": 16.0002431861122,
+      "condition": "random_dropout:0.7",
+      "n_series": 3881,
+      "infer_ms_per_series": 1.5793398955654034
+    },
+    "temporal_stride:3": {
+      "mse": 0.26014700531959534,
+      "ce": 0.26014700531959534,
+      "acc": 91.16207163102294,
+      "f1": 68.78355863065192,
+      "precision": 64.24952284650661,
+      "recall": 82.42481496031078,
+      "auroc": 90.22781550280287,
+      "auprc": 51.35685113194729,
+      "mae": 9.77218449719713,
+      "condition": "temporal_stride:3",
+      "n_series": 3881,
+      "infer_ms_per_series": 1.58364979823328
+    },
+    "variable_dropout:0.5": {
+      "mse": 0.33491918444633484,
+      "ce": 0.33491918444633484,
+      "acc": 89.28111311517651,
+      "f1": 65.36557907093284,
+      "precision": 61.64248973638128,
+      "recall": 79.787258918383,
+      "auroc": 86.05140580279478,
+      "auprc": 39.20407543390284,
+      "mae": 13.948594197205225,
+      "condition": "variable_dropout:0.5",
+      "n_series": 3881,
+      "infer_ms_per_series": 1.5803103408872452
+    },
+    "temporal_stride:3+variable_group_dropout:0.3": {
+      "mse": 1.2820965051651,
+      "ce": 1.2820965051651,
+      "acc": 73.15124967791806,
+      "f1": 52.27005128960498,
+      "precision": 55.28450200554003,
+      "recall": 75.75457844622781,
+      "auroc": 78.07591459802582,
+      "auprc": 10.186750361692228,
+      "mae": 21.92408540197418,
+      "condition": "temporal_stride:3+variable_group_dropout:0.3",
+      "n_series": 3881,
+      "infer_ms_per_series": 1.5829325152315818
+    }
+  },
+  "summary": {
+    "clean_mse": 0.2058560699224472,
+    "mean_shift_mse": 0.5650328919291496,
+    "mean_degradation": 1.7447958767599916,
+    "worst_mse": 1.2820965051651,
+    "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+    "mean_unseen_mse": 0.5650328919291496,
+    "mean_unseen_degradation": 1.7447958767599916
+  },
+  "cost": {
+    "n_params": 33866,
+    "train_time_per_epoch_s": 77.69989720980327,
+    "total_train_time_s": 2330.996916294098,
+    "epochs_run": 30,
+    "peak_gpu_mem_mb": 1054.94482421875,
+    "infer_ms_per_series": 1.574942513367344
+  },
+  "best": {
+    "val_mse": 0.18374931812286377,
+    "epoch": 19
+  },
+  "run": {
+    "name": "bench_P19_grud_opera_s1",
+    "seed": 1,
+    "config_path": "configs/P19_distillation.yaml",
+    "git_commit": "ce9a1cccbd514390f4c1e76e2a06bf070c86e6fc",
+    "experiment": "E2_distillation",
+    "dataset": "P19"
+  }
+}

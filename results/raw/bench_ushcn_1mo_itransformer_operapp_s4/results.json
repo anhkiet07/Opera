@@ -1,0 +1,242 @@
+{
+  "config": {
+    "experiment": "E4b_opera_strong",
+    "data": {
+      "name": "ushcn",
+      "history": 24,
+      "patch_size": 1.5,
+      "stride": 1.5,
+      "batch_size": 128,
+      "n_records": 100000000,
+      "pred_window": 1
+    },
+    "model": {
+      "backbone": "itransformer",
+      "embedding": "quite",
+      "irr_emb": true,
+      "hid_dim": 64,
+      "nhead": 4,
+      "nlayer": 3,
+      "dropout": 0.1,
+      "observation_aware": false,
+      "adaptive_query": "none"
+    },
+    "training": {
+      "epochs": 40,
+      "patience": 10,
+      "min_epochs": 15,
+      "lr": 0.001
+    },
+    "observation": {
+      "train_processes": [
+        "random_dropout:0.1",
+        "random_dropout:0.25",
+        "random_dropout:0.4",
+        "temporal_stride:2",
+        "burst:0.2",
+        "burst:0.3",
+        "variable_dropout:0.2",
+        "local_mask:0.3"
+      ],
+      "num_views": 2,
+      "rich_process": "identity",
+      "constraints": {
+        "min_density": 0.15,
+        "min_variable_coverage": 0.3,
+        "max_gap": 0.6,
+        "min_obs_per_sample": 4
+      }
+    },
+    "distillation": {
+      "enabled": true,
+      "teacher_type": "frozen",
+      "teacher_ckpt": "/scratch/s223669184/opera_bench/raw/bench_ushcn_1mo_itransformer_vanilla_s4/model.pt",
+      "loss": "prediction",
+      "prediction_loss": "mse",
+      "weight": 1.0
+    },
+    "hard_mining": {
+      "enabled": true,
+      "candidate_pool": 8,
+      "top_k": 2,
+      "alpha": 0.5,
+      "warmup_epochs": 5,
+      "pool": [
+        "random_dropout:0.6",
+        "random_dropout:0.8",
+        "variable_dropout:0.4",
+        "variable_dropout:0.6",
+        "long_gap:0.5",
+        "burst:0.6",
+        "random_dropout:0.5+variable_dropout:0.3",
+        "temporal_stride:3+variable_group_dropout:0.4"
+      ]
+    },
+    "wandb": {
+      "enabled": true,
+      "project": "opera"
+    },
+    "seed": 4
+  },
+  "info": {
+    "name": "ushcn",
+    "input_dim": 5,
+    "history": 24,
+    "pred_window": 1,
+    "patch_size": 1.5,
+    "stride": 1.5,
+    "npatch": 16,
+    "maxlen": 0,
+    "batch_size": 128,
+    "n_records": 100000000,
+    "n_train_batches": 126,
+    "n_val_batches": 42,
+    "n_test_batches": 42
+  },
+  "per_condition": {
+    "identity": {
+      "mse": 0.5163512229919434,
+      "mse_per_var": [
+        1.0588330030441284,
+        0.8069319725036621,
+        0.18470945954322815,
+        0.27265191078186035,
+        0.258629709482193
+      ],
+      "mae": 0.3212873935699463,
+      "mae_per_var": [
+        0.4591189920902252,
+        0.19473469257354736,
+        0.13624288141727448,
+        0.41483575105667114,
+        0.40150463581085205
+      ],
+      "mape": -0.5635721683502197,
+      "rmse": 0.718575829674185,
+      "condition": "identity",
+      "n_series": 5352,
+      "infer_ms_per_series": 0.06191933636173539
+    },
+    "random_dropout:0.7": {
+      "mse": 0.5334638357162476,
+      "mse_per_var": [
+        1.0644627809524536,
+        0.8216767311096191,
+        0.2046581357717514,
+        0.29138630628585815,
+        0.285135418176651
+      ],
+      "mae": 0.32570570707321167,
+      "mae_per_var": [
+        0.4631328880786896,
+        0.18245922029018402,
+        0.13057765364646912,
+        0.43130186200141907,
+        0.42105698585510254
+      ],
+      "mape": -0.5247744917869568,
+      "rmse": 0.730386086748815,
+      "condition": "random_dropout:0.7",
+      "n_series": 5352,
+      "infer_ms_per_series": 0.06184944122896066
+    },
+    "temporal_stride:3": {
+      "mse": 0.5186163187026978,
+      "mse_per_var": [
+        1.0619882345199585,
+        0.8131170868873596,
+        0.18582873046398163,
+        0.2713839113712311,
+        0.26076361536979675
+      ],
+      "mae": 0.3191181719303131,
+      "mae_per_var": [
+        0.46366843581199646,
+        0.18746432662010193,
+        0.1300700306892395,
+        0.41352054476737976,
+        0.4008675217628479
+      ],
+      "mape": -0.5357170104980469,
+      "rmse": 0.720150205653444,
+      "condition": "temporal_stride:3",
+      "n_series": 5352,
+      "infer_ms_per_series": 0.06185888531318516
+    },
+    "variable_dropout:0.5": {
+      "mse": 0.5402669906616211,
+      "mse_per_var": [
+        1.063297986984253,
+        0.8238146305084229,
+        0.20824910700321198,
+        0.3045973777770996,
+        0.3013758361339569
+      ],
+      "mae": 0.33232370018959045,
+      "mae_per_var": [
+        0.46128955483436584,
+        0.1907893717288971,
+        0.13903795182704926,
+        0.4373949468135834,
+        0.43310660123825073
+      ],
+      "mape": -0.5422713756561279,
+      "rmse": 0.7350285645208771,
+      "condition": "variable_dropout:0.5",
+      "n_series": 5352,
+      "infer_ms_per_series": 0.06184984215706453
+    },
+    "temporal_stride:3+variable_group_dropout:0.3": {
+      "mse": 0.53270024061203,
+      "mse_per_var": [
+        1.0633745193481445,
+        0.816073477268219,
+        0.19266651570796967,
+        0.299941748380661,
+        0.2914449870586395
+      ],
+      "mae": 0.3287959098815918,
+      "mae_per_var": [
+        0.4642636179924011,
+        0.18843579292297363,
+        0.13205645978450775,
+        0.43642324209213257,
+        0.42280054092407227
+      ],
+      "mape": -0.5335263013839722,
+      "rmse": 0.729863165676985,
+      "condition": "temporal_stride:3+variable_group_dropout:0.3",
+      "n_series": 5352,
+      "infer_ms_per_series": 0.061775091339476264
+    }
+  },
+  "summary": {
+    "clean_mse": 0.5163512229919434,
+    "mean_shift_mse": 0.5312618464231491,
+    "mean_degradation": 0.028876901549313074,
+    "worst_mse": 0.5402669906616211,
+    "worst_condition": "variable_dropout:0.5",
+    "mean_unseen_mse": 0.5312618464231491,
+    "mean_unseen_degradation": 0.028876901549313074
+  },
+  "cost": {
+    "n_params": 126849,
+    "train_time_per_epoch_s": 27.985247993469237,
+    "total_train_time_s": 699.631199836731,
+    "epochs_run": 25,
+    "peak_gpu_mem_mb": 2889.333984375,
+    "infer_ms_per_series": 0.06191933636173539
+  },
+  "best": {
+    "val_mse": 0.7924145460128784,
+    "epoch": 14
+  },
+  "run": {
+    "name": "bench_ushcn_1mo_itransformer_operapp_s4",
+    "seed": 4,
+    "config_path": "configs/ushcn_operapp.yaml",
+    "git_commit": "ce9a1cccbd514390f4c1e76e2a06bf070c86e6fc",
+    "experiment": "E4b_opera_strong",
+    "dataset": "ushcn"
+  }
+}

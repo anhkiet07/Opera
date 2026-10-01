@@ -1,0 +1,225 @@
+{
+  "config": {
+    "experiment": "E0_baseline",
+    "data": {
+      "name": "ushcn",
+      "history": 24,
+      "patch_size": 1.5,
+      "stride": 1.5,
+      "batch_size": 128,
+      "n_records": 100000000,
+      "pred_window": 1
+    },
+    "model": {
+      "backbone": "warpformer",
+      "embedding": "quite",
+      "irr_emb": true,
+      "hid_dim": 64,
+      "nhead": 4,
+      "nlayer": 3,
+      "dropout": 0.1,
+      "observation_aware": false,
+      "adaptive_query": "none"
+    },
+    "training": {
+      "epochs": 40,
+      "patience": 10,
+      "min_epochs": 15,
+      "lr": 0.001
+    },
+    "observation": {
+      "train_processes": [
+        "identity"
+      ],
+      "num_views": 1,
+      "rich_process": "identity",
+      "constraints": {
+        "min_density": 0.15,
+        "min_variable_coverage": 0.3,
+        "max_gap": 0.6,
+        "min_obs_per_sample": 4
+      }
+    },
+    "distillation": {
+      "enabled": false,
+      "teacher_type": "frozen",
+      "teacher_ckpt": null,
+      "loss": "prediction",
+      "prediction_loss": "mse",
+      "weight": 1.0
+    },
+    "hard_mining": {
+      "enabled": false,
+      "candidate_pool": 8,
+      "top_k": 2,
+      "alpha": 0.5,
+      "warmup_epochs": 5
+    },
+    "wandb": {
+      "enabled": true,
+      "project": "opera"
+    },
+    "seed": 0
+  },
+  "info": {
+    "name": "ushcn",
+    "input_dim": 5,
+    "history": 24,
+    "pred_window": 1,
+    "patch_size": 1.5,
+    "stride": 1.5,
+    "npatch": 16,
+    "maxlen": 0,
+    "batch_size": 128,
+    "n_records": 100000000,
+    "n_train_batches": 126,
+    "n_val_batches": 42,
+    "n_test_batches": 42
+  },
+  "per_condition": {
+    "identity": {
+      "mse": 0.5535894632339478,
+      "mse_per_var": [
+        1.0632460117340088,
+        0.835728645324707,
+        0.27773576974868774,
+        0.31510913372039795,
+        0.2761276662349701
+      ],
+      "mae": 0.34128767251968384,
+      "mae_per_var": [
+        0.44644877314567566,
+        0.22927410900592804,
+        0.17685472965240479,
+        0.44285354018211365,
+        0.4110070466995239
+      ],
+      "mape": -0.5968335270881653,
+      "rmse": 0.7440359287251844,
+      "condition": "identity",
+      "n_series": 5352,
+      "infer_ms_per_series": 0.02015331935454912
+    },
+    "random_dropout:0.7": {
+      "mse": 0.6065934300422668,
+      "mse_per_var": [
+        1.063859224319458,
+        0.8561384677886963,
+        0.32772138714790344,
+        0.4133654236793518,
+        0.3718826174736023
+      ],
+      "mae": 0.38087350130081177,
+      "mae_per_var": [
+        0.4375971853733063,
+        0.2649877369403839,
+        0.21614065766334534,
+        0.5067722201347351,
+        0.478869765996933
+      ],
+      "mape": -0.7146313190460205,
+      "rmse": 0.7788410813781377,
+      "condition": "random_dropout:0.7",
+      "n_series": 5352,
+      "infer_ms_per_series": 0.01967960052604276
+    },
+    "temporal_stride:3": {
+      "mse": 0.5699406862258911,
+      "mse_per_var": [
+        1.0650497674942017,
+        0.8459094762802124,
+        0.28399351239204407,
+        0.3482211232185364,
+        0.30652928352355957
+      ],
+      "mae": 0.3543519079685211,
+      "mae_per_var": [
+        0.4414288103580475,
+        0.2439565360546112,
+        0.19133727252483368,
+        0.46451669931411743,
+        0.43052026629447937
+      ],
+      "mape": -0.6268327236175537,
+      "rmse": 0.7549441609986073,
+      "condition": "temporal_stride:3",
+      "n_series": 5352,
+      "infer_ms_per_series": 0.019469202366645025
+    },
+    "variable_dropout:0.5": {
+      "mse": 0.6256323456764221,
+      "mse_per_var": [
+        1.0668647289276123,
+        0.8575223684310913,
+        0.44858792424201965,
+        0.38754382729530334,
+        0.3676428198814392
+      ],
+      "mae": 0.37211644649505615,
+      "mae_per_var": [
+        0.44604557752609253,
+        0.24846914410591125,
+        0.21358175575733185,
+        0.4861622452735901,
+        0.4663234353065491
+      ],
+      "mape": -0.679196298122406,
+      "rmse": 0.7909692444567122,
+      "condition": "variable_dropout:0.5",
+      "n_series": 5352,
+      "infer_ms_per_series": 0.019197907683026094
+    },
+    "temporal_stride:3+variable_group_dropout:0.3": {
+      "mse": 0.6040604710578918,
+      "mse_per_var": [
+        1.0683571100234985,
+        0.8595865964889526,
+        0.31613433361053467,
+        0.40037232637405396,
+        0.3758517801761627
+      ],
+      "mae": 0.37441927194595337,
+      "mae_per_var": [
+        0.44426804780960083,
+        0.249513640999794,
+        0.2081013321876526,
+        0.4979885518550873,
+        0.47222471237182617
+      ],
+      "mape": -0.6487430334091187,
+      "rmse": 0.777213272569307,
+      "condition": "temporal_stride:3+variable_group_dropout:0.3",
+      "n_series": 5352,
+      "infer_ms_per_series": 0.019435168025383143
+    }
+  },
+  "summary": {
+    "clean_mse": 0.5535894632339478,
+    "mean_shift_mse": 0.601556733250618,
+    "mean_degradation": 0.08664772941388009,
+    "worst_mse": 0.6256323456764221,
+    "worst_condition": "variable_dropout:0.5",
+    "mean_unseen_mse": 0.601556733250618,
+    "mean_unseen_degradation": 0.08664772941388009
+  },
+  "cost": {
+    "n_params": 84613,
+    "train_time_per_epoch_s": 11.383741630448235,
+    "total_train_time_s": 409.8146986961365,
+    "epochs_run": 36,
+    "peak_gpu_mem_mb": 1443.13427734375,
+    "infer_ms_per_series": 0.02015331935454912
+  },
+  "best": {
+    "val_mse": 0.7150194644927979,
+    "epoch": 25
+  },
+  "run": {
+    "name": "bench_ushcn_1mo_warpformer_vanilla_s0",
+    "seed": 0,
+    "config_path": "configs/ushcn_baseline.yaml",
+    "git_commit": "ce9a1cccbd514390f4c1e76e2a06bf070c86e6fc",
+    "experiment": "E0_baseline",
+    "dataset": "ushcn"
+  }
+}
