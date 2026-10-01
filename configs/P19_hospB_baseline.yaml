@@ -1,0 +1,16 @@
+# Sepsis 2019 under native hospital shift: train + validate on hospital system A, test on system B.
+# A genuine covariate shift (sepsis prevalence 5.30% in A vs 3.06% in B, different measurement practice)
+# with no synthetic corruption, evaluated under the standard 5-condition protocol on top.
+#
+# Records, preprocessing, normalisation, history and patching are identical to configs/P19_baseline.yaml --
+# only data.name differs, which selects the hospital split. A difference against P19 is therefore
+# attributable to the shift and not to a second preprocessing pipeline.
+_base_: baseline.yaml
+data:
+  name: P19_hospB
+  patch_size: 3.75
+  stride: 3.75
+  batch_size: 32
+  split_idx: 1
+model:
+  backbone: patchtst

@@ -23,10 +23,23 @@ import torch
 
 from data import DATA_ROOT
 
+# `source` is the Raindrop dataset whose arrays and preprocessing are used, and `data_dir` is the folder
+# they live in. Both default to the setting name. They are separate so that a setting can reuse another
+# setting's data and preprocessing unchanged and differ only in the split file -- which is what makes
+# P19_hospB a clean measurement of hospital shift rather than of a second preprocessing pipeline.
 CFG = {
     "P12": dict(d_static=9, variables_num=36, n_class=2, history=48, patch_size=6, split="/splits/phy12_split{k}.npy"),
     "P19": dict(d_static=6, variables_num=34, n_class=2, history=60, patch_size=3.75, split="/splits/phy19_split{k}_new.npy"),
     "PAM": dict(d_static=0, variables_num=17, n_class=8, history=60, patch_size=10, split="/splits/PAMAP2_split_{k}.npy"),
+    # Sepsis 2019 hospital shift: train + validate on hospital system A, test on system B. Same records,
+    # same preprocessing and same normalisation as P19; only the split differs.
+    "P19_hospB": dict(d_static=6, variables_num=34, n_class=2, history=60, patch_size=3.75,
+                      source="P19", data_dir="P19", split="/splits/phy19_hospB_split{k}.npy"),
+    # eICU demo, in-hospital mortality from the first 60 h of periodic vitals. Held-out hospital REGION,
+    # because 186 hospitals over 2,520 stays makes a per-hospital split ~1 event per hospital. Built by
+    # scripts/prepare_eicu_demo.py in the P19 layout (60 hourly bins, time in hours).
+    "eicu_demo": dict(d_static=3, variables_num=8, n_class=2, history=60, patch_size=3.75,
+                      split="/splits/eicu_region_split{k}.npy"),
 }
 
 
@@ -34,10 +47,12 @@ def _tensorize(name, args, split_idx, device):
     from utils import (get_data_split, getStats, getStats_static,
                        tensorize_normalize_extract_feature_patch,
                        tensorize_normalize_extract_feature_pam_patch)
-    base = os.path.join(DATA_ROOT, name)
+    c = CFG[name]
+    source = c.get("source", name)
+    base = os.path.join(DATA_ROOT, c.get("data_dir", name))
     Ptrain, Pval, Ptest, ytrain, yval, ytest = get_data_split(
-        base, CFG[name]["split"].format(k=split_idx), dataset=name)
-    if name == "PAM":
+        base, c["split"].format(k=split_idx), dataset=source)
+    if source == "PAM":
         mf, stdf = getStats(Ptrain)
         out = [tensorize_normalize_extract_feature_pam_patch(P, y, mf, stdf, args)
                for P, y in ((Ptrain, ytrain), (Pval, yval), (Ptest, ytest))]
@@ -50,7 +65,7 @@ def _tensorize(name, args, split_idx, device):
             tr[i] = Ptrain[i]["arr"]
             st[i] = Ptrain[i]["extended_static"]
         mf, stdf = getStats(tr)
-        ms, ss = getStats_static(st, dataset=name)
+        ms, ss = getStats_static(st, dataset=source)
         out = [tensorize_normalize_extract_feature_patch(P, y, mf, stdf, ms, ss, args)
                for P, y in ((Ptrain, ytrain), (Pval, yval), (Ptest, ytest))]
     labels = (ytrain, yval, ytest)
@@ -116,7 +131,7 @@ def load(cfg, device, seed=0):
     name = d.get("name")
     c = CFG[name]
     args = argparse.Namespace(
-        dataset=name,
+        dataset=c.get("source", name),
         history=c["history"],
         patch_size=float(d.get("patch_size", c["patch_size"])),
         stride=float(d.get("stride", d.get("patch_size", c["patch_size"]))),
@@ -138,7 +153,7 @@ def load(cfg, device, seed=0):
     te = _Split(test, yte, device, c["d_static"])
 
     rng = np.random.RandomState(seed)
-    balanced = name != "PAM"
+    balanced = c.get("source", name) != "PAM"
     half = args.batch_size // 2
     y = tr.y.detach().cpu().numpy()
     n_train_batches = (min(len(np.where(y == 0)[0]) // half, (3 * len(np.where(y == 1)[0])) // half)

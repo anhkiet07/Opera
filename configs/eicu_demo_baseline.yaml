@@ -1,0 +1,18 @@
+# eICU-demo in-hospital mortality from the first 60 h of periodic vitals, with a held-out hospital REGION.
+# Native multi-centre shift: test hospitals are unseen, and mortality differs by region (7.5% held-out
+# Midwest vs 9.3% training pool). The standard 5 observation conditions are applied on top.
+#
+# 60 hourly bins and patch 3.75 mirror configs/P19_baseline.yaml, so the window, patching and time
+# normalisation are shared with the other classification settings.
+#
+# POWER: the held-out region has 761 stays and 57 deaths. That supports a large effect only; it cannot
+# separate opera from opera++ (see the header of scripts/prepare_eicu_demo.py).
+_base_: baseline.yaml
+data:
+  name: eicu_demo
+  patch_size: 3.75
+  stride: 3.75
+  batch_size: 32
+  split_idx: 1
+model:
+  backbone: patchtst
