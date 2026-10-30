@@ -107,13 +107,24 @@ SETTINGS = {
     # the test region); reportable as a large-effect check, not as an arm-vs-arm comparison.
     "eicu_demo":      {"vanilla": "configs/eicu_demo_baseline.yaml",
                        "opera":   "configs/eicu_demo_distillation.yaml"},
+
+    # --- observation-process-shift forecasting datasets (src/datasets/forecast_extra.py) ---------------
+    # vanilla and opera only, like the horizon axis.
+    "vitaldb":        {"vanilla": "configs/vitaldb_baseline.yaml",
+                       "opera":   "configs/vitaldb_distillation.yaml"},
+    "noaa_isd":       {"vanilla": "configs/noaa_isd_baseline.yaml",
+                       "opera":   "configs/noaa_isd_distillation.yaml"},
+    "glucobench":     {"vanilla": "configs/glucobench_baseline.yaml",
+                       "opera":   "configs/glucobench_distillation.yaml"},
+    "cgmacros":       {"vanilla": "configs/cgmacros_baseline.yaml",
+                       "opera":   "configs/cgmacros_distillation.yaml"},
 }
 
 # Cheap settings first, so a configuration error surfaces in minutes rather than after an hour.
 # A setting missing from this list is silently dropped by plan(), so every SETTINGS key must appear.
 ORDER = ["eicu_demo", "PAM", "ushcn_12mo", "ushcn_6mo", "P19", "P19_hospB", "activity",
          "activity_h2000", "activity_h1000", "P12", "ushcn_1mo", "physionet", "physionet_h12",
-         "physionet_h36"]
+         "physionet_h36", "cgmacros", "glucobench", "noaa_isd", "vitaldb"]
 assert set(ORDER) == set(SETTINGS), f"ORDER/SETTINGS mismatch: {set(ORDER) ^ set(SETTINGS)}"
 
 CONDITIONS = ",".join([

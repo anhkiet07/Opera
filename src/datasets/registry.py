@@ -27,6 +27,10 @@ def load(cfg, device, seed=0):
     """Returns (data_obj, info) for the dataset named in cfg['data']['name']."""
     d = dict(cfg.get("data", {}))
     name = d.get("name", "physionet")
+    # vitaldb / noaa_isd / glucobench / cgmacros have their own windowing (src/datasets/forecast_extra.py)
+    from src.datasets import forecast_extra
+    if name in forecast_extra.CFG:
+        return forecast_extra.load(cfg, device, seed=seed)
     if name not in DEFAULTS:
         raise ValueError(f"unknown dataset '{name}'; known: {sorted(DEFAULTS)}")
     base = DEFAULTS[name]

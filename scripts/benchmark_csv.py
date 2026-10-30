@@ -41,16 +41,20 @@ TRAIN_SEVERITY = {  # the exact severities the training pool draws
 PRIMARY = {"physionet": "mse", "activity": "mse", "ushcn": "mse",
            "P12": "auroc", "P19": "auroc", "PAM": "acc",
            # native-shift variants reuse their source dataset's task and primary metric
-           "P19_hospB": "auroc", "eicu_demo": "auroc"}
+           "P19_hospB": "auroc", "eicu_demo": "auroc",
+           # observation-process-shift forecasting datasets (src/datasets/forecast_extra.py)
+           "vitaldb": "mse", "noaa_isd": "mse", "glucobench": "mse", "cgmacros": "mse"}
 # Time unit of the history/horizon columns. Forecast horizons follow the QuITE protocol: the clinical and
 # activity settings partition a FIXED window (48 h, 4000 ms), so a longer horizon is also a shorter history;
 # only USHCN varies the horizon at fixed history. Classification has no horizon.
 TIME_UNIT = {"physionet": "h", "activity": "ms", "ushcn": "mo", "P12": "", "P19": "", "PAM": "",
-             "P19_hospB": "", "eicu_demo": ""}
+             "P19_hospB": "", "eicu_demo": "",
+             "vitaldb": "min", "noaa_isd": "h", "glucobench": "min", "cgmacros": "min"}
 
 TASK = {"physionet": "forecast", "activity": "forecast", "ushcn": "forecast",
         "P12": "classify", "P19": "classify", "PAM": "classify",
-        "P19_hospB": "classify", "eicu_demo": "classify"}
+        "P19_hospB": "classify", "eicu_demo": "classify",
+        "vitaldb": "forecast", "noaa_isd": "forecast", "glucobench": "forecast", "cgmacros": "forecast"}
 # A dataset name absent from these maps is dropped from the CSV without warning (rows_for_run returns []),
 # so every new setting must be registered here as well as in run_benchmark.ORDER.
 assert set(PRIMARY) == set(TASK) == set(TIME_UNIT), "PRIMARY/TASK/TIME_UNIT disagree"
@@ -67,7 +71,8 @@ FIELDS = [
 
 
 # Unit suffix used in the setting id of each forecasting dataset.
-HORIZON_UNIT = {"physionet": "h", "activity": "ms", "ushcn": "mo"}
+HORIZON_UNIT = {"physionet": "h", "activity": "ms", "ushcn": "mo",
+                "vitaldb": "min", "noaa_isd": "h", "glucobench": "min", "cgmacros": "min"}
 
 
 def setting_id(cfg, info):
