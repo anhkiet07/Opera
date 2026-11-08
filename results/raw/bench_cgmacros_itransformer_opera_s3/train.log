@@ -1,0 +1,41 @@
+run bench_cgmacros_itransformer_opera_s3 | device cuda:0 | params 126785 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 180, "n_records": 100000000, "name": "cgmacros", "patch_size": 45, "pred_window": 60, "stride": 45}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_cgmacros_itransformer_vanilla_s3/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "itransformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01404 val_mse 0.00634 best 0.00634@0 (12.2s)
+epoch 001 loss 0.00716 val_mse 0.00665 best 0.00634@0 (5.7s)
+epoch 002 loss 0.00660 val_mse 0.00536 best 0.00536@2 (5.7s)
+epoch 003 loss 0.00637 val_mse 0.00516 best 0.00516@3 (5.8s)
+epoch 004 loss 0.00616 val_mse 0.00534 best 0.00516@3 (5.7s)
+epoch 005 loss 0.00605 val_mse 0.00523 best 0.00516@3 (5.8s)
+epoch 006 loss 0.00591 val_mse 0.00570 best 0.00516@3 (5.8s)
+epoch 007 loss 0.00584 val_mse 0.00520 best 0.00516@3 (5.8s)
+epoch 008 loss 0.00584 val_mse 0.00570 best 0.00516@3 (5.8s)
+epoch 009 loss 0.00583 val_mse 0.00577 best 0.00516@3 (5.8s)
+epoch 010 loss 0.00574 val_mse 0.00525 best 0.00516@3 (5.8s)
+epoch 011 loss 0.00563 val_mse 0.00535 best 0.00516@3 (5.8s)
+epoch 012 loss 0.00573 val_mse 0.00513 best 0.00513@12 (5.8s)
+epoch 013 loss 0.00566 val_mse 0.00584 best 0.00513@12 (5.8s)
+epoch 014 loss 0.00567 val_mse 0.00520 best 0.00513@12 (5.8s)
+epoch 015 loss 0.00564 val_mse 0.00522 best 0.00513@12 (5.8s)
+epoch 016 loss 0.00553 val_mse 0.00529 best 0.00513@12 (5.9s)
+epoch 017 loss 0.00560 val_mse 0.00528 best 0.00513@12 (6.0s)
+epoch 018 loss 0.00552 val_mse 0.00521 best 0.00513@12 (6.0s)
+epoch 019 loss 0.00564 val_mse 0.00537 best 0.00513@12 (6.0s)
+epoch 020 loss 0.00556 val_mse 0.00515 best 0.00513@12 (6.0s)
+epoch 021 loss 0.00542 val_mse 0.00521 best 0.00513@12 (6.0s)
+epoch 022 loss 0.00542 val_mse 0.00549 best 0.00513@12 (6.0s)
+early stop
+  [identity                                  ] MSE 0.00441  MAE 0.04314
+  [random_dropout:0.7                        ] MSE 0.00813  MAE 0.05978
+  [temporal_stride:3                         ] MSE 0.00813  MAE 0.06148
+  [variable_dropout:0.5                      ] MSE 0.00908  MAE 0.06149
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01132  MAE 0.07188
+best {'val_mse': 0.005125821102410555, 'epoch': 12} -> results/raw/bench_cgmacros_itransformer_opera_s3/results.json
+summary {
+  "clean_mse": 0.0044119819067418575,
+  "mean_shift_mse": 0.009162545902654529,
+  "mean_degradation": 1.0767414953931325,
+  "worst_mse": 0.011315101757645607,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.009162545902654529,
+  "mean_unseen_degradation": 1.0767414953931325
+}

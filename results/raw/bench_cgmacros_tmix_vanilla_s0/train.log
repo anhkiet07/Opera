@@ -1,0 +1,42 @@
+run bench_cgmacros_tmix_vanilla_s0 | device cuda:0 | params 445761 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 180, "n_records": 100000000, "name": "cgmacros", "patch_size": 45, "pred_window": 60, "stride": 45}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "tmix", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01389 val_mse 0.00588 best 0.00588@0 (3.5s)
+epoch 001 loss 0.00528 val_mse 0.00502 best 0.00502@1 (2.7s)
+epoch 002 loss 0.00498 val_mse 0.00498 best 0.00498@2 (2.7s)
+epoch 003 loss 0.00485 val_mse 0.00551 best 0.00498@2 (2.7s)
+epoch 004 loss 0.00479 val_mse 0.00549 best 0.00498@2 (2.8s)
+epoch 005 loss 0.00473 val_mse 0.00513 best 0.00498@2 (2.8s)
+epoch 006 loss 0.00475 val_mse 0.00577 best 0.00498@2 (2.8s)
+epoch 007 loss 0.00466 val_mse 0.00494 best 0.00494@7 (2.8s)
+epoch 008 loss 0.00462 val_mse 0.00508 best 0.00494@7 (2.8s)
+epoch 009 loss 0.00464 val_mse 0.00495 best 0.00494@7 (2.8s)
+epoch 010 loss 0.00460 val_mse 0.00505 best 0.00494@7 (2.8s)
+epoch 011 loss 0.00463 val_mse 0.00491 best 0.00491@11 (2.8s)
+epoch 012 loss 0.00454 val_mse 0.00509 best 0.00491@11 (2.8s)
+epoch 013 loss 0.00456 val_mse 0.00480 best 0.00480@13 (2.8s)
+epoch 014 loss 0.00451 val_mse 0.00490 best 0.00480@13 (2.8s)
+epoch 015 loss 0.00454 val_mse 0.00486 best 0.00480@13 (2.7s)
+epoch 016 loss 0.00455 val_mse 0.00529 best 0.00480@13 (2.6s)
+epoch 017 loss 0.00456 val_mse 0.00497 best 0.00480@13 (2.6s)
+epoch 018 loss 0.00453 val_mse 0.00538 best 0.00480@13 (2.6s)
+epoch 019 loss 0.00454 val_mse 0.00492 best 0.00480@13 (2.6s)
+epoch 020 loss 0.00446 val_mse 0.00510 best 0.00480@13 (2.6s)
+epoch 021 loss 0.00461 val_mse 0.00555 best 0.00480@13 (2.6s)
+epoch 022 loss 0.00449 val_mse 0.00486 best 0.00480@13 (2.6s)
+epoch 023 loss 0.00448 val_mse 0.00489 best 0.00480@13 (2.6s)
+early stop
+  [identity                                  ] MSE 0.00437  MAE 0.04222
+  [random_dropout:0.7                        ] MSE 0.03782  MAE 0.15940
+  [temporal_stride:3                         ] MSE 0.04219  MAE 0.17582
+  [variable_dropout:0.5                      ] MSE 0.03533  MAE 0.12885
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.05056  MAE 0.19147
+best {'val_mse': 0.004797536879777908, 'epoch': 13} -> results/raw/bench_cgmacros_tmix_vanilla_s0/results.json
+summary {
+  "clean_mse": 0.004365617875009775,
+  "mean_shift_mse": 0.04147432651370764,
+  "mean_degradation": 8.500219144492753,
+  "worst_mse": 0.05056152865290642,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.04147432651370764,
+  "mean_unseen_degradation": 8.500219144492753
+}
