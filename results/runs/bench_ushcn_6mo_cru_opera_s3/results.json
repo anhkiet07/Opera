@@ -1,0 +1,232 @@
+{
+  "config": {
+    "experiment": "E2_distillation",
+    "data": {
+      "name": "ushcn",
+      "history": 24,
+      "patch_size": 1.5,
+      "stride": 1.5,
+      "batch_size": 128,
+      "n_records": 100000000,
+      "pred_window": 6
+    },
+    "model": {
+      "backbone": "cru",
+      "embedding": "quite",
+      "irr_emb": true,
+      "hid_dim": 64,
+      "nhead": 4,
+      "nlayer": 3,
+      "dropout": 0.1,
+      "observation_aware": false,
+      "adaptive_query": "none"
+    },
+    "training": {
+      "epochs": 40,
+      "patience": 10,
+      "min_epochs": 15,
+      "lr": 0.001
+    },
+    "observation": {
+      "train_processes": [
+        "random_dropout:0.1",
+        "random_dropout:0.25",
+        "random_dropout:0.4",
+        "temporal_stride:2",
+        "burst:0.2",
+        "burst:0.3",
+        "variable_dropout:0.2",
+        "local_mask:0.3"
+      ],
+      "num_views": 2,
+      "rich_process": "identity",
+      "constraints": {
+        "min_density": 0.15,
+        "min_variable_coverage": 0.3,
+        "max_gap": 0.6,
+        "min_obs_per_sample": 4
+      }
+    },
+    "distillation": {
+      "enabled": true,
+      "teacher_type": "frozen",
+      "teacher_ckpt": "results/raw/bench_ushcn_6mo_cru_vanilla_s3/model.pt",
+      "loss": "prediction",
+      "prediction_loss": "mse",
+      "weight": 1.0
+    },
+    "hard_mining": {
+      "enabled": false,
+      "candidate_pool": 8,
+      "top_k": 2,
+      "alpha": 0.5,
+      "warmup_epochs": 5
+    },
+    "wandb": {
+      "enabled": true,
+      "project": "opera"
+    },
+    "seed": 3
+  },
+  "info": {
+    "name": "ushcn",
+    "input_dim": 5,
+    "history": 24,
+    "pred_window": 6,
+    "patch_size": 1.5,
+    "stride": 1.5,
+    "npatch": 16,
+    "maxlen": 0,
+    "batch_size": 128,
+    "n_records": 100000000,
+    "n_train_batches": 21,
+    "n_val_batches": 7,
+    "n_test_batches": 7
+  },
+  "per_condition": {
+    "identity": {
+      "mse": 0.7396736145019531,
+      "mse_per_var": [
+        1.0660401582717896,
+        0.845357358455658,
+        0.26903584599494934,
+        0.7705743312835693,
+        0.7473604083061218
+      ],
+      "mae": 0.44947490096092224,
+      "mae_per_var": [
+        0.44816678762435913,
+        0.21535369753837585,
+        0.17433418333530426,
+        0.7118730545043945,
+        0.697646975517273
+      ],
+      "mape": -0.5354374647140503,
+      "rmse": 0.8600427980641157,
+      "condition": "identity",
+      "n_series": 892,
+      "infer_ms_per_series": 1.4895748664445407
+    },
+    "random_dropout:0.7": {
+      "mse": 0.7474419474601746,
+      "mse_per_var": [
+        1.067034125328064,
+        0.8472608923912048,
+        0.25267285108566284,
+        0.7952709794044495,
+        0.7749708890914917
+      ],
+      "mae": 0.46482038497924805,
+      "mae_per_var": [
+        0.4577704966068268,
+        0.22637328505516052,
+        0.1802407056093216,
+        0.7388456463813782,
+        0.7208718657493591
+      ],
+      "mape": -0.46629685163497925,
+      "rmse": 0.8645472499870522,
+      "condition": "random_dropout:0.7",
+      "n_series": 892,
+      "infer_ms_per_series": 1.4818749085670095
+    },
+    "temporal_stride:3": {
+      "mse": 0.7345157861709595,
+      "mse_per_var": [
+        1.0639866590499878,
+        0.8423596620559692,
+        0.2734784781932831,
+        0.7603141665458679,
+        0.7324402332305908
+      ],
+      "mae": 0.45391932129859924,
+      "mae_per_var": [
+        0.45656219124794006,
+        0.22331368923187256,
+        0.17938512563705444,
+        0.7145028114318848,
+        0.6958326101303101
+      ],
+      "mape": -0.5298991203308105,
+      "rmse": 0.8570389642081389,
+      "condition": "temporal_stride:3",
+      "n_series": 892,
+      "infer_ms_per_series": 1.4812307507467912
+    },
+    "variable_dropout:0.5": {
+      "mse": 0.755416750907898,
+      "mse_per_var": [
+        1.0675464868545532,
+        0.8504410982131958,
+        0.26918449997901917,
+        0.8040277361869812,
+        0.7858841419219971
+      ],
+      "mae": 0.4633054733276367,
+      "mae_per_var": [
+        0.45289793610572815,
+        0.2235093116760254,
+        0.1783537119626999,
+        0.7388877868652344,
+        0.722878634929657
+      ],
+      "mape": -0.485273540019989,
+      "rmse": 0.8691471399641708,
+      "condition": "variable_dropout:0.5",
+      "n_series": 892,
+      "infer_ms_per_series": 1.482157963808342
+    },
+    "temporal_stride:3+variable_group_dropout:0.3": {
+      "mse": 0.7521965503692627,
+      "mse_per_var": [
+        1.0655741691589355,
+        0.8428472876548767,
+        0.2810175120830536,
+        0.7989997863769531,
+        0.7725438475608826
+      ],
+      "mae": 0.46538716554641724,
+      "mae_per_var": [
+        0.4598782956600189,
+        0.2286318987607956,
+        0.18863841891288757,
+        0.735206663608551,
+        0.7145805954933167
+      ],
+      "mape": -0.5248799920082092,
+      "rmse": 0.8672926555490151,
+      "condition": "temporal_stride:3+variable_group_dropout:0.3",
+      "n_series": 892,
+      "infer_ms_per_series": 1.4883950686775516
+    }
+  },
+  "summary": {
+    "clean_mse": 0.7396736145019531,
+    "mean_shift_mse": 0.7473927587270737,
+    "mean_degradation": 0.010435878844100856,
+    "worst_mse": 0.755416750907898,
+    "worst_condition": "variable_dropout:0.5",
+    "mean_unseen_mse": 0.7473927587270737,
+    "mean_unseen_degradation": 0.010435878844100856
+  },
+  "cost": {
+    "n_params": 71828,
+    "train_time_per_epoch_s": 36.79534311647768,
+    "total_train_time_s": 993.4742641448975,
+    "epochs_run": 27,
+    "peak_gpu_mem_mb": 4428.4736328125,
+    "infer_ms_per_series": 1.4895748664445407
+  },
+  "best": {
+    "val_mse": 0.8466448783874512,
+    "epoch": 16
+  },
+  "run": {
+    "name": "bench_ushcn_6mo_cru_opera_s3",
+    "seed": 3,
+    "config_path": "configs/ushcn_6mo_distillation.yaml",
+    "git_commit": "e6065879aa77f570f2eb12787d7e9bda76b25a6e",
+    "experiment": "E2_distillation",
+    "dataset": "ushcn"
+  }
+}

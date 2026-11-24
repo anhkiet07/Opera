@@ -1,0 +1,51 @@
+run bench_physionet_h12_grud_vanilla_s1 | device cuda:0 | params 41804 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 12, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01388 val_mse 0.00931 best 0.00931@0 (59.4s)
+epoch 001 loss 0.00794 val_mse 0.00863 best 0.00863@1 (59.9s)
+epoch 002 loss 0.00728 val_mse 0.00795 best 0.00795@2 (60.9s)
+epoch 003 loss 0.00706 val_mse 0.00804 best 0.00795@2 (56.9s)
+epoch 004 loss 0.00678 val_mse 0.00775 best 0.00775@4 (58.6s)
+epoch 005 loss 0.00661 val_mse 0.00732 best 0.00732@5 (57.9s)
+epoch 006 loss 0.00636 val_mse 0.00770 best 0.00732@5 (60.1s)
+epoch 007 loss 0.00625 val_mse 0.00738 best 0.00732@5 (60.4s)
+epoch 008 loss 0.00629 val_mse 0.00724 best 0.00724@8 (61.3s)
+epoch 009 loss 0.00616 val_mse 0.00746 best 0.00724@8 (60.3s)
+epoch 010 loss 0.00598 val_mse 0.00715 best 0.00715@10 (58.2s)
+epoch 011 loss 0.00598 val_mse 0.00713 best 0.00713@11 (59.3s)
+epoch 012 loss 0.00590 val_mse 0.00719 best 0.00713@11 (59.7s)
+epoch 013 loss 0.00592 val_mse 0.00760 best 0.00713@11 (58.6s)
+epoch 014 loss 0.00573 val_mse 0.00691 best 0.00691@14 (58.5s)
+epoch 015 loss 0.00587 val_mse 0.00692 best 0.00691@14 (60.7s)
+epoch 016 loss 0.00571 val_mse 0.00710 best 0.00691@14 (58.2s)
+epoch 017 loss 0.00570 val_mse 0.00706 best 0.00691@14 (58.8s)
+epoch 018 loss 0.00556 val_mse 0.00689 best 0.00689@18 (59.5s)
+epoch 019 loss 0.00563 val_mse 0.00696 best 0.00689@18 (60.6s)
+epoch 020 loss 0.00537 val_mse 0.00719 best 0.00689@18 (55.9s)
+epoch 021 loss 0.00540 val_mse 0.00681 best 0.00681@21 (19.4s)
+epoch 022 loss 0.00531 val_mse 0.00675 best 0.00675@22 (21.5s)
+epoch 023 loss 0.00522 val_mse 0.00683 best 0.00675@22 (57.2s)
+epoch 024 loss 0.00522 val_mse 0.00722 best 0.00675@22 (60.1s)
+epoch 025 loss 0.00510 val_mse 0.00679 best 0.00675@22 (57.8s)
+epoch 026 loss 0.00509 val_mse 0.00744 best 0.00675@22 (60.7s)
+epoch 027 loss 0.00502 val_mse 0.00700 best 0.00675@22 (60.1s)
+epoch 028 loss 0.00495 val_mse 0.00712 best 0.00675@22 (59.6s)
+epoch 029 loss 0.00495 val_mse 0.00707 best 0.00675@22 (58.5s)
+epoch 030 loss 0.00488 val_mse 0.00682 best 0.00675@22 (63.0s)
+epoch 031 loss 0.00492 val_mse 0.00688 best 0.00675@22 (60.2s)
+epoch 032 loss 0.00490 val_mse 0.00685 best 0.00675@22 (58.8s)
+early stop
+  [identity                                  ] MSE 0.00617  MAE 0.04366
+  [random_dropout:0.7                        ] MSE 0.00949  MAE 0.05529
+  [temporal_stride:3                         ] MSE 0.00743  MAE 0.04816
+  [variable_dropout:0.5                      ] MSE 0.01094  MAE 0.06021
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00894  MAE 0.05311
+best {'val_mse': 0.006751686334609985, 'epoch': 22} -> results/raw/bench_physionet_h12_grud_vanilla_s1/results.json
+summary {
+  "clean_mse": 0.006170372013002634,
+  "mean_shift_mse": 0.009201617445796728,
+  "mean_degradation": 0.4912581326387525,
+  "worst_mse": 0.010939409956336021,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.009201617445796728,
+  "mean_unseen_degradation": 0.4912581326387525
+}

@@ -1,0 +1,35 @@
+run bench_noaa_isd_itransformer_vanilla_s2 | device cuda:0 | params 126849 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "itransformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00977 val_mse 0.00399 best 0.00399@0 (14.2s)
+epoch 001 loss 0.00306 val_mse 0.00323 best 0.00323@1 (9.5s)
+epoch 002 loss 0.00284 val_mse 0.00236 best 0.00236@2 (9.5s)
+epoch 003 loss 0.00221 val_mse 0.00195 best 0.00195@3 (9.8s)
+epoch 004 loss 0.00203 val_mse 0.00205 best 0.00195@3 (9.8s)
+epoch 005 loss 0.00196 val_mse 0.00202 best 0.00195@3 (9.8s)
+epoch 006 loss 0.00195 val_mse 0.00171 best 0.00171@6 (9.9s)
+epoch 007 loss 0.00192 val_mse 0.00202 best 0.00171@6 (9.9s)
+epoch 008 loss 0.00190 val_mse 0.00172 best 0.00171@6 (9.9s)
+epoch 009 loss 0.00190 val_mse 0.00177 best 0.00171@6 (10.2s)
+epoch 010 loss 0.00188 val_mse 0.00174 best 0.00171@6 (9.9s)
+epoch 011 loss 0.00186 val_mse 0.00173 best 0.00171@6 (10.2s)
+epoch 012 loss 0.00188 val_mse 0.00191 best 0.00171@6 (10.0s)
+epoch 013 loss 0.00185 val_mse 0.00184 best 0.00171@6 (9.9s)
+epoch 014 loss 0.00183 val_mse 0.00181 best 0.00171@6 (10.0s)
+epoch 015 loss 0.00182 val_mse 0.00175 best 0.00171@6 (10.1s)
+epoch 016 loss 0.00182 val_mse 0.00177 best 0.00171@6 (10.1s)
+early stop
+  [identity                                  ] MSE 0.00213  MAE 0.02551
+  [random_dropout:0.7                        ] MSE 0.15336  MAE 0.32310
+  [temporal_stride:3                         ] MSE 0.16694  MAE 0.34151
+  [variable_dropout:0.5                      ] MSE 0.08875  MAE 0.18303
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.17171  MAE 0.34768
+best {'val_mse': 0.0017098201205953956, 'epoch': 6} -> results/raw/bench_noaa_isd_itransformer_vanilla_s2/results.json
+summary {
+  "clean_mse": 0.0021270676515996456,
+  "mean_shift_mse": 0.1451904382556677,
+  "mean_degradation": 67.25849574952555,
+  "worst_mse": 0.17171449959278107,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.1451904382556677,
+  "mean_unseen_degradation": 67.25849574952555
+}

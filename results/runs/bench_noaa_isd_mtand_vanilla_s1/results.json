@@ -1,0 +1,225 @@
+{
+  "config": {
+    "experiment": "E0_baseline",
+    "data": {
+      "name": "noaa_isd",
+      "history": 24,
+      "patch_size": 6,
+      "stride": 6,
+      "batch_size": 32,
+      "n_records": 100000000,
+      "pred_window": 6
+    },
+    "model": {
+      "backbone": "mtand",
+      "embedding": "quite",
+      "irr_emb": true,
+      "hid_dim": 64,
+      "nhead": 4,
+      "nlayer": 3,
+      "dropout": 0.1,
+      "observation_aware": false,
+      "adaptive_query": "none"
+    },
+    "training": {
+      "epochs": 40,
+      "patience": 10,
+      "min_epochs": 15,
+      "lr": 0.001
+    },
+    "observation": {
+      "train_processes": [
+        "identity"
+      ],
+      "num_views": 1,
+      "rich_process": "identity",
+      "constraints": {
+        "min_density": 0.15,
+        "min_variable_coverage": 0.3,
+        "max_gap": 0.6,
+        "min_obs_per_sample": 4
+      }
+    },
+    "distillation": {
+      "enabled": false,
+      "teacher_type": "frozen",
+      "teacher_ckpt": null,
+      "loss": "prediction",
+      "prediction_loss": "mse",
+      "weight": 1.0
+    },
+    "hard_mining": {
+      "enabled": false,
+      "candidate_pool": 8,
+      "top_k": 2,
+      "alpha": 0.5,
+      "warmup_epochs": 5
+    },
+    "wandb": {
+      "enabled": true,
+      "project": "opera"
+    },
+    "seed": 1
+  },
+  "info": {
+    "name": "noaa_isd",
+    "input_dim": 5,
+    "history": 24.0,
+    "pred_window": 6.0,
+    "patch_size": 6.0,
+    "stride": 6.0,
+    "npatch": 4,
+    "maxlen": 0,
+    "batch_size": 32,
+    "n_records": 100000000,
+    "n_train_batches": 454,
+    "n_val_batches": 151,
+    "n_test_batches": 142
+  },
+  "per_condition": {
+    "identity": {
+      "mse": 0.0007258736295625567,
+      "mse_per_var": [
+        0.0005706442170776427,
+        0.000561813241802156,
+        0.0002905491564888507,
+        0.00176327268127352,
+        0.00044308873475529253
+      ],
+      "mae": 0.01755697652697563,
+      "mae_per_var": [
+        0.01720208115875721,
+        0.016450677067041397,
+        0.011214722879230976,
+        0.030865954235196114,
+        0.012051448225975037
+      ],
+      "mape": 0.19775423407554626,
+      "rmse": 0.026942042045148634,
+      "condition": "identity",
+      "n_series": 4531,
+      "infer_ms_per_series": 0.05207691095807226
+    },
+    "random_dropout:0.7": {
+      "mse": 0.000940167170483619,
+      "mse_per_var": [
+        0.0008408792782574892,
+        0.0007789571536704898,
+        0.0005179853178560734,
+        0.0020879660733044147,
+        0.0004750476509798318
+      ],
+      "mae": 0.020268797874450684,
+      "mae_per_var": [
+        0.020952798426151276,
+        0.019508542492985725,
+        0.014660919085144997,
+        0.03396812826395035,
+        0.012253602035343647
+      ],
+      "mape": 0.21533656120300293,
+      "rmse": 0.03066214556229911,
+      "condition": "random_dropout:0.7",
+      "n_series": 4531,
+      "infer_ms_per_series": 0.0363734352012471
+    },
+    "temporal_stride:3": {
+      "mse": 0.000861329201143235,
+      "mse_per_var": [
+        0.0007786802598275244,
+        0.000696287548635155,
+        0.0003929735394194722,
+        0.00197179289534688,
+        0.00046691164607182145
+      ],
+      "mae": 0.019510870799422264,
+      "mae_per_var": [
+        0.020481711253523827,
+        0.01857975870370865,
+        0.013351334258913994,
+        0.033077873289585114,
+        0.012063676491379738
+      ],
+      "mape": 0.21172508597373962,
+      "rmse": 0.029348410538617503,
+      "condition": "temporal_stride:3",
+      "n_series": 4531,
+      "infer_ms_per_series": 0.04621721266437329
+    },
+    "variable_dropout:0.5": {
+      "mse": 0.013000817969441414,
+      "mse_per_var": [
+        0.008257418870925903,
+        0.026379110291600227,
+        0.026384126394987106,
+        0.003206274937838316,
+        0.0007771578966639936
+      ],
+      "mae": 0.07274927943944931,
+      "mae_per_var": [
+        0.05712694674730301,
+        0.11416132003068924,
+        0.12953925132751465,
+        0.043279968202114105,
+        0.019638920202851295
+      ],
+      "mape": 0.33468401432037354,
+      "rmse": 0.11402112948678159,
+      "condition": "variable_dropout:0.5",
+      "n_series": 4531,
+      "infer_ms_per_series": 0.043768568087350294
+    },
+    "temporal_stride:3+variable_group_dropout:0.3": {
+      "mse": 0.007520482875406742,
+      "mse_per_var": [
+        0.005686026997864246,
+        0.00994624849408865,
+        0.018035143613815308,
+        0.002969256602227688,
+        0.0009657374466769397
+      ],
+      "mae": 0.05088132619857788,
+      "mae_per_var": [
+        0.04554876685142517,
+        0.05711735039949417,
+        0.08947023004293442,
+        0.04166341572999954,
+        0.020606888458132744
+      ],
+      "mape": 0.29459571838378906,
+      "rmse": 0.08672071768272413,
+      "condition": "temporal_stride:3+variable_group_dropout:0.3",
+      "n_series": 4531,
+      "infer_ms_per_series": 0.041926730628888145
+    }
+  },
+  "summary": {
+    "clean_mse": 0.0007258736295625567,
+    "mean_shift_mse": 0.0055806993041187525,
+    "mean_degradation": 6.688251889632534,
+    "worst_mse": 0.013000817969441414,
+    "worst_condition": "variable_dropout:0.5",
+    "mean_unseen_mse": 0.0055806993041187525,
+    "mean_unseen_degradation": 6.688251889632534
+  },
+  "cost": {
+    "n_params": 69573,
+    "train_time_per_epoch_s": 40.42203131318092,
+    "total_train_time_s": 1616.881252527237,
+    "epochs_run": 40,
+    "peak_gpu_mem_mb": 116.0,
+    "infer_ms_per_series": 0.05207691095807226
+  },
+  "best": {
+    "val_mse": 0.00068542396184057,
+    "epoch": 32
+  },
+  "run": {
+    "name": "bench_noaa_isd_mtand_vanilla_s1",
+    "seed": 1,
+    "config_path": "configs/noaa_isd_baseline.yaml",
+    "git_commit": "e6065879aa77f570f2eb12787d7e9bda76b25a6e",
+    "experiment": "E0_baseline",
+    "dataset": "noaa_isd"
+  }
+}

@@ -1,0 +1,39 @@
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+Total records: 25
+Dataset n_samples: 25 15 5 5
+Test record ids (first 20): ['B04', 'D02', 'A01', 'E04', 'C02']
+Test record ids (last 20): ['B04', 'D02', 'A01', 'E04', 'C02']
+data_max: tensor([5.6217, 3.9067, 2.4465, 5.3456, 3.9414, 2.2163, 5.7582, 3.9781, 2.6061,
+        5.3913, 3.9654, 2.6011], device='cuda:0')
+data_min: tensor([ 0.1852, -0.1228, -1.4615,  0.1606, -0.4760, -2.5436, -0.2787, -0.4944,
+        -2.0269,  0.0198, -0.4789, -1.9588], device='cuda:0')
+time_max: tensor(304861., device='cuda:0')
+manual set time_max: tensor(4000)
+Dataset n_samples after time split: 2719 1671 507 541
+run dbg_wf_s0 | device cuda:0 | params 85516 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 2000, "n_records": 100000000, "name": "activity", "patch_size": 750, "stride": 750}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.03596 val_mse 0.01527 best 0.01527@0 (4.1s)
+epoch 001 loss 0.01450 val_mse 0.01420 best 0.01420@1 (3.2s)
+epoch 002 loss 0.01344 val_mse 0.01266 best 0.01266@2 (3.2s)
+epoch 003 loss 0.01272 val_mse 0.01203 best 0.01203@3 (3.3s)
+epoch 004 loss 0.01286 val_mse 0.01321 best 0.01203@3 (3.1s)
+epoch 005 loss 0.01272 val_mse 0.01238 best 0.01203@3 (3.1s)
+epoch 006 loss 0.01241 val_mse 0.01317 best 0.01203@3 (3.2s)
+epoch 007 loss 0.01251 val_mse 0.01192 best 0.01192@7 (3.2s)
+epoch 008 loss 0.01245 val_mse 0.01185 best 0.01185@8 (3.4s)
+[probe] step 500 gradnorm median 0.128 max 2.15 | {'score_min': -19.571218490600586, 'score_max': -11.956844329833984, 'gmax_min': 4.038016868435079e-06, 'n_gmax0': 0, 'nobs_min': 17, 'tok_absmax': 1.9853861331939697}
+epoch 009 loss 0.01224 val_mse 0.01214 best 0.01185@8 (3.3s)
+epoch 010 loss 0.01253 val_mse 0.01245 best 0.01185@8 (3.3s)
+epoch 011 loss 0.01207 val_mse 0.01157 best 0.01157@11 (3.3s)
+epoch 012 loss 0.01202 val_mse 0.01298 best 0.01157@11 (3.3s)
+epoch 013 loss 0.01215 val_mse 0.01152 best 0.01152@13 (3.5s)
+epoch 014 loss 0.01247 val_mse 0.01194 best 0.01152@13 (3.2s)
+epoch 015 loss 0.01206 val_mse 0.01465 best 0.01152@13 (3.4s)
+epoch 016 loss 0.01227 val_mse 0.01222 best 0.01152@13 (3.3s)
+epoch 017 loss 0.01208 val_mse 0.01153 best 0.01152@13 (3.3s)
+[probe] step 1000 gradnorm median 0.0929 max 0.256 | {'score_min': -46.748268127441406, 'score_max': -31.349946975708008, 'gmax_min': 2.199986603684096e-15, 'n_gmax0': 0, 'nobs_min': 17, 'tok_absmax': 1.9486026763916016}
+epoch 018 loss 0.01185 val_mse 0.01144 best 0.01144@18 (3.2s)
+epoch 019 loss 0.01169 val_mse 0.01215 best 0.01144@18 (3.1s)
+epoch 020 loss 0.01187 val_mse 0.01258 best 0.01144@18 (3.3s)
+[probe] NONFINITE GRAD at step 1125 gn=nan bad_params=[(12, 64), (64, 1), (64,), (1, 1), (1,), (31, 1)] prev_gn=[0.09924804522512803, 0.06607938720817466, 0.07395921375057911, 0.14246271996283477, 0.060877354358970556] fwd={'score_min': -91.11854553222656, 'score_max': -80.28107452392578, 'gmax_min': 6.79855308198354e-37, 'n_gmax0': 0, 'nobs_min': 18, 'tok_absmax': 2.112778663635254}

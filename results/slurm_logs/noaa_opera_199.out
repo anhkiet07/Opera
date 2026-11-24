@@ -1,0 +1,1254 @@
+stage C: 3 cells
+
+[1/3] bench_noaa_isd_itransformer_opera_s0
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/noaa_isd_distillation.yaml --seed 0 --name bench_noaa_isd_itransformer_opera_s0 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=itransformer distillation.teacher_ckpt=results/raw/bench_noaa_isd_itransformer_vanilla_s0/model.pt --no_wandb
+noaa_isd records: 496 297 99 100
+noaa_isd windows: 23889 14391 4793 4705
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   26.3000,   59.3683])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(30.0000)
+run bench_noaa_isd_itransformer_opera_s0 | device cuda:0 | params 126849 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_noaa_isd_itransformer_vanilla_s0/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "itransformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01528 val_mse 0.00467 best 0.00467@0 (22.7s)
+epoch 001 loss 0.00549 val_mse 0.00315 best 0.00315@1 (17.4s)
+epoch 002 loss 0.00469 val_mse 0.00297 best 0.00297@2 (17.4s)
+epoch 003 loss 0.00355 val_mse 0.00261 best 0.00261@3 (17.4s)
+epoch 004 loss 0.00324 val_mse 0.00211 best 0.00211@4 (17.5s)
+epoch 005 loss 0.00336 val_mse 0.00261 best 0.00211@4 (17.7s)
+epoch 006 loss 0.00320 val_mse 0.00194 best 0.00194@6 (17.5s)
+epoch 007 loss 0.00311 val_mse 0.00196 best 0.00194@6 (17.8s)
+epoch 008 loss 0.00306 val_mse 0.00196 best 0.00194@6 (17.6s)
+epoch 009 loss 0.00294 val_mse 0.00243 best 0.00194@6 (17.8s)
+epoch 010 loss 0.00337 val_mse 0.00189 best 0.00189@10 (17.7s)
+epoch 011 loss 0.00296 val_mse 0.00178 best 0.00178@11 (18.1s)
+epoch 012 loss 0.00332 val_mse 0.00219 best 0.00178@11 (17.7s)
+epoch 013 loss 0.00303 val_mse 0.00209 best 0.00178@11 (18.0s)
+epoch 014 loss 0.00281 val_mse 0.00195 best 0.00178@11 (17.8s)
+epoch 015 loss 0.00282 val_mse 0.00188 best 0.00178@11 (18.0s)
+epoch 016 loss 0.00280 val_mse 0.00198 best 0.00178@11 (18.0s)
+epoch 017 loss 0.00279 val_mse 0.00183 best 0.00178@11 (18.0s)
+epoch 018 loss 0.00282 val_mse 0.00198 best 0.00178@11 (17.9s)
+epoch 019 loss 0.00280 val_mse 0.00176 best 0.00176@19 (18.0s)
+epoch 020 loss 0.00270 val_mse 0.00187 best 0.00176@19 (17.8s)
+epoch 021 loss 0.00286 val_mse 0.00198 best 0.00176@19 (17.9s)
+epoch 022 loss 0.00271 val_mse 0.00186 best 0.00176@19 (17.9s)
+epoch 023 loss 0.00271 val_mse 0.00185 best 0.00176@19 (17.7s)
+epoch 024 loss 0.00277 val_mse 0.00181 best 0.00176@19 (17.8s)
+epoch 025 loss 0.00271 val_mse 0.00185 best 0.00176@19 (18.2s)
+epoch 026 loss 0.00259 val_mse 0.00182 best 0.00176@19 (17.9s)
+epoch 027 loss 0.00270 val_mse 0.00171 best 0.00171@27 (18.2s)
+epoch 028 loss 0.00254 val_mse 0.00194 best 0.00171@27 (18.0s)
+epoch 029 loss 0.00287 val_mse 0.00178 best 0.00171@27 (17.7s)
+epoch 030 loss 0.00282 val_mse 0.00181 best 0.00171@27 (18.0s)
+epoch 031 loss 0.00264 val_mse 0.00177 best 0.00171@27 (17.8s)
+epoch 032 loss 0.00264 val_mse 0.00172 best 0.00171@27 (18.0s)
+epoch 033 loss 0.00247 val_mse 0.00184 best 0.00171@27 (30.2s)
+epoch 034 loss 0.00251 val_mse 0.00178 best 0.00171@27 (23.4s)
+epoch 035 loss 0.00261 val_mse 0.00187 best 0.00171@27 (17.8s)
+epoch 036 loss 0.00274 val_mse 0.00176 best 0.00171@27 (17.8s)
+epoch 037 loss 0.00258 val_mse 0.00173 best 0.00171@27 (17.8s)
+early stop
+  [identity                                  ] MSE 0.00239  MAE 0.02648
+  [random_dropout:0.7                        ] MSE 0.00385  MAE 0.03490
+  [temporal_stride:3                         ] MSE 0.00284  MAE 0.03088
+  [variable_dropout:0.5                      ] MSE 0.00563  MAE 0.04478
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00437  MAE 0.03986
+best {'val_mse': 0.0017076721414923668, 'epoch': 27} -> results/raw/bench_noaa_isd_itransformer_opera_s0/results.json
+summary {
+  "clean_mse": 0.0023857990745455027,
+  "mean_shift_mse": 0.004172723740339279,
+  "mean_degradation": 0.7489837199028119,
+  "worst_mse": 0.005632652901113033,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.004172723740339279,
+  "mean_unseen_degradation": 0.7489837199028119
+}
+[1/3] ok bench_noaa_isd_itransformer_opera_s0 (16.0 min)
+
+[2/3] bench_noaa_isd_patchtst_opera_s0
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/noaa_isd_distillation.yaml --seed 0 --name bench_noaa_isd_patchtst_opera_s0 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=patchtst distillation.teacher_ckpt=results/raw/bench_noaa_isd_patchtst_vanilla_s0/model.pt --no_wandb
+noaa_isd records: 496 297 99 100
+noaa_isd windows: 23889 14391 4793 4705
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   26.3000,   59.3683])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(30.0000)
+run bench_noaa_isd_patchtst_opera_s0 | device cuda:0 | params 126785 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_noaa_isd_patchtst_vanilla_s0/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "patchtst", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.02039 val_mse 0.00991 best 0.00991@0 (37.4s)
+epoch 001 loss 0.01252 val_mse 0.00537 best 0.00537@1 (13.1s)
+epoch 002 loss 0.01240 val_mse 0.00360 best 0.00360@2 (13.4s)
+epoch 003 loss 0.01060 val_mse 0.00280 best 0.00280@3 (13.6s)
+epoch 004 loss 0.00986 val_mse 0.00268 best 0.00268@4 (20.8s)
+epoch 005 loss 0.00706 val_mse 0.00561 best 0.00268@4 (13.3s)
+epoch 006 loss 0.00668 val_mse 0.01885 best 0.00268@4 (13.8s)
+epoch 007 loss 0.00702 val_mse 0.00205 best 0.00205@7 (13.8s)
+epoch 008 loss 0.00706 val_mse 0.00280 best 0.00205@7 (14.1s)
+epoch 009 loss 0.00690 val_mse 0.00236 best 0.00205@7 (14.2s)
+epoch 010 loss 0.00631 val_mse 0.00421 best 0.00205@7 (13.9s)
+epoch 011 loss 0.00722 val_mse 0.00464 best 0.00205@7 (13.9s)
+epoch 012 loss 0.00852 val_mse 0.00327 best 0.00205@7 (14.5s)
+epoch 013 loss 0.00638 val_mse 0.00200 best 0.00200@13 (14.2s)
+epoch 014 loss 0.00704 val_mse 0.00207 best 0.00200@13 (14.2s)
+epoch 015 loss 0.00693 val_mse 0.00236 best 0.00200@13 (14.6s)
+epoch 016 loss 0.00678 val_mse 0.00223 best 0.00200@13 (14.4s)
+epoch 017 loss 0.00615 val_mse 0.00211 best 0.00200@13 (14.5s)
+epoch 018 loss 0.00569 val_mse 0.00213 best 0.00200@13 (14.5s)
+epoch 019 loss 0.00609 val_mse 0.00201 best 0.00200@13 (14.1s)
+epoch 020 loss 0.00601 val_mse 0.00192 best 0.00192@20 (14.0s)
+epoch 021 loss 0.00758 val_mse 0.01111 best 0.00192@20 (14.6s)
+epoch 022 loss 0.00771 val_mse 0.00296 best 0.00192@20 (14.7s)
+epoch 023 loss 0.00595 val_mse 0.00207 best 0.00192@20 (14.1s)
+epoch 024 loss 0.00741 val_mse 0.00196 best 0.00192@20 (13.2s)
+epoch 025 loss 0.00777 val_mse 0.00196 best 0.00192@20 (13.5s)
+epoch 026 loss 0.00564 val_mse 0.00204 best 0.00192@20 (13.9s)
+epoch 027 loss 0.00615 val_mse 0.00313 best 0.00192@20 (14.2s)
+epoch 028 loss 0.00626 val_mse 0.00214 best 0.00192@20 (14.7s)
+epoch 029 loss 0.00654 val_mse 0.01144 best 0.00192@20 (14.7s)
+epoch 030 loss 0.00850 val_mse 0.00218 best 0.00192@20 (13.9s)
+early stop
+  [identity                                  ] MSE 0.00264  MAE 0.02669
+  [random_dropout:0.7                        ] MSE 0.00342  MAE 0.03296
+  [temporal_stride:3                         ] MSE 0.00282  MAE 0.02943
+  [variable_dropout:0.5                      ] MSE 0.11239  MAE 0.20640
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.06577  MAE 0.13125
+best {'val_mse': 0.0019249219913035631, 'epoch': 20} -> results/raw/bench_noaa_isd_patchtst_opera_s0/results.json
+summary {
+  "clean_mse": 0.002640704857185483,
+  "mean_shift_mse": 0.04609867499675602,
+  "mean_degradation": 16.45695845990488,
+  "worst_mse": 0.1123865395784378,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.04609867499675602,
+  "mean_unseen_degradation": 16.45695845990488
+}
+[2/3] ok bench_noaa_isd_patchtst_opera_s0 (11.7 min)
+
+[3/3] bench_noaa_isd_tmix_opera_s0
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/noaa_isd_distillation.yaml --seed 0 --name bench_noaa_isd_tmix_opera_s0 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=tmix distillation.teacher_ckpt=results/raw/bench_noaa_isd_tmix_vanilla_s0/model.pt --no_wandb
+noaa_isd records: 496 297 99 100
+noaa_isd windows: 23889 14391 4793 4705
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   26.3000,   59.3683])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(30.0000)
+run bench_noaa_isd_tmix_opera_s0 | device cuda:0 | params 445761 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_noaa_isd_tmix_vanilla_s0/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "tmix", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.03327 val_mse 0.00495 best 0.00495@0 (15.9s)
+epoch 001 loss 0.01310 val_mse 0.00714 best 0.00495@0 (11.0s)
+epoch 002 loss 0.01324 val_mse 0.00321 best 0.00321@2 (11.0s)
+epoch 003 loss 0.01059 val_mse 0.00325 best 0.00321@2 (11.7s)
+epoch 004 loss 0.00898 val_mse 0.00344 best 0.00321@2 (11.1s)
+epoch 005 loss 0.00784 val_mse 0.00244 best 0.00244@5 (11.1s)
+epoch 006 loss 0.00790 val_mse 0.00339 best 0.00244@5 (11.2s)
+epoch 007 loss 0.00913 val_mse 0.00233 best 0.00233@7 (11.2s)
+epoch 008 loss 0.00938 val_mse 0.00283 best 0.00233@7 (11.3s)
+epoch 009 loss 0.00787 val_mse 0.00284 best 0.00233@7 (11.5s)
+epoch 010 loss 0.00762 val_mse 0.00378 best 0.00233@7 (11.5s)
+epoch 011 loss 0.00809 val_mse 0.00237 best 0.00233@7 (11.2s)
+epoch 012 loss 0.00702 val_mse 0.00226 best 0.00226@12 (11.2s)
+epoch 013 loss 0.00670 val_mse 0.00280 best 0.00226@12 (11.7s)
+epoch 014 loss 0.00693 val_mse 0.00236 best 0.00226@12 (11.5s)
+epoch 015 loss 0.00691 val_mse 0.00235 best 0.00226@12 (11.3s)
+epoch 016 loss 0.00745 val_mse 0.00249 best 0.00226@12 (11.7s)
+epoch 017 loss 0.00681 val_mse 0.00250 best 0.00226@12 (11.4s)
+epoch 018 loss 0.00615 val_mse 0.00262 best 0.00226@12 (11.5s)
+epoch 019 loss 0.00762 val_mse 0.00253 best 0.00226@12 (11.8s)
+epoch 020 loss 0.00705 val_mse 0.00237 best 0.00226@12 (12.1s)
+epoch 021 loss 0.00684 val_mse 0.00233 best 0.00226@12 (11.7s)
+epoch 022 loss 0.00678 val_mse 0.00214 best 0.00214@22 (11.7s)
+epoch 023 loss 0.00752 val_mse 0.00273 best 0.00214@22 (11.7s)
+epoch 024 loss 0.00936 val_mse 0.00224 best 0.00214@22 (11.7s)
+epoch 025 loss 0.00683 val_mse 0.00221 best 0.00214@22 (11.9s)
+epoch 026 loss 0.00651 val_mse 0.00302 best 0.00214@22 (11.9s)
+epoch 027 loss 0.00669 val_mse 0.00234 best 0.00214@22 (12.0s)
+epoch 028 loss 0.00654 val_mse 0.00214 best 0.00214@28 (12.0s)
+epoch 029 loss 0.00657 val_mse 0.00220 best 0.00214@28 (11.6s)
+epoch 030 loss 0.00632 val_mse 0.00223 best 0.00214@28 (12.1s)
+epoch 031 loss 0.00653 val_mse 0.00224 best 0.00214@28 (11.8s)
+epoch 032 loss 0.00639 val_mse 0.00230 best 0.00214@28 (11.7s)
+epoch 033 loss 0.00579 val_mse 0.00266 best 0.00214@28 (11.8s)
+epoch 034 loss 0.00630 val_mse 0.00218 best 0.00214@28 (12.2s)
+epoch 035 loss 0.00610 val_mse 0.00219 best 0.00214@28 (12.1s)
+epoch 036 loss 0.00692 val_mse 0.00210 best 0.00210@36 (11.9s)
+epoch 037 loss 0.00681 val_mse 0.00217 best 0.00210@36 (11.9s)
+epoch 038 loss 0.00655 val_mse 0.00229 best 0.00210@36 (11.8s)
+epoch 039 loss 0.00634 val_mse 0.00234 best 0.00210@36 (11.7s)
+  [identity                                  ] MSE 0.00265  MAE 0.02863
+  [random_dropout:0.7                        ] MSE 0.00571  MAE 0.04240
+  [temporal_stride:3                         ] MSE 0.00330  MAE 0.03387
+  [variable_dropout:0.5                      ] MSE 0.02909  MAE 0.11481
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01705  MAE 0.07896
+best {'val_mse': 0.0020982064306735992, 'epoch': 36} -> results/raw/bench_noaa_isd_tmix_opera_s0/results.json
+summary {
+  "clean_mse": 0.0026524499990046024,
+  "mean_shift_mse": 0.013786239898763597,
+  "mean_degradation": 4.197549399211003,
+  "worst_mse": 0.029085814952850342,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.013786239898763597,
+  "mean_unseen_degradation": 4.197549399211003
+}
+[3/3] ok bench_noaa_isd_tmix_opera_s0 (12.1 min)
+results/benchmark.csv: 4492 rows from 841 run cells
+results/benchmark_summary.csv: 1187 groups
+results/benchmark_curated.csv: 696 rows (curated: 4 shifts + clean, one row per seed, vanilla + opera + opera++)
+
+coverage by setting x backbone x method:
+  P12          grud          opera                      seeds [0, 1, 2, 3, 4]
+  P12          grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  P12          itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  P12          itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  P12          itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  P12          mtand         opera                      seeds [0, 1, 2, 3, 4]
+  P12          mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  P12          patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  P12          patchtst      abl_opera+mining_trainpool train       seeds [0]
+  P12          patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  P12          patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  P12          tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  P12          tmix          opera                      seeds [0, 1, 2, 3, 4]
+  P12          tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  P12          warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  P12          warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          grud          opera                      seeds [0, 1, 2, 3, 4]
+  P19          grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  P19          itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  P19          itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          mtand         opera                      seeds [0, 1, 2, 3, 4]
+  P19          mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  P19          patchtst      abl_opera+mining_trainpool train       seeds [0]
+  P19          patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  P19          patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  P19          tmix          opera                      seeds [0, 1, 2, 3, 4]
+  P19          tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  P19          warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  P19_hospB    itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  P19_hospB    itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  P19_hospB    patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  P19_hospB    patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  P19_hospB    tmix          opera                      seeds [0, 1, 2, 3, 4]
+  P19_hospB    tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          grud          opera                      seeds [0, 1, 2, 3, 4]
+  PAM          grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  PAM          itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  PAM          itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          mtand         opera                      seeds [0, 1, 2, 3, 4]
+  PAM          mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  PAM          patchtst      abl_opera+mining_trainpool train       seeds [0]
+  PAM          patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  PAM          patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  PAM          tmix          opera                      seeds [0, 1, 2, 3, 4]
+  PAM          tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  PAM          warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms grud          opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  activity_1000ms itransformer  abl_opera++_scalar             seeds [1, 2, 3, 4]
+  activity_1000ms itransformer  abl_opera+mining_trainpool train       seeds [0]
+  activity_1000ms itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms itransformer  opera++                    seeds [1, 2, 3, 4]
+  activity_1000ms itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms mtand         opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  activity_1000ms patchtst      abl_opera++_scalar             seeds [1, 2, 3, 4]
+  activity_1000ms patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms patchtst      opera++                    seeds [1, 2, 3, 4]
+  activity_1000ms patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  activity_1000ms tmix          abl_opera++_scalar             seeds [1, 2, 3, 4]
+  activity_1000ms tmix          opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms tmix          opera++                    seeds [1, 2, 3, 4]
+  activity_1000ms tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_2000ms itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  activity_2000ms itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_2000ms patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  activity_2000ms patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_2000ms tmix          opera                      seeds [0, 1, 2, 3, 4]
+  activity_2000ms tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_3000ms itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  activity_3000ms itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_3000ms patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  activity_3000ms patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_3000ms tmix          opera                      seeds [0, 1, 2, 3, 4]
+  activity_3000ms tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  eicu_demo    itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  eicu_demo    itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  eicu_demo    patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  eicu_demo    patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  eicu_demo    tmix          opera                      seeds [0, 1, 2, 3, 4]
+  eicu_demo    tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  noaa_isd_6h  itransformer  opera                      seeds [0]
+  noaa_isd_6h  itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  noaa_isd_6h  patchtst      opera                      seeds [0]
+  noaa_isd_6h  patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  noaa_isd_6h  tmix          opera                      seeds [0]
+  noaa_isd_6h  tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_12h itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  physionet_12h itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_12h patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  physionet_12h patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_12h tmix          opera                      seeds [0, 1, 2, 3, 4]
+  physionet_12h tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h grud          opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h itransformer  abl_aug+mining_harshpool harsh       seeds [0]
+  physionet_24h itransformer  abl_aug+mining_trainpool train       seeds [0]
+  physionet_24h itransformer  abl_augmentation             seeds [0]
+  physionet_24h itransformer  abl_mining     harsh       seeds [0, 1, 2, 3, 4]
+  physionet_24h itransformer  abl_opera++_scalar             seeds [1, 2, 3, 4]
+  physionet_24h itransformer  abl_opera+mining_trainpool train       seeds [0]
+  physionet_24h itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h itransformer  opera++                    seeds [1, 2, 3, 4]
+  physionet_24h itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h mtand         opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  physionet_24h patchtst      abl_opera++_scalar             seeds [1, 2, 3, 4]
+  physionet_24h patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h patchtst      opera++                    seeds [1, 2, 3, 4]
+  physionet_24h patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  physionet_24h tmix          abl_opera++_scalar             seeds [1, 2, 3, 4]
+  physionet_24h tmix          opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h tmix          opera++                    seeds [1, 2, 3, 4]
+  physionet_24h tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_36h itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  physionet_36h itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_36h patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  physionet_36h patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_36h tmix          opera                      seeds [0, 1, 2, 3, 4]
+  physionet_36h tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   grud          opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_12mo   itransformer  abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_12mo   itransformer  abl_opera+mining_trainpool train       seeds [0]
+  ushcn_12mo   itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   itransformer  opera++                    seeds [1, 2, 3, 4]
+  ushcn_12mo   itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   mtand         opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_12mo   patchtst      abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_12mo   patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   patchtst      opera++                    seeds [1, 2, 3, 4]
+  ushcn_12mo   patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_12mo   tmix          abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_12mo   tmix          opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   tmix          opera++                    seeds [1, 2, 3, 4]
+  ushcn_12mo   tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    grud          opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    itransformer  abl_aug+mining_trainpool train       seeds [0]
+  ushcn_1mo    itransformer  abl_augmentation             seeds [0]
+  ushcn_1mo    itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_1mo    itransformer  abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_1mo    itransformer  abl_opera+mining_trainpool train       seeds [0]
+  ushcn_1mo    itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    itransformer  opera++                    seeds [1, 2, 3, 4]
+  ushcn_1mo    itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    mtand         opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_1mo    patchtst      abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_1mo    patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    patchtst      opera++                    seeds [1, 2, 3, 4]
+  ushcn_1mo    patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_1mo    tmix          abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_1mo    tmix          opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    tmix          opera++                    seeds [1, 2, 3, 4]
+  ushcn_1mo    tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    tmix          opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+
+stage C: 3 ok, 0 failed
+stage D: 12 cells
+
+[1/12] bench_noaa_isd_itransformer_opera_s1
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/noaa_isd_distillation.yaml --seed 1 --name bench_noaa_isd_itransformer_opera_s1 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=itransformer distillation.teacher_ckpt=results/raw/bench_noaa_isd_itransformer_vanilla_s1/model.pt --no_wandb
+noaa_isd records: 496 297 99 100
+noaa_isd windows: 23889 14391 4793 4705
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   26.3000,   59.3683])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(30.0000)
+run bench_noaa_isd_itransformer_opera_s1 | device cuda:0 | params 126849 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_noaa_isd_itransformer_vanilla_s1/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "itransformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01522 val_mse 0.00335 best 0.00335@0 (22.2s)
+epoch 001 loss 0.00477 val_mse 0.00265 best 0.00265@1 (17.3s)
+epoch 002 loss 0.00407 val_mse 0.00213 best 0.00213@2 (17.4s)
+epoch 003 loss 0.00365 val_mse 0.00197 best 0.00197@3 (17.4s)
+epoch 004 loss 0.00360 val_mse 0.00191 best 0.00191@4 (17.5s)
+epoch 005 loss 0.00338 val_mse 0.00198 best 0.00191@4 (17.5s)
+epoch 006 loss 0.00349 val_mse 0.00189 best 0.00189@6 (17.7s)
+epoch 007 loss 0.00347 val_mse 0.00186 best 0.00186@7 (17.6s)
+epoch 008 loss 0.00340 val_mse 0.00204 best 0.00186@7 (17.6s)
+epoch 009 loss 0.00318 val_mse 0.00186 best 0.00186@7 (17.8s)
+epoch 010 loss 0.00329 val_mse 0.00227 best 0.00186@7 (17.8s)
+epoch 011 loss 0.00322 val_mse 0.00227 best 0.00186@7 (17.6s)
+epoch 012 loss 0.00314 val_mse 0.00202 best 0.00186@7 (17.8s)
+epoch 013 loss 0.00319 val_mse 0.00204 best 0.00186@7 (17.7s)
+epoch 014 loss 0.00301 val_mse 0.00202 best 0.00186@7 (17.6s)
+epoch 015 loss 0.00300 val_mse 0.00199 best 0.00186@7 (18.0s)
+epoch 016 loss 0.00331 val_mse 0.00206 best 0.00186@7 (17.7s)
+epoch 017 loss 0.00306 val_mse 0.00194 best 0.00186@7 (18.1s)
+early stop
+  [identity                                  ] MSE 0.00254  MAE 0.02780
+  [random_dropout:0.7                        ] MSE 0.00306  MAE 0.03381
+  [temporal_stride:3                         ] MSE 0.00282  MAE 0.03162
+  [variable_dropout:0.5                      ] MSE 0.00592  MAE 0.04863
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00460  MAE 0.04252
+best {'val_mse': 0.0018634442239999771, 'epoch': 7} -> results/raw/bench_noaa_isd_itransformer_opera_s1/results.json
+summary {
+  "clean_mse": 0.002540145767852664,
+  "mean_shift_mse": 0.004102938924916089,
+  "mean_degradation": 0.6152375886619084,
+  "worst_mse": 0.0059231920167803764,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.004102938924916089,
+  "mean_unseen_degradation": 0.6152375886619084
+}
+[1/12] ok bench_noaa_isd_itransformer_opera_s1 (8.8 min)
+
+[2/12] bench_noaa_isd_patchtst_opera_s1
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/noaa_isd_distillation.yaml --seed 1 --name bench_noaa_isd_patchtst_opera_s1 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=patchtst distillation.teacher_ckpt=results/raw/bench_noaa_isd_patchtst_vanilla_s1/model.pt --no_wandb
+noaa_isd records: 496 297 99 100
+noaa_isd windows: 23889 14391 4793 4705
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   26.3000,   59.3683])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(30.0000)
+run bench_noaa_isd_patchtst_opera_s1 | device cuda:0 | params 126785 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_noaa_isd_patchtst_vanilla_s1/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "patchtst", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01891 val_mse 0.00308 best 0.00308@0 (19.6s)
+epoch 001 loss 0.01361 val_mse 0.00545 best 0.00308@0 (13.8s)
+epoch 002 loss 0.01369 val_mse 0.00403 best 0.00308@0 (13.6s)
+epoch 003 loss 0.01049 val_mse 0.00219 best 0.00219@3 (13.8s)
+epoch 004 loss 0.00767 val_mse 0.00216 best 0.00216@4 (13.8s)
+epoch 005 loss 0.00804 val_mse 0.00603 best 0.00216@4 (14.0s)
+epoch 006 loss 0.00694 val_mse 0.00287 best 0.00216@4 (14.3s)
+epoch 007 loss 0.00811 val_mse 0.00380 best 0.00216@4 (14.1s)
+epoch 008 loss 0.00710 val_mse 0.00207 best 0.00207@8 (13.8s)
+epoch 009 loss 0.00653 val_mse 0.00208 best 0.00207@8 (14.2s)
+epoch 010 loss 0.00661 val_mse 0.00227 best 0.00207@8 (14.3s)
+epoch 011 loss 0.00643 val_mse 0.00223 best 0.00207@8 (14.4s)
+epoch 012 loss 0.00614 val_mse 0.00249 best 0.00207@8 (14.3s)
+epoch 013 loss 0.00933 val_mse 0.00535 best 0.00207@8 (14.5s)
+epoch 014 loss 0.00670 val_mse 0.00201 best 0.00201@14 (14.7s)
+epoch 015 loss 0.00608 val_mse 0.00242 best 0.00201@14 (14.3s)
+epoch 016 loss 0.00672 val_mse 0.00196 best 0.00196@16 (13.9s)
+epoch 017 loss 0.01087 val_mse 0.00532 best 0.00196@16 (13.8s)
+epoch 018 loss 0.00746 val_mse 0.00205 best 0.00196@16 (14.1s)
+epoch 019 loss 0.00620 val_mse 0.00207 best 0.00196@16 (14.7s)
+epoch 020 loss 0.00730 val_mse 0.00194 best 0.00194@20 (14.7s)
+epoch 021 loss 0.00580 val_mse 0.00263 best 0.00194@20 (14.5s)
+epoch 022 loss 0.00559 val_mse 0.00193 best 0.00193@22 (14.6s)
+epoch 023 loss 0.00794 val_mse 0.00450 best 0.00193@22 (14.1s)
+epoch 024 loss 0.00825 val_mse 0.00202 best 0.00193@22 (14.9s)
+epoch 025 loss 0.00594 val_mse 0.00227 best 0.00193@22 (15.0s)
+epoch 026 loss 0.00702 val_mse 0.00209 best 0.00193@22 (14.8s)
+epoch 027 loss 0.00686 val_mse 0.00202 best 0.00193@22 (14.6s)
+epoch 028 loss 0.00677 val_mse 0.00201 best 0.00193@22 (14.5s)
+epoch 029 loss 0.00584 val_mse 0.00196 best 0.00193@22 (14.7s)
+epoch 030 loss 0.00606 val_mse 0.00210 best 0.00193@22 (14.8s)
+epoch 031 loss 0.00574 val_mse 0.00207 best 0.00193@22 (14.8s)
+epoch 032 loss 0.00554 val_mse 0.00186 best 0.00186@32 (15.2s)
+epoch 033 loss 0.00566 val_mse 0.00192 best 0.00186@32 (14.7s)
+epoch 034 loss 0.00695 val_mse 0.00194 best 0.00186@32 (14.6s)
+epoch 035 loss 0.00674 val_mse 0.00334 best 0.00186@32 (14.7s)
+epoch 036 loss 0.00592 val_mse 0.00211 best 0.00186@32 (14.3s)
+epoch 037 loss 0.00636 val_mse 0.00254 best 0.00186@32 (14.2s)
+epoch 038 loss 0.00592 val_mse 0.00205 best 0.00186@32 (14.3s)
+epoch 039 loss 0.00583 val_mse 0.00192 best 0.00186@32 (14.2s)
+  [identity                                  ] MSE 0.00256  MAE 0.02835
+  [random_dropout:0.7                        ] MSE 0.00397  MAE 0.03848
+  [temporal_stride:3                         ] MSE 0.00313  MAE 0.03418
+  [variable_dropout:0.5                      ] MSE 0.11039  MAE 0.20533
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.06493  MAE 0.13394
+best {'val_mse': 0.0018646769458428025, 'epoch': 32} -> results/raw/bench_noaa_isd_patchtst_opera_s1/results.json
+summary {
+  "clean_mse": 0.0025588474236428738,
+  "mean_shift_mse": 0.04560547153232619,
+  "mean_degradation": 16.82266152758748,
+  "worst_mse": 0.11038930714130402,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.04560547153232619,
+  "mean_unseen_degradation": 16.82266152758748
+}
+[2/12] ok bench_noaa_isd_patchtst_opera_s1 (14.0 min)
+
+[3/12] bench_noaa_isd_tmix_opera_s1
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/noaa_isd_distillation.yaml --seed 1 --name bench_noaa_isd_tmix_opera_s1 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=tmix distillation.teacher_ckpt=results/raw/bench_noaa_isd_tmix_vanilla_s1/model.pt --no_wandb
+noaa_isd records: 496 297 99 100
+noaa_isd windows: 23889 14391 4793 4705
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   26.3000,   59.3683])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(30.0000)
+run bench_noaa_isd_tmix_opera_s1 | device cuda:0 | params 445761 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_noaa_isd_tmix_vanilla_s1/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "tmix", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.03073 val_mse 0.00349 best 0.00349@0 (17.8s)
+epoch 001 loss 0.01317 val_mse 0.00351 best 0.00349@0 (10.8s)
+epoch 002 loss 0.01333 val_mse 0.00291 best 0.00291@2 (11.0s)
+epoch 003 loss 0.01206 val_mse 0.00286 best 0.00286@3 (11.1s)
+epoch 004 loss 0.01066 val_mse 0.00417 best 0.00286@3 (11.1s)
+epoch 005 loss 0.00822 val_mse 0.00256 best 0.00256@5 (11.5s)
+epoch 006 loss 0.00735 val_mse 0.00259 best 0.00256@5 (11.3s)
+epoch 007 loss 0.00746 val_mse 0.00289 best 0.00256@5 (11.4s)
+epoch 008 loss 0.00831 val_mse 0.00238 best 0.00238@8 (11.8s)
+epoch 009 loss 0.00793 val_mse 0.00255 best 0.00238@8 (11.6s)
+epoch 010 loss 0.00803 val_mse 0.00252 best 0.00238@8 (11.5s)
+epoch 011 loss 0.00868 val_mse 0.00269 best 0.00238@8 (11.3s)
+epoch 012 loss 0.00738 val_mse 0.00243 best 0.00238@8 (11.4s)
+epoch 013 loss 0.00725 val_mse 0.00254 best 0.00238@8 (11.5s)
+epoch 014 loss 0.00703 val_mse 0.00220 best 0.00220@14 (11.8s)
+epoch 015 loss 0.00719 val_mse 0.00229 best 0.00220@14 (11.9s)
+epoch 016 loss 0.01211 val_mse 0.00312 best 0.00220@14 (12.0s)
+epoch 017 loss 0.00804 val_mse 0.00241 best 0.00220@14 (12.1s)
+epoch 018 loss 0.00630 val_mse 0.00213 best 0.00213@18 (12.1s)
+epoch 019 loss 0.00752 val_mse 0.00248 best 0.00213@18 (11.7s)
+epoch 020 loss 0.00674 val_mse 0.00228 best 0.00213@18 (11.7s)
+epoch 021 loss 0.00893 val_mse 0.00333 best 0.00213@18 (11.8s)
+epoch 022 loss 0.01038 val_mse 0.00347 best 0.00213@18 (11.7s)
+epoch 023 loss 0.00733 val_mse 0.00260 best 0.00213@18 (12.1s)
+epoch 024 loss 0.00646 val_mse 0.00237 best 0.00213@18 (12.1s)
+epoch 025 loss 0.00639 val_mse 0.00239 best 0.00213@18 (11.9s)
+epoch 026 loss 0.00629 val_mse 0.00245 best 0.00213@18 (12.1s)
+epoch 027 loss 0.00632 val_mse 0.00240 best 0.00213@18 (11.9s)
+epoch 028 loss 0.00624 val_mse 0.00214 best 0.00213@18 (11.7s)
+early stop
+  [identity                                  ] MSE 0.00273  MAE 0.03013
+  [random_dropout:0.7                        ] MSE 0.00732  MAE 0.04597
+  [temporal_stride:3                         ] MSE 0.00347  MAE 0.03604
+  [variable_dropout:0.5                      ] MSE 0.02873  MAE 0.11456
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01681  MAE 0.07966
+best {'val_mse': 0.002129537286236882, 'epoch': 18} -> results/raw/bench_noaa_isd_tmix_opera_s1/results.json
+summary {
+  "clean_mse": 0.002730326959863305,
+  "mean_shift_mse": 0.01408490096218884,
+  "mean_degradation": 4.158686548988992,
+  "worst_mse": 0.028732802718877792,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.01408490096218884,
+  "mean_unseen_degradation": 4.158686548988992
+}
+[3/12] ok bench_noaa_isd_tmix_opera_s1 (9.5 min)
+
+[4/12] bench_noaa_isd_itransformer_opera_s2
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/noaa_isd_distillation.yaml --seed 2 --name bench_noaa_isd_itransformer_opera_s2 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=itransformer distillation.teacher_ckpt=results/raw/bench_noaa_isd_itransformer_vanilla_s2/model.pt --no_wandb
+noaa_isd records: 496 297 99 100
+noaa_isd windows: 23889 14391 4793 4705
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   26.3000,   59.3683])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(30.0000)
+run bench_noaa_isd_itransformer_opera_s2 | device cuda:0 | params 126849 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_noaa_isd_itransformer_vanilla_s2/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "itransformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01974 val_mse 0.00399 best 0.00399@0 (21.3s)
+epoch 001 loss 0.00544 val_mse 0.00372 best 0.00372@1 (16.8s)
+epoch 002 loss 0.00501 val_mse 0.00323 best 0.00323@2 (17.0s)
+epoch 003 loss 0.00467 val_mse 0.00289 best 0.00289@3 (17.1s)
+epoch 004 loss 0.00460 val_mse 0.00339 best 0.00289@3 (17.0s)
+epoch 005 loss 0.00448 val_mse 0.00312 best 0.00289@3 (17.2s)
+epoch 006 loss 0.00419 val_mse 0.00260 best 0.00260@6 (17.3s)
+epoch 007 loss 0.00409 val_mse 0.00275 best 0.00260@6 (17.2s)
+epoch 008 loss 0.00416 val_mse 0.00300 best 0.00260@6 (17.3s)
+epoch 009 loss 0.00388 val_mse 0.00224 best 0.00224@9 (17.3s)
+epoch 010 loss 0.00390 val_mse 0.00263 best 0.00224@9 (17.6s)
+epoch 011 loss 0.00378 val_mse 0.00241 best 0.00224@9 (17.6s)
+epoch 012 loss 0.00384 val_mse 0.00254 best 0.00224@9 (17.6s)
+epoch 013 loss 0.00381 val_mse 0.00233 best 0.00224@9 (17.4s)
+epoch 014 loss 0.00374 val_mse 0.00225 best 0.00224@9 (19.2s)
+epoch 015 loss 0.00366 val_mse 0.00230 best 0.00224@9 (29.6s)
+epoch 016 loss 0.00377 val_mse 0.00253 best 0.00224@9 (24.9s)
+epoch 017 loss 0.00363 val_mse 0.00223 best 0.00223@17 (16.9s)
+epoch 018 loss 0.00325 val_mse 0.00203 best 0.00203@18 (17.3s)
+epoch 019 loss 0.00287 val_mse 0.00215 best 0.00203@18 (18.1s)
+epoch 020 loss 0.00326 val_mse 0.00200 best 0.00200@20 (17.8s)
+epoch 021 loss 0.00280 val_mse 0.00210 best 0.00200@20 (17.7s)
+epoch 022 loss 0.00295 val_mse 0.00189 best 0.00189@22 (17.9s)
+epoch 023 loss 0.00274 val_mse 0.00187 best 0.00187@23 (21.2s)
+epoch 024 loss 0.00281 val_mse 0.00193 best 0.00187@23 (30.0s)
+epoch 025 loss 0.00281 val_mse 0.00220 best 0.00187@23 (23.0s)
+epoch 026 loss 0.00304 val_mse 0.00206 best 0.00187@23 (17.6s)
+epoch 027 loss 0.00293 val_mse 0.00192 best 0.00187@23 (17.7s)
+epoch 028 loss 0.00278 val_mse 0.00181 best 0.00181@28 (17.8s)
+epoch 029 loss 0.00275 val_mse 0.00191 best 0.00181@28 (17.9s)
+epoch 030 loss 0.00289 val_mse 0.00192 best 0.00181@28 (18.0s)
+epoch 031 loss 0.00279 val_mse 0.00191 best 0.00181@28 (18.1s)
+epoch 032 loss 0.00269 val_mse 0.00184 best 0.00181@28 (18.0s)
+epoch 033 loss 0.00263 val_mse 0.00193 best 0.00181@28 (18.3s)
+epoch 034 loss 0.00283 val_mse 0.00200 best 0.00181@28 (30.3s)
+epoch 035 loss 0.00271 val_mse 0.00181 best 0.00181@35 (26.9s)
+epoch 036 loss 0.00314 val_mse 0.00201 best 0.00181@35 (17.7s)
+epoch 037 loss 0.00272 val_mse 0.00183 best 0.00181@35 (18.1s)
+epoch 038 loss 0.00270 val_mse 0.00178 best 0.00178@38 (18.0s)
+epoch 039 loss 0.00272 val_mse 0.00186 best 0.00178@38 (17.9s)
+  [identity                                  ] MSE 0.00252  MAE 0.02651
+  [random_dropout:0.7                        ] MSE 0.00327  MAE 0.03201
+  [temporal_stride:3                         ] MSE 0.00276  MAE 0.02884
+  [variable_dropout:0.5                      ] MSE 0.00576  MAE 0.04660
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00438  MAE 0.03940
+best {'val_mse': 0.0017831005388870835, 'epoch': 38} -> results/raw/bench_noaa_isd_itransformer_opera_s2/results.json
+summary {
+  "clean_mse": 0.0025205493438988924,
+  "mean_shift_mse": 0.004043270891997963,
+  "mean_degradation": 0.6041228876494282,
+  "worst_mse": 0.0057640657760202885,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.004043270891997963,
+  "mean_unseen_degradation": 0.6041228876494282
+}
+[4/12] ok bench_noaa_isd_itransformer_opera_s2 (17.1 min)
+
+[5/12] bench_noaa_isd_patchtst_opera_s2
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/noaa_isd_distillation.yaml --seed 2 --name bench_noaa_isd_patchtst_opera_s2 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=patchtst distillation.teacher_ckpt=results/raw/bench_noaa_isd_patchtst_vanilla_s2/model.pt --no_wandb
+noaa_isd records: 496 297 99 100
+noaa_isd windows: 23889 14391 4793 4705
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   26.3000,   59.3683])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(30.0000)
+run bench_noaa_isd_patchtst_opera_s2 | device cuda:0 | params 126785 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_noaa_isd_patchtst_vanilla_s2/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "patchtst", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.02009 val_mse 0.00646 best 0.00646@0 (18.3s)
+epoch 001 loss 0.01124 val_mse 0.00365 best 0.00365@1 (13.7s)
+epoch 002 loss 0.01279 val_mse 0.00359 best 0.00359@2 (13.4s)
+epoch 003 loss 0.01121 val_mse 0.00230 best 0.00230@3 (13.3s)
+epoch 004 loss 0.00863 val_mse 0.00291 best 0.00230@3 (13.7s)
+epoch 005 loss 0.00683 val_mse 0.00230 best 0.00230@5 (14.0s)
+epoch 006 loss 0.00633 val_mse 0.00265 best 0.00230@5 (13.9s)
+epoch 007 loss 0.01157 val_mse 0.00372 best 0.00230@5 (14.3s)
+epoch 008 loss 0.00892 val_mse 0.00468 best 0.00230@5 (14.3s)
+epoch 009 loss 0.00667 val_mse 0.00270 best 0.00230@5 (13.3s)
+epoch 010 loss 0.00679 val_mse 0.00289 best 0.00230@5 (12.9s)
+epoch 011 loss 0.00655 val_mse 0.00252 best 0.00230@5 (13.0s)
+epoch 012 loss 0.01043 val_mse 0.00277 best 0.00230@5 (13.0s)
+epoch 013 loss 0.00691 val_mse 0.00280 best 0.00230@5 (13.4s)
+epoch 014 loss 0.00773 val_mse 0.00274 best 0.00230@5 (13.2s)
+epoch 015 loss 0.00589 val_mse 0.00233 best 0.00230@5 (13.2s)
+early stop
+  [identity                                  ] MSE 0.00290  MAE 0.03503
+  [random_dropout:0.7                        ] MSE 0.00422  MAE 0.04283
+  [temporal_stride:3                         ] MSE 0.00313  MAE 0.03750
+  [variable_dropout:0.5                      ] MSE 0.10680  MAE 0.20517
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.06279  MAE 0.13415
+best {'val_mse': 0.0022997837513685226, 'epoch': 5} -> results/raw/bench_noaa_isd_patchtst_opera_s2/results.json
+summary {
+  "clean_mse": 0.002901574596762657,
+  "mean_shift_mse": 0.04423428967129439,
+  "mean_degradation": 14.244925882880091,
+  "worst_mse": 0.10680153220891953,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.04423428967129439,
+  "mean_unseen_degradation": 14.244925882880091
+}
+[5/12] ok bench_noaa_isd_patchtst_opera_s2 (7.1 min)
+
+[6/12] bench_noaa_isd_tmix_opera_s2
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/noaa_isd_distillation.yaml --seed 2 --name bench_noaa_isd_tmix_opera_s2 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=tmix distillation.teacher_ckpt=results/raw/bench_noaa_isd_tmix_vanilla_s2/model.pt --no_wandb
+noaa_isd records: 496 297 99 100
+noaa_isd windows: 23889 14391 4793 4705
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   26.3000,   59.3683])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(30.0000)
+run bench_noaa_isd_tmix_opera_s2 | device cuda:0 | params 445761 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_noaa_isd_tmix_vanilla_s2/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "tmix", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.03595 val_mse 0.00416 best 0.00416@0 (16.1s)
+epoch 001 loss 0.01220 val_mse 0.00315 best 0.00315@1 (11.2s)
+epoch 002 loss 0.01308 val_mse 0.00392 best 0.00315@1 (11.4s)
+epoch 003 loss 0.01210 val_mse 0.00403 best 0.00315@1 (11.1s)
+epoch 004 loss 0.01327 val_mse 0.00477 best 0.00315@1 (11.2s)
+epoch 005 loss 0.01253 val_mse 0.00381 best 0.00315@1 (11.3s)
+epoch 006 loss 0.01107 val_mse 0.00442 best 0.00315@1 (11.6s)
+epoch 007 loss 0.00879 val_mse 0.00223 best 0.00223@7 (11.6s)
+epoch 008 loss 0.00918 val_mse 0.00646 best 0.00223@7 (11.7s)
+epoch 009 loss 0.00738 val_mse 0.00280 best 0.00223@7 (11.4s)
+epoch 010 loss 0.00711 val_mse 0.00263 best 0.00223@7 (11.5s)
+epoch 011 loss 0.00760 val_mse 0.00258 best 0.00223@7 (11.5s)
+epoch 012 loss 0.00771 val_mse 0.00336 best 0.00223@7 (11.8s)
+epoch 013 loss 0.00735 val_mse 0.00228 best 0.00223@7 (11.8s)
+epoch 014 loss 0.00712 val_mse 0.00262 best 0.00223@7 (11.6s)
+epoch 015 loss 0.00856 val_mse 0.00287 best 0.00223@7 (11.6s)
+epoch 016 loss 0.00725 val_mse 0.00248 best 0.00223@7 (12.0s)
+epoch 017 loss 0.00770 val_mse 0.00291 best 0.00223@7 (12.1s)
+early stop
+  [identity                                  ] MSE 0.00284  MAE 0.03123
+  [random_dropout:0.7                        ] MSE 0.00586  MAE 0.04463
+  [temporal_stride:3                         ] MSE 0.00352  MAE 0.03694
+  [variable_dropout:0.5                      ] MSE 0.03113  MAE 0.11958
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01863  MAE 0.08402
+best {'val_mse': 0.002225009026005864, 'epoch': 7} -> results/raw/bench_noaa_isd_tmix_opera_s2/results.json
+summary {
+  "clean_mse": 0.0028410025406628847,
+  "mean_shift_mse": 0.014785322011448443,
+  "mean_degradation": 4.204262157399767,
+  "worst_mse": 0.031126031652092934,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.014785322011448443,
+  "mean_unseen_degradation": 4.204262157399767
+}
+[6/12] ok bench_noaa_isd_tmix_opera_s2 (7.1 min)
+
+[7/12] bench_noaa_isd_itransformer_opera_s3
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/noaa_isd_distillation.yaml --seed 3 --name bench_noaa_isd_itransformer_opera_s3 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=itransformer distillation.teacher_ckpt=results/raw/bench_noaa_isd_itransformer_vanilla_s3/model.pt --no_wandb
+noaa_isd records: 496 297 99 100
+noaa_isd windows: 23889 14391 4793 4705
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   26.3000,   59.3683])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(30.0000)
+run bench_noaa_isd_itransformer_opera_s3 | device cuda:0 | params 126849 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_noaa_isd_itransformer_vanilla_s3/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "itransformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01472 val_mse 0.00332 best 0.00332@0 (23.1s)
+epoch 001 loss 0.00540 val_mse 0.00302 best 0.00302@1 (17.5s)
+epoch 002 loss 0.00473 val_mse 0.00318 best 0.00302@1 (17.5s)
+epoch 003 loss 0.00468 val_mse 0.00312 best 0.00302@1 (17.5s)
+epoch 004 loss 0.00362 val_mse 0.00202 best 0.00202@4 (17.6s)
+epoch 005 loss 0.00305 val_mse 0.00190 best 0.00190@5 (17.5s)
+epoch 006 loss 0.00331 val_mse 0.00207 best 0.00190@5 (17.9s)
+epoch 007 loss 0.00313 val_mse 0.00210 best 0.00190@5 (17.8s)
+epoch 008 loss 0.00317 val_mse 0.00208 best 0.00190@5 (17.8s)
+epoch 009 loss 0.00295 val_mse 0.00205 best 0.00190@5 (17.8s)
+epoch 010 loss 0.00283 val_mse 0.00232 best 0.00190@5 (17.8s)
+epoch 011 loss 0.00301 val_mse 0.00199 best 0.00190@5 (17.7s)
+epoch 012 loss 0.00295 val_mse 0.00190 best 0.00190@12 (17.8s)
+epoch 013 loss 0.00288 val_mse 0.00181 best 0.00181@13 (17.8s)
+epoch 014 loss 0.00285 val_mse 0.00190 best 0.00181@13 (17.7s)
+epoch 015 loss 0.00304 val_mse 0.00178 best 0.00178@15 (18.1s)
+epoch 016 loss 0.00279 val_mse 0.00180 best 0.00178@15 (18.1s)
+epoch 017 loss 0.00292 val_mse 0.00191 best 0.00178@15 (17.3s)
+epoch 018 loss 0.00295 val_mse 0.00179 best 0.00178@15 (17.3s)
+epoch 019 loss 0.00276 val_mse 0.00186 best 0.00178@15 (17.4s)
+epoch 020 loss 0.00276 val_mse 0.00181 best 0.00178@15 (19.3s)
+epoch 021 loss 0.00267 val_mse 0.00184 best 0.00178@15 (30.4s)
+epoch 022 loss 0.00283 val_mse 0.00186 best 0.00178@15 (20.9s)
+epoch 023 loss 0.00279 val_mse 0.00179 best 0.00178@15 (17.1s)
+epoch 024 loss 0.00290 val_mse 0.00179 best 0.00178@15 (17.3s)
+epoch 025 loss 0.00276 val_mse 0.00176 best 0.00176@25 (17.4s)
+epoch 026 loss 0.00277 val_mse 0.00182 best 0.00176@25 (17.5s)
+epoch 027 loss 0.00271 val_mse 0.00181 best 0.00176@25 (17.4s)
+epoch 028 loss 0.00260 val_mse 0.00175 best 0.00175@28 (17.3s)
+epoch 029 loss 0.00259 val_mse 0.00177 best 0.00175@28 (17.7s)
+epoch 030 loss 0.00265 val_mse 0.00189 best 0.00175@28 (18.1s)
+epoch 031 loss 0.00259 val_mse 0.00173 best 0.00173@31 (18.0s)
+epoch 032 loss 0.00274 val_mse 0.00176 best 0.00173@31 (18.2s)
+epoch 033 loss 0.00269 val_mse 0.00179 best 0.00173@31 (18.3s)
+epoch 034 loss 0.00266 val_mse 0.00180 best 0.00173@31 (18.1s)
+epoch 035 loss 0.00261 val_mse 0.00180 best 0.00173@31 (17.9s)
+epoch 036 loss 0.00265 val_mse 0.00178 best 0.00173@31 (18.0s)
+epoch 037 loss 0.00259 val_mse 0.00173 best 0.00173@37 (17.9s)
+epoch 038 loss 0.00277 val_mse 0.00171 best 0.00171@38 (18.1s)
+epoch 039 loss 0.00274 val_mse 0.00212 best 0.00171@38 (19.5s)
+  [identity                                  ] MSE 0.00245  MAE 0.02621
+  [random_dropout:0.7                        ] MSE 0.00319  MAE 0.03161
+  [temporal_stride:3                         ] MSE 0.00272  MAE 0.02900
+  [variable_dropout:0.5                      ] MSE 0.00543  MAE 0.04456
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00415  MAE 0.03837
+best {'val_mse': 0.0017119382973760366, 'epoch': 38} -> results/raw/bench_noaa_isd_itransformer_opera_s3/results.json
+summary {
+  "clean_mse": 0.0024481553118675947,
+  "mean_shift_mse": 0.0038734214613214135,
+  "mean_degradation": 0.5821796282877753,
+  "worst_mse": 0.005429938435554504,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.0038734214613214135,
+  "mean_unseen_degradation": 0.5821796282877753
+}
+[7/12] ok bench_noaa_isd_itransformer_opera_s3 (16.6 min)
+
+[8/12] bench_noaa_isd_patchtst_opera_s3
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/noaa_isd_distillation.yaml --seed 3 --name bench_noaa_isd_patchtst_opera_s3 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=patchtst distillation.teacher_ckpt=results/raw/bench_noaa_isd_patchtst_vanilla_s3/model.pt --no_wandb
+noaa_isd records: 496 297 99 100
+noaa_isd windows: 23889 14391 4793 4705
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   26.3000,   59.3683])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(30.0000)
+run bench_noaa_isd_patchtst_opera_s3 | device cuda:0 | params 126785 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_noaa_isd_patchtst_vanilla_s3/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "patchtst", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.02266 val_mse 0.00429 best 0.00429@0 (20.0s)
+epoch 001 loss 0.01238 val_mse 0.00315 best 0.00315@1 (13.2s)
+epoch 002 loss 0.01173 val_mse 0.00250 best 0.00250@2 (13.7s)
+epoch 003 loss 0.01181 val_mse 0.00284 best 0.00250@2 (13.9s)
+epoch 004 loss 0.00817 val_mse 0.00322 best 0.00250@2 (14.0s)
+epoch 005 loss 0.00715 val_mse 0.00229 best 0.00229@5 (14.0s)
+epoch 006 loss 0.00656 val_mse 0.00213 best 0.00213@6 (13.5s)
+epoch 007 loss 0.00682 val_mse 0.00215 best 0.00213@6 (14.0s)
+epoch 008 loss 0.00691 val_mse 0.00247 best 0.00213@6 (14.2s)
+epoch 009 loss 0.00668 val_mse 0.00220 best 0.00213@6 (14.1s)
+epoch 010 loss 0.00627 val_mse 0.00540 best 0.00213@6 (14.1s)
+epoch 011 loss 0.00641 val_mse 0.00276 best 0.00213@6 (14.1s)
+epoch 012 loss 0.00649 val_mse 0.00476 best 0.00213@6 (13.9s)
+epoch 013 loss 0.00654 val_mse 0.00221 best 0.00213@6 (13.7s)
+epoch 014 loss 0.00633 val_mse 0.00208 best 0.00208@14 (14.2s)
+epoch 015 loss 0.00710 val_mse 0.00329 best 0.00208@14 (13.8s)
+epoch 016 loss 0.00607 val_mse 0.00218 best 0.00208@14 (14.5s)
+epoch 017 loss 0.00658 val_mse 0.00254 best 0.00208@14 (14.3s)
+epoch 018 loss 0.00815 val_mse 0.00225 best 0.00208@14 (14.1s)
+epoch 019 loss 0.00681 val_mse 0.00407 best 0.00208@14 (13.8s)
+epoch 020 loss 0.00671 val_mse 0.00214 best 0.00208@14 (14.7s)
+epoch 021 loss 0.00605 val_mse 0.00203 best 0.00203@21 (14.4s)
+epoch 022 loss 0.00588 val_mse 0.00227 best 0.00203@21 (14.0s)
+epoch 023 loss 0.00839 val_mse 0.00229 best 0.00203@21 (14.2s)
+epoch 024 loss 0.00665 val_mse 0.00229 best 0.00203@21 (14.7s)
+epoch 025 loss 0.00656 val_mse 0.00232 best 0.00203@21 (14.0s)
+epoch 026 loss 0.00655 val_mse 0.00199 best 0.00199@26 (14.4s)
+epoch 027 loss 0.00855 val_mse 0.00268 best 0.00199@26 (14.5s)
+epoch 028 loss 0.00779 val_mse 0.00322 best 0.00199@26 (14.7s)
+epoch 029 loss 0.00654 val_mse 0.00230 best 0.00199@26 (14.1s)
+epoch 030 loss 0.00705 val_mse 0.00210 best 0.00199@26 (14.7s)
+epoch 031 loss 0.00636 val_mse 0.00196 best 0.00196@31 (14.2s)
+epoch 032 loss 0.00587 val_mse 0.00221 best 0.00196@31 (14.9s)
+epoch 033 loss 0.00598 val_mse 0.00215 best 0.00196@31 (17.0s)
+epoch 034 loss 0.00649 val_mse 0.00211 best 0.00196@31 (14.9s)
+epoch 035 loss 0.00620 val_mse 0.00288 best 0.00196@31 (14.3s)
+epoch 036 loss 0.00627 val_mse 0.00220 best 0.00196@31 (14.3s)
+epoch 037 loss 0.00569 val_mse 0.00201 best 0.00196@31 (14.5s)
+epoch 038 loss 0.00619 val_mse 0.00200 best 0.00196@31 (14.1s)
+epoch 039 loss 0.00602 val_mse 0.00225 best 0.00196@31 (14.2s)
+  [identity                                  ] MSE 0.00266  MAE 0.02921
+  [random_dropout:0.7                        ] MSE 0.00372  MAE 0.03733
+  [temporal_stride:3                         ] MSE 0.00297  MAE 0.03299
+  [variable_dropout:0.5                      ] MSE 0.11065  MAE 0.20603
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.06489  MAE 0.13296
+best {'val_mse': 0.001955658895894885, 'epoch': 31} -> results/raw/bench_noaa_isd_patchtst_opera_s3/results.json
+summary {
+  "clean_mse": 0.0026618316769599915,
+  "mean_shift_mse": 0.045559035206679255,
+  "mean_degradation": 16.11567098739731,
+  "worst_mse": 0.11065082252025604,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.045559035206679255,
+  "mean_unseen_degradation": 16.11567098739731
+}
+[8/12] ok bench_noaa_isd_patchtst_opera_s3 (13.9 min)
+
+[9/12] bench_noaa_isd_tmix_opera_s3
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/noaa_isd_distillation.yaml --seed 3 --name bench_noaa_isd_tmix_opera_s3 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=tmix distillation.teacher_ckpt=results/raw/bench_noaa_isd_tmix_vanilla_s3/model.pt --no_wandb
+noaa_isd records: 496 297 99 100
+noaa_isd windows: 23889 14391 4793 4705
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   26.3000,   59.3683])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(30.0000)
+run bench_noaa_isd_tmix_opera_s3 | device cuda:0 | params 445761 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_noaa_isd_tmix_vanilla_s3/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "tmix", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.02783 val_mse 0.00398 best 0.00398@0 (14.4s)
+epoch 001 loss 0.01242 val_mse 0.00338 best 0.00338@1 (11.2s)
+epoch 002 loss 0.01294 val_mse 0.00266 best 0.00266@2 (10.9s)
+epoch 003 loss 0.01209 val_mse 0.00439 best 0.00266@2 (10.9s)
+epoch 004 loss 0.01047 val_mse 0.00285 best 0.00266@2 (11.3s)
+epoch 005 loss 0.00778 val_mse 0.00329 best 0.00266@2 (11.4s)
+epoch 006 loss 0.00786 val_mse 0.00252 best 0.00252@6 (11.4s)
+epoch 007 loss 0.00903 val_mse 0.00269 best 0.00252@6 (11.6s)
+epoch 008 loss 0.00864 val_mse 0.00252 best 0.00252@8 (11.6s)
+epoch 009 loss 0.00796 val_mse 0.00263 best 0.00252@8 (11.2s)
+epoch 010 loss 0.00700 val_mse 0.00246 best 0.00246@10 (11.5s)
+epoch 011 loss 0.00792 val_mse 0.00297 best 0.00246@10 (11.7s)
+epoch 012 loss 0.00824 val_mse 0.00420 best 0.00246@10 (11.8s)
+epoch 013 loss 0.00728 val_mse 0.00300 best 0.00246@10 (11.8s)
+epoch 014 loss 0.00718 val_mse 0.00234 best 0.00234@14 (11.9s)
+epoch 015 loss 0.00675 val_mse 0.00221 best 0.00221@15 (11.9s)
+epoch 016 loss 0.00661 val_mse 0.00232 best 0.00221@15 (11.9s)
+epoch 017 loss 0.00954 val_mse 0.00246 best 0.00221@15 (11.9s)
+epoch 018 loss 0.00813 val_mse 0.00214 best 0.00214@18 (11.6s)
+epoch 019 loss 0.00717 val_mse 0.00243 best 0.00214@18 (11.5s)
+epoch 020 loss 0.00667 val_mse 0.00211 best 0.00211@20 (11.7s)
+epoch 021 loss 0.00620 val_mse 0.00295 best 0.00211@20 (11.7s)
+epoch 022 loss 0.00599 val_mse 0.00207 best 0.00207@22 (12.0s)
+epoch 023 loss 0.00633 val_mse 0.00288 best 0.00207@22 (12.2s)
+epoch 024 loss 0.00739 val_mse 0.00202 best 0.00202@24 (11.6s)
+epoch 025 loss 0.00636 val_mse 0.00214 best 0.00202@24 (11.8s)
+epoch 026 loss 0.00706 val_mse 0.00234 best 0.00202@24 (12.0s)
+epoch 027 loss 0.00716 val_mse 0.00201 best 0.00201@27 (12.0s)
+epoch 028 loss 0.00711 val_mse 0.00216 best 0.00201@27 (11.9s)
+epoch 029 loss 0.00763 val_mse 0.00219 best 0.00201@27 (11.9s)
+epoch 030 loss 0.00677 val_mse 0.00216 best 0.00201@27 (11.8s)
+epoch 031 loss 0.00658 val_mse 0.00202 best 0.00201@27 (11.7s)
+epoch 032 loss 0.00616 val_mse 0.00212 best 0.00201@27 (11.7s)
+epoch 033 loss 0.00599 val_mse 0.00206 best 0.00201@27 (11.5s)
+epoch 034 loss 0.00621 val_mse 0.00200 best 0.00200@34 (11.4s)
+epoch 035 loss 0.00673 val_mse 0.00238 best 0.00200@34 (11.6s)
+epoch 036 loss 0.01017 val_mse 0.00217 best 0.00200@34 (12.0s)
+epoch 037 loss 0.00727 val_mse 0.00266 best 0.00200@34 (12.0s)
+epoch 038 loss 0.00616 val_mse 0.00212 best 0.00200@34 (12.1s)
+epoch 039 loss 0.00636 val_mse 0.00785 best 0.00200@34 (12.2s)
+  [identity                                  ] MSE 0.00256  MAE 0.02766
+  [random_dropout:0.7                        ] MSE 0.00539  MAE 0.04168
+  [temporal_stride:3                         ] MSE 0.00323  MAE 0.03441
+  [variable_dropout:0.5                      ] MSE 0.02863  MAE 0.11001
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01610  MAE 0.07556
+best {'val_mse': 0.0019970075227320194, 'epoch': 34} -> results/raw/bench_noaa_isd_tmix_opera_s3/results.json
+summary {
+  "clean_mse": 0.002564477501437068,
+  "mean_shift_mse": 0.0133355024154298,
+  "mean_degradation": 4.200085556592687,
+  "worst_mse": 0.028628135100007057,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.0133355024154298,
+  "mean_unseen_degradation": 4.200085556592687
+}
+[9/12] ok bench_noaa_isd_tmix_opera_s3 (11.9 min)
+
+[10/12] bench_noaa_isd_itransformer_opera_s4
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/noaa_isd_distillation.yaml --seed 4 --name bench_noaa_isd_itransformer_opera_s4 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=itransformer distillation.teacher_ckpt=results/raw/bench_noaa_isd_itransformer_vanilla_s4/model.pt --no_wandb
+noaa_isd records: 496 297 99 100
+noaa_isd windows: 23889 14391 4793 4705
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   26.3000,   59.3683])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(30.0000)
+run bench_noaa_isd_itransformer_opera_s4 | device cuda:0 | params 126849 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_noaa_isd_itransformer_vanilla_s4/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "itransformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01649 val_mse 0.00405 best 0.00405@0 (21.9s)
+epoch 001 loss 0.00567 val_mse 0.00302 best 0.00302@1 (17.3s)
+epoch 002 loss 0.00520 val_mse 0.00319 best 0.00302@1 (17.5s)
+epoch 003 loss 0.00492 val_mse 0.00285 best 0.00285@3 (17.6s)
+epoch 004 loss 0.00469 val_mse 0.00292 best 0.00285@3 (17.5s)
+epoch 005 loss 0.00467 val_mse 0.00312 best 0.00285@3 (17.6s)
+epoch 006 loss 0.00425 val_mse 0.00209 best 0.00209@6 (17.6s)
+epoch 007 loss 0.00343 val_mse 0.00210 best 0.00209@6 (17.8s)
+epoch 008 loss 0.00337 val_mse 0.00196 best 0.00196@8 (17.9s)
+epoch 009 loss 0.00317 val_mse 0.00248 best 0.00196@8 (17.6s)
+epoch 010 loss 0.00310 val_mse 0.00194 best 0.00194@10 (17.8s)
+epoch 011 loss 0.00295 val_mse 0.00194 best 0.00194@11 (17.8s)
+epoch 012 loss 0.00288 val_mse 0.00186 best 0.00186@12 (17.8s)
+epoch 013 loss 0.00286 val_mse 0.00190 best 0.00186@12 (17.7s)
+epoch 014 loss 0.00317 val_mse 0.00206 best 0.00186@12 (17.8s)
+epoch 015 loss 0.00305 val_mse 0.00183 best 0.00183@15 (17.8s)
+epoch 016 loss 0.00278 val_mse 0.00190 best 0.00183@15 (17.8s)
+epoch 017 loss 0.00285 val_mse 0.00199 best 0.00183@15 (17.7s)
+epoch 018 loss 0.00314 val_mse 0.00183 best 0.00183@18 (17.8s)
+epoch 019 loss 0.00291 val_mse 0.00199 best 0.00183@18 (17.9s)
+epoch 020 loss 0.00284 val_mse 0.00199 best 0.00183@18 (17.9s)
+epoch 021 loss 0.00270 val_mse 0.00177 best 0.00177@21 (17.7s)
+epoch 022 loss 0.00273 val_mse 0.00176 best 0.00176@22 (17.9s)
+epoch 023 loss 0.00311 val_mse 0.00179 best 0.00176@22 (17.7s)
+epoch 024 loss 0.00269 val_mse 0.00191 best 0.00176@22 (17.9s)
+epoch 025 loss 0.00270 val_mse 0.00181 best 0.00176@22 (17.5s)
+epoch 026 loss 0.00298 val_mse 0.00196 best 0.00176@22 (17.9s)
+epoch 027 loss 0.00268 val_mse 0.00190 best 0.00176@22 (18.0s)
+epoch 028 loss 0.00266 val_mse 0.00177 best 0.00176@22 (17.7s)
+epoch 029 loss 0.00293 val_mse 0.00218 best 0.00176@22 (17.8s)
+epoch 030 loss 0.00279 val_mse 0.00173 best 0.00173@30 (17.9s)
+epoch 031 loss 0.00264 val_mse 0.00187 best 0.00173@30 (18.0s)
+epoch 032 loss 0.00272 val_mse 0.00175 best 0.00173@30 (18.0s)
+epoch 033 loss 0.00262 val_mse 0.00172 best 0.00172@33 (18.2s)
+epoch 034 loss 0.00272 val_mse 0.00191 best 0.00172@33 (17.9s)
+epoch 035 loss 0.00262 val_mse 0.00179 best 0.00172@33 (18.0s)
+epoch 036 loss 0.00263 val_mse 0.00183 best 0.00172@33 (17.9s)
+epoch 037 loss 0.00259 val_mse 0.00173 best 0.00172@33 (17.8s)
+epoch 038 loss 0.00265 val_mse 0.00176 best 0.00172@33 (17.9s)
+epoch 039 loss 0.00255 val_mse 0.00178 best 0.00172@33 (18.0s)
+  [identity                                  ] MSE 0.00242  MAE 0.02697
+  [random_dropout:0.7                        ] MSE 0.00370  MAE 0.03445
+  [temporal_stride:3                         ] MSE 0.00277  MAE 0.03056
+  [variable_dropout:0.5                      ] MSE 0.00564  MAE 0.04712
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00435  MAE 0.04066
+best {'val_mse': 0.0017245670314878225, 'epoch': 33} -> results/raw/bench_noaa_isd_itransformer_opera_s4/results.json
+summary {
+  "clean_mse": 0.002418872434645891,
+  "mean_shift_mse": 0.004114502284210175,
+  "mean_degradation": 0.7010001128118666,
+  "worst_mse": 0.005635114852339029,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.004114502284210175,
+  "mean_unseen_degradation": 0.7010001128118666
+}
+[10/12] ok bench_noaa_isd_itransformer_opera_s4 (16.0 min)
+
+[11/12] bench_noaa_isd_patchtst_opera_s4
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/noaa_isd_distillation.yaml --seed 4 --name bench_noaa_isd_patchtst_opera_s4 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=patchtst distillation.teacher_ckpt=results/raw/bench_noaa_isd_patchtst_vanilla_s4/model.pt --no_wandb
+noaa_isd records: 496 297 99 100
+noaa_isd windows: 23889 14391 4793 4705
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   26.3000,   59.3683])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(30.0000)
+run bench_noaa_isd_patchtst_opera_s4 | device cuda:0 | params 126785 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_noaa_isd_patchtst_vanilla_s4/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "patchtst", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.02515 val_mse 0.00391 best 0.00391@0 (18.8s)
+epoch 001 loss 0.01329 val_mse 0.00361 best 0.00361@1 (13.1s)
+epoch 002 loss 0.01119 val_mse 0.00322 best 0.00322@2 (13.4s)
+epoch 003 loss 0.00940 val_mse 0.00852 best 0.00322@2 (13.7s)
+epoch 004 loss 0.00788 val_mse 0.00255 best 0.00255@4 (13.7s)
+epoch 005 loss 0.00699 val_mse 0.00260 best 0.00255@4 (13.5s)
+epoch 006 loss 0.00713 val_mse 0.00206 best 0.00206@6 (13.4s)
+epoch 007 loss 0.00719 val_mse 0.00278 best 0.00206@6 (13.8s)
+epoch 008 loss 0.00688 val_mse 0.00235 best 0.00206@6 (13.9s)
+epoch 009 loss 0.00705 val_mse 0.00209 best 0.00206@6 (14.2s)
+epoch 010 loss 0.00718 val_mse 0.00218 best 0.00206@6 (14.2s)
+epoch 011 loss 0.00603 val_mse 0.00236 best 0.00206@6 (14.2s)
+epoch 012 loss 0.00691 val_mse 0.00672 best 0.00206@6 (14.2s)
+epoch 013 loss 0.00680 val_mse 0.00229 best 0.00206@6 (15.5s)
+epoch 014 loss 0.00773 val_mse 0.00299 best 0.00206@6 (14.3s)
+epoch 015 loss 0.00689 val_mse 0.00268 best 0.00206@6 (13.6s)
+epoch 016 loss 0.00703 val_mse 0.00227 best 0.00206@6 (13.6s)
+early stop
+  [identity                                  ] MSE 0.00277  MAE 0.03056
+  [random_dropout:0.7                        ] MSE 0.00516  MAE 0.04484
+  [temporal_stride:3                         ] MSE 0.00335  MAE 0.03684
+  [variable_dropout:0.5                      ] MSE 0.10417  MAE 0.20013
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.06147  MAE 0.13230
+best {'val_mse': 0.0020628394559025764, 'epoch': 6} -> results/raw/bench_noaa_isd_patchtst_opera_s4/results.json
+summary {
+  "clean_mse": 0.002766931662335992,
+  "mean_shift_mse": 0.043536939250770956,
+  "mean_degradation": 14.73473600501385,
+  "worst_mse": 0.1041659489274025,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.043536939250770956,
+  "mean_unseen_degradation": 14.73473600501385
+}
+[11/12] ok bench_noaa_isd_patchtst_opera_s4 (7.4 min)
+
+[12/12] bench_noaa_isd_tmix_opera_s4
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/noaa_isd_distillation.yaml --seed 4 --name bench_noaa_isd_tmix_opera_s4 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=tmix distillation.teacher_ckpt=results/raw/bench_noaa_isd_tmix_vanilla_s4/model.pt --no_wandb
+noaa_isd records: 496 297 99 100
+noaa_isd windows: 23889 14391 4793 4705
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   26.3000,   59.3683])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(30.0000)
+run bench_noaa_isd_tmix_opera_s4 | device cuda:0 | params 445761 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_noaa_isd_tmix_vanilla_s4/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "tmix", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.04068 val_mse 0.00310 best 0.00310@0 (17.2s)
+epoch 001 loss 0.01275 val_mse 0.00453 best 0.00310@0 (10.9s)
+epoch 002 loss 0.01175 val_mse 0.00805 best 0.00310@0 (11.1s)
+epoch 003 loss 0.01277 val_mse 0.00474 best 0.00310@0 (11.2s)
+epoch 004 loss 0.01060 val_mse 0.00224 best 0.00224@4 (11.3s)
+epoch 005 loss 0.00948 val_mse 0.00288 best 0.00224@4 (11.7s)
+epoch 006 loss 0.00860 val_mse 0.00275 best 0.00224@4 (11.3s)
+epoch 007 loss 0.00810 val_mse 0.00236 best 0.00224@4 (11.4s)
+epoch 008 loss 0.00751 val_mse 0.00258 best 0.00224@4 (11.4s)
+epoch 009 loss 0.00763 val_mse 0.00430 best 0.00224@4 (11.2s)
+epoch 010 loss 0.01025 val_mse 0.00275 best 0.00224@4 (11.3s)
+epoch 011 loss 0.00679 val_mse 0.00236 best 0.00224@4 (11.5s)
+epoch 012 loss 0.00805 val_mse 0.00289 best 0.00224@4 (11.6s)
+epoch 013 loss 0.00763 val_mse 0.00256 best 0.00224@4 (11.4s)
+epoch 014 loss 0.01146 val_mse 0.00361 best 0.00224@4 (11.3s)
+early stop
+  [identity                                  ] MSE 0.00274  MAE 0.03300
+  [random_dropout:0.7                        ] MSE 0.00871  MAE 0.05124
+  [temporal_stride:3                         ] MSE 0.00311  MAE 0.03726
+  [variable_dropout:0.5                      ] MSE 0.09063  MAE 0.18723
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.05358  MAE 0.12469
+best {'val_mse': 0.0022447749506682158, 'epoch': 4} -> results/raw/bench_noaa_isd_tmix_opera_s4/results.json
+summary {
+  "clean_mse": 0.0027370681054890156,
+  "mean_shift_mse": 0.039006977691315114,
+  "mean_degradation": 13.251372705373718,
+  "worst_mse": 0.09062998741865158,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.039006977691315114,
+  "mean_unseen_degradation": 13.251372705373718
+}
+[12/12] ok bench_noaa_isd_tmix_opera_s4 (6.2 min)
+results/benchmark.csv: 4552 rows from 853 run cells
+results/benchmark_summary.csv: 1187 groups
+results/benchmark_curated.csv: 708 rows (curated: 4 shifts + clean, one row per seed, vanilla + opera + opera++)
+
+coverage by setting x backbone x method:
+  P12          grud          opera                      seeds [0, 1, 2, 3, 4]
+  P12          grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  P12          itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  P12          itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  P12          itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  P12          mtand         opera                      seeds [0, 1, 2, 3, 4]
+  P12          mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  P12          patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  P12          patchtst      abl_opera+mining_trainpool train       seeds [0]
+  P12          patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  P12          patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  P12          tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  P12          tmix          opera                      seeds [0, 1, 2, 3, 4]
+  P12          tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  P12          warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  P12          warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          grud          opera                      seeds [0, 1, 2, 3, 4]
+  P19          grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  P19          itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  P19          itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          mtand         opera                      seeds [0, 1, 2, 3, 4]
+  P19          mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  P19          patchtst      abl_opera+mining_trainpool train       seeds [0]
+  P19          patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  P19          patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  P19          tmix          opera                      seeds [0, 1, 2, 3, 4]
+  P19          tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  P19          warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  P19_hospB    itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  P19_hospB    itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  P19_hospB    patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  P19_hospB    patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  P19_hospB    tmix          opera                      seeds [0, 1, 2, 3, 4]
+  P19_hospB    tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          grud          opera                      seeds [0, 1, 2, 3, 4]
+  PAM          grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  PAM          itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  PAM          itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          mtand         opera                      seeds [0, 1, 2, 3, 4]
+  PAM          mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  PAM          patchtst      abl_opera+mining_trainpool train       seeds [0]
+  PAM          patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  PAM          patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  PAM          tmix          opera                      seeds [0, 1, 2, 3, 4]
+  PAM          tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  PAM          warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms grud          opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  activity_1000ms itransformer  abl_opera++_scalar             seeds [1, 2, 3, 4]
+  activity_1000ms itransformer  abl_opera+mining_trainpool train       seeds [0]
+  activity_1000ms itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms itransformer  opera++                    seeds [1, 2, 3, 4]
+  activity_1000ms itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms mtand         opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  activity_1000ms patchtst      abl_opera++_scalar             seeds [1, 2, 3, 4]
+  activity_1000ms patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms patchtst      opera++                    seeds [1, 2, 3, 4]
+  activity_1000ms patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  activity_1000ms tmix          abl_opera++_scalar             seeds [1, 2, 3, 4]
+  activity_1000ms tmix          opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms tmix          opera++                    seeds [1, 2, 3, 4]
+  activity_1000ms tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_2000ms itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  activity_2000ms itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_2000ms patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  activity_2000ms patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_2000ms tmix          opera                      seeds [0, 1, 2, 3, 4]
+  activity_2000ms tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_3000ms itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  activity_3000ms itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_3000ms patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  activity_3000ms patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_3000ms tmix          opera                      seeds [0, 1, 2, 3, 4]
+  activity_3000ms tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  eicu_demo    itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  eicu_demo    itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  eicu_demo    patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  eicu_demo    patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  eicu_demo    tmix          opera                      seeds [0, 1, 2, 3, 4]
+  eicu_demo    tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  noaa_isd_6h  itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  noaa_isd_6h  itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  noaa_isd_6h  patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  noaa_isd_6h  patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  noaa_isd_6h  tmix          opera                      seeds [0, 1, 2, 3, 4]
+  noaa_isd_6h  tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_12h itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  physionet_12h itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_12h patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  physionet_12h patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_12h tmix          opera                      seeds [0, 1, 2, 3, 4]
+  physionet_12h tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h grud          opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h itransformer  abl_aug+mining_harshpool harsh       seeds [0]
+  physionet_24h itransformer  abl_aug+mining_trainpool train       seeds [0]
+  physionet_24h itransformer  abl_augmentation             seeds [0]
+  physionet_24h itransformer  abl_mining     harsh       seeds [0, 1, 2, 3, 4]
+  physionet_24h itransformer  abl_opera++_scalar             seeds [1, 2, 3, 4]
+  physionet_24h itransformer  abl_opera+mining_trainpool train       seeds [0]
+  physionet_24h itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h itransformer  opera++                    seeds [1, 2, 3, 4]
+  physionet_24h itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h mtand         opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  physionet_24h patchtst      abl_opera++_scalar             seeds [1, 2, 3, 4]
+  physionet_24h patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h patchtst      opera++                    seeds [1, 2, 3, 4]
+  physionet_24h patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  physionet_24h tmix          abl_opera++_scalar             seeds [1, 2, 3, 4]
+  physionet_24h tmix          opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h tmix          opera++                    seeds [1, 2, 3, 4]
+  physionet_24h tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_36h itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  physionet_36h itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_36h patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  physionet_36h patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_36h tmix          opera                      seeds [0, 1, 2, 3, 4]
+  physionet_36h tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   grud          opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_12mo   itransformer  abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_12mo   itransformer  abl_opera+mining_trainpool train       seeds [0]
+  ushcn_12mo   itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   itransformer  opera++                    seeds [1, 2, 3, 4]
+  ushcn_12mo   itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   mtand         opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_12mo   patchtst      abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_12mo   patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   patchtst      opera++                    seeds [1, 2, 3, 4]
+  ushcn_12mo   patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_12mo   tmix          abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_12mo   tmix          opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   tmix          opera++                    seeds [1, 2, 3, 4]
+  ushcn_12mo   tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    grud          opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    itransformer  abl_aug+mining_trainpool train       seeds [0]
+  ushcn_1mo    itransformer  abl_augmentation             seeds [0]
+  ushcn_1mo    itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_1mo    itransformer  abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_1mo    itransformer  abl_opera+mining_trainpool train       seeds [0]
+  ushcn_1mo    itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    itransformer  opera++                    seeds [1, 2, 3, 4]
+  ushcn_1mo    itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    mtand         opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_1mo    patchtst      abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_1mo    patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    patchtst      opera++                    seeds [1, 2, 3, 4]
+  ushcn_1mo    patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_1mo    tmix          abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_1mo    tmix          opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    tmix          opera++                    seeds [1, 2, 3, 4]
+  ushcn_1mo    tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    tmix          opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+
+stage D: 12 ok, 0 failed

@@ -1,0 +1,50 @@
+run bench_physionet_h12_grud_opera_s3 | device cuda:0 | params 41804 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 12, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_physionet_h12_grud_vanilla_s3/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.02587 val_mse 0.00923 best 0.00923@0 (18.7s)
+epoch 001 loss 0.00965 val_mse 0.00867 best 0.00867@1 (18.4s)
+epoch 002 loss 0.00877 val_mse 0.00850 best 0.00850@2 (18.6s)
+epoch 003 loss 0.00838 val_mse 0.00816 best 0.00816@3 (18.4s)
+epoch 004 loss 0.00800 val_mse 0.00783 best 0.00783@4 (18.4s)
+epoch 005 loss 0.00767 val_mse 0.00770 best 0.00770@5 (18.5s)
+epoch 006 loss 0.00737 val_mse 0.00753 best 0.00753@6 (18.2s)
+epoch 007 loss 0.00736 val_mse 0.00747 best 0.00747@7 (18.4s)
+epoch 008 loss 0.00739 val_mse 0.00776 best 0.00747@7 (18.5s)
+epoch 009 loss 0.00713 val_mse 0.00723 best 0.00723@9 (18.5s)
+epoch 010 loss 0.00707 val_mse 0.00747 best 0.00723@9 (18.4s)
+epoch 011 loss 0.00704 val_mse 0.00717 best 0.00717@11 (18.4s)
+epoch 012 loss 0.00695 val_mse 0.00711 best 0.00711@12 (18.5s)
+epoch 013 loss 0.00683 val_mse 0.00710 best 0.00710@13 (18.4s)
+epoch 014 loss 0.00672 val_mse 0.00710 best 0.00710@13 (18.5s)
+epoch 015 loss 0.00680 val_mse 0.00706 best 0.00706@15 (18.3s)
+epoch 016 loss 0.00668 val_mse 0.00716 best 0.00706@15 (18.4s)
+epoch 017 loss 0.00644 val_mse 0.00738 best 0.00706@15 (18.3s)
+epoch 018 loss 0.00652 val_mse 0.00697 best 0.00697@18 (18.2s)
+epoch 019 loss 0.00645 val_mse 0.00719 best 0.00697@18 (18.5s)
+epoch 020 loss 0.00659 val_mse 0.00707 best 0.00697@18 (18.3s)
+epoch 021 loss 0.00640 val_mse 0.00674 best 0.00674@21 (18.3s)
+epoch 022 loss 0.00635 val_mse 0.00695 best 0.00674@21 (18.4s)
+epoch 023 loss 0.00636 val_mse 0.00678 best 0.00674@21 (18.4s)
+epoch 024 loss 0.00669 val_mse 0.00697 best 0.00674@21 (18.3s)
+epoch 025 loss 0.00640 val_mse 0.00700 best 0.00674@21 (18.4s)
+epoch 026 loss 0.00629 val_mse 0.00701 best 0.00674@21 (18.5s)
+epoch 027 loss 0.00620 val_mse 0.00699 best 0.00674@21 (18.4s)
+epoch 028 loss 0.00628 val_mse 0.00713 best 0.00674@21 (18.3s)
+epoch 029 loss 0.00623 val_mse 0.00716 best 0.00674@21 (18.3s)
+epoch 030 loss 0.00631 val_mse 0.00702 best 0.00674@21 (18.3s)
+epoch 031 loss 0.00627 val_mse 0.00688 best 0.00674@21 (18.4s)
+early stop
+  [identity                                  ] MSE 0.00608  MAE 0.04322
+  [random_dropout:0.7                        ] MSE 0.00756  MAE 0.04820
+  [temporal_stride:3                         ] MSE 0.00646  MAE 0.04501
+  [variable_dropout:0.5                      ] MSE 0.00782  MAE 0.04921
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00722  MAE 0.04760
+best {'val_mse': 0.006743874866515398, 'epoch': 21} -> results/raw/bench_physionet_h12_grud_opera_s3/results.json
+summary {
+  "clean_mse": 0.00608006352558732,
+  "mean_shift_mse": 0.0072661066660657525,
+  "mean_degradation": 0.19507084679084222,
+  "worst_mse": 0.007823674008250237,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.0072661066660657525,
+  "mean_unseen_degradation": 0.19507084679084222
+}

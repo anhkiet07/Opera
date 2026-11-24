@@ -1,0 +1,53 @@
+run bench_physionet_h36_grud_vanilla_s2 | device cuda:0 | params 41804 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 36, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01648 val_mse 0.01043 best 0.01043@0 (78.9s)
+epoch 001 loss 0.00741 val_mse 0.00826 best 0.00826@1 (79.4s)
+epoch 002 loss 0.00612 val_mse 0.00751 best 0.00751@2 (79.2s)
+epoch 003 loss 0.00541 val_mse 0.00693 best 0.00693@3 (77.7s)
+epoch 004 loss 0.00532 val_mse 0.00652 best 0.00652@4 (77.5s)
+epoch 005 loss 0.00482 val_mse 0.00636 best 0.00636@5 (78.7s)
+epoch 006 loss 0.00469 val_mse 0.00597 best 0.00597@6 (81.3s)
+epoch 007 loss 0.00448 val_mse 0.00545 best 0.00545@7 (66.1s)
+epoch 008 loss 0.00439 val_mse 0.00544 best 0.00544@8 (79.9s)
+epoch 009 loss 0.00422 val_mse 0.00543 best 0.00543@9 (79.0s)
+epoch 010 loss 0.00425 val_mse 0.00535 best 0.00535@10 (78.6s)
+epoch 011 loss 0.00407 val_mse 0.00531 best 0.00531@11 (77.9s)
+epoch 012 loss 0.00409 val_mse 0.00547 best 0.00531@11 (79.8s)
+epoch 013 loss 0.00396 val_mse 0.00564 best 0.00531@11 (79.3s)
+epoch 014 loss 0.00401 val_mse 0.00504 best 0.00504@14 (77.3s)
+epoch 015 loss 0.00379 val_mse 0.00487 best 0.00487@15 (79.0s)
+epoch 016 loss 0.00387 val_mse 0.00511 best 0.00487@15 (57.2s)
+epoch 017 loss 0.00375 val_mse 0.00493 best 0.00487@15 (78.3s)
+epoch 018 loss 0.00379 val_mse 0.00497 best 0.00487@15 (75.4s)
+epoch 019 loss 0.00371 val_mse 0.00480 best 0.00480@19 (75.6s)
+epoch 020 loss 0.00371 val_mse 0.00493 best 0.00480@19 (76.4s)
+epoch 021 loss 0.00362 val_mse 0.00495 best 0.00480@19 (74.9s)
+epoch 022 loss 0.00353 val_mse 0.00487 best 0.00480@19 (76.2s)
+epoch 023 loss 0.00347 val_mse 0.00552 best 0.00480@19 (75.1s)
+epoch 024 loss 0.00345 val_mse 0.00464 best 0.00464@24 (74.4s)
+epoch 025 loss 0.00351 val_mse 0.00477 best 0.00464@24 (65.9s)
+epoch 026 loss 0.00348 val_mse 0.00468 best 0.00464@24 (75.4s)
+epoch 027 loss 0.00328 val_mse 0.00473 best 0.00464@24 (76.6s)
+epoch 028 loss 0.00334 val_mse 0.00511 best 0.00464@24 (76.7s)
+epoch 029 loss 0.00325 val_mse 0.00475 best 0.00464@24 (78.1s)
+epoch 030 loss 0.00322 val_mse 0.00498 best 0.00464@24 (75.1s)
+epoch 031 loss 0.00324 val_mse 0.00501 best 0.00464@24 (78.8s)
+epoch 032 loss 0.00323 val_mse 0.00481 best 0.00464@24 (78.3s)
+epoch 033 loss 0.00324 val_mse 0.00495 best 0.00464@24 (75.3s)
+epoch 034 loss 0.00317 val_mse 0.00542 best 0.00464@24 (75.6s)
+early stop
+  [identity                                  ] MSE 0.00458  MAE 0.03839
+  [random_dropout:0.7                        ] MSE 0.00712  MAE 0.04958
+  [temporal_stride:3                         ] MSE 0.00536  MAE 0.04263
+  [variable_dropout:0.5                      ] MSE 0.01113  MAE 0.06167
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00754  MAE 0.05036
+best {'val_mse': 0.004636202938854694, 'epoch': 24} -> results/raw/bench_physionet_h36_grud_vanilla_s2/results.json
+summary {
+  "clean_mse": 0.004579199943691492,
+  "mean_shift_mse": 0.007786666159518063,
+  "mean_degradation": 0.7004424911048748,
+  "worst_mse": 0.011127009987831116,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.007786666159518063,
+  "mean_unseen_degradation": 0.7004424911048748
+}

@@ -1,0 +1,53 @@
+run bench_vitaldb_grud_vanilla_s1 | device cuda:0 | params 24794 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00887 val_mse 0.00416 best 0.00416@0 (21.5s)
+epoch 001 loss 0.00395 val_mse 0.00331 best 0.00331@1 (22.3s)
+epoch 002 loss 0.00346 val_mse 0.00318 best 0.00318@2 (22.4s)
+epoch 003 loss 0.00327 val_mse 0.00306 best 0.00306@3 (22.4s)
+epoch 004 loss 0.00318 val_mse 0.00372 best 0.00306@3 (22.3s)
+epoch 005 loss 0.00309 val_mse 0.00280 best 0.00280@5 (22.4s)
+epoch 006 loss 0.00294 val_mse 0.00278 best 0.00278@6 (22.4s)
+epoch 007 loss 0.00286 val_mse 0.00266 best 0.00266@7 (22.6s)
+epoch 008 loss 0.00283 val_mse 0.00279 best 0.00266@7 (22.4s)
+epoch 009 loss 0.00279 val_mse 0.00263 best 0.00263@9 (22.5s)
+epoch 010 loss 0.00274 val_mse 0.00258 best 0.00258@10 (22.5s)
+epoch 011 loss 0.00274 val_mse 0.00266 best 0.00258@10 (22.4s)
+epoch 012 loss 0.00272 val_mse 0.00263 best 0.00258@10 (22.5s)
+epoch 013 loss 0.00269 val_mse 0.00248 best 0.00248@13 (22.4s)
+epoch 014 loss 0.00269 val_mse 0.00252 best 0.00248@13 (22.5s)
+epoch 015 loss 0.00268 val_mse 0.00271 best 0.00248@13 (22.4s)
+epoch 016 loss 0.00266 val_mse 0.00255 best 0.00248@13 (22.4s)
+epoch 017 loss 0.00263 val_mse 0.00258 best 0.00248@13 (22.5s)
+epoch 018 loss 0.00264 val_mse 0.00255 best 0.00248@13 (22.6s)
+epoch 019 loss 0.00264 val_mse 0.00244 best 0.00244@19 (21.3s)
+epoch 020 loss 0.00261 val_mse 0.00247 best 0.00244@19 (21.3s)
+epoch 021 loss 0.00258 val_mse 0.00257 best 0.00244@19 (22.8s)
+epoch 022 loss 0.00264 val_mse 0.00243 best 0.00243@22 (22.6s)
+epoch 023 loss 0.00259 val_mse 0.00245 best 0.00243@22 (22.5s)
+epoch 024 loss 0.00263 val_mse 0.00241 best 0.00241@24 (22.4s)
+epoch 025 loss 0.00257 val_mse 0.00252 best 0.00241@24 (23.0s)
+epoch 026 loss 0.00261 val_mse 0.00261 best 0.00241@24 (23.1s)
+epoch 027 loss 0.00255 val_mse 0.00245 best 0.00241@24 (23.2s)
+epoch 028 loss 0.00256 val_mse 0.00260 best 0.00241@24 (22.8s)
+epoch 029 loss 0.00255 val_mse 0.00245 best 0.00241@24 (22.8s)
+epoch 030 loss 0.00253 val_mse 0.00249 best 0.00241@24 (22.6s)
+epoch 031 loss 0.00255 val_mse 0.00250 best 0.00241@24 (22.4s)
+epoch 032 loss 0.00253 val_mse 0.00245 best 0.00241@24 (22.2s)
+epoch 033 loss 0.00253 val_mse 0.00244 best 0.00241@24 (21.3s)
+epoch 034 loss 0.00253 val_mse 0.00243 best 0.00241@24 (22.4s)
+early stop
+  [identity                                  ] MSE 0.00257  MAE 0.03018
+  [random_dropout:0.7                        ] MSE 0.00627  MAE 0.05981
+  [temporal_stride:3                         ] MSE 0.00299  MAE 0.03348
+  [variable_dropout:0.5                      ] MSE 0.01058  MAE 0.07220
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00742  MAE 0.05310
+best {'val_mse': 0.0024103589821606874, 'epoch': 24} -> results/raw/bench_vitaldb_grud_vanilla_s1/results.json
+summary {
+  "clean_mse": 0.0025650260504335165,
+  "mean_shift_mse": 0.006817241839598864,
+  "mean_degradation": 1.6577670969254594,
+  "worst_mse": 0.010584861971437931,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.006817241839598864,
+  "mean_unseen_degradation": 1.6577670969254594
+}

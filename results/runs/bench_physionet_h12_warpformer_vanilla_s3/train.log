@@ -1,0 +1,53 @@
+run bench_physionet_h12_warpformer_vanilla_s3 | device cuda:0 | params 89257 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 12, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01299 val_mse 0.01091 best 0.01091@0 (29.7s)
+epoch 001 loss 0.00989 val_mse 0.01083 best 0.01083@1 (28.4s)
+epoch 002 loss 0.00948 val_mse 0.01077 best 0.01077@2 (27.8s)
+epoch 003 loss 0.00920 val_mse 0.01002 best 0.01002@3 (28.8s)
+epoch 004 loss 0.00894 val_mse 0.00976 best 0.00976@4 (27.9s)
+epoch 005 loss 0.00880 val_mse 0.00992 best 0.00976@4 (28.9s)
+epoch 006 loss 0.00873 val_mse 0.00951 best 0.00951@6 (30.1s)
+epoch 007 loss 0.00867 val_mse 0.00955 best 0.00951@6 (28.3s)
+epoch 008 loss 0.00861 val_mse 0.00974 best 0.00951@6 (27.7s)
+epoch 009 loss 0.00857 val_mse 0.00936 best 0.00936@9 (30.2s)
+epoch 010 loss 0.00851 val_mse 0.00926 best 0.00926@10 (28.5s)
+epoch 011 loss 0.00827 val_mse 0.00948 best 0.00926@10 (30.3s)
+epoch 012 loss 0.00838 val_mse 0.00959 best 0.00926@10 (29.8s)
+epoch 013 loss 0.00841 val_mse 0.00940 best 0.00926@10 (26.1s)
+epoch 014 loss 0.00816 val_mse 0.00951 best 0.00926@10 (30.6s)
+epoch 015 loss 0.00819 val_mse 0.00926 best 0.00926@15 (29.9s)
+epoch 016 loss 0.00813 val_mse 0.00948 best 0.00926@15 (29.8s)
+epoch 017 loss 0.00823 val_mse 0.00906 best 0.00906@17 (29.4s)
+epoch 018 loss 0.00800 val_mse 0.00914 best 0.00906@17 (28.9s)
+epoch 019 loss 0.00791 val_mse 0.00916 best 0.00906@17 (30.3s)
+epoch 020 loss 0.00801 val_mse 0.00924 best 0.00906@17 (28.5s)
+epoch 021 loss 0.00801 val_mse 0.00907 best 0.00906@17 (31.0s)
+epoch 022 loss 0.00800 val_mse 0.00915 best 0.00906@17 (22.7s)
+epoch 023 loss 0.00787 val_mse 0.00939 best 0.00906@17 (22.8s)
+epoch 024 loss 0.00797 val_mse 0.00900 best 0.00900@24 (29.6s)
+epoch 025 loss 0.00788 val_mse 0.00909 best 0.00900@24 (18.4s)
+epoch 026 loss 0.00782 val_mse 0.00911 best 0.00900@24 (18.4s)
+epoch 027 loss 0.00788 val_mse 0.00910 best 0.00900@24 (25.6s)
+epoch 028 loss 0.00789 val_mse 0.00908 best 0.00900@24 (30.8s)
+epoch 029 loss 0.00768 val_mse 0.00930 best 0.00900@24 (29.7s)
+epoch 030 loss 0.00772 val_mse 0.00923 best 0.00900@24 (29.3s)
+epoch 031 loss 0.00790 val_mse 0.00905 best 0.00900@24 (25.8s)
+epoch 032 loss 0.00760 val_mse 0.00907 best 0.00900@24 (26.8s)
+epoch 033 loss 0.00767 val_mse 0.00927 best 0.00900@24 (31.4s)
+epoch 034 loss 0.00774 val_mse 0.00959 best 0.00900@24 (29.3s)
+early stop
+  [identity                                  ] MSE 0.00836  MAE 0.05264
+  [random_dropout:0.7                        ] MSE 0.00934  MAE 0.05544
+  [temporal_stride:3                         ] MSE 0.00865  MAE 0.05356
+  [variable_dropout:0.5                      ] MSE 0.00967  MAE 0.05616
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00902  MAE 0.05467
+best {'val_mse': 0.009004940278828144, 'epoch': 24} -> results/raw/bench_physionet_h12_warpformer_vanilla_s3/results.json
+summary {
+  "clean_mse": 0.008362246677279472,
+  "mean_shift_mse": 0.00916789355687797,
+  "mean_degradation": 0.09634335253317391,
+  "worst_mse": 0.009665166959166527,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.00916789355687797,
+  "mean_unseen_degradation": 0.09634335253317391
+}

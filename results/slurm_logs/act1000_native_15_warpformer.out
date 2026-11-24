@@ -1,0 +1,730 @@
+stage A: 1 cells
+
+[1/1] bench_activity_h1000_warpformer_vanilla_s0
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/activity_h1000_baseline.yaml --seed 0 --name bench_activity_h1000_warpformer_vanilla_s0 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=warpformer --no_wandb
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+Total records: 25
+Dataset n_samples: 25 15 5 5
+Test record ids (first 20): ['B04', 'D02', 'A01', 'E04', 'C02']
+Test record ids (last 20): ['B04', 'D02', 'A01', 'E04', 'C02']
+data_max: tensor([5.6217, 3.9067, 2.4465, 5.3456, 3.9414, 2.2163, 5.7582, 3.9781, 2.6061,
+        5.3913, 3.9654, 2.6011], device='cuda:0')
+data_min: tensor([ 0.1852, -0.1228, -1.4615,  0.1606, -0.4760, -2.5436, -0.2787, -0.4944,
+        -2.0269,  0.0198, -0.4789, -1.9588], device='cuda:0')
+time_max: tensor(304861., device='cuda:0')
+manual set time_max: tensor(4000)
+Dataset n_samples after time split: 1826 1121 341 364
+run bench_activity_h1000_warpformer_vanilla_s0 | device cuda:0 | params 85516 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 1000, "n_records": 100000000, "name": "activity", "patch_size": 750, "stride": 750}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.04626 val_mse 0.01617 best 0.01617@0 (3.6s)
+epoch 001 loss 0.01570 val_mse 0.01472 best 0.01472@1 (3.3s)
+epoch 002 loss 0.01509 val_mse 0.01569 best 0.01472@1 (3.7s)
+epoch 003 loss 0.01391 val_mse 0.01435 best 0.01435@3 (3.6s)
+epoch 004 loss 0.01369 val_mse 0.01305 best 0.01305@4 (3.7s)
+epoch 005 loss 0.01277 val_mse 0.01507 best 0.01305@4 (3.5s)
+epoch 006 loss 0.01299 val_mse 0.01593 best 0.01305@4 (3.3s)
+epoch 007 loss 0.01314 val_mse 0.01532 best 0.01305@4 (3.3s)
+epoch 008 loss 0.01437 val_mse 0.01380 best 0.01305@4 (3.5s)
+epoch 009 loss 0.01265 val_mse 0.01738 best 0.01305@4 (3.3s)
+epoch 010 loss 0.01402 val_mse 0.01515 best 0.01305@4 (3.4s)
+epoch 011 loss 0.01313 val_mse 0.01231 best 0.01231@11 (3.2s)
+epoch 012 loss 0.01256 val_mse 0.01287 best 0.01231@11 (3.5s)
+epoch 013 loss 0.01240 val_mse 0.01239 best 0.01231@11 (3.6s)
+epoch 014 loss 0.01312 val_mse 0.01295 best 0.01231@11 (3.5s)
+epoch 015 loss 0.01257 val_mse 0.01246 best 0.01231@11 (3.6s)
+epoch 016 loss 0.01305 val_mse 0.01214 best 0.01214@16 (3.2s)
+epoch 017 loss 0.01192 val_mse 0.01205 best 0.01205@17 (3.7s)
+epoch 018 loss 0.01164 val_mse 0.01444 best 0.01205@17 (3.8s)
+epoch 019 loss 0.01162 val_mse 0.01284 best 0.01205@17 (3.5s)
+epoch 020 loss 0.01162 val_mse 0.01147 best 0.01147@20 (3.5s)
+epoch 021 loss 0.01132 val_mse 0.01520 best 0.01147@20 (3.2s)
+epoch 022 loss 0.01199 val_mse 0.01153 best 0.01147@20 (3.4s)
+epoch 023 loss 0.01211 val_mse 0.01482 best 0.01147@20 (3.6s)
+epoch 024 loss 0.01325 val_mse 0.01252 best 0.01147@20 (3.3s)
+epoch 025 loss 0.01224 val_mse 0.01204 best 0.01147@20 (3.6s)
+epoch 026 loss 0.01209 val_mse 0.01149 best 0.01147@20 (3.5s)
+epoch 027 loss 0.01145 val_mse 0.01408 best 0.01147@20 (3.6s)
+epoch 028 loss 0.01188 val_mse 0.01138 best 0.01138@28 (3.5s)
+epoch 029 loss 0.01145 val_mse 0.01285 best 0.01138@28 (3.5s)
+epoch 030 loss 0.01187 val_mse 0.01217 best 0.01138@28 (3.6s)
+epoch 031 loss 0.01095 val_mse 0.01085 best 0.01085@31 (3.5s)
+epoch 032 loss 0.01085 val_mse 0.01074 best 0.01074@32 (3.6s)
+epoch 033 loss 0.01066 val_mse 0.01072 best 0.01072@33 (3.3s)
+epoch 034 loss 0.01049 val_mse 0.01347 best 0.01072@33 (3.4s)
+epoch 035 loss 0.01086 val_mse 0.01206 best 0.01072@33 (3.3s)
+epoch 036 loss 0.01227 val_mse 0.01215 best 0.01072@33 (3.6s)
+epoch 037 loss 0.01110 val_mse 0.01187 best 0.01072@33 (2.4s)
+epoch 038 loss 0.01090 val_mse 0.01160 best 0.01072@33 (2.4s)
+epoch 039 loss 0.01074 val_mse 0.01063 best 0.01063@39 (3.4s)
+  [identity                                  ] MSE 0.01092  MAE 0.07905
+  [random_dropout:0.7                        ] MSE 0.02043  MAE 0.10563
+  [temporal_stride:3                         ] MSE 0.01768  MAE 0.10662
+  [variable_dropout:0.5                      ] MSE 0.01700  MAE 0.09628
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01857  MAE 0.10892
+best {'val_mse': 0.01063123345375061, 'epoch': 39} -> results/raw/bench_activity_h1000_warpformer_vanilla_s0/results.json
+summary {
+  "clean_mse": 0.010923040099442005,
+  "mean_shift_mse": 0.01842204760760069,
+  "mean_degradation": 0.6865311707993972,
+  "worst_mse": 0.020431658253073692,
+  "worst_condition": "random_dropout:0.7",
+  "mean_unseen_mse": 0.01842204760760069,
+  "mean_unseen_degradation": 0.6865311707993972
+}
+[1/1] ok bench_activity_h1000_warpformer_vanilla_s0 (3.1 min)
+
+stage A: 1 ok, 0 failed
+stage B: 4 cells
+
+[1/4] bench_activity_h1000_warpformer_vanilla_s1
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/activity_h1000_baseline.yaml --seed 1 --name bench_activity_h1000_warpformer_vanilla_s1 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=warpformer --no_wandb
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+Total records: 25
+Dataset n_samples: 25 15 5 5
+Test record ids (first 20): ['B04', 'D02', 'A01', 'E04', 'C02']
+Test record ids (last 20): ['B04', 'D02', 'A01', 'E04', 'C02']
+data_max: tensor([5.6217, 3.9067, 2.4465, 5.3456, 3.9414, 2.2163, 5.7582, 3.9781, 2.6061,
+        5.3913, 3.9654, 2.6011], device='cuda:0')
+data_min: tensor([ 0.1852, -0.1228, -1.4615,  0.1606, -0.4760, -2.5436, -0.2787, -0.4944,
+        -2.0269,  0.0198, -0.4789, -1.9588], device='cuda:0')
+time_max: tensor(304861., device='cuda:0')
+manual set time_max: tensor(4000)
+Dataset n_samples after time split: 1826 1121 341 364
+run bench_activity_h1000_warpformer_vanilla_s1 | device cuda:0 | params 85516 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 1000, "n_records": 100000000, "name": "activity", "patch_size": 750, "stride": 750}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.03393 val_mse 0.01477 best 0.01477@0 (3.8s)
+epoch 001 loss 0.01450 val_mse 0.01523 best 0.01477@0 (3.5s)
+epoch 002 loss 0.01417 val_mse 0.01405 best 0.01405@2 (3.4s)
+epoch 003 loss 0.01331 val_mse 0.01440 best 0.01405@2 (3.5s)
+epoch 004 loss 0.01325 val_mse 0.01631 best 0.01405@2 (3.4s)
+epoch 005 loss 0.01332 val_mse 0.01360 best 0.01360@5 (3.6s)
+epoch 006 loss 0.01279 val_mse 0.01237 best 0.01237@6 (2.9s)
+epoch 007 loss 0.01292 val_mse 0.01392 best 0.01237@6 (2.4s)
+epoch 008 loss 0.01293 val_mse 0.01397 best 0.01237@6 (3.6s)
+epoch 009 loss 0.01334 val_mse 0.01399 best 0.01237@6 (3.5s)
+epoch 010 loss 0.01271 val_mse 0.01456 best 0.01237@6 (3.1s)
+epoch 011 loss 0.01235 val_mse 0.01210 best 0.01210@11 (3.4s)
+epoch 012 loss 0.01213 val_mse 0.01609 best 0.01210@11 (3.4s)
+epoch 013 loss 0.01292 val_mse 0.01206 best 0.01206@13 (3.7s)
+epoch 014 loss 0.01161 val_mse 0.01755 best 0.01206@13 (3.4s)
+epoch 015 loss 0.01249 val_mse 0.01275 best 0.01206@13 (3.3s)
+epoch 016 loss 0.01243 val_mse 0.01432 best 0.01206@13 (3.5s)
+epoch 017 loss 0.01209 val_mse 0.01220 best 0.01206@13 (3.3s)
+epoch 018 loss 0.01172 val_mse 0.01137 best 0.01137@18 (3.4s)
+epoch 019 loss 0.01191 val_mse 0.01320 best 0.01137@18 (3.5s)
+epoch 020 loss 0.01148 val_mse 0.01487 best 0.01137@18 (3.5s)
+epoch 021 loss 0.01330 val_mse 0.01240 best 0.01137@18 (3.6s)
+epoch 022 loss 0.01262 val_mse 0.01218 best 0.01137@18 (3.3s)
+epoch 023 loss 0.01174 val_mse 0.01167 best 0.01137@18 (3.5s)
+epoch 024 loss 0.01190 val_mse 0.01170 best 0.01137@18 (3.4s)
+epoch 025 loss 0.01138 val_mse 0.01138 best 0.01137@18 (3.7s)
+epoch 026 loss 0.01119 val_mse 0.01393 best 0.01137@18 (3.5s)
+epoch 027 loss 0.01223 val_mse 0.01159 best 0.01137@18 (3.6s)
+epoch 028 loss 0.01155 val_mse 0.01244 best 0.01137@18 (3.5s)
+early stop
+  [identity                                  ] MSE 0.01166  MAE 0.08212
+  [random_dropout:0.7                        ] MSE 0.01936  MAE 0.10246
+  [temporal_stride:3                         ] MSE 0.01583  MAE 0.09850
+  [variable_dropout:0.5                      ] MSE 0.01661  MAE 0.09581
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01647  MAE 0.10040
+best {'val_mse': 0.011366184800863266, 'epoch': 18} -> results/raw/bench_activity_h1000_warpformer_vanilla_s1/results.json
+summary {
+  "clean_mse": 0.011661038734018803,
+  "mean_shift_mse": 0.017070018220692873,
+  "mean_degradation": 0.46385057198158763,
+  "worst_mse": 0.019363828003406525,
+  "worst_condition": "random_dropout:0.7",
+  "mean_unseen_mse": 0.017070018220692873,
+  "mean_unseen_degradation": 0.46385057198158763
+}
+[1/4] ok bench_activity_h1000_warpformer_vanilla_s1 (2.3 min)
+
+[2/4] bench_activity_h1000_warpformer_vanilla_s2
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/activity_h1000_baseline.yaml --seed 2 --name bench_activity_h1000_warpformer_vanilla_s2 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=warpformer --no_wandb
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+Total records: 25
+Dataset n_samples: 25 15 5 5
+Test record ids (first 20): ['B04', 'D02', 'A01', 'E04', 'C02']
+Test record ids (last 20): ['B04', 'D02', 'A01', 'E04', 'C02']
+data_max: tensor([5.6217, 3.9067, 2.4465, 5.3456, 3.9414, 2.2163, 5.7582, 3.9781, 2.6061,
+        5.3913, 3.9654, 2.6011], device='cuda:0')
+data_min: tensor([ 0.1852, -0.1228, -1.4615,  0.1606, -0.4760, -2.5436, -0.2787, -0.4944,
+        -2.0269,  0.0198, -0.4789, -1.9588], device='cuda:0')
+time_max: tensor(304861., device='cuda:0')
+manual set time_max: tensor(4000)
+Dataset n_samples after time split: 1826 1121 341 364
+run bench_activity_h1000_warpformer_vanilla_s2 | device cuda:0 | params 85516 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 1000, "n_records": 100000000, "name": "activity", "patch_size": 750, "stride": 750}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.03870 val_mse 0.01539 best 0.01539@0 (3.8s)
+epoch 001 loss 0.01510 val_mse 0.01573 best 0.01539@0 (3.5s)
+epoch 002 loss 0.01502 val_mse 0.01629 best 0.01539@0 (3.6s)
+epoch 003 loss 0.01387 val_mse 0.01269 best 0.01269@3 (3.6s)
+epoch 004 loss 0.01314 val_mse 0.01700 best 0.01269@3 (2.3s)
+epoch 005 loss 0.01389 val_mse 0.01288 best 0.01269@3 (2.4s)
+epoch 006 loss 0.01313 val_mse 0.01451 best 0.01269@3 (3.6s)
+epoch 007 loss 0.01307 val_mse 0.01235 best 0.01235@7 (3.8s)
+epoch 008 loss 0.01274 val_mse 0.01231 best 0.01231@8 (3.5s)
+epoch 009 loss 0.01333 val_mse 0.01320 best 0.01231@8 (3.7s)
+epoch 010 loss 0.01213 val_mse 0.01571 best 0.01231@8 (3.5s)
+epoch 011 loss 0.01323 val_mse 0.01625 best 0.01231@8 (3.3s)
+epoch 012 loss 0.01340 val_mse 0.01683 best 0.01231@8 (3.8s)
+epoch 013 loss 0.01348 val_mse 0.01447 best 0.01231@8 (3.6s)
+epoch 014 loss 0.01222 val_mse 0.01165 best 0.01165@14 (3.6s)
+epoch 015 loss 0.01211 val_mse 0.01190 best 0.01165@14 (3.3s)
+epoch 016 loss 0.01193 val_mse 0.01167 best 0.01165@14 (3.7s)
+epoch 017 loss 0.01221 val_mse 0.01169 best 0.01165@14 (3.2s)
+epoch 018 loss 0.01169 val_mse 0.01141 best 0.01141@18 (3.4s)
+epoch 019 loss 0.01197 val_mse 0.01331 best 0.01141@18 (3.6s)
+epoch 020 loss 0.01189 val_mse 0.01127 best 0.01127@20 (3.3s)
+epoch 021 loss 0.01241 val_mse 0.01259 best 0.01127@20 (3.3s)
+epoch 022 loss 0.01175 val_mse 0.01166 best 0.01127@20 (3.5s)
+epoch 023 loss 0.01133 val_mse 0.01128 best 0.01127@20 (3.4s)
+epoch 024 loss 0.01092 val_mse 0.01242 best 0.01127@20 (3.5s)
+epoch 025 loss 0.01133 val_mse 0.01163 best 0.01127@20 (2.6s)
+epoch 026 loss 0.01121 val_mse 0.01474 best 0.01127@20 (2.8s)
+epoch 027 loss 0.01100 val_mse 0.01119 best 0.01119@27 (3.5s)
+epoch 028 loss 0.01095 val_mse 0.01252 best 0.01119@27 (3.8s)
+epoch 029 loss 0.01139 val_mse 0.01152 best 0.01119@27 (3.4s)
+epoch 030 loss 0.01062 val_mse 0.01134 best 0.01119@27 (3.5s)
+epoch 031 loss 0.01050 val_mse 0.01334 best 0.01119@27 (3.5s)
+epoch 032 loss 0.01070 val_mse 0.01081 best 0.01081@32 (3.2s)
+epoch 033 loss 0.00989 val_mse 0.01079 best 0.01079@33 (3.6s)
+epoch 034 loss 0.01015 val_mse 0.01036 best 0.01036@34 (3.2s)
+epoch 035 loss 0.01046 val_mse 0.01229 best 0.01036@34 (3.5s)
+epoch 036 loss 0.01095 val_mse 0.01090 best 0.01036@34 (3.4s)
+epoch 037 loss 0.01091 val_mse 0.01096 best 0.01036@34 (3.5s)
+epoch 038 loss 0.01054 val_mse 0.01115 best 0.01036@34 (3.8s)
+epoch 039 loss 0.01100 val_mse 0.01097 best 0.01036@34 (3.7s)
+  [identity                                  ] MSE 0.01065  MAE 0.07768
+  [random_dropout:0.7                        ] MSE 0.02288  MAE 0.10970
+  [temporal_stride:3                         ] MSE 0.01401  MAE 0.09060
+  [variable_dropout:0.5                      ] MSE 0.01661  MAE 0.09580
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01516  MAE 0.09448
+best {'val_mse': 0.010358176194131374, 'epoch': 34} -> results/raw/bench_activity_h1000_warpformer_vanilla_s2/results.json
+summary {
+  "clean_mse": 0.010654911398887634,
+  "mean_shift_mse": 0.017164668766781688,
+  "mean_degradation": 0.6109630689724617,
+  "worst_mse": 0.022883163765072823,
+  "worst_condition": "random_dropout:0.7",
+  "mean_unseen_mse": 0.017164668766781688,
+  "mean_unseen_degradation": 0.6109630689724617
+}
+[2/4] ok bench_activity_h1000_warpformer_vanilla_s2 (3.1 min)
+
+[3/4] bench_activity_h1000_warpformer_vanilla_s3
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/activity_h1000_baseline.yaml --seed 3 --name bench_activity_h1000_warpformer_vanilla_s3 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=warpformer --no_wandb
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+Total records: 25
+Dataset n_samples: 25 15 5 5
+Test record ids (first 20): ['B04', 'D02', 'A01', 'E04', 'C02']
+Test record ids (last 20): ['B04', 'D02', 'A01', 'E04', 'C02']
+data_max: tensor([5.6217, 3.9067, 2.4465, 5.3456, 3.9414, 2.2163, 5.7582, 3.9781, 2.6061,
+        5.3913, 3.9654, 2.6011], device='cuda:0')
+data_min: tensor([ 0.1852, -0.1228, -1.4615,  0.1606, -0.4760, -2.5436, -0.2787, -0.4944,
+        -2.0269,  0.0198, -0.4789, -1.9588], device='cuda:0')
+time_max: tensor(304861., device='cuda:0')
+manual set time_max: tensor(4000)
+Dataset n_samples after time split: 1826 1121 341 364
+run bench_activity_h1000_warpformer_vanilla_s3 | device cuda:0 | params 85516 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 1000, "n_records": 100000000, "name": "activity", "patch_size": 750, "stride": 750}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.04272 val_mse 0.01619 best 0.01619@0 (4.1s)
+epoch 001 loss 0.01504 val_mse 0.01403 best 0.01403@1 (3.6s)
+epoch 002 loss 0.01392 val_mse 0.01623 best 0.01403@1 (3.8s)
+epoch 003 loss 0.01388 val_mse 0.01387 best 0.01387@3 (3.2s)
+epoch 004 loss 0.01287 val_mse 0.01400 best 0.01387@3 (3.6s)
+epoch 005 loss 0.01294 val_mse 0.01225 best 0.01225@5 (3.4s)
+epoch 006 loss 0.01274 val_mse 0.01194 best 0.01194@6 (3.3s)
+epoch 007 loss 0.01270 val_mse 0.01462 best 0.01194@6 (3.4s)
+epoch 008 loss 0.01286 val_mse 0.01271 best 0.01194@6 (3.5s)
+epoch 009 loss 0.01274 val_mse 0.01203 best 0.01194@6 (3.5s)
+epoch 010 loss 0.01308 val_mse 0.01670 best 0.01194@6 (3.3s)
+epoch 011 loss 0.01325 val_mse 0.01374 best 0.01194@6 (3.6s)
+epoch 012 loss 0.01200 val_mse 0.01377 best 0.01194@6 (3.4s)
+epoch 013 loss 0.01221 val_mse 0.01290 best 0.01194@6 (3.3s)
+epoch 014 loss 0.01247 val_mse 0.01242 best 0.01194@6 (3.9s)
+epoch 015 loss 0.01291 val_mse 0.01279 best 0.01194@6 (3.4s)
+epoch 016 loss 0.01179 val_mse 0.01290 best 0.01194@6 (3.3s)
+early stop
+  [identity                                  ] MSE 0.01231  MAE 0.08459
+  [random_dropout:0.7                        ] MSE 0.01326  MAE 0.08777
+  [temporal_stride:3                         ] MSE 0.01361  MAE 0.09102
+  [variable_dropout:0.5                      ] MSE 0.01419  MAE 0.09046
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01397  MAE 0.09232
+best {'val_mse': 0.011943806894123554, 'epoch': 6} -> results/raw/bench_activity_h1000_warpformer_vanilla_s3/results.json
+summary {
+  "clean_mse": 0.012311513535678387,
+  "mean_shift_mse": 0.013756623258814216,
+  "mean_degradation": 0.11737872187265568,
+  "worst_mse": 0.014188535511493683,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.013756623258814216,
+  "mean_unseen_degradation": 0.11737872187265568
+}
+[3/4] ok bench_activity_h1000_warpformer_vanilla_s3 (1.4 min)
+
+[4/4] bench_activity_h1000_warpformer_vanilla_s4
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/activity_h1000_baseline.yaml --seed 4 --name bench_activity_h1000_warpformer_vanilla_s4 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=warpformer --no_wandb
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+Total records: 25
+Dataset n_samples: 25 15 5 5
+Test record ids (first 20): ['B04', 'D02', 'A01', 'E04', 'C02']
+Test record ids (last 20): ['B04', 'D02', 'A01', 'E04', 'C02']
+data_max: tensor([5.6217, 3.9067, 2.4465, 5.3456, 3.9414, 2.2163, 5.7582, 3.9781, 2.6061,
+        5.3913, 3.9654, 2.6011], device='cuda:0')
+data_min: tensor([ 0.1852, -0.1228, -1.4615,  0.1606, -0.4760, -2.5436, -0.2787, -0.4944,
+        -2.0269,  0.0198, -0.4789, -1.9588], device='cuda:0')
+time_max: tensor(304861., device='cuda:0')
+manual set time_max: tensor(4000)
+Dataset n_samples after time split: 1826 1121 341 364
+run bench_activity_h1000_warpformer_vanilla_s4 | device cuda:0 | params 85516 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 1000, "n_records": 100000000, "name": "activity", "patch_size": 750, "stride": 750}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.03779 val_mse 0.01517 best 0.01517@0 (4.0s)
+epoch 001 loss 0.01543 val_mse 0.01460 best 0.01460@1 (3.4s)
+epoch 002 loss 0.01432 val_mse 0.01326 best 0.01326@2 (3.5s)
+epoch 003 loss 0.01398 val_mse 0.01341 best 0.01326@2 (3.4s)
+epoch 004 loss 0.01372 val_mse 0.01259 best 0.01259@4 (3.3s)
+epoch 005 loss 0.01297 val_mse 0.01215 best 0.01215@5 (3.6s)
+epoch 006 loss 0.01239 val_mse 0.01261 best 0.01215@5 (3.3s)
+epoch 007 loss 0.01224 val_mse 0.01277 best 0.01215@5 (3.6s)
+epoch 008 loss 0.01280 val_mse 0.01238 best 0.01215@5 (3.6s)
+epoch 009 loss 0.01303 val_mse 0.01311 best 0.01215@5 (3.5s)
+epoch 010 loss 0.01268 val_mse 0.01255 best 0.01215@5 (3.4s)
+epoch 011 loss 0.01292 val_mse 0.01485 best 0.01215@5 (3.7s)
+epoch 012 loss 0.01348 val_mse 0.01184 best 0.01184@12 (3.0s)
+epoch 013 loss 0.01193 val_mse 0.01321 best 0.01184@12 (2.8s)
+epoch 014 loss 0.01222 val_mse 0.01578 best 0.01184@12 (3.7s)
+epoch 015 loss 0.01266 val_mse 0.01262 best 0.01184@12 (3.3s)
+epoch 016 loss 0.01181 val_mse 0.01233 best 0.01184@12 (3.8s)
+epoch 017 loss 0.01186 val_mse 0.01449 best 0.01184@12 (3.7s)
+epoch 018 loss 0.01399 val_mse 0.01626 best 0.01184@12 (3.2s)
+epoch 019 loss 0.01368 val_mse 0.01225 best 0.01184@12 (3.1s)
+epoch 020 loss 0.01159 val_mse 0.01152 best 0.01152@20 (2.3s)
+epoch 021 loss 0.01176 val_mse 0.01138 best 0.01138@21 (3.4s)
+epoch 022 loss 0.01209 val_mse 0.01350 best 0.01138@21 (3.2s)
+epoch 023 loss 0.01239 val_mse 0.01141 best 0.01138@21 (3.6s)
+epoch 024 loss 0.01175 val_mse 0.01187 best 0.01138@21 (3.5s)
+epoch 025 loss 0.01202 val_mse 0.01287 best 0.01138@21 (3.7s)
+epoch 026 loss 0.01190 val_mse 0.01191 best 0.01138@21 (3.6s)
+epoch 027 loss 0.01160 val_mse 0.01402 best 0.01138@21 (3.5s)
+epoch 028 loss 0.01292 val_mse 0.01200 best 0.01138@21 (3.6s)
+epoch 029 loss 0.01139 val_mse 0.01133 best 0.01133@29 (3.8s)
+epoch 030 loss 0.01132 val_mse 0.01150 best 0.01133@29 (3.5s)
+epoch 031 loss 0.01064 val_mse 0.01256 best 0.01133@29 (3.3s)
+epoch 032 loss 0.01034 val_mse 0.01281 best 0.01133@29 (4.0s)
+epoch 033 loss 0.01173 val_mse 0.01192 best 0.01133@29 (3.9s)
+epoch 034 loss 0.01041 val_mse 0.01253 best 0.01133@29 (3.4s)
+epoch 035 loss 0.01079 val_mse 0.01177 best 0.01133@29 (3.8s)
+epoch 036 loss 0.01075 val_mse 0.01192 best 0.01133@29 (3.3s)
+epoch 037 loss 0.01146 val_mse 0.01247 best 0.01133@29 (3.4s)
+epoch 038 loss 0.01086 val_mse 0.01226 best 0.01133@29 (3.9s)
+epoch 039 loss 0.01059 val_mse 0.01058 best 0.01058@39 (3.5s)
+  [identity                                  ] MSE 0.01054  MAE 0.07801
+  [random_dropout:0.7                        ] MSE 0.01610  MAE 0.09486
+  [temporal_stride:3                         ] MSE 0.01753  MAE 0.10401
+  [variable_dropout:0.5                      ] MSE 0.01483  MAE 0.09137
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01884  MAE 0.10791
+best {'val_mse': 0.010576254688203335, 'epoch': 39} -> results/raw/bench_activity_h1000_warpformer_vanilla_s4/results.json
+summary {
+  "clean_mse": 0.010544461198151112,
+  "mean_shift_mse": 0.01682452321983874,
+  "mean_degradation": 0.595579224359874,
+  "worst_mse": 0.018844006583094597,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.01682452321983874,
+  "mean_unseen_degradation": 0.595579224359874
+}
+[4/4] ok bench_activity_h1000_warpformer_vanilla_s4 (3.1 min)
+
+stage B: 4 ok, 0 failed
+stage C: 1 cells
+
+[1/1] bench_activity_h1000_warpformer_opera_s0
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/activity_h1000_distillation.yaml --seed 0 --name bench_activity_h1000_warpformer_opera_s0 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=warpformer distillation.teacher_ckpt=results/raw/bench_activity_h1000_warpformer_vanilla_s0/model.pt --no_wandb
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+Total records: 25
+Dataset n_samples: 25 15 5 5
+Test record ids (first 20): ['B04', 'D02', 'A01', 'E04', 'C02']
+Test record ids (last 20): ['B04', 'D02', 'A01', 'E04', 'C02']
+data_max: tensor([5.6217, 3.9067, 2.4465, 5.3456, 3.9414, 2.2163, 5.7582, 3.9781, 2.6061,
+        5.3913, 3.9654, 2.6011], device='cuda:0')
+data_min: tensor([ 0.1852, -0.1228, -1.4615,  0.1606, -0.4760, -2.5436, -0.2787, -0.4944,
+        -2.0269,  0.0198, -0.4789, -1.9588], device='cuda:0')
+time_max: tensor(304861., device='cuda:0')
+manual set time_max: tensor(4000)
+Dataset n_samples after time split: 1826 1121 341 364
+run bench_activity_h1000_warpformer_opera_s0 | device cuda:0 | params 85516 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 1000, "n_records": 100000000, "name": "activity", "patch_size": 750, "stride": 750}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_activity_h1000_warpformer_vanilla_s0/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+epoch 000 loss 0.08405 val_mse 0.01700 best 0.01700@0 (5.0s)
+epoch 001 loss 0.02210 val_mse 0.01472 best 0.01472@1 (4.1s)
+epoch 002 loss 0.01982 val_mse 0.01359 best 0.01359@2 (3.9s)
+epoch 003 loss 0.01750 val_mse 0.01308 best 0.01308@3 (4.4s)
+epoch 004 loss 0.01687 val_mse 0.01360 best 0.01308@3 (4.0s)
+epoch 005 loss 0.01720 val_mse 0.01376 best 0.01308@3 (4.0s)
+epoch 006 loss 0.01593 val_mse 0.01348 best 0.01308@3 (4.2s)
+epoch 007 loss 0.01594 val_mse 0.01405 best 0.01308@3 (4.3s)
+epoch 008 loss 0.01740 val_mse 0.01222 best 0.01222@8 (4.1s)
+epoch 009 loss 0.01527 val_mse 0.01214 best 0.01214@9 (4.2s)
+epoch 010 loss 0.01493 val_mse 0.01415 best 0.01214@9 (3.8s)
+epoch 011 loss 0.01668 val_mse 0.01349 best 0.01214@9 (4.1s)
+epoch 012 loss 0.01458 val_mse 0.01243 best 0.01214@9 (4.3s)
+epoch 013 loss 0.01490 val_mse 0.01207 best 0.01207@13 (4.0s)
+epoch 014 loss 0.01455 val_mse 0.01171 best 0.01171@14 (3.1s)
+epoch 015 loss 0.01491 val_mse 0.01189 best 0.01171@14 (2.8s)
+epoch 016 loss 0.01399 val_mse 0.01199 best 0.01171@14 (3.1s)
+epoch 017 loss 0.01405 val_mse 0.01173 best 0.01171@14 (3.0s)
+epoch 018 loss 0.01423 val_mse 0.01176 best 0.01171@14 (4.0s)
+epoch 019 loss 0.01434 val_mse 0.01245 best 0.01171@14 (3.8s)
+epoch 020 loss 0.01439 val_mse 0.01145 best 0.01145@20 (4.2s)
+epoch 021 loss 0.01331 val_mse 0.01145 best 0.01145@20 (4.2s)
+epoch 022 loss 0.01367 val_mse 0.01652 best 0.01145@20 (3.9s)
+epoch 023 loss 0.01534 val_mse 0.01179 best 0.01145@20 (4.2s)
+epoch 024 loss 0.01292 val_mse 0.01257 best 0.01145@20 (3.8s)
+epoch 025 loss 0.01330 val_mse 0.01216 best 0.01145@20 (3.9s)
+epoch 026 loss 0.01364 val_mse 0.01137 best 0.01137@26 (4.2s)
+epoch 027 loss 0.01250 val_mse 0.01106 best 0.01106@27 (3.7s)
+epoch 028 loss 0.01195 val_mse 0.01133 best 0.01106@27 (3.9s)
+epoch 029 loss 0.01163 val_mse 0.01199 best 0.01106@27 (3.9s)
+epoch 030 loss 0.01234 val_mse 0.01382 best 0.01106@27 (3.9s)
+epoch 031 loss 0.01361 val_mse 0.01153 best 0.01106@27 (3.9s)
+epoch 032 loss 0.01189 val_mse 0.01319 best 0.01106@27 (3.9s)
+epoch 033 loss 0.01285 val_mse 0.01127 best 0.01106@27 (4.3s)
+epoch 034 loss 0.01161 val_mse 0.01094 best 0.01094@34 (3.8s)
+epoch 035 loss 0.01217 val_mse 0.01113 best 0.01094@34 (4.0s)
+epoch 036 loss 0.01179 val_mse 0.01126 best 0.01094@34 (3.9s)
+epoch 037 loss 0.01151 val_mse 0.01057 best 0.01057@37 (4.0s)
+epoch 038 loss 0.01151 val_mse 0.01031 best 0.01031@38 (3.9s)
+epoch 039 loss 0.01160 val_mse 0.01143 best 0.01031@38 (3.9s)
+  [identity                                  ] MSE 0.01040  MAE 0.07702
+  [random_dropout:0.7                        ] MSE 0.00922  MAE 0.07247
+  [temporal_stride:3                         ] MSE 0.01094  MAE 0.07929
+  [variable_dropout:0.5                      ] MSE 0.01242  MAE 0.08322
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01152  MAE 0.08116
+best {'val_mse': 0.010311699472367764, 'epoch': 38} -> results/raw/bench_activity_h1000_warpformer_opera_s0/results.json
+summary {
+  "clean_mse": 0.01039708498865366,
+  "mean_shift_mse": 0.011024202918633819,
+  "mean_degradation": 0.06031670710247465,
+  "worst_mse": 0.012415890581905842,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.011024202918633819,
+  "mean_unseen_degradation": 0.06031670710247465
+}
+[1/1] ok bench_activity_h1000_warpformer_opera_s0 (3.4 min)
+
+stage C: 1 ok, 0 failed
+stage D: 4 cells
+
+[1/4] bench_activity_h1000_warpformer_opera_s1
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/activity_h1000_distillation.yaml --seed 1 --name bench_activity_h1000_warpformer_opera_s1 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=warpformer distillation.teacher_ckpt=results/raw/bench_activity_h1000_warpformer_vanilla_s1/model.pt --no_wandb
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+Total records: 25
+Dataset n_samples: 25 15 5 5
+Test record ids (first 20): ['B04', 'D02', 'A01', 'E04', 'C02']
+Test record ids (last 20): ['B04', 'D02', 'A01', 'E04', 'C02']
+data_max: tensor([5.6217, 3.9067, 2.4465, 5.3456, 3.9414, 2.2163, 5.7582, 3.9781, 2.6061,
+        5.3913, 3.9654, 2.6011], device='cuda:0')
+data_min: tensor([ 0.1852, -0.1228, -1.4615,  0.1606, -0.4760, -2.5436, -0.2787, -0.4944,
+        -2.0269,  0.0198, -0.4789, -1.9588], device='cuda:0')
+time_max: tensor(304861., device='cuda:0')
+manual set time_max: tensor(4000)
+Dataset n_samples after time split: 1826 1121 341 364
+run bench_activity_h1000_warpformer_opera_s1 | device cuda:0 | params 85516 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 1000, "n_records": 100000000, "name": "activity", "patch_size": 750, "stride": 750}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_activity_h1000_warpformer_vanilla_s1/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+epoch 000 loss 0.05938 val_mse 0.01477 best 0.01477@0 (4.1s)
+epoch 001 loss 0.01927 val_mse 0.01453 best 0.01453@1 (4.1s)
+epoch 002 loss 0.01719 val_mse 0.01279 best 0.01279@2 (3.9s)
+epoch 003 loss 0.01504 val_mse 0.01328 best 0.01279@2 (3.8s)
+epoch 004 loss 0.01470 val_mse 0.01219 best 0.01219@4 (4.2s)
+epoch 005 loss 0.01477 val_mse 0.01220 best 0.01219@4 (4.1s)
+epoch 006 loss 0.01455 val_mse 0.01344 best 0.01219@4 (3.9s)
+epoch 007 loss 0.01479 val_mse 0.01296 best 0.01219@4 (3.7s)
+epoch 008 loss 0.01454 val_mse 0.01337 best 0.01219@4 (4.1s)
+epoch 009 loss 0.01465 val_mse 0.01198 best 0.01198@9 (4.1s)
+epoch 010 loss 0.01415 val_mse 0.01265 best 0.01198@9 (3.8s)
+epoch 011 loss 0.01360 val_mse 0.01182 best 0.01182@11 (4.0s)
+epoch 012 loss 0.01362 val_mse 0.01219 best 0.01182@11 (2.8s)
+epoch 013 loss 0.01373 val_mse 0.01250 best 0.01182@11 (3.2s)
+epoch 014 loss 0.01334 val_mse 0.01323 best 0.01182@11 (3.7s)
+epoch 015 loss 0.01346 val_mse 0.01208 best 0.01182@11 (4.1s)
+epoch 016 loss 0.01270 val_mse 0.01220 best 0.01182@11 (2.8s)
+epoch 017 loss 0.01293 val_mse 0.01177 best 0.01177@17 (3.3s)
+epoch 018 loss 0.01250 val_mse 0.01415 best 0.01177@17 (3.9s)
+epoch 019 loss 0.01354 val_mse 0.01139 best 0.01139@19 (3.7s)
+epoch 020 loss 0.01212 val_mse 0.01276 best 0.01139@19 (3.6s)
+epoch 021 loss 0.01315 val_mse 0.01166 best 0.01139@19 (3.9s)
+epoch 022 loss 0.01203 val_mse 0.01124 best 0.01124@22 (3.8s)
+epoch 023 loss 0.01175 val_mse 0.01173 best 0.01124@22 (3.5s)
+epoch 024 loss 0.01193 val_mse 0.01227 best 0.01124@22 (3.7s)
+epoch 025 loss 0.01251 val_mse 0.01198 best 0.01124@22 (3.7s)
+epoch 026 loss 0.01262 val_mse 0.01124 best 0.01124@22 (3.9s)
+epoch 027 loss 0.01196 val_mse 0.01129 best 0.01124@22 (3.9s)
+epoch 028 loss 0.01169 val_mse 0.01239 best 0.01124@22 (3.5s)
+epoch 029 loss 0.01228 val_mse 0.01113 best 0.01113@29 (3.6s)
+epoch 030 loss 0.01175 val_mse 0.01134 best 0.01113@29 (3.7s)
+epoch 031 loss 0.01154 val_mse 0.01271 best 0.01113@29 (3.9s)
+epoch 032 loss 0.01270 val_mse 0.01182 best 0.01113@29 (3.5s)
+epoch 033 loss 0.01183 val_mse 0.01161 best 0.01113@29 (3.8s)
+epoch 034 loss 0.01322 val_mse 0.01171 best 0.01113@29 (3.7s)
+epoch 035 loss 0.01240 val_mse 0.01102 best 0.01102@35 (3.9s)
+epoch 036 loss 0.01141 val_mse 0.01141 best 0.01102@35 (3.6s)
+epoch 037 loss 0.01124 val_mse 0.01076 best 0.01076@37 (3.7s)
+epoch 038 loss 0.01159 val_mse 0.01081 best 0.01076@37 (3.7s)
+epoch 039 loss 0.01142 val_mse 0.01093 best 0.01076@37 (3.9s)
+  [identity                                  ] MSE 0.01081  MAE 0.07881
+  [random_dropout:0.7                        ] MSE 0.00997  MAE 0.07502
+  [temporal_stride:3                         ] MSE 0.01142  MAE 0.08085
+  [variable_dropout:0.5                      ] MSE 0.01291  MAE 0.08530
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01179  MAE 0.08202
+best {'val_mse': 0.0107595669105649, 'epoch': 37} -> results/raw/bench_activity_h1000_warpformer_opera_s1/results.json
+summary {
+  "clean_mse": 0.010806463658809662,
+  "mean_shift_mse": 0.011523541295900941,
+  "mean_degradation": 0.06635636409203134,
+  "worst_mse": 0.012908079661428928,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.011523541295900941,
+  "mean_unseen_degradation": 0.06635636409203134
+}
+[1/4] ok bench_activity_h1000_warpformer_opera_s1 (3.3 min)
+
+[2/4] bench_activity_h1000_warpformer_opera_s2
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/activity_h1000_distillation.yaml --seed 2 --name bench_activity_h1000_warpformer_opera_s2 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=warpformer distillation.teacher_ckpt=results/raw/bench_activity_h1000_warpformer_vanilla_s2/model.pt --no_wandb
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+Total records: 25
+Dataset n_samples: 25 15 5 5
+Test record ids (first 20): ['B04', 'D02', 'A01', 'E04', 'C02']
+Test record ids (last 20): ['B04', 'D02', 'A01', 'E04', 'C02']
+data_max: tensor([5.6217, 3.9067, 2.4465, 5.3456, 3.9414, 2.2163, 5.7582, 3.9781, 2.6061,
+        5.3913, 3.9654, 2.6011], device='cuda:0')
+data_min: tensor([ 0.1852, -0.1228, -1.4615,  0.1606, -0.4760, -2.5436, -0.2787, -0.4944,
+        -2.0269,  0.0198, -0.4789, -1.9588], device='cuda:0')
+time_max: tensor(304861., device='cuda:0')
+manual set time_max: tensor(4000)
+Dataset n_samples after time split: 1826 1121 341 364
+run bench_activity_h1000_warpformer_opera_s2 | device cuda:0 | params 85516 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 1000, "n_records": 100000000, "name": "activity", "patch_size": 750, "stride": 750}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_activity_h1000_warpformer_vanilla_s2/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+epoch 000 loss 0.07186 val_mse 0.01935 best 0.01935@0 (4.3s)
+epoch 001 loss 0.02334 val_mse 0.01532 best 0.01532@1 (3.6s)
+epoch 002 loss 0.01937 val_mse 0.01368 best 0.01368@2 (3.7s)
+epoch 003 loss 0.01739 val_mse 0.01339 best 0.01339@3 (3.9s)
+epoch 004 loss 0.01646 val_mse 0.01264 best 0.01264@4 (4.0s)
+epoch 005 loss 0.01594 val_mse 0.01548 best 0.01264@4 (3.8s)
+epoch 006 loss 0.01701 val_mse 0.01963 best 0.01264@4 (3.6s)
+epoch 007 loss 0.01752 val_mse 0.01250 best 0.01250@7 (3.6s)
+epoch 008 loss 0.01577 val_mse 0.01521 best 0.01250@7 (3.8s)
+epoch 009 loss 0.01735 val_mse 0.01347 best 0.01250@7 (2.7s)
+epoch 010 loss 0.01707 val_mse 0.01217 best 0.01217@10 (3.0s)
+epoch 011 loss 0.01639 val_mse 0.01313 best 0.01217@10 (3.8s)
+epoch 012 loss 0.01649 val_mse 0.01320 best 0.01217@10 (3.8s)
+epoch 013 loss 0.01497 val_mse 0.01184 best 0.01184@13 (3.7s)
+epoch 014 loss 0.01485 val_mse 0.01198 best 0.01184@13 (3.6s)
+epoch 015 loss 0.01518 val_mse 0.01176 best 0.01176@15 (3.7s)
+epoch 016 loss 0.01436 val_mse 0.01298 best 0.01176@15 (3.6s)
+epoch 017 loss 0.01582 val_mse 0.01608 best 0.01176@15 (3.8s)
+epoch 018 loss 0.01663 val_mse 0.01196 best 0.01176@15 (3.7s)
+epoch 019 loss 0.01447 val_mse 0.01185 best 0.01176@15 (3.5s)
+epoch 020 loss 0.01428 val_mse 0.01163 best 0.01163@20 (3.7s)
+epoch 021 loss 0.01432 val_mse 0.01331 best 0.01163@20 (3.9s)
+epoch 022 loss 0.01370 val_mse 0.01171 best 0.01163@20 (3.7s)
+epoch 023 loss 0.01344 val_mse 0.01217 best 0.01163@20 (3.8s)
+epoch 024 loss 0.01277 val_mse 0.01108 best 0.01108@24 (3.6s)
+epoch 025 loss 0.01221 val_mse 0.01249 best 0.01108@24 (3.5s)
+epoch 026 loss 0.01255 val_mse 0.01165 best 0.01108@24 (4.2s)
+epoch 027 loss 0.01250 val_mse 0.01294 best 0.01108@24 (3.4s)
+epoch 028 loss 0.01295 val_mse 0.01098 best 0.01098@28 (2.6s)
+epoch 029 loss 0.01204 val_mse 0.01101 best 0.01098@28 (3.5s)
+epoch 030 loss 0.01194 val_mse 0.01104 best 0.01098@28 (4.0s)
+epoch 031 loss 0.01170 val_mse 0.01058 best 0.01058@31 (3.6s)
+epoch 032 loss 0.01228 val_mse 0.01249 best 0.01058@31 (3.9s)
+epoch 033 loss 0.01208 val_mse 0.01159 best 0.01058@31 (3.8s)
+epoch 034 loss 0.01241 val_mse 0.01095 best 0.01058@31 (3.4s)
+epoch 035 loss 0.01284 val_mse 0.01227 best 0.01058@31 (3.5s)
+epoch 036 loss 0.01286 val_mse 0.01131 best 0.01058@31 (3.6s)
+epoch 037 loss 0.01169 val_mse 0.01221 best 0.01058@31 (3.5s)
+epoch 038 loss 0.01244 val_mse 0.01098 best 0.01058@31 (3.8s)
+epoch 039 loss 0.01168 val_mse 0.01105 best 0.01058@31 (3.9s)
+  [identity                                  ] MSE 0.01064  MAE 0.07799
+  [random_dropout:0.7                        ] MSE 0.00966  MAE 0.07370
+  [temporal_stride:3                         ] MSE 0.01149  MAE 0.08133
+  [variable_dropout:0.5                      ] MSE 0.01313  MAE 0.08576
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01217  MAE 0.08335
+best {'val_mse': 0.010580699890851974, 'epoch': 31} -> results/raw/bench_activity_h1000_warpformer_opera_s2/results.json
+summary {
+  "clean_mse": 0.010643328540027142,
+  "mean_shift_mse": 0.01161299180239439,
+  "mean_degradation": 0.09110526455333641,
+  "worst_mse": 0.01312508899718523,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.01161299180239439,
+  "mean_unseen_degradation": 0.09110526455333641
+}
+[2/4] ok bench_activity_h1000_warpformer_opera_s2 (3.2 min)
+
+[3/4] bench_activity_h1000_warpformer_opera_s3
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/activity_h1000_distillation.yaml --seed 3 --name bench_activity_h1000_warpformer_opera_s3 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=warpformer distillation.teacher_ckpt=results/raw/bench_activity_h1000_warpformer_vanilla_s3/model.pt --no_wandb
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+Total records: 25
+Dataset n_samples: 25 15 5 5
+Test record ids (first 20): ['B04', 'D02', 'A01', 'E04', 'C02']
+Test record ids (last 20): ['B04', 'D02', 'A01', 'E04', 'C02']
+data_max: tensor([5.6217, 3.9067, 2.4465, 5.3456, 3.9414, 2.2163, 5.7582, 3.9781, 2.6061,
+        5.3913, 3.9654, 2.6011], device='cuda:0')
+data_min: tensor([ 0.1852, -0.1228, -1.4615,  0.1606, -0.4760, -2.5436, -0.2787, -0.4944,
+        -2.0269,  0.0198, -0.4789, -1.9588], device='cuda:0')
+time_max: tensor(304861., device='cuda:0')
+manual set time_max: tensor(4000)
+Dataset n_samples after time split: 1826 1121 341 364
+run bench_activity_h1000_warpformer_opera_s3 | device cuda:0 | params 85516 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 1000, "n_records": 100000000, "name": "activity", "patch_size": 750, "stride": 750}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_activity_h1000_warpformer_vanilla_s3/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+epoch 000 loss 0.07820 val_mse 0.01572 best 0.01572@0 (4.2s)
+epoch 001 loss 0.01718 val_mse 0.01434 best 0.01434@1 (3.9s)
+epoch 002 loss 0.01567 val_mse 0.01381 best 0.01381@2 (3.7s)
+epoch 003 loss 0.01444 val_mse 0.01339 best 0.01339@3 (3.7s)
+epoch 004 loss 0.01475 val_mse 0.01341 best 0.01339@3 (4.1s)
+epoch 005 loss 0.01365 val_mse 0.01369 best 0.01339@3 (3.4s)
+epoch 006 loss 0.01376 val_mse 0.01268 best 0.01268@6 (2.5s)
+epoch 007 loss 0.01286 val_mse 0.01373 best 0.01268@6 (3.5s)
+epoch 008 loss 0.01375 val_mse 0.01271 best 0.01268@6 (3.6s)
+epoch 009 loss 0.01328 val_mse 0.01241 best 0.01241@9 (4.1s)
+epoch 010 loss 0.01323 val_mse 0.01264 best 0.01241@9 (3.6s)
+epoch 011 loss 0.01374 val_mse 0.01264 best 0.01241@9 (4.0s)
+epoch 012 loss 0.01278 val_mse 0.01262 best 0.01241@9 (3.6s)
+epoch 013 loss 0.01268 val_mse 0.01201 best 0.01201@13 (3.8s)
+epoch 014 loss 0.01264 val_mse 0.01306 best 0.01201@13 (3.6s)
+epoch 015 loss 0.01278 val_mse 0.01206 best 0.01201@13 (3.6s)
+epoch 016 loss 0.01261 val_mse 0.01216 best 0.01201@13 (3.6s)
+epoch 017 loss 0.01288 val_mse 0.01351 best 0.01201@13 (3.8s)
+epoch 018 loss 0.01345 val_mse 0.01283 best 0.01201@13 (3.6s)
+epoch 019 loss 0.01286 val_mse 0.01244 best 0.01201@13 (3.7s)
+epoch 020 loss 0.01344 val_mse 0.01211 best 0.01201@13 (3.5s)
+epoch 021 loss 0.01247 val_mse 0.01244 best 0.01201@13 (3.8s)
+epoch 022 loss 0.01228 val_mse 0.01163 best 0.01163@22 (4.0s)
+epoch 023 loss 0.01238 val_mse 0.01183 best 0.01163@22 (3.8s)
+epoch 024 loss 0.01246 val_mse 0.01195 best 0.01163@22 (4.0s)
+epoch 025 loss 0.01245 val_mse 0.01199 best 0.01163@22 (3.7s)
+epoch 026 loss 0.01229 val_mse 0.01180 best 0.01163@22 (4.1s)
+epoch 027 loss 0.01249 val_mse 0.01221 best 0.01163@22 (3.7s)
+epoch 028 loss 0.01204 val_mse 0.01156 best 0.01156@28 (3.5s)
+epoch 029 loss 0.01201 val_mse 0.01198 best 0.01156@28 (3.6s)
+epoch 030 loss 0.01196 val_mse 0.01187 best 0.01156@28 (3.7s)
+epoch 031 loss 0.01173 val_mse 0.01258 best 0.01156@28 (3.7s)
+epoch 032 loss 0.01251 val_mse 0.01133 best 0.01133@32 (3.9s)
+epoch 033 loss 0.01157 val_mse 0.01276 best 0.01133@32 (3.6s)
+epoch 034 loss 0.01215 val_mse 0.01162 best 0.01133@32 (3.8s)
+epoch 035 loss 0.01188 val_mse 0.01112 best 0.01112@35 (4.0s)
+epoch 036 loss 0.01182 val_mse 0.01178 best 0.01112@35 (3.6s)
+epoch 037 loss 0.01130 val_mse 0.01167 best 0.01112@35 (3.9s)
+epoch 038 loss 0.01148 val_mse 0.01129 best 0.01112@35 (4.4s)
+epoch 039 loss 0.01132 val_mse 0.01122 best 0.01112@35 (2.6s)
+  [identity                                  ] MSE 0.01134  MAE 0.08131
+  [random_dropout:0.7                        ] MSE 0.01000  MAE 0.07647
+  [temporal_stride:3                         ] MSE 0.01176  MAE 0.08260
+  [variable_dropout:0.5                      ] MSE 0.01309  MAE 0.08653
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01213  MAE 0.08364
+best {'val_mse': 0.011119924485683441, 'epoch': 35} -> results/raw/bench_activity_h1000_warpformer_opera_s3/results.json
+summary {
+  "clean_mse": 0.011344055645167828,
+  "mean_shift_mse": 0.011744510615244508,
+  "mean_degradation": 0.03530086440004902,
+  "worst_mse": 0.01309012621641159,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.011744510615244508,
+  "mean_unseen_degradation": 0.03530086440004902
+}
+[3/4] ok bench_activity_h1000_warpformer_opera_s3 (3.2 min)
+
+[4/4] bench_activity_h1000_warpformer_opera_s4
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/activity_h1000_distillation.yaml --seed 4 --name bench_activity_h1000_warpformer_opera_s4 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=warpformer distillation.teacher_ckpt=results/raw/bench_activity_h1000_warpformer_vanilla_s4/model.pt --no_wandb
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+Total records: 25
+Dataset n_samples: 25 15 5 5
+Test record ids (first 20): ['B04', 'D02', 'A01', 'E04', 'C02']
+Test record ids (last 20): ['B04', 'D02', 'A01', 'E04', 'C02']
+data_max: tensor([5.6217, 3.9067, 2.4465, 5.3456, 3.9414, 2.2163, 5.7582, 3.9781, 2.6061,
+        5.3913, 3.9654, 2.6011], device='cuda:0')
+data_min: tensor([ 0.1852, -0.1228, -1.4615,  0.1606, -0.4760, -2.5436, -0.2787, -0.4944,
+        -2.0269,  0.0198, -0.4789, -1.9588], device='cuda:0')
+time_max: tensor(304861., device='cuda:0')
+manual set time_max: tensor(4000)
+Dataset n_samples after time split: 1826 1121 341 364
+run bench_activity_h1000_warpformer_opera_s4 | device cuda:0 | params 85516 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 1000, "n_records": 100000000, "name": "activity", "patch_size": 750, "stride": 750}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_activity_h1000_warpformer_vanilla_s4/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+epoch 000 loss 0.06689 val_mse 0.01512 best 0.01512@0 (4.3s)
+epoch 001 loss 0.01935 val_mse 0.01685 best 0.01512@0 (3.7s)
+epoch 002 loss 0.01815 val_mse 0.01674 best 0.01512@0 (4.0s)
+epoch 003 loss 0.01716 val_mse 0.01237 best 0.01237@3 (2.5s)
+epoch 004 loss 0.01543 val_mse 0.01228 best 0.01228@4 (3.2s)
+epoch 005 loss 0.01487 val_mse 0.01430 best 0.01228@4 (3.7s)
+epoch 006 loss 0.01502 val_mse 0.01226 best 0.01226@6 (3.7s)
+epoch 007 loss 0.01495 val_mse 0.01264 best 0.01226@6 (3.7s)
+epoch 008 loss 0.01468 val_mse 0.01225 best 0.01225@8 (3.8s)
+epoch 009 loss 0.01433 val_mse 0.01203 best 0.01203@9 (3.8s)
+epoch 010 loss 0.01435 val_mse 0.01296 best 0.01203@9 (3.7s)
+epoch 011 loss 0.01505 val_mse 0.01297 best 0.01203@9 (3.5s)
+epoch 012 loss 0.01485 val_mse 0.01333 best 0.01203@9 (3.5s)
+epoch 013 loss 0.01428 val_mse 0.01188 best 0.01188@13 (3.7s)
+epoch 014 loss 0.01380 val_mse 0.01215 best 0.01188@13 (3.8s)
+epoch 015 loss 0.01432 val_mse 0.01560 best 0.01188@13 (3.6s)
+epoch 016 loss 0.01509 val_mse 0.01272 best 0.01188@13 (3.7s)
+epoch 017 loss 0.01407 val_mse 0.01228 best 0.01188@13 (3.6s)
+epoch 018 loss 0.01356 val_mse 0.01258 best 0.01188@13 (3.5s)
+epoch 019 loss 0.01332 val_mse 0.01201 best 0.01188@13 (3.4s)
+epoch 020 loss 0.01342 val_mse 0.01164 best 0.01164@20 (3.7s)
+epoch 021 loss 0.01280 val_mse 0.01236 best 0.01164@20 (3.9s)
+epoch 022 loss 0.01255 val_mse 0.01208 best 0.01164@20 (3.7s)
+epoch 023 loss 0.01261 val_mse 0.01206 best 0.01164@20 (3.6s)
+epoch 024 loss 0.01258 val_mse 0.01121 best 0.01121@24 (3.7s)
+epoch 025 loss 0.01203 val_mse 0.01400 best 0.01121@24 (3.6s)
+epoch 026 loss 0.01407 val_mse 0.01126 best 0.01121@24 (3.6s)
+epoch 027 loss 0.01180 val_mse 0.01094 best 0.01094@27 (3.7s)
+epoch 028 loss 0.01171 val_mse 0.01155 best 0.01094@27 (3.7s)
+epoch 029 loss 0.01319 val_mse 0.01152 best 0.01094@27 (3.7s)
+epoch 030 loss 0.01188 val_mse 0.01091 best 0.01091@30 (3.8s)
+epoch 031 loss 0.01130 val_mse 0.01087 best 0.01087@31 (3.8s)
+epoch 032 loss 0.01129 val_mse 0.01208 best 0.01087@31 (3.6s)
+epoch 033 loss 0.01234 val_mse 0.01289 best 0.01087@31 (3.8s)
+epoch 034 loss 0.01135 val_mse 0.01106 best 0.01087@31 (3.7s)
+epoch 035 loss 0.01125 val_mse 0.01104 best 0.01087@31 (3.6s)
+epoch 036 loss 0.01142 val_mse 0.01073 best 0.01073@36 (3.9s)
+epoch 037 loss 0.01116 val_mse 0.01388 best 0.01073@36 (3.8s)
+epoch 038 loss 0.01357 val_mse 0.01154 best 0.01073@36 (3.8s)
+epoch 039 loss 0.01132 val_mse 0.01184 best 0.01073@36 (3.8s)
+  [identity                                  ] MSE 0.01078  MAE 0.07863
+  [random_dropout:0.7                        ] MSE 0.00974  MAE 0.07463
+  [temporal_stride:3                         ] MSE 0.01227  MAE 0.08463
+  [variable_dropout:0.5                      ] MSE 0.01298  MAE 0.08579
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01274  MAE 0.08622
+best {'val_mse': 0.010733638890087605, 'epoch': 36} -> results/raw/bench_activity_h1000_warpformer_opera_s4/results.json
+summary {
+  "clean_mse": 0.010784356854856014,
+  "mean_shift_mse": 0.011931838002055883,
+  "mean_degradation": 0.1064023717541559,
+  "worst_mse": 0.012979697436094284,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.011931838002055883,
+  "mean_unseen_degradation": 0.1064023717541559
+}
+[4/4] ok bench_activity_h1000_warpformer_opera_s4 (3.2 min)
+
+stage D: 4 ok, 0 failed

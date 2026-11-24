@@ -1,0 +1,50 @@
+run bench_vitaldb_patchtst_opera_s4 | device cuda:0 | params 126785 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw\\bench_vitaldb_patchtst_vanilla_s4\\model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "patchtst", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.02001 val_mse 0.00375 best 0.00375@0 (38.9s)
+epoch 001 loss 0.00841 val_mse 0.00388 best 0.00375@0 (55.8s)
+epoch 002 loss 0.00721 val_mse 0.00340 best 0.00340@2 (53.3s)
+epoch 003 loss 0.00634 val_mse 0.00324 best 0.00324@3 (52.8s)
+epoch 004 loss 0.00690 val_mse 0.00298 best 0.00298@4 (51.9s)
+epoch 005 loss 0.00664 val_mse 0.00414 best 0.00298@4 (52.5s)
+epoch 006 loss 0.00692 val_mse 0.00331 best 0.00298@4 (53.0s)
+epoch 007 loss 0.00649 val_mse 0.00290 best 0.00290@7 (52.6s)
+epoch 008 loss 0.00620 val_mse 0.00293 best 0.00290@7 (52.4s)
+epoch 009 loss 0.00714 val_mse 0.00308 best 0.00290@7 (52.9s)
+epoch 010 loss 0.00682 val_mse 0.00381 best 0.00290@7 (52.1s)
+epoch 011 loss 0.00636 val_mse 0.00318 best 0.00290@7 (53.1s)
+epoch 012 loss 0.00612 val_mse 0.00291 best 0.00290@7 (51.9s)
+epoch 013 loss 0.00636 val_mse 0.00293 best 0.00290@7 (52.0s)
+epoch 014 loss 0.00653 val_mse 0.00287 best 0.00287@14 (54.2s)
+epoch 015 loss 0.00655 val_mse 0.00325 best 0.00287@14 (52.7s)
+epoch 016 loss 0.00621 val_mse 0.00297 best 0.00287@14 (53.5s)
+epoch 017 loss 0.00604 val_mse 0.00284 best 0.00284@17 (51.4s)
+epoch 018 loss 0.00613 val_mse 0.00330 best 0.00284@17 (52.4s)
+epoch 019 loss 0.00587 val_mse 0.00275 best 0.00275@19 (54.7s)
+epoch 020 loss 0.00563 val_mse 0.00326 best 0.00275@19 (51.5s)
+epoch 021 loss 0.00604 val_mse 0.00271 best 0.00271@21 (49.3s)
+epoch 022 loss 0.00636 val_mse 0.00283 best 0.00271@21 (40.7s)
+epoch 023 loss 0.00641 val_mse 0.00289 best 0.00271@21 (39.5s)
+epoch 024 loss 0.00596 val_mse 0.00288 best 0.00271@21 (40.4s)
+epoch 025 loss 0.00601 val_mse 0.00272 best 0.00271@21 (42.7s)
+epoch 026 loss 0.00599 val_mse 0.00347 best 0.00271@21 (43.2s)
+epoch 027 loss 0.00581 val_mse 0.00311 best 0.00271@21 (42.8s)
+epoch 028 loss 0.00579 val_mse 0.00277 best 0.00271@21 (39.4s)
+epoch 029 loss 0.00619 val_mse 0.00301 best 0.00271@21 (39.8s)
+epoch 030 loss 0.00592 val_mse 0.00630 best 0.00271@21 (40.6s)
+epoch 031 loss 0.00767 val_mse 0.00322 best 0.00271@21 (42.2s)
+early stop
+  [identity                                  ] MSE 0.00287  MAE 0.03308
+  [random_dropout:0.7                        ] MSE 0.00501  MAE 0.04825
+  [temporal_stride:3                         ] MSE 0.00394  MAE 0.04185
+  [variable_dropout:0.5                      ] MSE 0.02212  MAE 0.08934
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01443  MAE 0.07020
+best {'val_mse': 0.00270782015286386, 'epoch': 21} -> results/raw\bench_vitaldb_patchtst_opera_s4\results.json
+summary {
+  "clean_mse": 0.002872924320399761,
+  "mean_shift_mse": 0.011373363086022437,
+  "mean_degradation": 2.9588105420193798,
+  "worst_mse": 0.02211916632950306,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.011373363086022437,
+  "mean_unseen_degradation": 2.9588105420193798
+}

@@ -1,0 +1,47 @@
+wandb disabled: No API key configured. Use `wandb login` to log in.
+run bench_cgmacros_segrnn_vanilla_s0 | device cuda:0 | params 125889 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 180, "n_records": 100000000, "name": "cgmacros", "patch_size": 45, "pred_window": 60, "stride": 45}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "segrnn", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01148 val_mse 0.00561 best 0.00561@0 (3.4s)
+epoch 001 loss 0.00554 val_mse 0.00551 best 0.00551@1 (2.9s)
+epoch 002 loss 0.00512 val_mse 0.00501 best 0.00501@2 (2.9s)
+epoch 003 loss 0.00505 val_mse 0.00514 best 0.00501@2 (3.4s)
+epoch 004 loss 0.00492 val_mse 0.00534 best 0.00501@2 (2.9s)
+epoch 005 loss 0.00475 val_mse 0.00533 best 0.00501@2 (2.9s)
+epoch 006 loss 0.00476 val_mse 0.00497 best 0.00497@6 (2.9s)
+epoch 007 loss 0.00469 val_mse 0.00490 best 0.00490@7 (2.9s)
+epoch 008 loss 0.00473 val_mse 0.00483 best 0.00483@8 (2.9s)
+epoch 009 loss 0.00477 val_mse 0.00507 best 0.00483@8 (2.9s)
+epoch 010 loss 0.00464 val_mse 0.00519 best 0.00483@8 (2.9s)
+epoch 011 loss 0.00468 val_mse 0.00513 best 0.00483@8 (2.9s)
+epoch 012 loss 0.00467 val_mse 0.00497 best 0.00483@8 (2.9s)
+epoch 013 loss 0.00458 val_mse 0.00481 best 0.00481@13 (2.9s)
+epoch 014 loss 0.00462 val_mse 0.00483 best 0.00481@13 (2.9s)
+epoch 015 loss 0.00459 val_mse 0.00495 best 0.00481@13 (2.9s)
+epoch 016 loss 0.00455 val_mse 0.00530 best 0.00481@13 (3.0s)
+epoch 017 loss 0.00454 val_mse 0.00474 best 0.00474@17 (2.9s)
+epoch 018 loss 0.00456 val_mse 0.00488 best 0.00474@17 (2.9s)
+epoch 019 loss 0.00453 val_mse 0.00485 best 0.00474@17 (2.9s)
+epoch 020 loss 0.00450 val_mse 0.00476 best 0.00474@17 (2.9s)
+epoch 021 loss 0.00448 val_mse 0.00501 best 0.00474@17 (2.9s)
+epoch 022 loss 0.00446 val_mse 0.00480 best 0.00474@17 (2.9s)
+epoch 023 loss 0.00450 val_mse 0.00508 best 0.00474@17 (2.9s)
+epoch 024 loss 0.00447 val_mse 0.00477 best 0.00474@17 (2.9s)
+epoch 025 loss 0.00451 val_mse 0.00483 best 0.00474@17 (3.0s)
+epoch 026 loss 0.00446 val_mse 0.00481 best 0.00474@17 (2.9s)
+epoch 027 loss 0.00448 val_mse 0.00488 best 0.00474@17 (2.9s)
+early stop
+  [identity                                  ] MSE 0.00430  MAE 0.04122
+  [random_dropout:0.7                        ] MSE 0.04169  MAE 0.16470
+  [temporal_stride:3                         ] MSE 0.04629  MAE 0.18023
+  [variable_dropout:0.5                      ] MSE 0.02994  MAE 0.11653
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.05027  MAE 0.18764
+best {'val_mse': 0.00474307918921113, 'epoch': 17} -> results/raw/bench_cgmacros_segrnn_vanilla_s0/results.json
+summary {
+  "clean_mse": 0.0042975046671926975,
+  "mean_shift_mse": 0.04204677511006594,
+  "mean_degradation": 8.783997544215019,
+  "worst_mse": 0.05026564747095108,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.04204677511006594,
+  "mean_unseen_degradation": 8.783997544215019
+}

@@ -1,0 +1,1236 @@
+stage A: 3 cells
+
+[1/3] bench_cgmacros_itransformer_vanilla_s0
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/cgmacros_baseline.yaml --seed 0 --name bench_cgmacros_itransformer_vanilla_s0 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=itransformer --no_wandb
+cgmacros records: 45 27 9 9
+cgmacros windows: 11422 6770 2261 2391
+data_max: tensor([400.0000, 405.0000, 172.0000, 124.2000])
+data_min: tensor([40.0000, 40.0000, 42.6000,  0.0000])
+time_max: tensor(239.)
+run bench_cgmacros_itransformer_vanilla_s0 | device cuda:0 | params 126785 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 180, "n_records": 100000000, "name": "cgmacros", "patch_size": 45, "pred_window": 60, "stride": 45}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "itransformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00864 val_mse 0.00523 best 0.00523@0 (8.0s)
+epoch 001 loss 0.00508 val_mse 0.00556 best 0.00523@0 (3.4s)
+epoch 002 loss 0.00487 val_mse 0.00508 best 0.00508@2 (3.4s)
+epoch 003 loss 0.00471 val_mse 0.00497 best 0.00497@3 (3.4s)
+epoch 004 loss 0.00461 val_mse 0.00528 best 0.00497@3 (3.5s)
+epoch 005 loss 0.00454 val_mse 0.00523 best 0.00497@3 (3.5s)
+epoch 006 loss 0.00454 val_mse 0.00525 best 0.00497@3 (3.5s)
+epoch 007 loss 0.00446 val_mse 0.00490 best 0.00490@7 (3.5s)
+epoch 008 loss 0.00451 val_mse 0.00478 best 0.00478@8 (3.5s)
+epoch 009 loss 0.00451 val_mse 0.00485 best 0.00478@8 (3.5s)
+epoch 010 loss 0.00441 val_mse 0.00504 best 0.00478@8 (3.5s)
+epoch 011 loss 0.00449 val_mse 0.00496 best 0.00478@8 (3.5s)
+epoch 012 loss 0.00446 val_mse 0.00514 best 0.00478@8 (3.5s)
+epoch 013 loss 0.00445 val_mse 0.00479 best 0.00478@8 (3.5s)
+epoch 014 loss 0.00443 val_mse 0.00502 best 0.00478@8 (3.5s)
+epoch 015 loss 0.00443 val_mse 0.00493 best 0.00478@8 (3.5s)
+epoch 016 loss 0.00434 val_mse 0.00549 best 0.00478@8 (3.5s)
+epoch 017 loss 0.00443 val_mse 0.00472 best 0.00472@17 (3.5s)
+epoch 018 loss 0.00440 val_mse 0.00506 best 0.00472@17 (3.5s)
+epoch 019 loss 0.00438 val_mse 0.00486 best 0.00472@17 (3.5s)
+epoch 020 loss 0.00436 val_mse 0.00477 best 0.00472@17 (3.5s)
+epoch 021 loss 0.00435 val_mse 0.00515 best 0.00472@17 (3.5s)
+epoch 022 loss 0.00437 val_mse 0.00474 best 0.00472@17 (3.5s)
+epoch 023 loss 0.00435 val_mse 0.00508 best 0.00472@17 (3.5s)
+epoch 024 loss 0.00435 val_mse 0.00473 best 0.00472@17 (3.5s)
+epoch 025 loss 0.00430 val_mse 0.00491 best 0.00472@17 (3.5s)
+epoch 026 loss 0.00430 val_mse 0.00477 best 0.00472@17 (3.5s)
+epoch 027 loss 0.00435 val_mse 0.00490 best 0.00472@17 (3.5s)
+early stop
+  [identity                                  ] MSE 0.00418  MAE 0.04174
+  [random_dropout:0.7                        ] MSE 0.03247  MAE 0.13465
+  [temporal_stride:3                         ] MSE 0.04049  MAE 0.15820
+  [variable_dropout:0.5                      ] MSE 0.02070  MAE 0.09448
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.04121  MAE 0.15969
+best {'val_mse': 0.004720504395663738, 'epoch': 17} -> results/raw/bench_cgmacros_itransformer_vanilla_s0/results.json
+summary {
+  "clean_mse": 0.004180390387773514,
+  "mean_shift_mse": 0.03371627954766154,
+  "mean_degradation": 7.065342329336595,
+  "worst_mse": 0.04121030867099762,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.03371627954766154,
+  "mean_unseen_degradation": 7.065342329336595
+}
+[1/3] ok bench_cgmacros_itransformer_vanilla_s0 (5.0 min)
+
+[2/3] bench_cgmacros_patchtst_vanilla_s0
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/cgmacros_baseline.yaml --seed 0 --name bench_cgmacros_patchtst_vanilla_s0 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=patchtst --no_wandb
+cgmacros records: 45 27 9 9
+cgmacros windows: 11422 6770 2261 2391
+data_max: tensor([400.0000, 405.0000, 172.0000, 124.2000])
+data_min: tensor([40.0000, 40.0000, 42.6000,  0.0000])
+time_max: tensor(239.)
+run bench_cgmacros_patchtst_vanilla_s0 | device cuda:0 | params 126785 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 180, "n_records": 100000000, "name": "cgmacros", "patch_size": 45, "pred_window": 60, "stride": 45}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "patchtst", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00681 val_mse 0.00684 best 0.00684@0 (4.5s)
+epoch 001 loss 0.00520 val_mse 0.00578 best 0.00578@1 (3.4s)
+epoch 002 loss 0.00498 val_mse 0.00504 best 0.00504@2 (3.4s)
+epoch 003 loss 0.00488 val_mse 0.00514 best 0.00504@2 (3.5s)
+epoch 004 loss 0.00482 val_mse 0.00500 best 0.00500@4 (3.5s)
+epoch 005 loss 0.00481 val_mse 0.00547 best 0.00500@4 (3.5s)
+epoch 006 loss 0.00473 val_mse 0.00548 best 0.00500@4 (3.5s)
+epoch 007 loss 0.00476 val_mse 0.00553 best 0.00500@4 (3.1s)
+epoch 008 loss 0.00474 val_mse 0.00550 best 0.00500@4 (3.1s)
+epoch 009 loss 0.00474 val_mse 0.00493 best 0.00493@9 (3.1s)
+epoch 010 loss 0.00467 val_mse 0.00499 best 0.00493@9 (3.1s)
+epoch 011 loss 0.00469 val_mse 0.00502 best 0.00493@9 (3.1s)
+epoch 012 loss 0.00464 val_mse 0.00473 best 0.00473@12 (3.1s)
+epoch 013 loss 0.00467 val_mse 0.00488 best 0.00473@12 (3.2s)
+epoch 014 loss 0.00466 val_mse 0.00493 best 0.00473@12 (3.2s)
+epoch 015 loss 0.00466 val_mse 0.00474 best 0.00473@12 (3.1s)
+epoch 016 loss 0.00463 val_mse 0.00498 best 0.00473@12 (3.2s)
+epoch 017 loss 0.00455 val_mse 0.00547 best 0.00473@12 (3.2s)
+epoch 018 loss 0.00468 val_mse 0.00723 best 0.00473@12 (3.2s)
+epoch 019 loss 0.00460 val_mse 0.00542 best 0.00473@12 (3.2s)
+epoch 020 loss 0.00454 val_mse 0.00578 best 0.00473@12 (3.2s)
+epoch 021 loss 0.00457 val_mse 0.00476 best 0.00473@12 (3.2s)
+epoch 022 loss 0.00455 val_mse 0.00518 best 0.00473@12 (3.2s)
+early stop
+  [identity                                  ] MSE 0.00439  MAE 0.04274
+  [random_dropout:0.7                        ] MSE 0.05362  MAE 0.19274
+  [temporal_stride:3                         ] MSE 0.06425  MAE 0.21829
+  [variable_dropout:0.5                      ] MSE 0.03341  MAE 0.12511
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.06530  MAE 0.22008
+best {'val_mse': 0.00473235035315156, 'epoch': 12} -> results/raw/bench_cgmacros_patchtst_vanilla_s0/results.json
+summary {
+  "clean_mse": 0.004387316294014454,
+  "mean_shift_mse": 0.054146223701536655,
+  "mean_degradation": 11.341536391029635,
+  "worst_mse": 0.06529694050550461,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.054146223701536655,
+  "mean_unseen_degradation": 11.341536391029635
+}
+[2/3] ok bench_cgmacros_patchtst_vanilla_s0 (4.4 min)
+
+[3/3] bench_cgmacros_tmix_vanilla_s0
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/cgmacros_baseline.yaml --seed 0 --name bench_cgmacros_tmix_vanilla_s0 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=tmix --no_wandb
+cgmacros records: 45 27 9 9
+cgmacros windows: 11422 6770 2261 2391
+data_max: tensor([400.0000, 405.0000, 172.0000, 124.2000])
+data_min: tensor([40.0000, 40.0000, 42.6000,  0.0000])
+time_max: tensor(239.)
+run bench_cgmacros_tmix_vanilla_s0 | device cuda:0 | params 445761 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 180, "n_records": 100000000, "name": "cgmacros", "patch_size": 45, "pred_window": 60, "stride": 45}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "tmix", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01389 val_mse 0.00588 best 0.00588@0 (3.5s)
+epoch 001 loss 0.00528 val_mse 0.00502 best 0.00502@1 (2.7s)
+epoch 002 loss 0.00498 val_mse 0.00498 best 0.00498@2 (2.7s)
+epoch 003 loss 0.00485 val_mse 0.00551 best 0.00498@2 (2.7s)
+epoch 004 loss 0.00479 val_mse 0.00549 best 0.00498@2 (2.8s)
+epoch 005 loss 0.00473 val_mse 0.00513 best 0.00498@2 (2.8s)
+epoch 006 loss 0.00475 val_mse 0.00577 best 0.00498@2 (2.8s)
+epoch 007 loss 0.00466 val_mse 0.00494 best 0.00494@7 (2.8s)
+epoch 008 loss 0.00462 val_mse 0.00508 best 0.00494@7 (2.8s)
+epoch 009 loss 0.00464 val_mse 0.00495 best 0.00494@7 (2.8s)
+epoch 010 loss 0.00460 val_mse 0.00505 best 0.00494@7 (2.8s)
+epoch 011 loss 0.00463 val_mse 0.00491 best 0.00491@11 (2.8s)
+epoch 012 loss 0.00454 val_mse 0.00509 best 0.00491@11 (2.8s)
+epoch 013 loss 0.00456 val_mse 0.00480 best 0.00480@13 (2.8s)
+epoch 014 loss 0.00451 val_mse 0.00490 best 0.00480@13 (2.8s)
+epoch 015 loss 0.00454 val_mse 0.00486 best 0.00480@13 (2.7s)
+epoch 016 loss 0.00455 val_mse 0.00529 best 0.00480@13 (2.6s)
+epoch 017 loss 0.00456 val_mse 0.00497 best 0.00480@13 (2.6s)
+epoch 018 loss 0.00453 val_mse 0.00538 best 0.00480@13 (2.6s)
+epoch 019 loss 0.00454 val_mse 0.00492 best 0.00480@13 (2.6s)
+epoch 020 loss 0.00446 val_mse 0.00510 best 0.00480@13 (2.6s)
+epoch 021 loss 0.00461 val_mse 0.00555 best 0.00480@13 (2.6s)
+epoch 022 loss 0.00449 val_mse 0.00486 best 0.00480@13 (2.6s)
+epoch 023 loss 0.00448 val_mse 0.00489 best 0.00480@13 (2.6s)
+early stop
+  [identity                                  ] MSE 0.00437  MAE 0.04222
+  [random_dropout:0.7                        ] MSE 0.03782  MAE 0.15940
+  [temporal_stride:3                         ] MSE 0.04219  MAE 0.17582
+  [variable_dropout:0.5                      ] MSE 0.03533  MAE 0.12885
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.05056  MAE 0.19147
+best {'val_mse': 0.004797536879777908, 'epoch': 13} -> results/raw/bench_cgmacros_tmix_vanilla_s0/results.json
+summary {
+  "clean_mse": 0.004365617875009775,
+  "mean_shift_mse": 0.04147432651370764,
+  "mean_degradation": 8.500219144492753,
+  "worst_mse": 0.05056152865290642,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.04147432651370764,
+  "mean_unseen_degradation": 8.500219144492753
+}
+[3/3] ok bench_cgmacros_tmix_vanilla_s0 (4.1 min)
+results/benchmark.csv: 4567 rows from 856 run cells
+results/benchmark_summary.csv: 1202 groups
+results/benchmark_curated.csv: 711 rows (curated: 4 shifts + clean, one row per seed, vanilla + opera + opera++)
+
+coverage by setting x backbone x method:
+  P12          grud          opera                      seeds [0, 1, 2, 3, 4]
+  P12          grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  P12          itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  P12          itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  P12          itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  P12          mtand         opera                      seeds [0, 1, 2, 3, 4]
+  P12          mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  P12          patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  P12          patchtst      abl_opera+mining_trainpool train       seeds [0]
+  P12          patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  P12          patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  P12          tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  P12          tmix          opera                      seeds [0, 1, 2, 3, 4]
+  P12          tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  P12          warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  P12          warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          grud          opera                      seeds [0, 1, 2, 3, 4]
+  P19          grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  P19          itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  P19          itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          mtand         opera                      seeds [0, 1, 2, 3, 4]
+  P19          mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  P19          patchtst      abl_opera+mining_trainpool train       seeds [0]
+  P19          patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  P19          patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  P19          tmix          opera                      seeds [0, 1, 2, 3, 4]
+  P19          tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  P19          warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  P19_hospB    itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  P19_hospB    itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  P19_hospB    patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  P19_hospB    patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  P19_hospB    tmix          opera                      seeds [0, 1, 2, 3, 4]
+  P19_hospB    tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          grud          opera                      seeds [0, 1, 2, 3, 4]
+  PAM          grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  PAM          itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  PAM          itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          mtand         opera                      seeds [0, 1, 2, 3, 4]
+  PAM          mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  PAM          patchtst      abl_opera+mining_trainpool train       seeds [0]
+  PAM          patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  PAM          patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  PAM          tmix          opera                      seeds [0, 1, 2, 3, 4]
+  PAM          tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  PAM          warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms grud          opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  activity_1000ms itransformer  abl_opera++_scalar             seeds [1, 2, 3, 4]
+  activity_1000ms itransformer  abl_opera+mining_trainpool train       seeds [0]
+  activity_1000ms itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms itransformer  opera++                    seeds [1, 2, 3, 4]
+  activity_1000ms itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms mtand         opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  activity_1000ms patchtst      abl_opera++_scalar             seeds [1, 2, 3, 4]
+  activity_1000ms patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms patchtst      opera++                    seeds [1, 2, 3, 4]
+  activity_1000ms patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  activity_1000ms tmix          abl_opera++_scalar             seeds [1, 2, 3, 4]
+  activity_1000ms tmix          opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms tmix          opera++                    seeds [1, 2, 3, 4]
+  activity_1000ms tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_2000ms itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  activity_2000ms itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_2000ms patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  activity_2000ms patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_2000ms tmix          opera                      seeds [0, 1, 2, 3, 4]
+  activity_2000ms tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_3000ms itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  activity_3000ms itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_3000ms patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  activity_3000ms patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_3000ms tmix          opera                      seeds [0, 1, 2, 3, 4]
+  activity_3000ms tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  cgmacros_60min itransformer  vanilla                    seeds [0]
+  cgmacros_60min patchtst      vanilla                    seeds [0]
+  cgmacros_60min tmix          vanilla                    seeds [0]
+  eicu_demo    itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  eicu_demo    itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  eicu_demo    patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  eicu_demo    patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  eicu_demo    tmix          opera                      seeds [0, 1, 2, 3, 4]
+  eicu_demo    tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  noaa_isd_6h  itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  noaa_isd_6h  itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  noaa_isd_6h  patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  noaa_isd_6h  patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  noaa_isd_6h  tmix          opera                      seeds [0, 1, 2, 3, 4]
+  noaa_isd_6h  tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_12h itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  physionet_12h itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_12h patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  physionet_12h patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_12h tmix          opera                      seeds [0, 1, 2, 3, 4]
+  physionet_12h tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h grud          opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h itransformer  abl_aug+mining_harshpool harsh       seeds [0]
+  physionet_24h itransformer  abl_aug+mining_trainpool train       seeds [0]
+  physionet_24h itransformer  abl_augmentation             seeds [0]
+  physionet_24h itransformer  abl_mining     harsh       seeds [0, 1, 2, 3, 4]
+  physionet_24h itransformer  abl_opera++_scalar             seeds [1, 2, 3, 4]
+  physionet_24h itransformer  abl_opera+mining_trainpool train       seeds [0]
+  physionet_24h itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h itransformer  opera++                    seeds [1, 2, 3, 4]
+  physionet_24h itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h mtand         opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  physionet_24h patchtst      abl_opera++_scalar             seeds [1, 2, 3, 4]
+  physionet_24h patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h patchtst      opera++                    seeds [1, 2, 3, 4]
+  physionet_24h patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  physionet_24h tmix          abl_opera++_scalar             seeds [1, 2, 3, 4]
+  physionet_24h tmix          opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h tmix          opera++                    seeds [1, 2, 3, 4]
+  physionet_24h tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_36h itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  physionet_36h itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_36h patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  physionet_36h patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_36h tmix          opera                      seeds [0, 1, 2, 3, 4]
+  physionet_36h tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   grud          opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_12mo   itransformer  abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_12mo   itransformer  abl_opera+mining_trainpool train       seeds [0]
+  ushcn_12mo   itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   itransformer  opera++                    seeds [1, 2, 3, 4]
+  ushcn_12mo   itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   mtand         opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_12mo   patchtst      abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_12mo   patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   patchtst      opera++                    seeds [1, 2, 3, 4]
+  ushcn_12mo   patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_12mo   tmix          abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_12mo   tmix          opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   tmix          opera++                    seeds [1, 2, 3, 4]
+  ushcn_12mo   tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    grud          opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    itransformer  abl_aug+mining_trainpool train       seeds [0]
+  ushcn_1mo    itransformer  abl_augmentation             seeds [0]
+  ushcn_1mo    itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_1mo    itransformer  abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_1mo    itransformer  abl_opera+mining_trainpool train       seeds [0]
+  ushcn_1mo    itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    itransformer  opera++                    seeds [1, 2, 3, 4]
+  ushcn_1mo    itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    mtand         opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_1mo    patchtst      abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_1mo    patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    patchtst      opera++                    seeds [1, 2, 3, 4]
+  ushcn_1mo    patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_1mo    tmix          abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_1mo    tmix          opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    tmix          opera++                    seeds [1, 2, 3, 4]
+  ushcn_1mo    tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    tmix          opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+
+stage A: 3 ok, 0 failed
+stage B: 12 cells
+
+[1/12] bench_cgmacros_itransformer_vanilla_s1
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/cgmacros_baseline.yaml --seed 1 --name bench_cgmacros_itransformer_vanilla_s1 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=itransformer --no_wandb
+cgmacros records: 45 27 9 9
+cgmacros windows: 11422 6770 2261 2391
+data_max: tensor([400.0000, 405.0000, 172.0000, 124.2000])
+data_min: tensor([40.0000, 40.0000, 42.6000,  0.0000])
+time_max: tensor(239.)
+run bench_cgmacros_itransformer_vanilla_s1 | device cuda:0 | params 126785 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 180, "n_records": 100000000, "name": "cgmacros", "patch_size": 45, "pred_window": 60, "stride": 45}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "itransformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00918 val_mse 0.00545 best 0.00545@0 (8.4s)
+epoch 001 loss 0.00503 val_mse 0.00533 best 0.00533@1 (3.4s)
+epoch 002 loss 0.00490 val_mse 0.00523 best 0.00523@2 (3.4s)
+epoch 003 loss 0.00468 val_mse 0.00531 best 0.00523@2 (3.5s)
+epoch 004 loss 0.00454 val_mse 0.00481 best 0.00481@4 (3.5s)
+epoch 005 loss 0.00455 val_mse 0.00485 best 0.00481@4 (3.5s)
+epoch 006 loss 0.00449 val_mse 0.00475 best 0.00475@6 (3.5s)
+epoch 007 loss 0.00451 val_mse 0.00498 best 0.00475@6 (3.5s)
+epoch 008 loss 0.00450 val_mse 0.00498 best 0.00475@6 (3.5s)
+epoch 009 loss 0.00441 val_mse 0.00509 best 0.00475@6 (3.4s)
+epoch 010 loss 0.00440 val_mse 0.00483 best 0.00475@6 (3.5s)
+epoch 011 loss 0.00443 val_mse 0.00542 best 0.00475@6 (3.4s)
+epoch 012 loss 0.00441 val_mse 0.00483 best 0.00475@6 (3.4s)
+epoch 013 loss 0.00443 val_mse 0.00482 best 0.00475@6 (3.5s)
+epoch 014 loss 0.00440 val_mse 0.00504 best 0.00475@6 (3.5s)
+epoch 015 loss 0.00440 val_mse 0.00505 best 0.00475@6 (3.5s)
+epoch 016 loss 0.00437 val_mse 0.00506 best 0.00475@6 (3.5s)
+early stop
+  [identity                                  ] MSE 0.00468  MAE 0.04374
+  [random_dropout:0.7                        ] MSE 0.03730  MAE 0.14854
+  [temporal_stride:3                         ] MSE 0.04592  MAE 0.17484
+  [variable_dropout:0.5                      ] MSE 0.02721  MAE 0.11068
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.04858  MAE 0.18036
+best {'val_mse': 0.004750476218760014, 'epoch': 6} -> results/raw/bench_cgmacros_itransformer_vanilla_s1/results.json
+summary {
+  "clean_mse": 0.004682169295847416,
+  "mean_shift_mse": 0.03975410666316748,
+  "mean_degradation": 7.490531664120971,
+  "worst_mse": 0.04857867583632469,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.03975410666316748,
+  "mean_unseen_degradation": 7.490531664120971
+}
+[1/12] ok bench_cgmacros_itransformer_vanilla_s1 (4.1 min)
+
+[2/12] bench_cgmacros_patchtst_vanilla_s1
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/cgmacros_baseline.yaml --seed 1 --name bench_cgmacros_patchtst_vanilla_s1 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=patchtst --no_wandb
+cgmacros records: 45 27 9 9
+cgmacros windows: 11422 6770 2261 2391
+data_max: tensor([400.0000, 405.0000, 172.0000, 124.2000])
+data_min: tensor([40.0000, 40.0000, 42.6000,  0.0000])
+time_max: tensor(239.)
+run bench_cgmacros_patchtst_vanilla_s1 | device cuda:0 | params 126785 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 180, "n_records": 100000000, "name": "cgmacros", "patch_size": 45, "pred_window": 60, "stride": 45}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "patchtst", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00664 val_mse 0.00537 best 0.00537@0 (4.2s)
+epoch 001 loss 0.00505 val_mse 0.00511 best 0.00511@1 (3.4s)
+epoch 002 loss 0.00505 val_mse 0.00622 best 0.00511@1 (3.4s)
+epoch 003 loss 0.00491 val_mse 0.00582 best 0.00511@1 (3.4s)
+epoch 004 loss 0.00479 val_mse 0.00521 best 0.00511@1 (3.4s)
+epoch 005 loss 0.00474 val_mse 0.00498 best 0.00498@5 (3.4s)
+epoch 006 loss 0.00479 val_mse 0.00608 best 0.00498@5 (3.4s)
+epoch 007 loss 0.00472 val_mse 0.00500 best 0.00498@5 (3.4s)
+epoch 008 loss 0.00472 val_mse 0.00515 best 0.00498@5 (3.4s)
+epoch 009 loss 0.00465 val_mse 0.00511 best 0.00498@5 (3.4s)
+epoch 010 loss 0.00469 val_mse 0.00501 best 0.00498@5 (3.4s)
+epoch 011 loss 0.00462 val_mse 0.00558 best 0.00498@5 (3.4s)
+epoch 012 loss 0.00470 val_mse 0.00498 best 0.00498@5 (3.5s)
+epoch 013 loss 0.00465 val_mse 0.00505 best 0.00498@5 (3.4s)
+epoch 014 loss 0.00461 val_mse 0.00546 best 0.00498@5 (3.4s)
+epoch 015 loss 0.00464 val_mse 0.00536 best 0.00498@5 (3.5s)
+early stop
+  [identity                                  ] MSE 0.00473  MAE 0.04377
+  [random_dropout:0.7                        ] MSE 0.05021  MAE 0.18974
+  [temporal_stride:3                         ] MSE 0.05646  MAE 0.20761
+  [variable_dropout:0.5                      ] MSE 0.03447  MAE 0.12735
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.06033  MAE 0.21365
+best {'val_mse': 0.004976833239197731, 'epoch': 5} -> results/raw/bench_cgmacros_patchtst_vanilla_s1/results.json
+summary {
+  "clean_mse": 0.0047256313264369965,
+  "mean_shift_mse": 0.05036710575222969,
+  "mean_degradation": 9.658280824925287,
+  "worst_mse": 0.06033109128475189,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.05036710575222969,
+  "mean_unseen_degradation": 9.658280824925287
+}
+[2/12] ok bench_cgmacros_patchtst_vanilla_s1 (3.7 min)
+
+[3/12] bench_cgmacros_tmix_vanilla_s1
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/cgmacros_baseline.yaml --seed 1 --name bench_cgmacros_tmix_vanilla_s1 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=tmix --no_wandb
+cgmacros records: 45 27 9 9
+cgmacros windows: 11422 6770 2261 2391
+data_max: tensor([400.0000, 405.0000, 172.0000, 124.2000])
+data_min: tensor([40.0000, 40.0000, 42.6000,  0.0000])
+time_max: tensor(239.)
+run bench_cgmacros_tmix_vanilla_s1 | device cuda:0 | params 445761 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 180, "n_records": 100000000, "name": "cgmacros", "patch_size": 45, "pred_window": 60, "stride": 45}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "tmix", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01270 val_mse 0.00577 best 0.00577@0 (4.0s)
+epoch 001 loss 0.00511 val_mse 0.00517 best 0.00517@1 (2.8s)
+epoch 002 loss 0.00490 val_mse 0.00533 best 0.00517@1 (2.8s)
+epoch 003 loss 0.00476 val_mse 0.00517 best 0.00517@1 (2.8s)
+epoch 004 loss 0.00478 val_mse 0.00524 best 0.00517@1 (2.8s)
+epoch 005 loss 0.00479 val_mse 0.00492 best 0.00492@5 (2.8s)
+epoch 006 loss 0.00467 val_mse 0.00490 best 0.00490@6 (2.8s)
+epoch 007 loss 0.00460 val_mse 0.00490 best 0.00490@7 (2.8s)
+epoch 008 loss 0.00459 val_mse 0.00488 best 0.00488@8 (2.8s)
+epoch 009 loss 0.00463 val_mse 0.00493 best 0.00488@8 (2.8s)
+epoch 010 loss 0.00456 val_mse 0.00483 best 0.00483@10 (2.8s)
+epoch 011 loss 0.00457 val_mse 0.00530 best 0.00483@10 (2.8s)
+epoch 012 loss 0.00461 val_mse 0.00502 best 0.00483@10 (2.8s)
+epoch 013 loss 0.00454 val_mse 0.00505 best 0.00483@10 (2.8s)
+epoch 014 loss 0.00456 val_mse 0.00488 best 0.00483@10 (2.8s)
+epoch 015 loss 0.00450 val_mse 0.00530 best 0.00483@10 (2.7s)
+epoch 016 loss 0.00450 val_mse 0.00476 best 0.00476@16 (2.6s)
+epoch 017 loss 0.00450 val_mse 0.00494 best 0.00476@16 (2.6s)
+epoch 018 loss 0.00452 val_mse 0.00483 best 0.00476@16 (2.6s)
+epoch 019 loss 0.00448 val_mse 0.00477 best 0.00476@16 (2.6s)
+epoch 020 loss 0.00443 val_mse 0.00478 best 0.00476@16 (2.6s)
+epoch 021 loss 0.00446 val_mse 0.00499 best 0.00476@16 (2.6s)
+epoch 022 loss 0.00447 val_mse 0.00484 best 0.00476@16 (2.6s)
+epoch 023 loss 0.00445 val_mse 0.00493 best 0.00476@16 (2.6s)
+epoch 024 loss 0.00445 val_mse 0.00515 best 0.00476@16 (2.6s)
+epoch 025 loss 0.00448 val_mse 0.00487 best 0.00476@16 (2.6s)
+epoch 026 loss 0.00438 val_mse 0.00474 best 0.00474@26 (2.6s)
+epoch 027 loss 0.00442 val_mse 0.00481 best 0.00474@26 (2.6s)
+epoch 028 loss 0.00446 val_mse 0.00490 best 0.00474@26 (2.6s)
+epoch 029 loss 0.00438 val_mse 0.00474 best 0.00474@26 (2.6s)
+epoch 030 loss 0.00443 val_mse 0.00491 best 0.00474@26 (2.6s)
+epoch 031 loss 0.00439 val_mse 0.00486 best 0.00474@26 (2.6s)
+epoch 032 loss 0.00439 val_mse 0.00495 best 0.00474@26 (2.7s)
+epoch 033 loss 0.00438 val_mse 0.00502 best 0.00474@26 (2.6s)
+epoch 034 loss 0.00434 val_mse 0.00501 best 0.00474@26 (2.6s)
+epoch 035 loss 0.00440 val_mse 0.00499 best 0.00474@26 (2.6s)
+epoch 036 loss 0.00441 val_mse 0.00477 best 0.00474@26 (2.6s)
+early stop
+  [identity                                  ] MSE 0.00429  MAE 0.04178
+  [random_dropout:0.7                        ] MSE 0.04290  MAE 0.17162
+  [temporal_stride:3                         ] MSE 0.05125  MAE 0.19757
+  [variable_dropout:0.5                      ] MSE 0.03316  MAE 0.12412
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.05599  MAE 0.20507
+best {'val_mse': 0.004736186936497688, 'epoch': 26} -> results/raw/bench_cgmacros_tmix_vanilla_s1/results.json
+summary {
+  "clean_mse": 0.004290882498025894,
+  "mean_shift_mse": 0.04582471214234829,
+  "mean_degradation": 9.679554185748703,
+  "worst_mse": 0.05598898231983185,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.04582471214234829,
+  "mean_unseen_degradation": 9.679554185748703
+}
+[3/12] ok bench_cgmacros_tmix_vanilla_s1 (5.0 min)
+
+[4/12] bench_cgmacros_itransformer_vanilla_s2
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/cgmacros_baseline.yaml --seed 2 --name bench_cgmacros_itransformer_vanilla_s2 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=itransformer --no_wandb
+cgmacros records: 45 27 9 9
+cgmacros windows: 11422 6770 2261 2391
+data_max: tensor([400.0000, 405.0000, 172.0000, 124.2000])
+data_min: tensor([40.0000, 40.0000, 42.6000,  0.0000])
+time_max: tensor(239.)
+run bench_cgmacros_itransformer_vanilla_s2 | device cuda:0 | params 126785 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 180, "n_records": 100000000, "name": "cgmacros", "patch_size": 45, "pred_window": 60, "stride": 45}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "itransformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01045 val_mse 0.00601 best 0.00601@0 (7.9s)
+epoch 001 loss 0.00501 val_mse 0.00540 best 0.00540@1 (3.4s)
+epoch 002 loss 0.00480 val_mse 0.00608 best 0.00540@1 (3.4s)
+epoch 003 loss 0.00472 val_mse 0.00503 best 0.00503@3 (3.4s)
+epoch 004 loss 0.00462 val_mse 0.00514 best 0.00503@3 (3.5s)
+epoch 005 loss 0.00454 val_mse 0.00493 best 0.00493@5 (3.5s)
+epoch 006 loss 0.00450 val_mse 0.00488 best 0.00488@6 (3.4s)
+epoch 007 loss 0.00454 val_mse 0.00518 best 0.00488@6 (3.5s)
+epoch 008 loss 0.00451 val_mse 0.00484 best 0.00484@8 (3.5s)
+epoch 009 loss 0.00444 val_mse 0.00503 best 0.00484@8 (3.5s)
+epoch 010 loss 0.00448 val_mse 0.00482 best 0.00482@10 (3.4s)
+epoch 011 loss 0.00444 val_mse 0.00577 best 0.00482@10 (3.5s)
+epoch 012 loss 0.00449 val_mse 0.00476 best 0.00476@12 (3.5s)
+epoch 013 loss 0.00448 val_mse 0.00479 best 0.00476@12 (3.5s)
+epoch 014 loss 0.00443 val_mse 0.00485 best 0.00476@12 (3.4s)
+epoch 015 loss 0.00442 val_mse 0.00491 best 0.00476@12 (3.5s)
+epoch 016 loss 0.00442 val_mse 0.00499 best 0.00476@12 (3.5s)
+epoch 017 loss 0.00437 val_mse 0.00499 best 0.00476@12 (3.5s)
+epoch 018 loss 0.00444 val_mse 0.00481 best 0.00476@12 (3.5s)
+epoch 019 loss 0.00441 val_mse 0.00489 best 0.00476@12 (3.5s)
+epoch 020 loss 0.00435 val_mse 0.00477 best 0.00476@12 (3.5s)
+epoch 021 loss 0.00439 val_mse 0.00509 best 0.00476@12 (3.5s)
+epoch 022 loss 0.00440 val_mse 0.00502 best 0.00476@12 (3.5s)
+early stop
+  [identity                                  ] MSE 0.00433  MAE 0.04204
+  [random_dropout:0.7                        ] MSE 0.03962  MAE 0.15032
+  [temporal_stride:3                         ] MSE 0.04889  MAE 0.17640
+  [variable_dropout:0.5                      ] MSE 0.02495  MAE 0.10417
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.04941  MAE 0.17763
+best {'val_mse': 0.004758830182254314, 'epoch': 12} -> results/raw/bench_cgmacros_itransformer_vanilla_s2/results.json
+summary {
+  "clean_mse": 0.004325295332819223,
+  "mean_shift_mse": 0.04071603016927838,
+  "mean_degradation": 8.413468222698151,
+  "worst_mse": 0.0494079552590847,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.04071603016927838,
+  "mean_unseen_degradation": 8.413468222698151
+}
+[4/12] ok bench_cgmacros_itransformer_vanilla_s2 (4.4 min)
+
+[5/12] bench_cgmacros_patchtst_vanilla_s2
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/cgmacros_baseline.yaml --seed 2 --name bench_cgmacros_patchtst_vanilla_s2 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=patchtst --no_wandb
+cgmacros records: 45 27 9 9
+cgmacros windows: 11422 6770 2261 2391
+data_max: tensor([400.0000, 405.0000, 172.0000, 124.2000])
+data_min: tensor([40.0000, 40.0000, 42.6000,  0.0000])
+time_max: tensor(239.)
+run bench_cgmacros_patchtst_vanilla_s2 | device cuda:0 | params 126785 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 180, "n_records": 100000000, "name": "cgmacros", "patch_size": 45, "pred_window": 60, "stride": 45}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "patchtst", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00733 val_mse 0.00529 best 0.00529@0 (4.1s)
+epoch 001 loss 0.00517 val_mse 0.00497 best 0.00497@1 (3.4s)
+epoch 002 loss 0.00499 val_mse 0.00507 best 0.00497@1 (3.4s)
+epoch 003 loss 0.00506 val_mse 0.00571 best 0.00497@1 (3.4s)
+epoch 004 loss 0.00491 val_mse 0.00518 best 0.00497@1 (3.4s)
+epoch 005 loss 0.00483 val_mse 0.00495 best 0.00495@5 (3.4s)
+epoch 006 loss 0.00484 val_mse 0.00507 best 0.00495@5 (3.5s)
+epoch 007 loss 0.00480 val_mse 0.00502 best 0.00495@5 (3.5s)
+epoch 008 loss 0.00475 val_mse 0.00485 best 0.00485@8 (3.5s)
+epoch 009 loss 0.00476 val_mse 0.00518 best 0.00485@8 (3.5s)
+epoch 010 loss 0.00467 val_mse 0.00509 best 0.00485@8 (3.5s)
+epoch 011 loss 0.00482 val_mse 0.00490 best 0.00485@8 (3.5s)
+epoch 012 loss 0.00465 val_mse 0.00506 best 0.00485@8 (3.5s)
+epoch 013 loss 0.00465 val_mse 0.00491 best 0.00485@8 (3.5s)
+epoch 014 loss 0.00463 val_mse 0.00521 best 0.00485@8 (3.5s)
+epoch 015 loss 0.00463 val_mse 0.00482 best 0.00482@15 (3.5s)
+epoch 016 loss 0.00465 val_mse 0.00524 best 0.00482@15 (3.5s)
+epoch 017 loss 0.00457 val_mse 0.00505 best 0.00482@15 (3.5s)
+epoch 018 loss 0.00457 val_mse 0.00489 best 0.00482@15 (3.5s)
+epoch 019 loss 0.00458 val_mse 0.00479 best 0.00479@19 (3.5s)
+epoch 020 loss 0.00454 val_mse 0.00573 best 0.00479@19 (3.5s)
+epoch 021 loss 0.00457 val_mse 0.00501 best 0.00479@19 (3.5s)
+epoch 022 loss 0.00451 val_mse 0.00513 best 0.00479@19 (3.5s)
+epoch 023 loss 0.00453 val_mse 0.00575 best 0.00479@19 (3.5s)
+epoch 024 loss 0.00461 val_mse 0.00486 best 0.00479@19 (3.6s)
+epoch 025 loss 0.00454 val_mse 0.00520 best 0.00479@19 (3.5s)
+epoch 026 loss 0.00448 val_mse 0.00477 best 0.00477@26 (3.5s)
+epoch 027 loss 0.00448 val_mse 0.00554 best 0.00477@26 (3.5s)
+epoch 028 loss 0.00449 val_mse 0.00500 best 0.00477@26 (3.5s)
+epoch 029 loss 0.00454 val_mse 0.00509 best 0.00477@26 (3.6s)
+epoch 030 loss 0.00459 val_mse 0.00570 best 0.00477@26 (3.5s)
+epoch 031 loss 0.00451 val_mse 0.00509 best 0.00477@26 (3.6s)
+epoch 032 loss 0.00446 val_mse 0.00541 best 0.00477@26 (3.6s)
+epoch 033 loss 0.00452 val_mse 0.00484 best 0.00477@26 (3.5s)
+epoch 034 loss 0.00449 val_mse 0.00469 best 0.00469@34 (3.6s)
+epoch 035 loss 0.00447 val_mse 0.00480 best 0.00469@34 (3.6s)
+epoch 036 loss 0.00449 val_mse 0.00545 best 0.00469@34 (3.6s)
+epoch 037 loss 0.00449 val_mse 0.00469 best 0.00469@34 (3.6s)
+epoch 038 loss 0.00445 val_mse 0.00472 best 0.00469@34 (3.6s)
+epoch 039 loss 0.00447 val_mse 0.00469 best 0.00469@34 (3.6s)
+  [identity                                  ] MSE 0.00424  MAE 0.04159
+  [random_dropout:0.7                        ] MSE 0.04989  MAE 0.18565
+  [temporal_stride:3                         ] MSE 0.05782  MAE 0.20513
+  [variable_dropout:0.5                      ] MSE 0.03177  MAE 0.12099
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.05971  MAE 0.20840
+best {'val_mse': 0.0046881986781954765, 'epoch': 34} -> results/raw/bench_cgmacros_patchtst_vanilla_s2/results.json
+summary {
+  "clean_mse": 0.004240446723997593,
+  "mean_shift_mse": 0.04979861434549093,
+  "mean_degradation": 10.743718901989723,
+  "worst_mse": 0.0597124919295311,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.04979861434549093,
+  "mean_unseen_degradation": 10.743718901989723
+}
+[5/12] ok bench_cgmacros_patchtst_vanilla_s2 (5.5 min)
+
+[6/12] bench_cgmacros_tmix_vanilla_s2
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/cgmacros_baseline.yaml --seed 2 --name bench_cgmacros_tmix_vanilla_s2 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=tmix --no_wandb
+cgmacros records: 45 27 9 9
+cgmacros windows: 11422 6770 2261 2391
+data_max: tensor([400.0000, 405.0000, 172.0000, 124.2000])
+data_min: tensor([40.0000, 40.0000, 42.6000,  0.0000])
+time_max: tensor(239.)
+run bench_cgmacros_tmix_vanilla_s2 | device cuda:0 | params 445761 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 180, "n_records": 100000000, "name": "cgmacros", "patch_size": 45, "pred_window": 60, "stride": 45}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "tmix", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01404 val_mse 0.00564 best 0.00564@0 (4.2s)
+epoch 001 loss 0.00527 val_mse 0.00601 best 0.00564@0 (2.7s)
+epoch 002 loss 0.00499 val_mse 0.00519 best 0.00519@2 (2.7s)
+epoch 003 loss 0.00502 val_mse 0.00519 best 0.00519@3 (2.8s)
+epoch 004 loss 0.00493 val_mse 0.00565 best 0.00519@3 (2.8s)
+epoch 005 loss 0.00478 val_mse 0.00503 best 0.00503@5 (2.8s)
+epoch 006 loss 0.00481 val_mse 0.00577 best 0.00503@5 (2.8s)
+epoch 007 loss 0.00472 val_mse 0.00504 best 0.00503@5 (2.8s)
+epoch 008 loss 0.00469 val_mse 0.00505 best 0.00503@5 (2.8s)
+epoch 009 loss 0.00471 val_mse 0.00496 best 0.00496@9 (2.8s)
+epoch 010 loss 0.00473 val_mse 0.00496 best 0.00496@10 (2.8s)
+epoch 011 loss 0.00456 val_mse 0.00541 best 0.00496@10 (2.8s)
+epoch 012 loss 0.00459 val_mse 0.00513 best 0.00496@10 (2.8s)
+epoch 013 loss 0.00470 val_mse 0.00508 best 0.00496@10 (2.8s)
+epoch 014 loss 0.00459 val_mse 0.00514 best 0.00496@10 (2.8s)
+epoch 015 loss 0.00461 val_mse 0.00511 best 0.00496@10 (2.8s)
+epoch 016 loss 0.00459 val_mse 0.00501 best 0.00496@10 (2.8s)
+epoch 017 loss 0.00453 val_mse 0.00473 best 0.00473@17 (2.8s)
+epoch 018 loss 0.00459 val_mse 0.00494 best 0.00473@17 (2.8s)
+epoch 019 loss 0.00455 val_mse 0.00505 best 0.00473@17 (2.8s)
+epoch 020 loss 0.00450 val_mse 0.00508 best 0.00473@17 (2.8s)
+epoch 021 loss 0.00456 val_mse 0.00473 best 0.00473@21 (2.8s)
+epoch 022 loss 0.00449 val_mse 0.00485 best 0.00473@21 (2.8s)
+epoch 023 loss 0.00449 val_mse 0.00476 best 0.00473@21 (2.8s)
+epoch 024 loss 0.00449 val_mse 0.00472 best 0.00472@24 (2.8s)
+epoch 025 loss 0.00448 val_mse 0.00496 best 0.00472@24 (2.8s)
+epoch 026 loss 0.00445 val_mse 0.00605 best 0.00472@24 (2.8s)
+epoch 027 loss 0.00446 val_mse 0.00494 best 0.00472@24 (2.8s)
+epoch 028 loss 0.00447 val_mse 0.00482 best 0.00472@24 (2.8s)
+epoch 029 loss 0.00456 val_mse 0.00487 best 0.00472@24 (2.8s)
+epoch 030 loss 0.00443 val_mse 0.00480 best 0.00472@24 (2.8s)
+epoch 031 loss 0.00441 val_mse 0.00526 best 0.00472@24 (2.8s)
+epoch 032 loss 0.00443 val_mse 0.00487 best 0.00472@24 (2.8s)
+epoch 033 loss 0.00447 val_mse 0.00468 best 0.00468@33 (2.8s)
+epoch 034 loss 0.00447 val_mse 0.00515 best 0.00468@33 (2.8s)
+epoch 035 loss 0.00444 val_mse 0.00472 best 0.00468@33 (2.9s)
+epoch 036 loss 0.00439 val_mse 0.00502 best 0.00468@33 (2.8s)
+epoch 037 loss 0.00442 val_mse 0.00481 best 0.00468@33 (2.8s)
+epoch 038 loss 0.00445 val_mse 0.00481 best 0.00468@33 (2.9s)
+epoch 039 loss 0.00438 val_mse 0.00489 best 0.00468@33 (2.8s)
+  [identity                                  ] MSE 0.00439  MAE 0.04156
+  [random_dropout:0.7                        ] MSE 0.03911  MAE 0.15736
+  [temporal_stride:3                         ] MSE 0.04138  MAE 0.16631
+  [variable_dropout:0.5                      ] MSE 0.02933  MAE 0.11526
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.04622  MAE 0.17620
+best {'val_mse': 0.00468410411849618, 'epoch': 33} -> results/raw/bench_cgmacros_tmix_vanilla_s2/results.json
+summary {
+  "clean_mse": 0.004388844594359398,
+  "mean_shift_mse": 0.039009733591228724,
+  "mean_degradation": 7.888383434985271,
+  "worst_mse": 0.0462217852473259,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.039009733591228724,
+  "mean_unseen_degradation": 7.888383434985271
+}
+[6/12] ok bench_cgmacros_tmix_vanilla_s2 (5.2 min)
+
+[7/12] bench_cgmacros_itransformer_vanilla_s3
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/cgmacros_baseline.yaml --seed 3 --name bench_cgmacros_itransformer_vanilla_s3 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=itransformer --no_wandb
+cgmacros records: 45 27 9 9
+cgmacros windows: 11422 6770 2261 2391
+data_max: tensor([400.0000, 405.0000, 172.0000, 124.2000])
+data_min: tensor([40.0000, 40.0000, 42.6000,  0.0000])
+time_max: tensor(239.)
+run bench_cgmacros_itransformer_vanilla_s3 | device cuda:0 | params 126785 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 180, "n_records": 100000000, "name": "cgmacros", "patch_size": 45, "pred_window": 60, "stride": 45}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "itransformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00882 val_mse 0.00521 best 0.00521@0 (7.9s)
+epoch 001 loss 0.00505 val_mse 0.00544 best 0.00521@0 (3.4s)
+epoch 002 loss 0.00473 val_mse 0.00520 best 0.00520@2 (3.4s)
+epoch 003 loss 0.00463 val_mse 0.00546 best 0.00520@2 (3.5s)
+epoch 004 loss 0.00455 val_mse 0.00479 best 0.00479@4 (3.5s)
+epoch 005 loss 0.00453 val_mse 0.00498 best 0.00479@4 (3.4s)
+epoch 006 loss 0.00453 val_mse 0.00495 best 0.00479@4 (3.4s)
+epoch 007 loss 0.00455 val_mse 0.00485 best 0.00479@4 (3.4s)
+epoch 008 loss 0.00451 val_mse 0.00476 best 0.00476@8 (3.4s)
+epoch 009 loss 0.00448 val_mse 0.00489 best 0.00476@8 (3.5s)
+epoch 010 loss 0.00444 val_mse 0.00482 best 0.00476@8 (3.5s)
+epoch 011 loss 0.00452 val_mse 0.00508 best 0.00476@8 (3.5s)
+epoch 012 loss 0.00445 val_mse 0.00472 best 0.00472@12 (3.5s)
+epoch 013 loss 0.00444 val_mse 0.00482 best 0.00472@12 (3.5s)
+epoch 014 loss 0.00438 val_mse 0.00499 best 0.00472@12 (3.5s)
+epoch 015 loss 0.00446 val_mse 0.00481 best 0.00472@12 (3.5s)
+epoch 016 loss 0.00445 val_mse 0.00487 best 0.00472@12 (3.5s)
+epoch 017 loss 0.00446 val_mse 0.00484 best 0.00472@12 (3.5s)
+epoch 018 loss 0.00444 val_mse 0.00479 best 0.00472@12 (3.5s)
+epoch 019 loss 0.00440 val_mse 0.00485 best 0.00472@12 (3.5s)
+epoch 020 loss 0.00442 val_mse 0.00484 best 0.00472@12 (3.5s)
+epoch 021 loss 0.00438 val_mse 0.00475 best 0.00472@12 (3.5s)
+epoch 022 loss 0.00440 val_mse 0.00493 best 0.00472@12 (3.5s)
+early stop
+  [identity                                  ] MSE 0.00436  MAE 0.04331
+  [random_dropout:0.7                        ] MSE 0.04873  MAE 0.17147
+  [temporal_stride:3                         ] MSE 0.05980  MAE 0.20239
+  [variable_dropout:0.5                      ] MSE 0.03031  MAE 0.11758
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.06059  MAE 0.20438
+best {'val_mse': 0.004723893478512764, 'epoch': 12} -> results/raw/bench_cgmacros_itransformer_vanilla_s3/results.json
+summary {
+  "clean_mse": 0.0043570720590651035,
+  "mean_shift_mse": 0.04985693097114563,
+  "mean_degradation": 10.442760251673098,
+  "worst_mse": 0.060588568449020386,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.04985693097114563,
+  "mean_unseen_degradation": 10.442760251673098
+}
+[7/12] ok bench_cgmacros_itransformer_vanilla_s3 (4.2 min)
+
+[8/12] bench_cgmacros_patchtst_vanilla_s3
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/cgmacros_baseline.yaml --seed 3 --name bench_cgmacros_patchtst_vanilla_s3 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=patchtst --no_wandb
+cgmacros records: 45 27 9 9
+cgmacros windows: 11422 6770 2261 2391
+data_max: tensor([400.0000, 405.0000, 172.0000, 124.2000])
+data_min: tensor([40.0000, 40.0000, 42.6000,  0.0000])
+time_max: tensor(239.)
+run bench_cgmacros_patchtst_vanilla_s3 | device cuda:0 | params 126785 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 180, "n_records": 100000000, "name": "cgmacros", "patch_size": 45, "pred_window": 60, "stride": 45}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "patchtst", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00695 val_mse 0.00883 best 0.00883@0 (4.1s)
+epoch 001 loss 0.00521 val_mse 0.00631 best 0.00631@1 (3.4s)
+epoch 002 loss 0.00501 val_mse 0.00503 best 0.00503@2 (3.4s)
+epoch 003 loss 0.00488 val_mse 0.00496 best 0.00496@3 (3.4s)
+epoch 004 loss 0.00488 val_mse 0.00496 best 0.00496@3 (3.4s)
+epoch 005 loss 0.00480 val_mse 0.00566 best 0.00496@3 (3.5s)
+epoch 006 loss 0.00488 val_mse 0.00539 best 0.00496@3 (3.5s)
+epoch 007 loss 0.00475 val_mse 0.00519 best 0.00496@3 (3.4s)
+epoch 008 loss 0.00470 val_mse 0.00528 best 0.00496@3 (3.5s)
+epoch 009 loss 0.00472 val_mse 0.00478 best 0.00478@9 (3.5s)
+epoch 010 loss 0.00469 val_mse 0.00543 best 0.00478@9 (3.4s)
+epoch 011 loss 0.00470 val_mse 0.00482 best 0.00478@9 (3.4s)
+epoch 012 loss 0.00465 val_mse 0.00539 best 0.00478@9 (3.4s)
+epoch 013 loss 0.00464 val_mse 0.00492 best 0.00478@9 (3.4s)
+epoch 014 loss 0.00456 val_mse 0.00486 best 0.00478@9 (3.4s)
+epoch 015 loss 0.00463 val_mse 0.00476 best 0.00476@15 (3.4s)
+epoch 016 loss 0.00461 val_mse 0.00531 best 0.00476@15 (3.4s)
+epoch 017 loss 0.00458 val_mse 0.00526 best 0.00476@15 (3.4s)
+epoch 018 loss 0.00459 val_mse 0.00505 best 0.00476@15 (3.4s)
+epoch 019 loss 0.00460 val_mse 0.00491 best 0.00476@15 (3.4s)
+epoch 020 loss 0.00458 val_mse 0.00493 best 0.00476@15 (3.4s)
+epoch 021 loss 0.00457 val_mse 0.00516 best 0.00476@15 (3.4s)
+epoch 022 loss 0.00458 val_mse 0.00487 best 0.00476@15 (3.4s)
+epoch 023 loss 0.00459 val_mse 0.00485 best 0.00476@15 (3.4s)
+epoch 024 loss 0.00459 val_mse 0.00532 best 0.00476@15 (3.4s)
+epoch 025 loss 0.00452 val_mse 0.00515 best 0.00476@15 (3.4s)
+early stop
+  [identity                                  ] MSE 0.00438  MAE 0.04200
+  [random_dropout:0.7                        ] MSE 0.04582  MAE 0.17736
+  [temporal_stride:3                         ] MSE 0.05693  MAE 0.20595
+  [variable_dropout:0.5                      ] MSE 0.03251  MAE 0.12274
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.05954  MAE 0.21002
+best {'val_mse': 0.004757897928357124, 'epoch': 15} -> results/raw/bench_cgmacros_patchtst_vanilla_s3/results.json
+summary {
+  "clean_mse": 0.0043792324140667915,
+  "mean_shift_mse": 0.04870201088488102,
+  "mean_degradation": 10.121129522251984,
+  "worst_mse": 0.059538789093494415,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.04870201088488102,
+  "mean_unseen_degradation": 10.121129522251984
+}
+[8/12] ok bench_cgmacros_patchtst_vanilla_s3 (4.3 min)
+
+[9/12] bench_cgmacros_tmix_vanilla_s3
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/cgmacros_baseline.yaml --seed 3 --name bench_cgmacros_tmix_vanilla_s3 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=tmix --no_wandb
+cgmacros records: 45 27 9 9
+cgmacros windows: 11422 6770 2261 2391
+data_max: tensor([400.0000, 405.0000, 172.0000, 124.2000])
+data_min: tensor([40.0000, 40.0000, 42.6000,  0.0000])
+time_max: tensor(239.)
+run bench_cgmacros_tmix_vanilla_s3 | device cuda:0 | params 445761 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 180, "n_records": 100000000, "name": "cgmacros", "patch_size": 45, "pred_window": 60, "stride": 45}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "tmix", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01038 val_mse 0.00567 best 0.00567@0 (3.2s)
+epoch 001 loss 0.00509 val_mse 0.00527 best 0.00527@1 (2.5s)
+epoch 002 loss 0.00497 val_mse 0.00536 best 0.00527@1 (2.5s)
+epoch 003 loss 0.00481 val_mse 0.00523 best 0.00523@3 (2.5s)
+epoch 004 loss 0.00474 val_mse 0.00498 best 0.00498@4 (2.6s)
+epoch 005 loss 0.00474 val_mse 0.00510 best 0.00498@4 (2.6s)
+epoch 006 loss 0.00465 val_mse 0.00488 best 0.00488@6 (2.6s)
+epoch 007 loss 0.00467 val_mse 0.00523 best 0.00488@6 (2.6s)
+epoch 008 loss 0.00465 val_mse 0.00499 best 0.00488@6 (2.6s)
+epoch 009 loss 0.00467 val_mse 0.00488 best 0.00488@6 (2.6s)
+epoch 010 loss 0.00462 val_mse 0.00502 best 0.00488@6 (2.6s)
+epoch 011 loss 0.00459 val_mse 0.00510 best 0.00488@6 (2.6s)
+epoch 012 loss 0.00465 val_mse 0.00476 best 0.00476@12 (2.6s)
+epoch 013 loss 0.00457 val_mse 0.00511 best 0.00476@12 (2.6s)
+epoch 014 loss 0.00454 val_mse 0.00480 best 0.00476@12 (2.6s)
+epoch 015 loss 0.00451 val_mse 0.00486 best 0.00476@12 (2.7s)
+epoch 016 loss 0.00448 val_mse 0.00516 best 0.00476@12 (2.7s)
+epoch 017 loss 0.00454 val_mse 0.00490 best 0.00476@12 (2.6s)
+epoch 018 loss 0.00453 val_mse 0.00483 best 0.00476@12 (2.6s)
+epoch 019 loss 0.00451 val_mse 0.00472 best 0.00472@19 (2.6s)
+epoch 020 loss 0.00449 val_mse 0.00490 best 0.00472@19 (2.6s)
+epoch 021 loss 0.00452 val_mse 0.00505 best 0.00472@19 (2.6s)
+epoch 022 loss 0.00448 val_mse 0.00471 best 0.00471@22 (2.7s)
+epoch 023 loss 0.00444 val_mse 0.00487 best 0.00471@22 (2.7s)
+epoch 024 loss 0.00449 val_mse 0.00478 best 0.00471@22 (2.6s)
+epoch 025 loss 0.00442 val_mse 0.00500 best 0.00471@22 (2.6s)
+epoch 026 loss 0.00444 val_mse 0.00497 best 0.00471@22 (2.6s)
+epoch 027 loss 0.00447 val_mse 0.00479 best 0.00471@22 (2.7s)
+epoch 028 loss 0.00440 val_mse 0.00490 best 0.00471@22 (2.6s)
+epoch 029 loss 0.00444 val_mse 0.00480 best 0.00471@22 (2.6s)
+epoch 030 loss 0.00440 val_mse 0.00470 best 0.00470@30 (2.6s)
+epoch 031 loss 0.00439 val_mse 0.00483 best 0.00470@30 (2.6s)
+epoch 032 loss 0.00440 val_mse 0.00502 best 0.00470@30 (2.6s)
+epoch 033 loss 0.00445 val_mse 0.00475 best 0.00470@30 (2.6s)
+epoch 034 loss 0.00436 val_mse 0.00467 best 0.00467@34 (2.8s)
+epoch 035 loss 0.00440 val_mse 0.00489 best 0.00467@34 (2.8s)
+epoch 036 loss 0.00439 val_mse 0.00494 best 0.00467@34 (2.8s)
+epoch 037 loss 0.00438 val_mse 0.00490 best 0.00467@34 (2.8s)
+epoch 038 loss 0.00439 val_mse 0.00486 best 0.00467@34 (2.8s)
+epoch 039 loss 0.00436 val_mse 0.00496 best 0.00467@34 (2.8s)
+  [identity                                  ] MSE 0.00420  MAE 0.04189
+  [random_dropout:0.7                        ] MSE 0.04216  MAE 0.16996
+  [temporal_stride:3                         ] MSE 0.05089  MAE 0.19632
+  [variable_dropout:0.5                      ] MSE 0.03264  MAE 0.12314
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.05531  MAE 0.20336
+best {'val_mse': 0.004665715154260397, 'epoch': 34} -> results/raw/bench_cgmacros_tmix_vanilla_s3/results.json
+summary {
+  "clean_mse": 0.004204990807920694,
+  "mean_shift_mse": 0.045251594856381416,
+  "mean_degradation": 9.76140161142413,
+  "worst_mse": 0.05531030893325806,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.045251594856381416,
+  "mean_unseen_degradation": 9.76140161142413
+}
+[9/12] ok bench_cgmacros_tmix_vanilla_s3 (4.9 min)
+
+[10/12] bench_cgmacros_itransformer_vanilla_s4
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/cgmacros_baseline.yaml --seed 4 --name bench_cgmacros_itransformer_vanilla_s4 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=itransformer --no_wandb
+cgmacros records: 45 27 9 9
+cgmacros windows: 11422 6770 2261 2391
+data_max: tensor([400.0000, 405.0000, 172.0000, 124.2000])
+data_min: tensor([40.0000, 40.0000, 42.6000,  0.0000])
+time_max: tensor(239.)
+run bench_cgmacros_itransformer_vanilla_s4 | device cuda:0 | params 126785 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 180, "n_records": 100000000, "name": "cgmacros", "patch_size": 45, "pred_window": 60, "stride": 45}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "itransformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01070 val_mse 0.00515 best 0.00515@0 (7.5s)
+epoch 001 loss 0.00500 val_mse 0.00508 best 0.00508@1 (3.3s)
+epoch 002 loss 0.00474 val_mse 0.00494 best 0.00494@2 (3.3s)
+epoch 003 loss 0.00473 val_mse 0.00517 best 0.00494@2 (3.4s)
+epoch 004 loss 0.00467 val_mse 0.00492 best 0.00492@4 (3.4s)
+epoch 005 loss 0.00458 val_mse 0.00488 best 0.00488@5 (3.4s)
+epoch 006 loss 0.00458 val_mse 0.00515 best 0.00488@5 (3.4s)
+epoch 007 loss 0.00452 val_mse 0.00555 best 0.00488@5 (3.5s)
+epoch 008 loss 0.00454 val_mse 0.00509 best 0.00488@5 (3.4s)
+epoch 009 loss 0.00453 val_mse 0.00486 best 0.00486@9 (3.5s)
+epoch 010 loss 0.00461 val_mse 0.00535 best 0.00486@9 (3.5s)
+epoch 011 loss 0.00447 val_mse 0.00487 best 0.00486@9 (3.5s)
+epoch 012 loss 0.00442 val_mse 0.00497 best 0.00486@9 (3.5s)
+epoch 013 loss 0.00445 val_mse 0.00486 best 0.00486@13 (3.5s)
+epoch 014 loss 0.00440 val_mse 0.00537 best 0.00486@13 (3.5s)
+epoch 015 loss 0.00441 val_mse 0.00481 best 0.00481@15 (3.5s)
+epoch 016 loss 0.00446 val_mse 0.00477 best 0.00477@16 (3.4s)
+epoch 017 loss 0.00448 val_mse 0.00504 best 0.00477@16 (3.4s)
+epoch 018 loss 0.00443 val_mse 0.00522 best 0.00477@16 (3.4s)
+epoch 019 loss 0.00444 val_mse 0.00494 best 0.00477@16 (3.4s)
+epoch 020 loss 0.00443 val_mse 0.00481 best 0.00477@16 (3.4s)
+epoch 021 loss 0.00438 val_mse 0.00516 best 0.00477@16 (3.4s)
+epoch 022 loss 0.00444 val_mse 0.00489 best 0.00477@16 (3.4s)
+epoch 023 loss 0.00437 val_mse 0.00547 best 0.00477@16 (3.4s)
+epoch 024 loss 0.00438 val_mse 0.00503 best 0.00477@16 (3.4s)
+epoch 025 loss 0.00437 val_mse 0.00474 best 0.00474@25 (3.4s)
+epoch 026 loss 0.00437 val_mse 0.00495 best 0.00474@25 (3.4s)
+epoch 027 loss 0.00436 val_mse 0.00547 best 0.00474@25 (3.4s)
+epoch 028 loss 0.00439 val_mse 0.00505 best 0.00474@25 (3.4s)
+epoch 029 loss 0.00440 val_mse 0.00482 best 0.00474@25 (3.4s)
+epoch 030 loss 0.00438 val_mse 0.00497 best 0.00474@25 (3.4s)
+epoch 031 loss 0.00438 val_mse 0.00490 best 0.00474@25 (3.4s)
+epoch 032 loss 0.00438 val_mse 0.00483 best 0.00474@25 (3.4s)
+epoch 033 loss 0.00435 val_mse 0.00473 best 0.00473@33 (3.4s)
+epoch 034 loss 0.00435 val_mse 0.00524 best 0.00473@33 (3.4s)
+epoch 035 loss 0.00432 val_mse 0.00511 best 0.00473@33 (3.4s)
+epoch 036 loss 0.00433 val_mse 0.00525 best 0.00473@33 (3.4s)
+epoch 037 loss 0.00430 val_mse 0.00478 best 0.00473@33 (3.4s)
+epoch 038 loss 0.00432 val_mse 0.00471 best 0.00471@38 (3.4s)
+epoch 039 loss 0.00436 val_mse 0.00483 best 0.00471@38 (3.4s)
+  [identity                                  ] MSE 0.00421  MAE 0.04370
+  [random_dropout:0.7                        ] MSE 0.03820  MAE 0.14800
+  [temporal_stride:3                         ] MSE 0.04823  MAE 0.17717
+  [variable_dropout:0.5                      ] MSE 0.02575  MAE 0.10750
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.04927  MAE 0.17951
+best {'val_mse': 0.004710466600954533, 'epoch': 38} -> results/raw/bench_cgmacros_itransformer_vanilla_s4/results.json
+summary {
+  "clean_mse": 0.004211065359413624,
+  "mean_shift_mse": 0.040362303610891104,
+  "mean_degradation": 8.584820031506567,
+  "worst_mse": 0.04927361011505127,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.040362303610891104,
+  "mean_unseen_degradation": 8.584820031506567
+}
+[10/12] ok bench_cgmacros_itransformer_vanilla_s4 (5.4 min)
+
+[11/12] bench_cgmacros_patchtst_vanilla_s4
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/cgmacros_baseline.yaml --seed 4 --name bench_cgmacros_patchtst_vanilla_s4 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=patchtst --no_wandb
+cgmacros records: 45 27 9 9
+cgmacros windows: 11422 6770 2261 2391
+data_max: tensor([400.0000, 405.0000, 172.0000, 124.2000])
+data_min: tensor([40.0000, 40.0000, 42.6000,  0.0000])
+time_max: tensor(239.)
+run bench_cgmacros_patchtst_vanilla_s4 | device cuda:0 | params 126785 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 180, "n_records": 100000000, "name": "cgmacros", "patch_size": 45, "pred_window": 60, "stride": 45}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "patchtst", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00800 val_mse 0.00776 best 0.00776@0 (4.2s)
+epoch 001 loss 0.00517 val_mse 0.00668 best 0.00668@1 (3.4s)
+epoch 002 loss 0.00501 val_mse 0.00682 best 0.00668@1 (3.4s)
+epoch 003 loss 0.00488 val_mse 0.00547 best 0.00547@3 (3.2s)
+epoch 004 loss 0.00484 val_mse 0.00594 best 0.00547@3 (3.1s)
+epoch 005 loss 0.00489 val_mse 0.00766 best 0.00547@3 (3.2s)
+epoch 006 loss 0.00476 val_mse 0.00487 best 0.00487@6 (3.2s)
+epoch 007 loss 0.00475 val_mse 0.00498 best 0.00487@6 (3.2s)
+epoch 008 loss 0.00478 val_mse 0.00524 best 0.00487@6 (3.2s)
+epoch 009 loss 0.00470 val_mse 0.00519 best 0.00487@6 (3.3s)
+epoch 010 loss 0.00467 val_mse 0.00660 best 0.00487@6 (3.3s)
+epoch 011 loss 0.00470 val_mse 0.00496 best 0.00487@6 (3.3s)
+epoch 012 loss 0.00466 val_mse 0.00529 best 0.00487@6 (3.4s)
+epoch 013 loss 0.00480 val_mse 0.00489 best 0.00487@6 (3.4s)
+epoch 014 loss 0.00461 val_mse 0.00509 best 0.00487@6 (3.4s)
+epoch 015 loss 0.00463 val_mse 0.00487 best 0.00487@6 (3.4s)
+epoch 016 loss 0.00466 val_mse 0.00485 best 0.00485@16 (3.4s)
+epoch 017 loss 0.00465 val_mse 0.00547 best 0.00485@16 (3.6s)
+epoch 018 loss 0.00463 val_mse 0.00518 best 0.00485@16 (3.7s)
+epoch 019 loss 0.00462 val_mse 0.00544 best 0.00485@16 (3.7s)
+epoch 020 loss 0.00465 val_mse 0.00492 best 0.00485@16 (3.7s)
+epoch 021 loss 0.00453 val_mse 0.00473 best 0.00473@21 (3.7s)
+epoch 022 loss 0.00461 val_mse 0.00495 best 0.00473@21 (3.7s)
+epoch 023 loss 0.00459 val_mse 0.00494 best 0.00473@21 (3.7s)
+epoch 024 loss 0.00458 val_mse 0.00494 best 0.00473@21 (3.7s)
+epoch 025 loss 0.00461 val_mse 0.00512 best 0.00473@21 (3.7s)
+epoch 026 loss 0.00451 val_mse 0.00533 best 0.00473@21 (3.7s)
+epoch 027 loss 0.00452 val_mse 0.00520 best 0.00473@21 (3.7s)
+epoch 028 loss 0.00454 val_mse 0.00482 best 0.00473@21 (3.7s)
+epoch 029 loss 0.00452 val_mse 0.00586 best 0.00473@21 (3.7s)
+epoch 030 loss 0.00452 val_mse 0.00477 best 0.00473@21 (3.7s)
+epoch 031 loss 0.00452 val_mse 0.00469 best 0.00469@31 (3.7s)
+epoch 032 loss 0.00451 val_mse 0.00521 best 0.00469@31 (3.7s)
+epoch 033 loss 0.00448 val_mse 0.00590 best 0.00469@31 (3.7s)
+epoch 034 loss 0.00454 val_mse 0.00494 best 0.00469@31 (3.7s)
+epoch 035 loss 0.00450 val_mse 0.00508 best 0.00469@31 (3.6s)
+epoch 036 loss 0.00448 val_mse 0.00530 best 0.00469@31 (3.5s)
+epoch 037 loss 0.00444 val_mse 0.00471 best 0.00469@31 (3.6s)
+epoch 038 loss 0.00448 val_mse 0.00480 best 0.00469@31 (3.5s)
+epoch 039 loss 0.00448 val_mse 0.00488 best 0.00469@31 (3.5s)
+  [identity                                  ] MSE 0.00430  MAE 0.04132
+  [random_dropout:0.7                        ] MSE 0.04574  MAE 0.17789
+  [temporal_stride:3                         ] MSE 0.05264  MAE 0.19768
+  [variable_dropout:0.5                      ] MSE 0.03346  MAE 0.12446
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.05689  MAE 0.20497
+best {'val_mse': 0.004685653373599052, 'epoch': 31} -> results/raw/bench_cgmacros_patchtst_vanilla_s4/results.json
+summary {
+  "clean_mse": 0.004300483502447605,
+  "mean_shift_mse": 0.04718214459717274,
+  "mean_degradation": 9.971358120620433,
+  "worst_mse": 0.05689171701669693,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.04718214459717274,
+  "mean_unseen_degradation": 9.971358120620433
+}
+[11/12] ok bench_cgmacros_patchtst_vanilla_s4 (5.5 min)
+
+[12/12] bench_cgmacros_tmix_vanilla_s4
+  /home/kiet/quite_test/.venv/bin/python scripts/train.py --config configs/cgmacros_baseline.yaml --seed 4 --name bench_cgmacros_tmix_vanilla_s4 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=tmix --no_wandb
+cgmacros records: 45 27 9 9
+cgmacros windows: 11422 6770 2261 2391
+data_max: tensor([400.0000, 405.0000, 172.0000, 124.2000])
+data_min: tensor([40.0000, 40.0000, 42.6000,  0.0000])
+time_max: tensor(239.)
+run bench_cgmacros_tmix_vanilla_s4 | device cuda:0 | params 445761 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 180, "n_records": 100000000, "name": "cgmacros", "patch_size": 45, "pred_window": 60, "stride": 45}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "tmix", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01621 val_mse 0.00755 best 0.00755@0 (3.5s)
+epoch 001 loss 0.00572 val_mse 0.00573 best 0.00573@1 (2.7s)
+epoch 002 loss 0.00505 val_mse 0.00516 best 0.00516@2 (2.8s)
+epoch 003 loss 0.00495 val_mse 0.00562 best 0.00516@2 (2.8s)
+epoch 004 loss 0.00484 val_mse 0.00499 best 0.00499@4 (2.8s)
+epoch 005 loss 0.00472 val_mse 0.00582 best 0.00499@4 (2.8s)
+epoch 006 loss 0.00469 val_mse 0.00500 best 0.00499@4 (2.8s)
+epoch 007 loss 0.00464 val_mse 0.00534 best 0.00499@4 (2.8s)
+epoch 008 loss 0.00469 val_mse 0.00489 best 0.00489@8 (2.8s)
+epoch 009 loss 0.00463 val_mse 0.00570 best 0.00489@8 (2.8s)
+epoch 010 loss 0.00465 val_mse 0.00495 best 0.00489@8 (2.8s)
+epoch 011 loss 0.00460 val_mse 0.00510 best 0.00489@8 (2.8s)
+epoch 012 loss 0.00464 val_mse 0.00502 best 0.00489@8 (2.8s)
+epoch 013 loss 0.00462 val_mse 0.00519 best 0.00489@8 (2.8s)
+epoch 014 loss 0.00458 val_mse 0.00490 best 0.00489@8 (2.8s)
+epoch 015 loss 0.00455 val_mse 0.00495 best 0.00489@8 (2.8s)
+epoch 016 loss 0.00451 val_mse 0.00490 best 0.00489@8 (2.8s)
+epoch 017 loss 0.00455 val_mse 0.00498 best 0.00489@8 (2.8s)
+epoch 018 loss 0.00450 val_mse 0.00521 best 0.00489@8 (2.8s)
+early stop
+  [identity                                  ] MSE 0.00432  MAE 0.04292
+  [random_dropout:0.7                        ] MSE 0.03929  MAE 0.16182
+  [temporal_stride:3                         ] MSE 0.04135  MAE 0.17033
+  [variable_dropout:0.5                      ] MSE 0.03119  MAE 0.12036
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.04741  MAE 0.18205
+best {'val_mse': 0.00488542253151536, 'epoch': 8} -> results/raw/bench_cgmacros_tmix_vanilla_s4/results.json
+summary {
+  "clean_mse": 0.004324229434132576,
+  "mean_shift_mse": 0.03980793710798025,
+  "mean_degradation": 8.205787462099725,
+  "worst_mse": 0.04740801826119423,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.03980793710798025,
+  "mean_unseen_degradation": 8.205787462099725
+}
+[12/12] ok bench_cgmacros_tmix_vanilla_s4 (3.8 min)
+results/benchmark.csv: 4627 rows from 868 run cells
+results/benchmark_summary.csv: 1202 groups
+results/benchmark_curated.csv: 723 rows (curated: 4 shifts + clean, one row per seed, vanilla + opera + opera++)
+
+coverage by setting x backbone x method:
+  P12          grud          opera                      seeds [0, 1, 2, 3, 4]
+  P12          grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  P12          itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  P12          itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  P12          itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  P12          mtand         opera                      seeds [0, 1, 2, 3, 4]
+  P12          mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  P12          patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  P12          patchtst      abl_opera+mining_trainpool train       seeds [0]
+  P12          patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  P12          patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  P12          tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  P12          tmix          opera                      seeds [0, 1, 2, 3, 4]
+  P12          tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  P12          warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  P12          warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          grud          opera                      seeds [0, 1, 2, 3, 4]
+  P19          grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  P19          itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  P19          itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          mtand         opera                      seeds [0, 1, 2, 3, 4]
+  P19          mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  P19          patchtst      abl_opera+mining_trainpool train       seeds [0]
+  P19          patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  P19          patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  P19          tmix          opera                      seeds [0, 1, 2, 3, 4]
+  P19          tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  P19          warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  P19          warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  P19_hospB    itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  P19_hospB    itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  P19_hospB    patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  P19_hospB    patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  P19_hospB    tmix          opera                      seeds [0, 1, 2, 3, 4]
+  P19_hospB    tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          grud          opera                      seeds [0, 1, 2, 3, 4]
+  PAM          grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  PAM          itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  PAM          itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          mtand         opera                      seeds [0, 1, 2, 3, 4]
+  PAM          mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  PAM          patchtst      abl_opera+mining_trainpool train       seeds [0]
+  PAM          patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  PAM          patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  PAM          tmix          opera                      seeds [0, 1, 2, 3, 4]
+  PAM          tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  PAM          warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  PAM          warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms grud          opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  activity_1000ms itransformer  abl_opera++_scalar             seeds [1, 2, 3, 4]
+  activity_1000ms itransformer  abl_opera+mining_trainpool train       seeds [0]
+  activity_1000ms itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms itransformer  opera++                    seeds [1, 2, 3, 4]
+  activity_1000ms itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms mtand         opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  activity_1000ms patchtst      abl_opera++_scalar             seeds [1, 2, 3, 4]
+  activity_1000ms patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms patchtst      opera++                    seeds [1, 2, 3, 4]
+  activity_1000ms patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  activity_1000ms tmix          abl_opera++_scalar             seeds [1, 2, 3, 4]
+  activity_1000ms tmix          opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms tmix          opera++                    seeds [1, 2, 3, 4]
+  activity_1000ms tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_1000ms warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  activity_1000ms warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_2000ms itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  activity_2000ms itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_2000ms patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  activity_2000ms patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_2000ms tmix          opera                      seeds [0, 1, 2, 3, 4]
+  activity_2000ms tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_3000ms itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  activity_3000ms itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_3000ms patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  activity_3000ms patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  activity_3000ms tmix          opera                      seeds [0, 1, 2, 3, 4]
+  activity_3000ms tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  cgmacros_60min itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  cgmacros_60min patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  cgmacros_60min tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  eicu_demo    itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  eicu_demo    itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  eicu_demo    patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  eicu_demo    patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  eicu_demo    tmix          opera                      seeds [0, 1, 2, 3, 4]
+  eicu_demo    tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  noaa_isd_6h  itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  noaa_isd_6h  itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  noaa_isd_6h  patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  noaa_isd_6h  patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  noaa_isd_6h  tmix          opera                      seeds [0, 1, 2, 3, 4]
+  noaa_isd_6h  tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_12h itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  physionet_12h itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_12h patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  physionet_12h patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_12h tmix          opera                      seeds [0, 1, 2, 3, 4]
+  physionet_12h tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h grud          opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h itransformer  abl_aug+mining_harshpool harsh       seeds [0]
+  physionet_24h itransformer  abl_aug+mining_trainpool train       seeds [0]
+  physionet_24h itransformer  abl_augmentation             seeds [0]
+  physionet_24h itransformer  abl_mining     harsh       seeds [0, 1, 2, 3, 4]
+  physionet_24h itransformer  abl_opera++_scalar             seeds [1, 2, 3, 4]
+  physionet_24h itransformer  abl_opera+mining_trainpool train       seeds [0]
+  physionet_24h itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h itransformer  opera++                    seeds [1, 2, 3, 4]
+  physionet_24h itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h mtand         opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  physionet_24h patchtst      abl_opera++_scalar             seeds [1, 2, 3, 4]
+  physionet_24h patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h patchtst      opera++                    seeds [1, 2, 3, 4]
+  physionet_24h patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  physionet_24h tmix          abl_opera++_scalar             seeds [1, 2, 3, 4]
+  physionet_24h tmix          opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h tmix          opera++                    seeds [1, 2, 3, 4]
+  physionet_24h tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_24h warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  physionet_24h warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_36h itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  physionet_36h itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_36h patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  physionet_36h patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  physionet_36h tmix          opera                      seeds [0, 1, 2, 3, 4]
+  physionet_36h tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   grud          opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_12mo   itransformer  abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_12mo   itransformer  abl_opera+mining_trainpool train       seeds [0]
+  ushcn_12mo   itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   itransformer  opera++                    seeds [1, 2, 3, 4]
+  ushcn_12mo   itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   mtand         opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_12mo   patchtst      abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_12mo   patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   patchtst      opera++                    seeds [1, 2, 3, 4]
+  ushcn_12mo   patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_12mo   tmix          abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_12mo   tmix          opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   tmix          opera++                    seeds [1, 2, 3, 4]
+  ushcn_12mo   tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_12mo   warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    grud          opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    grud          vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    itransformer  abl_aug+mining_trainpool train       seeds [0]
+  ushcn_1mo    itransformer  abl_augmentation             seeds [0]
+  ushcn_1mo    itransformer  abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_1mo    itransformer  abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_1mo    itransformer  abl_opera+mining_trainpool train       seeds [0]
+  ushcn_1mo    itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    itransformer  opera++                    seeds [1, 2, 3, 4]
+  ushcn_1mo    itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    mtand         opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    mtand         vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    patchtst      abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_1mo    patchtst      abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_1mo    patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    patchtst      opera++                    seeds [1, 2, 3, 4]
+  ushcn_1mo    patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    tmix          abl_mining     harsh       seeds [1, 2, 3, 4]
+  ushcn_1mo    tmix          abl_opera++_scalar             seeds [1, 2, 3, 4]
+  ushcn_1mo    tmix          opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    tmix          opera++                    seeds [1, 2, 3, 4]
+  ushcn_1mo    tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    warpformer    opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_1mo    warpformer    vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    itransformer  opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    itransformer  vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    patchtst      opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    patchtst      vanilla                    seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    tmix          opera                      seeds [0, 1, 2, 3, 4]
+  ushcn_6mo    tmix          vanilla                    seeds [0, 1, 2, 3, 4]
+
+stage B: 12 ok, 0 failed

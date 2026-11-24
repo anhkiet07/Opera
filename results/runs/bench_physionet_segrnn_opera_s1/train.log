@@ -1,0 +1,50 @@
+wandb disabled: No API key configured. Use `wandb login` to log in.
+run bench_physionet_segrnn_opera_s1 | device cuda:0 | params 125889 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_physionet_segrnn_vanilla_s1/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "segrnn", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.06327 val_mse 0.01917 best 0.01917@0 (20.7s)
+epoch 001 loss 0.02549 val_mse 0.01482 best 0.01482@1 (19.3s)
+epoch 002 loss 0.02393 val_mse 0.01406 best 0.01406@2 (19.4s)
+epoch 003 loss 0.02322 val_mse 0.01378 best 0.01378@3 (19.4s)
+epoch 004 loss 0.02304 val_mse 0.01346 best 0.01346@4 (19.3s)
+epoch 005 loss 0.02290 val_mse 0.01314 best 0.01314@5 (19.4s)
+epoch 006 loss 0.02240 val_mse 0.01300 best 0.01300@6 (19.4s)
+epoch 007 loss 0.02158 val_mse 0.01327 best 0.01300@6 (19.2s)
+epoch 008 loss 0.02155 val_mse 0.01279 best 0.01279@8 (19.3s)
+epoch 009 loss 0.02188 val_mse 0.01322 best 0.01279@8 (19.5s)
+epoch 010 loss 0.02142 val_mse 0.01313 best 0.01279@8 (19.6s)
+epoch 011 loss 0.02201 val_mse 0.01300 best 0.01279@8 (19.3s)
+epoch 012 loss 0.02150 val_mse 0.01290 best 0.01279@8 (19.3s)
+epoch 013 loss 0.02123 val_mse 0.01240 best 0.01240@13 (19.2s)
+epoch 014 loss 0.02135 val_mse 0.01243 best 0.01240@13 (19.5s)
+epoch 015 loss 0.02122 val_mse 0.01328 best 0.01240@13 (19.5s)
+epoch 016 loss 0.02283 val_mse 0.01276 best 0.01240@13 (19.5s)
+epoch 017 loss 0.02147 val_mse 0.01263 best 0.01240@13 (19.3s)
+epoch 018 loss 0.01995 val_mse 0.01249 best 0.01240@13 (19.3s)
+epoch 019 loss 0.02215 val_mse 0.01235 best 0.01235@19 (19.4s)
+epoch 020 loss 0.02185 val_mse 0.01202 best 0.01202@20 (19.4s)
+epoch 021 loss 0.02128 val_mse 0.01281 best 0.01202@20 (19.2s)
+epoch 022 loss 0.02150 val_mse 0.01278 best 0.01202@20 (19.2s)
+epoch 023 loss 0.02226 val_mse 0.01262 best 0.01202@20 (19.1s)
+epoch 024 loss 0.02094 val_mse 0.01242 best 0.01202@20 (19.2s)
+epoch 025 loss 0.02181 val_mse 0.01240 best 0.01202@20 (19.4s)
+epoch 026 loss 0.02261 val_mse 0.01237 best 0.01202@20 (19.4s)
+epoch 027 loss 0.02169 val_mse 0.01330 best 0.01202@20 (19.5s)
+epoch 028 loss 0.02062 val_mse 0.01249 best 0.01202@20 (19.3s)
+epoch 029 loss 0.02249 val_mse 0.01355 best 0.01202@20 (19.3s)
+epoch 030 loss 0.02114 val_mse 0.01258 best 0.01202@20 (19.5s)
+early stop
+  [identity                                  ] MSE 0.01156  MAE 0.06087
+  [random_dropout:0.7                        ] MSE 0.02960  MAE 0.09516
+  [temporal_stride:3                         ] MSE 0.01196  MAE 0.06144
+  [variable_dropout:0.5                      ] MSE 0.06087  MAE 0.14530
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.03239  MAE 0.09883
+best {'val_mse': 0.01201772689819336, 'epoch': 20} -> results/raw/bench_physionet_segrnn_opera_s1/results.json
+summary {
+  "clean_mse": 0.011559130623936653,
+  "mean_shift_mse": 0.0337074373383075,
+  "mean_degradation": 1.9160875878075228,
+  "worst_mse": 0.06086980924010277,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.0337074373383075,
+  "mean_unseen_degradation": 1.9160875878075228
+}

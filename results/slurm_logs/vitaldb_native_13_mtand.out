@@ -1,0 +1,625 @@
+stage A: 1 cells
+
+[1/1] bench_vitaldb_mtand_vanilla_s0
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_baseline.yaml --seed 0 --name bench_vitaldb_mtand_vanilla_s0 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=mtand --no_wandb
+vitaldb: 500/6388 cases processed
+vitaldb: 1000/6388 cases processed
+vitaldb: 1500/6388 cases processed
+vitaldb: 2000/6388 cases processed
+vitaldb: 2500/6388 cases processed
+vitaldb: 3000/6388 cases processed
+vitaldb: 3500/6388 cases processed
+vitaldb: 4000/6388 cases processed
+vitaldb: 4500/6388 cases processed
+vitaldb: 5000/6388 cases processed
+vitaldb: 5500/6388 cases processed
+vitaldb: 6000/6388 cases processed
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_mtand_vanilla_s0 | device cuda:0 | params 73035 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "mtand", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00783 val_mse 0.00418 best 0.00418@0 (13.9s)
+epoch 001 loss 0.00380 val_mse 0.00327 best 0.00327@1 (13.3s)
+epoch 002 loss 0.00347 val_mse 0.00311 best 0.00311@2 (13.5s)
+epoch 003 loss 0.00330 val_mse 0.00302 best 0.00302@3 (13.4s)
+epoch 004 loss 0.00315 val_mse 0.00302 best 0.00302@3 (13.4s)
+epoch 005 loss 0.00300 val_mse 0.00265 best 0.00265@5 (13.5s)
+epoch 006 loss 0.00299 val_mse 0.00280 best 0.00265@5 (13.4s)
+epoch 007 loss 0.00291 val_mse 0.00314 best 0.00265@5 (13.4s)
+epoch 008 loss 0.00292 val_mse 0.00279 best 0.00265@5 (13.4s)
+epoch 009 loss 0.00288 val_mse 0.00272 best 0.00265@5 (13.3s)
+epoch 010 loss 0.00286 val_mse 0.00288 best 0.00265@5 (13.4s)
+epoch 011 loss 0.00288 val_mse 0.00275 best 0.00265@5 (13.3s)
+epoch 012 loss 0.00286 val_mse 0.00263 best 0.00263@12 (13.3s)
+epoch 013 loss 0.00282 val_mse 0.00268 best 0.00263@12 (13.4s)
+epoch 014 loss 0.00283 val_mse 0.00280 best 0.00263@12 (13.3s)
+epoch 015 loss 0.00282 val_mse 0.00265 best 0.00263@12 (13.3s)
+epoch 016 loss 0.00282 val_mse 0.00267 best 0.00263@12 (13.4s)
+epoch 017 loss 0.00280 val_mse 0.00291 best 0.00263@12 (13.3s)
+epoch 018 loss 0.00280 val_mse 0.00263 best 0.00263@12 (13.4s)
+epoch 019 loss 0.00281 val_mse 0.00270 best 0.00263@12 (13.5s)
+epoch 020 loss 0.00279 val_mse 0.00270 best 0.00263@12 (13.2s)
+epoch 021 loss 0.00281 val_mse 0.00267 best 0.00263@12 (10.1s)
+epoch 022 loss 0.00279 val_mse 0.00264 best 0.00263@12 (13.3s)
+early stop
+  [identity                                  ] MSE 0.00277  MAE 0.03260
+  [random_dropout:0.7                        ] MSE 0.00301  MAE 0.03431
+  [temporal_stride:3                         ] MSE 0.00306  MAE 0.03451
+  [variable_dropout:0.5                      ] MSE 0.00863  MAE 0.06950
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00456  MAE 0.04516
+best {'val_mse': 0.00262855994515121, 'epoch': 12} -> results/raw/bench_vitaldb_mtand_vanilla_s0/results.json
+summary {
+  "clean_mse": 0.002767671598121524,
+  "mean_shift_mse": 0.004814702202565968,
+  "mean_degradation": 0.7396219283508225,
+  "worst_mse": 0.008633023127913475,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.004814702202565968,
+  "mean_unseen_degradation": 0.7396219283508225
+}
+[1/1] ok bench_vitaldb_mtand_vanilla_s0 (10.8 min)
+
+stage A: 1 ok, 0 failed
+stage B: 4 cells
+
+[1/4] bench_vitaldb_mtand_vanilla_s1
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_baseline.yaml --seed 1 --name bench_vitaldb_mtand_vanilla_s1 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=mtand --no_wandb
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_mtand_vanilla_s1 | device cuda:0 | params 73035 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "mtand", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00719 val_mse 0.00419 best 0.00419@0 (13.7s)
+epoch 001 loss 0.00379 val_mse 0.00360 best 0.00360@1 (13.5s)
+epoch 002 loss 0.00340 val_mse 0.00296 best 0.00296@2 (13.4s)
+epoch 003 loss 0.00326 val_mse 0.00298 best 0.00296@2 (13.4s)
+epoch 004 loss 0.00310 val_mse 0.00274 best 0.00274@4 (13.5s)
+epoch 005 loss 0.00302 val_mse 0.00273 best 0.00273@5 (13.3s)
+epoch 006 loss 0.00296 val_mse 0.00270 best 0.00270@6 (13.4s)
+epoch 007 loss 0.00292 val_mse 0.00268 best 0.00268@7 (13.4s)
+epoch 008 loss 0.00288 val_mse 0.00292 best 0.00268@7 (13.3s)
+epoch 009 loss 0.00289 val_mse 0.00280 best 0.00268@7 (13.4s)
+epoch 010 loss 0.00287 val_mse 0.00262 best 0.00262@10 (13.3s)
+epoch 011 loss 0.00286 val_mse 0.00269 best 0.00262@10 (13.3s)
+epoch 012 loss 0.00285 val_mse 0.00267 best 0.00262@10 (13.4s)
+epoch 013 loss 0.00281 val_mse 0.00272 best 0.00262@10 (13.3s)
+epoch 014 loss 0.00286 val_mse 0.00273 best 0.00262@10 (13.4s)
+epoch 015 loss 0.00283 val_mse 0.00264 best 0.00262@10 (13.4s)
+epoch 016 loss 0.00281 val_mse 0.00267 best 0.00262@10 (13.3s)
+epoch 017 loss 0.00281 val_mse 0.00276 best 0.00262@10 (13.4s)
+epoch 018 loss 0.00281 val_mse 0.00265 best 0.00262@10 (13.4s)
+epoch 019 loss 0.00282 val_mse 0.00258 best 0.00258@19 (13.3s)
+epoch 020 loss 0.00276 val_mse 0.00266 best 0.00258@19 (13.4s)
+epoch 021 loss 0.00279 val_mse 0.00262 best 0.00258@19 (13.3s)
+epoch 022 loss 0.00276 val_mse 0.00262 best 0.00258@19 (13.4s)
+epoch 023 loss 0.00277 val_mse 0.00257 best 0.00257@23 (13.5s)
+epoch 024 loss 0.00274 val_mse 0.00258 best 0.00257@23 (13.3s)
+epoch 025 loss 0.00276 val_mse 0.00266 best 0.00257@23 (13.5s)
+epoch 026 loss 0.00279 val_mse 0.00293 best 0.00257@23 (13.5s)
+epoch 027 loss 0.00277 val_mse 0.00261 best 0.00257@23 (13.3s)
+epoch 028 loss 0.00269 val_mse 0.00265 best 0.00257@23 (13.4s)
+epoch 029 loss 0.00274 val_mse 0.00268 best 0.00257@23 (13.4s)
+epoch 030 loss 0.00271 val_mse 0.00260 best 0.00257@23 (13.3s)
+epoch 031 loss 0.00273 val_mse 0.00255 best 0.00255@31 (13.4s)
+epoch 032 loss 0.00267 val_mse 0.00258 best 0.00255@31 (13.2s)
+epoch 033 loss 0.00270 val_mse 0.00266 best 0.00255@31 (11.5s)
+epoch 034 loss 0.00270 val_mse 0.00266 best 0.00255@31 (13.5s)
+epoch 035 loss 0.00268 val_mse 0.00263 best 0.00255@31 (13.3s)
+epoch 036 loss 0.00270 val_mse 0.00256 best 0.00255@31 (13.5s)
+epoch 037 loss 0.00270 val_mse 0.00256 best 0.00255@31 (13.4s)
+epoch 038 loss 0.00267 val_mse 0.00275 best 0.00255@31 (13.3s)
+epoch 039 loss 0.00269 val_mse 0.00289 best 0.00255@31 (13.1s)
+  [identity                                  ] MSE 0.00269  MAE 0.03152
+  [random_dropout:0.7                        ] MSE 0.00300  MAE 0.03379
+  [temporal_stride:3                         ] MSE 0.00303  MAE 0.03377
+  [variable_dropout:0.5                      ] MSE 0.01063  MAE 0.07135
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00465  MAE 0.04509
+best {'val_mse': 0.0025540441274642944, 'epoch': 31} -> results/raw/bench_vitaldb_mtand_vanilla_s1/results.json
+summary {
+  "clean_mse": 0.0026889725122600794,
+  "mean_shift_mse": 0.005325800215359777,
+  "mean_degradation": 0.9806079054647703,
+  "worst_mse": 0.010631903074681759,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.005325800215359777,
+  "mean_unseen_degradation": 0.9806079054647703
+}
+[1/4] ok bench_vitaldb_mtand_vanilla_s1 (12.0 min)
+
+[2/4] bench_vitaldb_mtand_vanilla_s2
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_baseline.yaml --seed 2 --name bench_vitaldb_mtand_vanilla_s2 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=mtand --no_wandb
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_mtand_vanilla_s2 | device cuda:0 | params 73035 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "mtand", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00961 val_mse 0.00455 best 0.00455@0 (13.7s)
+epoch 001 loss 0.00418 val_mse 0.00356 best 0.00356@1 (13.4s)
+epoch 002 loss 0.00354 val_mse 0.00311 best 0.00311@2 (13.3s)
+epoch 003 loss 0.00328 val_mse 0.00294 best 0.00294@3 (13.4s)
+epoch 004 loss 0.00314 val_mse 0.00300 best 0.00294@3 (13.4s)
+epoch 005 loss 0.00305 val_mse 0.00290 best 0.00290@5 (13.3s)
+epoch 006 loss 0.00300 val_mse 0.00289 best 0.00289@6 (13.4s)
+epoch 007 loss 0.00292 val_mse 0.00271 best 0.00271@7 (13.4s)
+epoch 008 loss 0.00286 val_mse 0.00266 best 0.00266@8 (13.3s)
+epoch 009 loss 0.00285 val_mse 0.00269 best 0.00266@8 (13.5s)
+epoch 010 loss 0.00285 val_mse 0.00277 best 0.00266@8 (13.4s)
+epoch 011 loss 0.00287 val_mse 0.00271 best 0.00266@8 (13.3s)
+epoch 012 loss 0.00283 val_mse 0.00263 best 0.00263@12 (13.5s)
+epoch 013 loss 0.00283 val_mse 0.00265 best 0.00263@12 (13.3s)
+epoch 014 loss 0.00281 val_mse 0.00281 best 0.00263@12 (13.4s)
+epoch 015 loss 0.00278 val_mse 0.00272 best 0.00263@12 (13.5s)
+epoch 016 loss 0.00278 val_mse 0.00271 best 0.00263@12 (13.3s)
+epoch 017 loss 0.00280 val_mse 0.00269 best 0.00263@12 (13.4s)
+epoch 018 loss 0.00276 val_mse 0.00263 best 0.00263@18 (13.4s)
+epoch 019 loss 0.00277 val_mse 0.00260 best 0.00260@19 (13.3s)
+epoch 020 loss 0.00277 val_mse 0.00263 best 0.00260@19 (13.4s)
+epoch 021 loss 0.00278 val_mse 0.00271 best 0.00260@19 (13.3s)
+epoch 022 loss 0.00275 val_mse 0.00273 best 0.00260@19 (13.3s)
+epoch 023 loss 0.00276 val_mse 0.00295 best 0.00260@19 (13.4s)
+epoch 024 loss 0.00276 val_mse 0.00277 best 0.00260@19 (13.3s)
+epoch 025 loss 0.00275 val_mse 0.00264 best 0.00260@19 (13.4s)
+epoch 026 loss 0.00270 val_mse 0.00277 best 0.00260@19 (13.4s)
+epoch 027 loss 0.00271 val_mse 0.00267 best 0.00260@19 (13.4s)
+epoch 028 loss 0.00274 val_mse 0.00275 best 0.00260@19 (13.4s)
+epoch 029 loss 0.00275 val_mse 0.00265 best 0.00260@19 (13.2s)
+early stop
+  [identity                                  ] MSE 0.00272  MAE 0.03213
+  [random_dropout:0.7                        ] MSE 0.00300  MAE 0.03412
+  [temporal_stride:3                         ] MSE 0.00306  MAE 0.03439
+  [variable_dropout:0.5                      ] MSE 0.00958  MAE 0.06880
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00424  MAE 0.04321
+best {'val_mse': 0.002599053317680955, 'epoch': 19} -> results/raw/bench_vitaldb_mtand_vanilla_s2/results.json
+summary {
+  "clean_mse": 0.002722938545048237,
+  "mean_shift_mse": 0.004970102338120341,
+  "mean_degradation": 0.8252715791763475,
+  "worst_mse": 0.00958220660686493,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.004970102338120341,
+  "mean_unseen_degradation": 0.8252715791763475
+}
+[2/4] ok bench_vitaldb_mtand_vanilla_s2 (9.1 min)
+
+[3/4] bench_vitaldb_mtand_vanilla_s3
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_baseline.yaml --seed 3 --name bench_vitaldb_mtand_vanilla_s3 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=mtand --no_wandb
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_mtand_vanilla_s3 | device cuda:0 | params 73035 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "mtand", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00865 val_mse 0.00431 best 0.00431@0 (13.7s)
+epoch 001 loss 0.00387 val_mse 0.00323 best 0.00323@1 (13.6s)
+epoch 002 loss 0.00341 val_mse 0.00303 best 0.00303@2 (13.3s)
+epoch 003 loss 0.00326 val_mse 0.00285 best 0.00285@3 (13.4s)
+epoch 004 loss 0.00307 val_mse 0.00288 best 0.00285@3 (13.4s)
+epoch 005 loss 0.00303 val_mse 0.00297 best 0.00285@3 (13.3s)
+epoch 006 loss 0.00293 val_mse 0.00288 best 0.00285@3 (13.5s)
+epoch 007 loss 0.00288 val_mse 0.00281 best 0.00281@7 (14.0s)
+epoch 008 loss 0.00285 val_mse 0.00268 best 0.00268@8 (13.4s)
+epoch 009 loss 0.00285 val_mse 0.00277 best 0.00268@8 (13.6s)
+epoch 010 loss 0.00285 val_mse 0.00270 best 0.00268@8 (13.6s)
+epoch 011 loss 0.00284 val_mse 0.00278 best 0.00268@8 (13.5s)
+epoch 012 loss 0.00279 val_mse 0.00272 best 0.00268@8 (13.5s)
+epoch 013 loss 0.00282 val_mse 0.00268 best 0.00268@8 (13.3s)
+epoch 014 loss 0.00281 val_mse 0.00272 best 0.00268@8 (13.5s)
+epoch 015 loss 0.00277 val_mse 0.00268 best 0.00268@8 (13.4s)
+epoch 016 loss 0.00281 val_mse 0.00276 best 0.00268@8 (13.3s)
+epoch 017 loss 0.00279 val_mse 0.00272 best 0.00268@8 (13.4s)
+epoch 018 loss 0.00279 val_mse 0.00268 best 0.00268@8 (13.3s)
+early stop
+  [identity                                  ] MSE 0.00282  MAE 0.03205
+  [random_dropout:0.7                        ] MSE 0.00309  MAE 0.03414
+  [temporal_stride:3                         ] MSE 0.00312  MAE 0.03395
+  [variable_dropout:0.5                      ] MSE 0.01007  MAE 0.07462
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00491  MAE 0.04645
+best {'val_mse': 0.002676289761438966, 'epoch': 8} -> results/raw/bench_vitaldb_mtand_vanilla_s3/results.json
+summary {
+  "clean_mse": 0.0028205045964568853,
+  "mean_shift_mse": 0.005296114133670926,
+  "mean_degradation": 0.8777186679021544,
+  "worst_mse": 0.010067643597722054,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.005296114133670926,
+  "mean_unseen_degradation": 0.8777186679021544
+}
+[3/4] ok bench_vitaldb_mtand_vanilla_s3 (6.0 min)
+
+[4/4] bench_vitaldb_mtand_vanilla_s4
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_baseline.yaml --seed 4 --name bench_vitaldb_mtand_vanilla_s4 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=mtand --no_wandb
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_mtand_vanilla_s4 | device cuda:0 | params 73035 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "mtand", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00807 val_mse 0.00469 best 0.00469@0 (13.7s)
+epoch 001 loss 0.00392 val_mse 0.00397 best 0.00397@1 (13.4s)
+epoch 002 loss 0.00343 val_mse 0.00320 best 0.00320@2 (13.2s)
+epoch 003 loss 0.00321 val_mse 0.00309 best 0.00309@3 (13.1s)
+epoch 004 loss 0.00309 val_mse 0.00292 best 0.00292@4 (10.9s)
+epoch 005 loss 0.00301 val_mse 0.00299 best 0.00292@4 (13.5s)
+epoch 006 loss 0.00292 val_mse 0.00309 best 0.00292@4 (13.4s)
+epoch 007 loss 0.00288 val_mse 0.00295 best 0.00292@4 (13.3s)
+epoch 008 loss 0.00290 val_mse 0.00267 best 0.00267@8 (13.6s)
+epoch 009 loss 0.00285 val_mse 0.00272 best 0.00267@8 (13.4s)
+epoch 010 loss 0.00284 val_mse 0.00283 best 0.00267@8 (13.4s)
+epoch 011 loss 0.00284 val_mse 0.00265 best 0.00265@11 (13.5s)
+epoch 012 loss 0.00280 val_mse 0.00275 best 0.00265@11 (13.4s)
+epoch 013 loss 0.00284 val_mse 0.00264 best 0.00264@13 (13.4s)
+epoch 014 loss 0.00283 val_mse 0.00281 best 0.00264@13 (13.6s)
+epoch 015 loss 0.00284 val_mse 0.00278 best 0.00264@13 (13.7s)
+epoch 016 loss 0.00279 val_mse 0.00274 best 0.00264@13 (13.7s)
+epoch 017 loss 0.00278 val_mse 0.00264 best 0.00264@17 (13.8s)
+epoch 018 loss 0.00276 val_mse 0.00260 best 0.00260@18 (13.5s)
+epoch 019 loss 0.00277 val_mse 0.00267 best 0.00260@18 (13.6s)
+epoch 020 loss 0.00279 val_mse 0.00255 best 0.00255@20 (13.3s)
+epoch 021 loss 0.00273 val_mse 0.00262 best 0.00255@20 (11.9s)
+epoch 022 loss 0.00277 val_mse 0.00274 best 0.00255@20 (13.5s)
+epoch 023 loss 0.00276 val_mse 0.00258 best 0.00255@20 (13.4s)
+epoch 024 loss 0.00277 val_mse 0.00269 best 0.00255@20 (13.5s)
+epoch 025 loss 0.00271 val_mse 0.00270 best 0.00255@20 (13.4s)
+epoch 026 loss 0.00274 val_mse 0.00262 best 0.00255@20 (13.5s)
+epoch 027 loss 0.00271 val_mse 0.00266 best 0.00255@20 (13.6s)
+epoch 028 loss 0.00276 val_mse 0.00266 best 0.00255@20 (13.4s)
+epoch 029 loss 0.00274 val_mse 0.00274 best 0.00255@20 (13.5s)
+epoch 030 loss 0.00272 val_mse 0.00259 best 0.00255@20 (13.5s)
+early stop
+  [identity                                  ] MSE 0.00270  MAE 0.03202
+  [random_dropout:0.7                        ] MSE 0.00297  MAE 0.03414
+  [temporal_stride:3                         ] MSE 0.00301  MAE 0.03412
+  [variable_dropout:0.5                      ] MSE 0.01218  MAE 0.07111
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00443  MAE 0.04380
+best {'val_mse': 0.0025504278019070625, 'epoch': 20} -> results/raw/bench_vitaldb_mtand_vanilla_s4/results.json
+summary {
+  "clean_mse": 0.0026988573372364044,
+  "mean_shift_mse": 0.005648336315061897,
+  "mean_degradation": 1.0928621298840944,
+  "worst_mse": 0.012181687168776989,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.005648336315061897,
+  "mean_unseen_degradation": 1.0928621298840944
+}
+[4/4] ok bench_vitaldb_mtand_vanilla_s4 (9.4 min)
+
+stage B: 4 ok, 0 failed
+stage C: 1 cells
+
+[1/1] bench_vitaldb_mtand_opera_s0
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_distillation.yaml --seed 0 --name bench_vitaldb_mtand_opera_s0 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=mtand distillation.teacher_ckpt=results/raw/bench_vitaldb_mtand_vanilla_s0/model.pt --no_wandb
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_mtand_opera_s0 | device cuda:0 | params 73035 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_vitaldb_mtand_vanilla_s0/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "mtand", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 0.01311 val_mse 0.00483 best 0.00483@0 (16.5s)
+epoch 001 loss 0.00493 val_mse 0.00332 best 0.00332@1 (15.5s)
+epoch 002 loss 0.00417 val_mse 0.00312 best 0.00312@2 (15.4s)
+epoch 003 loss 0.00373 val_mse 0.00294 best 0.00294@3 (15.4s)
+epoch 004 loss 0.00343 val_mse 0.00290 best 0.00290@4 (15.4s)
+epoch 005 loss 0.00330 val_mse 0.00281 best 0.00281@5 (12.6s)
+epoch 006 loss 0.00318 val_mse 0.00268 best 0.00268@6 (15.6s)
+epoch 007 loss 0.00316 val_mse 0.00276 best 0.00268@6 (15.7s)
+epoch 008 loss 0.00316 val_mse 0.00276 best 0.00268@6 (15.7s)
+epoch 009 loss 0.00312 val_mse 0.00276 best 0.00268@6 (15.6s)
+epoch 010 loss 0.00313 val_mse 0.00279 best 0.00268@6 (15.8s)
+epoch 011 loss 0.00308 val_mse 0.00269 best 0.00268@6 (15.9s)
+epoch 012 loss 0.00306 val_mse 0.00267 best 0.00267@12 (15.8s)
+epoch 013 loss 0.00304 val_mse 0.00281 best 0.00267@12 (15.7s)
+epoch 014 loss 0.00305 val_mse 0.00278 best 0.00267@12 (15.7s)
+epoch 015 loss 0.00305 val_mse 0.00276 best 0.00267@12 (15.7s)
+epoch 016 loss 0.00306 val_mse 0.00278 best 0.00267@12 (15.6s)
+epoch 017 loss 0.00304 val_mse 0.00265 best 0.00265@17 (15.8s)
+epoch 018 loss 0.00301 val_mse 0.00264 best 0.00264@18 (15.6s)
+epoch 019 loss 0.00300 val_mse 0.00265 best 0.00264@18 (15.6s)
+epoch 020 loss 0.00306 val_mse 0.00267 best 0.00264@18 (15.8s)
+epoch 021 loss 0.00301 val_mse 0.00266 best 0.00264@18 (15.7s)
+epoch 022 loss 0.00305 val_mse 0.00267 best 0.00264@18 (15.7s)
+epoch 023 loss 0.00302 val_mse 0.00264 best 0.00264@18 (15.8s)
+epoch 024 loss 0.00301 val_mse 0.00257 best 0.00257@24 (15.9s)
+epoch 025 loss 0.00297 val_mse 0.00263 best 0.00257@24 (15.7s)
+epoch 026 loss 0.00298 val_mse 0.00266 best 0.00257@24 (15.9s)
+epoch 027 loss 0.00301 val_mse 0.00261 best 0.00257@24 (15.7s)
+epoch 028 loss 0.00299 val_mse 0.00263 best 0.00257@24 (15.6s)
+epoch 029 loss 0.00300 val_mse 0.00269 best 0.00257@24 (15.6s)
+epoch 030 loss 0.00297 val_mse 0.00255 best 0.00255@30 (15.5s)
+epoch 031 loss 0.00298 val_mse 0.00270 best 0.00255@30 (12.9s)
+epoch 032 loss 0.00300 val_mse 0.00264 best 0.00255@30 (15.8s)
+epoch 033 loss 0.00298 val_mse 0.00259 best 0.00255@30 (15.6s)
+epoch 034 loss 0.00297 val_mse 0.00256 best 0.00255@30 (15.6s)
+epoch 035 loss 0.00293 val_mse 0.00260 best 0.00255@30 (15.8s)
+epoch 036 loss 0.00299 val_mse 0.00260 best 0.00255@30 (15.7s)
+epoch 037 loss 0.00296 val_mse 0.00270 best 0.00255@30 (15.6s)
+epoch 038 loss 0.00295 val_mse 0.00257 best 0.00255@30 (15.8s)
+epoch 039 loss 0.00296 val_mse 0.00270 best 0.00255@30 (15.7s)
+  [identity                                  ] MSE 0.00270  MAE 0.03140
+  [random_dropout:0.7                        ] MSE 0.00295  MAE 0.03333
+  [temporal_stride:3                         ] MSE 0.00301  MAE 0.03349
+  [variable_dropout:0.5                      ] MSE 0.00342  MAE 0.03828
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00346  MAE 0.03741
+best {'val_mse': 0.0025516687892377377, 'epoch': 30} -> results/raw/bench_vitaldb_mtand_opera_s0/results.json
+summary {
+  "clean_mse": 0.0026966826990246773,
+  "mean_shift_mse": 0.003209987306036055,
+  "mean_degradation": 0.19034668305508368,
+  "worst_mse": 0.0034648238215595484,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.003209987306036055,
+  "mean_unseen_degradation": 0.19034668305508368
+}
+[1/1] ok bench_vitaldb_mtand_opera_s0 (13.6 min)
+
+stage C: 1 ok, 0 failed
+stage D: 4 cells
+
+[1/4] bench_vitaldb_mtand_opera_s1
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_distillation.yaml --seed 1 --name bench_vitaldb_mtand_opera_s1 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=mtand distillation.teacher_ckpt=results/raw/bench_vitaldb_mtand_vanilla_s1/model.pt --no_wandb
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_mtand_opera_s1 | device cuda:0 | params 73035 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_vitaldb_mtand_vanilla_s1/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "mtand", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 0.01196 val_mse 0.00416 best 0.00416@0 (16.3s)
+epoch 001 loss 0.00483 val_mse 0.00324 best 0.00324@1 (15.7s)
+epoch 002 loss 0.00414 val_mse 0.00318 best 0.00318@2 (15.8s)
+epoch 003 loss 0.00389 val_mse 0.00324 best 0.00318@2 (15.7s)
+epoch 004 loss 0.00363 val_mse 0.00294 best 0.00294@4 (15.9s)
+epoch 005 loss 0.00337 val_mse 0.00275 best 0.00275@5 (15.8s)
+epoch 006 loss 0.00329 val_mse 0.00309 best 0.00275@5 (15.7s)
+epoch 007 loss 0.00320 val_mse 0.00274 best 0.00274@7 (15.4s)
+epoch 008 loss 0.00317 val_mse 0.00276 best 0.00274@7 (12.0s)
+epoch 009 loss 0.00317 val_mse 0.00269 best 0.00269@9 (15.6s)
+epoch 010 loss 0.00313 val_mse 0.00271 best 0.00269@9 (15.8s)
+epoch 011 loss 0.00311 val_mse 0.00281 best 0.00269@9 (15.8s)
+epoch 012 loss 0.00312 val_mse 0.00274 best 0.00269@9 (15.8s)
+epoch 013 loss 0.00310 val_mse 0.00269 best 0.00269@13 (15.9s)
+epoch 014 loss 0.00310 val_mse 0.00269 best 0.00269@13 (15.8s)
+epoch 015 loss 0.00312 val_mse 0.00264 best 0.00264@15 (15.7s)
+epoch 016 loss 0.00306 val_mse 0.00262 best 0.00262@16 (15.8s)
+epoch 017 loss 0.00306 val_mse 0.00259 best 0.00259@17 (15.8s)
+epoch 018 loss 0.00304 val_mse 0.00258 best 0.00258@18 (15.6s)
+epoch 019 loss 0.00301 val_mse 0.00256 best 0.00256@19 (15.7s)
+epoch 020 loss 0.00300 val_mse 0.00256 best 0.00256@19 (15.7s)
+epoch 021 loss 0.00307 val_mse 0.00270 best 0.00256@19 (15.6s)
+epoch 022 loss 0.00302 val_mse 0.00261 best 0.00256@19 (15.7s)
+epoch 023 loss 0.00299 val_mse 0.00259 best 0.00256@19 (15.7s)
+epoch 024 loss 0.00301 val_mse 0.00257 best 0.00256@19 (15.6s)
+epoch 025 loss 0.00300 val_mse 0.00257 best 0.00256@19 (15.7s)
+epoch 026 loss 0.00297 val_mse 0.00255 best 0.00255@26 (15.9s)
+epoch 027 loss 0.00297 val_mse 0.00261 best 0.00255@26 (15.8s)
+epoch 028 loss 0.00302 val_mse 0.00259 best 0.00255@26 (15.8s)
+epoch 029 loss 0.00297 val_mse 0.00263 best 0.00255@26 (15.7s)
+epoch 030 loss 0.00297 val_mse 0.00255 best 0.00255@30 (15.6s)
+epoch 031 loss 0.00297 val_mse 0.00260 best 0.00255@30 (15.6s)
+epoch 032 loss 0.00297 val_mse 0.00281 best 0.00255@30 (15.7s)
+epoch 033 loss 0.00298 val_mse 0.00258 best 0.00255@30 (15.6s)
+epoch 034 loss 0.00294 val_mse 0.00254 best 0.00254@34 (15.6s)
+epoch 035 loss 0.00294 val_mse 0.00267 best 0.00254@34 (15.7s)
+epoch 036 loss 0.00296 val_mse 0.00259 best 0.00254@34 (15.6s)
+epoch 037 loss 0.00296 val_mse 0.00268 best 0.00254@34 (15.6s)
+epoch 038 loss 0.00299 val_mse 0.00258 best 0.00254@34 (15.8s)
+epoch 039 loss 0.00295 val_mse 0.00255 best 0.00254@34 (15.7s)
+  [identity                                  ] MSE 0.00267  MAE 0.03197
+  [random_dropout:0.7                        ] MSE 0.00294  MAE 0.03393
+  [temporal_stride:3                         ] MSE 0.00297  MAE 0.03402
+  [variable_dropout:0.5                      ] MSE 0.00340  MAE 0.03874
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00345  MAE 0.03784
+best {'val_mse': 0.002537583000957966, 'epoch': 34} -> results/raw/bench_vitaldb_mtand_opera_s1/results.json
+summary {
+  "clean_mse": 0.0026720850728452206,
+  "mean_shift_mse": 0.003189361945260316,
+  "mean_degradation": 0.19358548036956855,
+  "worst_mse": 0.003447208320721984,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.003189361945260316,
+  "mean_unseen_degradation": 0.19358548036956855
+}
+[1/4] ok bench_vitaldb_mtand_opera_s1 (13.7 min)
+
+[2/4] bench_vitaldb_mtand_opera_s2
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_distillation.yaml --seed 2 --name bench_vitaldb_mtand_opera_s2 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=mtand distillation.teacher_ckpt=results/raw/bench_vitaldb_mtand_vanilla_s2/model.pt --no_wandb
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_mtand_opera_s2 | device cuda:0 | params 73035 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_vitaldb_mtand_vanilla_s2/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "mtand", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 0.01747 val_mse 0.00451 best 0.00451@0 (16.2s)
+epoch 001 loss 0.00600 val_mse 0.00389 best 0.00389@1 (15.6s)
+epoch 002 loss 0.00448 val_mse 0.00313 best 0.00313@2 (15.5s)
+epoch 003 loss 0.00408 val_mse 0.00296 best 0.00296@3 (15.4s)
+epoch 004 loss 0.00375 val_mse 0.00319 best 0.00296@3 (15.6s)
+epoch 005 loss 0.00357 val_mse 0.00290 best 0.00290@5 (15.6s)
+epoch 006 loss 0.00343 val_mse 0.00300 best 0.00290@5 (15.6s)
+epoch 007 loss 0.00336 val_mse 0.00280 best 0.00280@7 (15.6s)
+epoch 008 loss 0.00328 val_mse 0.00277 best 0.00277@8 (15.2s)
+epoch 009 loss 0.00320 val_mse 0.00274 best 0.00274@9 (12.9s)
+epoch 010 loss 0.00319 val_mse 0.00267 best 0.00267@10 (15.6s)
+epoch 011 loss 0.00316 val_mse 0.00268 best 0.00267@10 (13.1s)
+epoch 012 loss 0.00310 val_mse 0.00265 best 0.00265@12 (16.0s)
+epoch 013 loss 0.00313 val_mse 0.00259 best 0.00259@13 (16.0s)
+epoch 014 loss 0.00308 val_mse 0.00262 best 0.00259@13 (15.9s)
+epoch 015 loss 0.00311 val_mse 0.00260 best 0.00259@13 (15.8s)
+epoch 016 loss 0.00307 val_mse 0.00269 best 0.00259@13 (15.8s)
+epoch 017 loss 0.00304 val_mse 0.00270 best 0.00259@13 (15.7s)
+epoch 018 loss 0.00301 val_mse 0.00262 best 0.00259@13 (15.8s)
+epoch 019 loss 0.00302 val_mse 0.00265 best 0.00259@13 (15.9s)
+epoch 020 loss 0.00302 val_mse 0.00269 best 0.00259@13 (15.8s)
+epoch 021 loss 0.00300 val_mse 0.00263 best 0.00259@13 (15.7s)
+epoch 022 loss 0.00300 val_mse 0.00264 best 0.00259@13 (15.8s)
+epoch 023 loss 0.00301 val_mse 0.00272 best 0.00259@13 (15.8s)
+early stop
+  [identity                                  ] MSE 0.00273  MAE 0.03217
+  [random_dropout:0.7                        ] MSE 0.00296  MAE 0.03384
+  [temporal_stride:3                         ] MSE 0.00302  MAE 0.03412
+  [variable_dropout:0.5                      ] MSE 0.00347  MAE 0.03848
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00348  MAE 0.03773
+best {'val_mse': 0.0025865500792860985, 'epoch': 13} -> results/raw/bench_vitaldb_mtand_opera_s2/results.json
+summary {
+  "clean_mse": 0.00272883172146976,
+  "mean_shift_mse": 0.0032321474282070994,
+  "mean_degradation": 0.18444365871936272,
+  "worst_mse": 0.0034831478260457516,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.0032321474282070994,
+  "mean_unseen_degradation": 0.18444365871936272
+}
+[2/4] ok bench_vitaldb_mtand_opera_s2 (8.3 min)
+
+[3/4] bench_vitaldb_mtand_opera_s3
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_distillation.yaml --seed 3 --name bench_vitaldb_mtand_opera_s3 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=mtand distillation.teacher_ckpt=results/raw/bench_vitaldb_mtand_vanilla_s3/model.pt --no_wandb
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_mtand_opera_s3 | device cuda:0 | params 73035 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_vitaldb_mtand_vanilla_s3/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "mtand", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 0.01488 val_mse 0.00447 best 0.00447@0 (16.4s)
+epoch 001 loss 0.00498 val_mse 0.00324 best 0.00324@1 (15.8s)
+epoch 002 loss 0.00419 val_mse 0.00303 best 0.00303@2 (16.0s)
+epoch 003 loss 0.00373 val_mse 0.00320 best 0.00303@2 (15.8s)
+epoch 004 loss 0.00349 val_mse 0.00297 best 0.00297@4 (17.2s)
+epoch 005 loss 0.00328 val_mse 0.00279 best 0.00279@5 (18.7s)
+epoch 006 loss 0.00321 val_mse 0.00278 best 0.00278@6 (16.4s)
+epoch 007 loss 0.00314 val_mse 0.00269 best 0.00269@7 (16.0s)
+epoch 008 loss 0.00313 val_mse 0.00276 best 0.00269@7 (16.2s)
+epoch 009 loss 0.00310 val_mse 0.00270 best 0.00269@7 (16.3s)
+epoch 010 loss 0.00310 val_mse 0.00265 best 0.00265@10 (16.4s)
+epoch 011 loss 0.00304 val_mse 0.00265 best 0.00265@10 (20.0s)
+epoch 012 loss 0.00311 val_mse 0.00278 best 0.00265@10 (16.6s)
+epoch 013 loss 0.00306 val_mse 0.00263 best 0.00263@13 (16.0s)
+epoch 014 loss 0.00303 val_mse 0.00286 best 0.00263@13 (15.8s)
+epoch 015 loss 0.00308 val_mse 0.00265 best 0.00263@13 (15.9s)
+epoch 016 loss 0.00301 val_mse 0.00271 best 0.00263@13 (15.9s)
+epoch 017 loss 0.00307 val_mse 0.00282 best 0.00263@13 (15.8s)
+epoch 018 loss 0.00305 val_mse 0.00259 best 0.00259@18 (16.2s)
+epoch 019 loss 0.00301 val_mse 0.00266 best 0.00259@18 (15.7s)
+epoch 020 loss 0.00304 val_mse 0.00271 best 0.00259@18 (15.9s)
+epoch 021 loss 0.00305 val_mse 0.00270 best 0.00259@18 (16.2s)
+epoch 022 loss 0.00306 val_mse 0.00266 best 0.00259@18 (15.9s)
+epoch 023 loss 0.00302 val_mse 0.00268 best 0.00259@18 (15.8s)
+epoch 024 loss 0.00301 val_mse 0.00270 best 0.00259@18 (15.9s)
+epoch 025 loss 0.00303 val_mse 0.00277 best 0.00259@18 (16.7s)
+epoch 026 loss 0.00303 val_mse 0.00266 best 0.00259@18 (16.1s)
+epoch 027 loss 0.00301 val_mse 0.00265 best 0.00259@18 (16.2s)
+epoch 028 loss 0.00301 val_mse 0.00267 best 0.00259@18 (16.4s)
+early stop
+  [identity                                  ] MSE 0.00273  MAE 0.03158
+  [random_dropout:0.7                        ] MSE 0.00297  MAE 0.03350
+  [temporal_stride:3                         ] MSE 0.00305  MAE 0.03368
+  [variable_dropout:0.5                      ] MSE 0.00346  MAE 0.03831
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00350  MAE 0.03746
+best {'val_mse': 0.0025936479214578867, 'epoch': 18} -> results/raw/bench_vitaldb_mtand_opera_s3/results.json
+summary {
+  "clean_mse": 0.00273203500546515,
+  "mean_shift_mse": 0.003244292049203068,
+  "mean_degradation": 0.18750017577124803,
+  "worst_mse": 0.003496458288282156,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.003244292049203068,
+  "mean_unseen_degradation": 0.18750017577124803
+}
+[3/4] ok bench_vitaldb_mtand_opera_s3 (10.5 min)
+
+[4/4] bench_vitaldb_mtand_opera_s4
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_distillation.yaml --seed 4 --name bench_vitaldb_mtand_opera_s4 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=mtand distillation.teacher_ckpt=results/raw/bench_vitaldb_mtand_vanilla_s4/model.pt --no_wandb
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_mtand_opera_s4 | device cuda:0 | params 73035 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_vitaldb_mtand_vanilla_s4/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "mtand", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 0.01451 val_mse 0.00437 best 0.00437@0 (11.7s)
+epoch 001 loss 0.00518 val_mse 0.00359 best 0.00359@1 (16.3s)
+epoch 002 loss 0.00424 val_mse 0.00311 best 0.00311@2 (16.3s)
+epoch 003 loss 0.00378 val_mse 0.00292 best 0.00292@3 (16.3s)
+epoch 004 loss 0.00359 val_mse 0.00282 best 0.00282@4 (16.3s)
+epoch 005 loss 0.00338 val_mse 0.00287 best 0.00282@4 (16.0s)
+epoch 006 loss 0.00328 val_mse 0.00288 best 0.00282@4 (16.4s)
+epoch 007 loss 0.00324 val_mse 0.00286 best 0.00282@4 (16.2s)
+epoch 008 loss 0.00309 val_mse 0.00277 best 0.00277@8 (17.1s)
+epoch 009 loss 0.00309 val_mse 0.00261 best 0.00261@9 (16.2s)
+epoch 010 loss 0.00317 val_mse 0.00270 best 0.00261@9 (16.4s)
+epoch 011 loss 0.00303 val_mse 0.00270 best 0.00261@9 (16.3s)
+epoch 012 loss 0.00303 val_mse 0.00266 best 0.00261@9 (16.7s)
+epoch 013 loss 0.00303 val_mse 0.00272 best 0.00261@9 (16.4s)
+epoch 014 loss 0.00303 val_mse 0.00261 best 0.00261@9 (16.3s)
+epoch 015 loss 0.00300 val_mse 0.00258 best 0.00258@15 (16.3s)
+epoch 016 loss 0.00303 val_mse 0.00261 best 0.00258@15 (16.0s)
+epoch 017 loss 0.00301 val_mse 0.00257 best 0.00257@17 (16.5s)
+epoch 018 loss 0.00304 val_mse 0.00263 best 0.00257@17 (16.0s)
+epoch 019 loss 0.00302 val_mse 0.00267 best 0.00257@17 (16.4s)
+epoch 020 loss 0.00297 val_mse 0.00262 best 0.00257@17 (16.3s)
+epoch 021 loss 0.00299 val_mse 0.00260 best 0.00257@17 (16.4s)
+epoch 022 loss 0.00295 val_mse 0.00261 best 0.00257@17 (16.5s)
+epoch 023 loss 0.00299 val_mse 0.00271 best 0.00257@17 (16.4s)
+epoch 024 loss 0.00297 val_mse 0.00267 best 0.00257@17 (16.4s)
+epoch 025 loss 0.00298 val_mse 0.00259 best 0.00257@17 (16.2s)
+epoch 026 loss 0.00297 val_mse 0.00262 best 0.00257@17 (16.4s)
+epoch 027 loss 0.00294 val_mse 0.00253 best 0.00253@27 (16.1s)
+epoch 028 loss 0.00298 val_mse 0.00258 best 0.00253@27 (16.5s)
+epoch 029 loss 0.00299 val_mse 0.00260 best 0.00253@27 (16.3s)
+epoch 030 loss 0.00295 val_mse 0.00267 best 0.00253@27 (16.3s)
+epoch 031 loss 0.00293 val_mse 0.00266 best 0.00253@27 (16.2s)
+epoch 032 loss 0.00296 val_mse 0.00258 best 0.00253@27 (16.4s)
+epoch 033 loss 0.00291 val_mse 0.00260 best 0.00253@27 (16.3s)
+epoch 034 loss 0.00296 val_mse 0.00256 best 0.00253@27 (16.4s)
+epoch 035 loss 0.00293 val_mse 0.00262 best 0.00253@27 (16.5s)
+epoch 036 loss 0.00293 val_mse 0.00267 best 0.00253@27 (16.3s)
+epoch 037 loss 0.00295 val_mse 0.00266 best 0.00253@27 (16.6s)
+early stop
+  [identity                                  ] MSE 0.00266  MAE 0.03073
+  [random_dropout:0.7                        ] MSE 0.00292  MAE 0.03273
+  [temporal_stride:3                         ] MSE 0.00296  MAE 0.03284
+  [variable_dropout:0.5                      ] MSE 0.00343  MAE 0.03804
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00344  MAE 0.03684
+best {'val_mse': 0.0025252217892557383, 'epoch': 27} -> results/raw/bench_vitaldb_mtand_opera_s4/results.json
+summary {
+  "clean_mse": 0.0026566118467599154,
+  "mean_shift_mse": 0.0031894052517600358,
+  "mean_degradation": 0.20055372622460124,
+  "worst_mse": 0.0034423472825437784,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.0031894052517600358,
+  "mean_unseen_degradation": 0.20055372622460124
+}
+[4/4] ok bench_vitaldb_mtand_opera_s4 (13.5 min)
+
+stage D: 4 ok, 0 failed

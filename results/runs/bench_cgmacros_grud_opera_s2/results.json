@@ -1,0 +1,222 @@
+{
+  "config": {
+    "experiment": "E2_distillation",
+    "data": {
+      "name": "cgmacros",
+      "history": 180,
+      "patch_size": 45,
+      "stride": 45,
+      "batch_size": 32,
+      "n_records": 100000000,
+      "pred_window": 60
+    },
+    "model": {
+      "backbone": "grud",
+      "embedding": "quite",
+      "irr_emb": true,
+      "hid_dim": 64,
+      "nhead": 4,
+      "nlayer": 3,
+      "dropout": 0.1,
+      "observation_aware": false,
+      "adaptive_query": "none"
+    },
+    "training": {
+      "epochs": 40,
+      "patience": 10,
+      "min_epochs": 15,
+      "lr": 0.001
+    },
+    "observation": {
+      "train_processes": [
+        "random_dropout:0.1",
+        "random_dropout:0.25",
+        "random_dropout:0.4",
+        "temporal_stride:2",
+        "burst:0.2",
+        "burst:0.3",
+        "variable_dropout:0.2",
+        "local_mask:0.3"
+      ],
+      "num_views": 2,
+      "rich_process": "identity",
+      "constraints": {
+        "min_density": 0.15,
+        "min_variable_coverage": 0.3,
+        "max_gap": 0.6,
+        "min_obs_per_sample": 4
+      }
+    },
+    "distillation": {
+      "enabled": true,
+      "teacher_type": "frozen",
+      "teacher_ckpt": "results/raw/bench_cgmacros_grud_vanilla_s2/model.pt",
+      "loss": "prediction",
+      "prediction_loss": "mse",
+      "weight": 1.0
+    },
+    "hard_mining": {
+      "enabled": false,
+      "candidate_pool": 8,
+      "top_k": 2,
+      "alpha": 0.5,
+      "warmup_epochs": 5
+    },
+    "wandb": {
+      "enabled": true,
+      "project": "opera"
+    },
+    "seed": 2
+  },
+  "info": {
+    "name": "cgmacros",
+    "input_dim": 4,
+    "history": 180.0,
+    "pred_window": 60.0,
+    "patch_size": 45.0,
+    "stride": 45.0,
+    "npatch": 4,
+    "maxlen": 0,
+    "batch_size": 32,
+    "n_records": 100000000,
+    "n_train_batches": 212,
+    "n_val_batches": 71,
+    "n_test_batches": 75
+  },
+  "per_condition": {
+    "identity": {
+      "mse": 0.0039218938909471035,
+      "mse_per_var": [
+        0.0029526283033192158,
+        0.002594136632978916,
+        0.003979559056460857,
+        0.006161251105368137
+      ],
+      "mae": 0.04093111678957939,
+      "mae_per_var": [
+        0.035753507167100906,
+        0.03336764872074127,
+        0.044312041252851486,
+        0.0502912700176239
+      ],
+      "mape": 0.21216222643852234,
+      "rmse": 0.06262502607542055,
+      "condition": "identity",
+      "n_series": 2391,
+      "infer_ms_per_series": 0.2356140945606878
+    },
+    "random_dropout:0.7": {
+      "mse": 0.0051964083686470985,
+      "mse_per_var": [
+        0.004454636014997959,
+        0.00491078058257699,
+        0.004786754492670298,
+        0.006633462384343147
+      ],
+      "mae": 0.04859008640050888,
+      "mae_per_var": [
+        0.04413876309990883,
+        0.04652700200676918,
+        0.0489434115588665,
+        0.05475116893649101
+      ],
+      "mape": 0.25230568647384644,
+      "rmse": 0.07208611772489276,
+      "condition": "random_dropout:0.7",
+      "n_series": 2391,
+      "infer_ms_per_series": 0.2357376414529951
+    },
+    "temporal_stride:3": {
+      "mse": 0.005401885136961937,
+      "mse_per_var": [
+        0.004627398680895567,
+        0.005282266531139612,
+        0.004862785339355469,
+        0.006835088599473238
+      ],
+      "mae": 0.04987897351384163,
+      "mae_per_var": [
+        0.04542642831802368,
+        0.048662178218364716,
+        0.049447305500507355,
+        0.055979982018470764
+      ],
+      "mape": 0.26141059398651123,
+      "rmse": 0.07349751789660612,
+      "condition": "temporal_stride:3",
+      "n_series": 2391,
+      "infer_ms_per_series": 0.23532173016339553
+    },
+    "variable_dropout:0.5": {
+      "mse": 0.0074103111401200294,
+      "mse_per_var": [
+        0.007351899053901434,
+        0.006612131372094154,
+        0.008638504892587662,
+        0.007038707844913006
+      ],
+      "mae": 0.05686011165380478,
+      "mae_per_var": [
+        0.05460617318749428,
+        0.0517716184258461,
+        0.06584293395280838,
+        0.05521972477436066
+      ],
+      "mape": 0.28452473878860474,
+      "rmse": 0.08608316409217327,
+      "condition": "variable_dropout:0.5",
+      "n_series": 2391,
+      "infer_ms_per_series": 0.23455651720813606
+    },
+    "temporal_stride:3+variable_group_dropout:0.3": {
+      "mse": 0.007244219072163105,
+      "mse_per_var": [
+        0.006876074708998203,
+        0.006760038901120424,
+        0.00814956333488226,
+        0.0071911998093128204
+      ],
+      "mae": 0.057245537638664246,
+      "mae_per_var": [
+        0.05356654152274132,
+        0.05440660938620567,
+        0.06395101547241211,
+        0.05705798789858818
+      ],
+      "mape": 0.29117894172668457,
+      "rmse": 0.08511297828276898,
+      "condition": "temporal_stride:3+variable_group_dropout:0.3",
+      "n_series": 2391,
+      "infer_ms_per_series": 0.23556583249783328
+    }
+  },
+  "summary": {
+    "clean_mse": 0.0039218938909471035,
+    "mean_shift_mse": 0.0063132059294730425,
+    "mean_degradation": 0.6097339971501519,
+    "worst_mse": 0.0074103111401200294,
+    "worst_condition": "variable_dropout:0.5",
+    "mean_unseen_mse": 0.0063132059294730425,
+    "mean_unseen_degradation": 0.6097339971501519
+  },
+  "cost": {
+    "n_params": 21084,
+    "train_time_per_epoch_s": 14.22334684095075,
+    "total_train_time_s": 440.92375206947327,
+    "epochs_run": 31,
+    "peak_gpu_mem_mb": 51.99169921875,
+    "infer_ms_per_series": 0.2356140945606878
+  },
+  "best": {
+    "val_mse": 0.0045186420902609825,
+    "epoch": 20
+  },
+  "run": {
+    "name": "bench_cgmacros_grud_opera_s2",
+    "seed": 2,
+    "config_path": "configs/cgmacros_distillation.yaml",
+    "git_commit": "e6065879aa77f570f2eb12787d7e9bda76b25a6e",
+    "experiment": "E2_distillation",
+    "dataset": "cgmacros"
+  }
+}

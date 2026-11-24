@@ -1,0 +1,1083 @@
+--- PAGE 1 ---
+OPERA: Robust Representation Learning for Irregular Time Series
+under Observation-Process Shift
+Anonymous Authors
+Anonymous Institution
+Abstract
+An irregularly sampled time series reflects not only the underly-
+ing dynamics of a system, but also the process through which it
+is observed. Anobservation processdetermines when and which
+variables are recorded, yet models for irregular time series are
+evaluated almost exclusively under the observation process of the
+training benchmark. This leaves robustness to changes in the obser-
+vation process largely unmeasured. We introduceOPERA, a training
+framework for robustness to observation-process shift. OPERA com-
+bines observation-process augmentation, which exposes the model
+to diverse observation processes during training, withprivileged
+observation self-distillation, in which a teacher receives a richer
+observation of the same history and provides task-level supervi-
+sion to a student restricted to the deployment observation. Both
+mechanisms act on the observation process alone: the architecture,
+the parameter count and the inference path are unchanged, and
+the teacher and the richer observation are discarded after training.
+[PLACEHOLDER.]
+Keywords
+irregular time series, observation process, distribution shift, robust-
+ness, privileged information, data augmentation
+ACM Reference Format:
+Anonymous Authors. 2018. OPERA: Robust Representation Learning for
+Irregular Time Series under Observation-Process Shift. InProceedings of
+Make sure to enter the correct conference title from your rights confirmation
+email (Conference acronym ’XX).ACM, New York, NY, USA, 12 pages. https:
+//doi.org/XXXXXXX.XXXXXXX
+1 Introduction
+Temporal data reflect both how a system evolves and how that
+system is measured. For example, a patient’s physiological state
+changes continuously, but the recorded measurements depend on
+when clinicians choose to order laboratory tests. The first process
+describes the underlying trajectory, while the second determines
+which parts of that trajectory become available to a model.
+Irregular time-series modelshave largely focused on represent-
+ing the observations that are available. Existing approaches use
+recurrent models with decay [4], continuous-time latent dynamics
+[6, 13, 24], set and attention-based aggregation [ 12, 29], graph-
+guided representations [39, 40], and query-based embeddings that
+Permission to make digital or hard copies of all or part of this work for personal or
+classroom use is granted without fee provided that copies are not made or distributed
+for profit or commercial advantage and that copies bear this notice and the full citation
+on the first page. Copyrights for components of this work owned by others than the
+author(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or
+republish, to post on servers or to redistribute to lists, requires prior specific permission
+and/or a fee. Request permissions from permissions@acm.org.
+Conference acronym ’XX, Woodstock, NY
+©2018 Copyright held by the owner/author(s). Publication rights licensed to ACM.
+ACM ISBN 978-1-4503-XXXX-X/2018/06
+https://doi.org/XXXXXXX.XXXXXXX
+allow standard multivariate backbones to consume irregular ob-
+servations directly [17]. These methods are typically trained and
+evaluated using the same observation process. As a result, they can
+be robust to irregular observations encountered during training
+while remaining sensitive to changes in how the system is observed
+at deployment.
+Classical missing data theory formally characterizes how obser-
+vations are omitted through mechanisms such as Missing Com-
+pletely At Random or Missing At Random [?]. While a rich lit-
+erature addresses representation learning under missingness [?],
+these frameworks typically assume the underlying missingness
+mechanism itself remains stationary across datasets. We study a
+distinct and overlooked source of distribution shift, which we call
+observation-process shift. In this setting, the underlying distribution
+of the system trajectory and the prediction target remain perfectly
+stationary, but the missingness mechanism governing data avail-
+ability changes between training and deployment. For example, a
+hospital may alter its measurement schedule or adopt new admin-
+istrative protocols while the patient’s physiological dynamics and
+clinical risk remain unchanged. The model therefore faces a funda-
+mentally different observation process even though the underlying
+prediction problem is identical. Standard train–test splits do not
+reveal this failure mode because both splits are generated under the
+original observation process, leaving models entirely unprepared
+for structural changes in data availability at deployment.
+We make this shift measurable by re-observing each held-out
+history through a different admissible observation process while
+keeping its prediction target unchanged. Figure 1 illustrates this
+mechanism using a patient history from the PhysioNet dataset [30].
+By systematically withholding recorded measurements according to
+distinct processes—such as random dropout, temporal subsampling,
+or channel removal—the model receives radically different inputs
+even though the underlying physiological trajectory is fixed. This
+isolates the effect of observation-process shift from standard co-
+variate shift. This evaluation reveals that the resulting performance
+degradation is substantial and highly variable. More importantly,
+the severity of the shift cannot be explained by data sparsity alone.
+Processes that remove approximately the same fraction of observa-
+tions produce drastically different errors depending on the structure
+of the missingness. As Figure 1 demonstrates, two processes can
+leave the exact same number of measurements for a target channel,
+yet yield a doubled prediction error simply because one process
+removes critical correlating information from other variables. The
+most damaging type of observation loss is therefore deeply tied to
+both cross-channel dependencies and the underlying data modal-
+ity. These findings emphasize that robustness must be evaluated
+against the specific structure of the observation process rather than
+a global scalar measure of observation density.
+This motivates a simple question:If the observation process can
+change at deployment, can we make models robust by exposing them
+--- PAGE 2 ---
+Conference acronym ’XX, June 03–05, 2018, Woodstock, NY Anonymous Authors
+0 6 12 18 24
+history (h)
+0.25
+0.30
+0.35
+0.40
+0.45
+systolic pressure (norm.)
+(a) full observation
+MSE 0.0048
+0 6 12 18 24
+history (h)
+(b) density
+MSE 0.0194
+0 6 12 18 24
+history (h)
+(c) timing
+MSE 0.0135
+0 6 12 18 24
+history (h)
+channel removed
+(d) variables
+MSE 0.0368
+0 6 12 18 24
+history (h)
+(e) composed
+MSE 0.0250
+given to model recorded, withheld
+Figure 1: Systolic blood pressure over the 24 h history of one PhysioNet [ 30], as five observation processes deliver it. Filled
+markers are the observations handed to the model; hollow ones were recorded but withheld. The processes are: (b)density,
+each observation dropped independently with probability0 .7; (c)timing, every third observation of each variable retained; (d)
+variables, half of the variables removed; (e)composed, (c) together with the removal of contiguous variable groups. The MSE is
+for this channel alone. Removing the channel itself costs the most,0 .0048to0 .0368in (d), where none of its45observations
+survive. Comparing (c) and (e) shows that the cost is not set by this channel’s own observations: both leave it exactly15, yet (e)
+also deletes the observations elsewhere, and the error onthischannel doubles,0.0135to0.0250.
+to different observation processes during training?We address this
+question withOPERA, a training framework designed for robustness
+to observation-process shift. OPERA combines two complemen-
+tary mechanisms that address distinct but interlocking challenges:
+observation-process augmentationandprivileged observation self-
+distillation. The motivation for combining these two phases stems
+from the limitations of using either in isolation.Observation-process
+augmentationgenerates multiple admissible observations of each
+training trajectory, forcing the model to encounter varied sparsity
+patterns. However, learning to map artificially sparsified sequences
+directly to hard ground-truth labels is inherently brittle. When
+restricted to sparse inputs, a model will often overfit to spurious
+correlations within the augmented missingness patterns just to min-
+imize training error. To prevent this, Phase 1 creates the necessary
+environmental diversity, setting the stage forprivileged observation
+self-distillation(Phase 2) to act as a powerful regularizer. Phase 2
+exploits an information advantage available only during training.
+In this phase, we can observe the same history through a richer,
+uncorrupted observation process. A teacher network receives this
+dense view, while a student receives the augmented, sparse views
+generated in Phase 1. By training the student to match the teacher’s
+task-level predictive distribution—in addition to the ground-truth
+target—the teacher effectively filters the signal. It passes on soft
+knowledge about what can and cannot be reliably predicted from
+the underlying trajectory, preventing the student from memorizing
+the artifacts of its restricted observation window. Because the stu-
+dent learns to approximate the teacher’s generalized understanding
+rather than overfitting to the noise of the sparse data, it develops a
+much more robust representation of the underlying dynamics. The
+richer observation and teacher are used exclusively during training
+and are discarded at inference.
+Our contributions can be summarized as:
+• Observation-process shift.We identify observation-process
+shift as a distinct source of distribution shift in irregular time
+series, where the observations available to a model change
+while the underlying trajectory and prediction target remain
+fixed. We develop a controlled family of admissible obser-
+vation processes and an evaluation protocol that measures
+generalisation across both seen and unseen process families
+(Sections??and??).
+• OPERA.We introduce OPERA, a training framework that
+combines observation-process augmentation with privileged
+observation self-distillation. The framework exposes models
+to diverse observation processes while using richer views of
+the same history to provide task-level privileged supervision
+to the deployment-restricted model (Section??).
+•Empirical study.[PLACEHOLDER.]
+2 Related Work
+2.1 Irregular time-series representations and
+the shared-observation assumption.
+Deep learning for irregular multivariate time series spans several
+architectural paradigms. Interpolation-based approaches address ir-
+regular sampling by mapping observations collected at non-uniform
+time intervals onto a regular time grid or a set of reference points
+[28]. Continuous-time models maintain latent states governed by
+differential equations [6, 13, 24]. The set and attention-based archi-
+tectures treat the observations as unordered tuples of time, channel,
+--- PAGE 3 ---
+OPERA: Robust Representation Learning for Irregular Time Series
+under Observation-Process Shift Conference acronym ’XX, June 03–05, 2018, Woodstock, NY
+and value [12, 29].Graph-based models address asynchronous ob-
+servations across variables by representing channels as nodes and
+propagating information along learned inter-channel dependencies
+[39, 40], and image-based methods sidestep irregular sampling by
+rendering each variable as a line plot, turning unaligned observa-
+tions into an image that a pretrained vision backbone can process
+without imputation [16]. More recently, query-based tokenization
+aggregates irregular observations into discrete tokens, allowing
+standard multivariate backbones [19, 23] to consume irregular in-
+put directly [17]. These paradigms differ in how they represent the
+available observations, but are trained and evaluated in the same
+way, training and test splits are drawn from a single dataset and,
+therefore, share its observation process. Our work does not intro-
+duce another encoder architecture. It intervenes in the observation
+process seen during training and applies unchanged to any of the
+encoders above.
+2.2 Evaluating robustness to missing
+observations.
+When robustness to missing observations is assessed, it is mea-
+sured at test time only and follows one of two protocols. The first is
+leave-sensors-out, introduced with Raindrop [40] a fixed or random
+subset of variables is hidden in the validation and test sets while
+the training set is left unchanged [14, 16, 40]. The second sweeps a
+scalar missingness rate by randomly dropping observations or time
+points [14, 15]. Both protocols summarize the observation process
+by a single quantity, the fraction of variables or observations re-
+moved, and neither is used during training. Moreover, some public
+implementations of leave-sensors-out only zero out the values of
+removed variables and keep their observation indicators and times-
+tamps. The model therefore still sees these variables as recorded,
+only at their mean value, instead of as missing. Such evaluations
+measure robustness to value imputation rather than to a change
+in the observation process. Our protocol instead re-observes each
+held-out history by element-wise removal, so that withheld obser-
+vations are indistinguishable from observations that were never
+recorded, and it organizes the resulting processes along density,
+timing, and variable availability, with leave-sensors-out as a special
+case of variable dropout, separated into families seen and unseen
+during training.
+2.3 Observation-process shift and robust
+training.
+In clinical time series, missingness itself carries predictive signal
+[4, 18]. When and how often laboratory tests are ordered can pre-
+dict outcomes better than their results [1], and irregular time-series
+models rely on the timing and structure of observations rather than
+on values alone [22]. Models that exploit this signal become exposed
+to changes in record-keeping. Domain adaptation under missing-
+ness shift shows that this setting reduces to covariate shift when
+missingness indicators are available [41], and later work extends
+it to data missing not at random [32]. These works consider static
+covariates rather than processes acting jointly on timestamps and
+channels, and they assume access to target-domain data, whereas
+we assume no access to the deployment process.
+Without target data, a natural alternative is to train on synthetic
+variation [34, 36] and to concentrate on high-error regimes [21, 25–
+27]. Close to our setting, ATENet [14] masks random time points
+of irregular series and enforces contrastive consistency between
+representations of the full and masked views, using masking as a
+regularizer under the benchmark’s own observation process. Opera
+instead samples realizable observation processes to simulate deploy-
+ment shift, and Opera++ can be read as a distributionally robust
+objective over a constrained set of them. Unlike representation-level
+constraints [2, 3, 5, 9], which require anti-collapse mechanisms and
+can over-constrain the model, Opera supervises predictions asym-
+metrically, from the richer view to the sparser one (Section??).
+2.4 Privileged information and asymmetric
+self-distillation.
+Learning using privileged information formalizes the use of auxil-
+iary inputs available only during training [35], and knowledge dis-
+tillation provides a natural mechanism for exploiting them [11, 20].
+Standard distillation transfers knowledge from a larger teacher, and
+generalized distillation from a teacher trained on privileged features
+that the student never sees. Self-distillation removes the capacity
+gap and shows that a student with the teacher’s own architecture
+can match or exceed it [7, 38]. Opera combines the last two ideas.
+The teacher shares the student’s architecture and task objective,
+and the privileged information is a richer observation of the same
+history rather than an extra feature or a larger model. Because both
+views are sub-samples of the same recording, this privileged signal
+requires no external annotations, auxiliary sensors, or additional
+data, and the teacher never sees a target or a future state denied to
+the student. The teacher and the richer view are used only during
+training and are discarded at inference.
+Teacher–student training on differently corrupted views is also
+common in semi-supervised learning. Mean Teacher [33] and Fix-
+Match [31] enforce agreement between predictions on weakly and
+strongly augmented inputs, and Noisy Student [37] trains a noised
+student on labels from a clean teacher. Cross-modal and modality
+distillation transfer knowledge from a modality available at training
+time to a model that must work without it [8, 10]. These methods
+use augmentation or missing modalities to exploit unlabeled data or
+to compensate for an absent input stream. Opera targets a different
+failure. Its corruptions are realizable observation processes rather
+than generic perturbations, its supervised setting keeps ground-
+truth labels alongside the teacher, and its teacher signal reduces the
+variance of the training target on views too sparse to determine the
+label, so that the student is not pushed to fit noise through artificial
+missingness patterns.
+3 Observation-Process Shift
+3.1 Problem formulation
+Let𝑋={𝑥(𝑡)} 𝑡∈T ,𝑥(𝑡)∈R 𝑁 represent an underlying multivariate
+temporal process defined over a continuous or discrete windowT .
+In realistic operational environments, a learning algorithm never
+observes𝑋 directly. Instead, it receives a finite set of timestamped,
+partially observed measurements
+O={(𝑡 𝑘, 𝑥(𝑡𝑘),𝑚 𝑘)}𝐾𝑘=1, 𝑚 𝑘∈{0,1} 𝑁,(1)
+--- PAGE 4 ---
+Conference acronym ’XX, June 03–05, 2018, Woodstock, NY Anonymous Authors
+where𝑚𝑘,𝑖 = 1if and only if variable 𝑖 was recorded at time𝑡𝑘. The
+data-generating mechanism responsible for selecting the observa-
+tion sequence{(𝑡𝑘,𝑚𝑘)} constitutes theobservation process S. We
+formalize this sampling mechanism as a random variableS∼𝑃(S)
+and write the observed data asO=S(𝑋) . A predictive architecture
+𝑓𝜃 mapsO to a task target ˆ𝑌 , corresponding to either a continuous
+forecast over a future horizon or a discrete classification label.
+Data distributions in training and deployment environments are
+characterized by joint distributions over(𝑋,S) . We distinguish two
+orthogonal pathways through which these joint distributions can
+diverge between environments,
+𝑃train(𝑋)≠𝑃 test(𝑋)(process shift),(2)
+𝑃train(S)≠𝑃 test(S)(observation-process shift).(3)
+This work focuses strictly on the second failure mode, holding
+the underlying system dynamics𝑃(𝑋) stationary. Standard eval-
+uation protocols that sample training and test sets from a single
+observation process are inherently blind to this shift, leaving mod-
+els vulnerable when deployment deployment systems alter their
+sampling schedules.
+3.2 Three structural dimensions of an
+observation process
+An observation process cannot be adequately characterized by
+a single scalar missingness parameter. Because S operates on a
+binary mask indexed over both time and variable spaces, it can
+diverge across three distinct structural dimensions—density,timing,
+andvariable availability. We design both our observation process
+taxonomy and our evaluation suite around these three axes to
+enable precise attribution of model performance degradation.
+We enforce that all constructed processes arerealizable. Each
+process must represent a physically plausible sampling protocol
+applied to the true underlying trajectory, guaranteeing that the
+ground-truth prediction target remains well-defined. We restrict
+our consideration to processes that act on the observation mask
+strictly viaelement-wise removal,
+S:(𝑡,𝑚) ↦→ (𝑡,𝑚⊙𝜅), 𝜅∈{0,1} 𝐾×𝑁,(4)
+where values at omitted entries are discarded rather than artifi-
+cially imputed. Consequently, every realization S(𝑋) is a strict
+sub-sample of the original recording. This property ensures no syn-
+thetic feature values are injected into the input stream, allowing
+a single held-out evaluation trajectory to be re-observed across
+multiple shifted conditions without altering its ground-truth target.
+Nine primitives instantiate these three structural dimensions.
+Density and volume.These processes govern the total volume
+of retained observations.RandomDropout(𝑝) removes each in-
+dividual measurement independently with probability 𝑝.Densi-
+tyControlledSampling(𝜌) retains a fixed target fraction 𝜌 of
+observations for every variable, fixing input density independently
+of the original temporal sampling pattern.
+Timing and temporal alignment.These processes dictate when
+observations arrive across the time horizon.TemporalStride(𝑘)
+keeps every𝑘-th observation per channel, reducing the effective
+sampling rate while preserving regular periodicity.BurstMiss-
+ingness(𝑝) eliminates contiguous temporal windows covering a
+fraction 𝑝 of the total window span.LongGapMissingness (𝑝)
+concentrates this omission into a single large temporal gap.Lo-
+calTemporalMask(𝑝) deletes one contiguous block per variable,
+matching random dropout in overall volume while heavily cluster-
+ing missingness within individual channels.
+Variable availability and persistence.These processes control
+channel persistence across the sequence.VariableDropout(𝑝)
+eliminates entire variables independently across the full horizon.
+VariableGroupDropout(𝑝) removes contiguous blocks of vari-
+ables simultaneously, simulating structural hardware failures or
+omitted clinical testing panels.
+These primitive operators compose sequentially (S2◦S1, denoted
+as a+b) and mix probabilistically (S∼Unif{S 1,...} , denoted as
+a|b). As a result, complex deployment regimes can be specified
+modularly, enabling a single observation process to induce shift
+across multiple dimensions simultaneously.
+Non-separability across variables.A common pitfall is attempting
+to summarize the observation state of a specific variable 𝑖 solely
+by its channel-wise missingness rate. This summary is fundamen-
+tally insufficient because multivariate models 𝑓𝜃 predict variable
+𝑖 using the cross-channel context of the entire sequenceO. Two
+distinct observation processes can leave variable𝑖 with identical
+observations yet yield radically different prediction errors on that
+channel if they differ in what they remove from neighboring vari-
+ables (Figure 1). The impact of missingness cannot be decoupled
+across channels, demonstrating that observation processes must be
+analyzed as structured, multivariate entities.
+3.3 Controlled re-observation protocol and
+validity bounds
+We isolate and quantify observation-process shift using a controlled
+re-observation protocol. For any target evaluation processS, we
+replace the historical input trajectory of each held-out sample with
+S(O) while holding prediction timestamps, forecast horizons, and
+ground-truth targets strictly invariant. This isolates the observation
+process from confounding distribution shifts. A single held-out test
+set can thus generate an arbitrary number of shifted evaluation
+environments. The pseudo-random state is seeded deterministically
+across all models, ensuring that every architecture is evaluated on
+byte-identical re-observed sequences. Thecleanevaluation baseline
+corresponds to the dataset’s native sampling process, formalized as
+S=id.
+Because our OPERA++ training framework actively searches for
+worst-case observation processes, we must mathematically prevent
+candidate selection from collapsing into trivial, target-destroying
+configurations. We define a valid candidate setC bounded by con-
+straints on relative density, channel coverage, maximum gap dura-
+tion, and absolute observation count,
+C=
+{︃
+S
+𝜌min≤ 𝜌(S(𝑋))𝜌(𝑋) ≤𝜌 max,Δ𝑡 max(S(𝑋))≤𝐺 max}︃,(5)
+and discard any candidate process violating these bounds prior to
+loss evaluation. Across all experiments, we set𝜌min = 0.15, enforce
+a minimum variable coverage of0 .3, bound the maximum gap
+at𝐺max = 0.6of the historical window, and require at least four
+surviving observations per sample.
+--- PAGE 5 ---
+OPERA: Robust Representation Learning for Irregular Time Series
+under Observation-Process Shift Conference acronym ’XX, June 03–05, 2018, Woodstock, NY
+To monitor structural changes across batches, we compute an
+explicit descriptor vector 𝑟=𝑔(O) ∈R 8 for each realized pro-
+cess. This descriptor summarizes observation count, overall density,
+inter-observation gap statistics, temporal span, variable coverage,
+and recent density trends. It is derived strictly from timestamp
+and binary mask metadata, guaranteeing zero leakage regarding
+underlying feature values.
+4 The Opera Framework
+The core principle of our approach is to intervene strictly on the
+data-generating mechanism rather than the model architecture. Ev-
+erything in this section acts on the observation processS (Figure 2).
+The model architecture, its parameter count, and its deployment in-
+ference path remain entirely unmodified. We first detail privileged
+observation self-distillation, which forms the theoretical core of the
+method, followed by the observation-process augmentation that
+supports it.
+4.1 Rich and sparse observations of a stationary
+history
+At deployment, a model is bound by the prevailing observation
+mechanism and must make predictions using whatever sparse data
+it receives. During training, however, we can manipulate the miss-
+ingness mechanism. Crucially, the same underlying history can
+be observedmore richlythan deployment conditions permit. We
+define these two views as
+O𝑠 =S𝑠(𝑋),O 𝑟 =S𝑟(𝑋),(6)
+whereS𝑠 is a deployment-constrained observation process andS𝑟
+is a strictly denser process applied to the exact same trajectory. In
+our experiments,S𝑟 represents the uncorrupted dataset record. Be-
+causeO𝑟 is accessible only at training time, it constitutes privileged
+information in the sense of [ 35]. Distillation [ 11, 20] provides a
+mathematically principled mechanism to transfer this privileged
+structural knowledge into the deployment-restricted student.
+4.2 The distillation objective
+We first train a teacher network𝑓𝜃𝑇 on the rich observations and
+subsequently freeze its weights. The student network𝑓𝜃 is trained
+on the artificially sparsified observations. Beyond minimizing the
+standard task loss, the student is optimized to match the teacher’s
+task-level predictive distribution. The outputs are given by
+ˆ𝑌𝑇 =𝑓 𝜃𝑇(O𝑟), ˆ𝑌𝑆 =𝑓 𝜃(O𝑠),(7)
+and the distillation objective is formulated as
+Ldistill =𝐷 (︁ ˆ𝑌𝑆,sg[ ˆ𝑌𝑇])︁ =  ˆ𝑌𝑆−sg[ ˆ𝑌𝑇]2Ω,(8)
+where sg[·] denotes the stop-gradient operation and Ω restricts
+the penalty strictly to entries that carry ground-truth supervision.
+This ensures the student is never forced to imitate the teacher in
+regions lacking true targets. For probabilistic outputs, the distance
+metric𝐷 can be instantiated as a Kullback-Leibler divergence. We
+also implement an exponential-moving-average teacher parameter-
+ization,𝜃𝑇←𝛼𝑇𝜃𝑇+( 1−𝛼𝑇)𝜃, and treat the frozen-versus-EMA
+distinction as an empirical design choice. All reported experiments
+utilize a frozen teacher.
+This objective does not assume the teacher is a superior model
+in an absolute sense. The teacher and student share the identical ar-
+chitecture, capacity, and task objective. The teacher achieves higher
+performance simply because it operates on an uncorrupted view of
+the system state. By enforcing this distillation penalty, the teacher
+filters out the spurious correlations present in the sparse obser-
+vation patterns. It passes on soft knowledge about the stationary
+dynamics of the underlying trajectory, forcing the student to learn
+what can be robustly predicted despite the restrictive deployment
+mechanism.
+Self-distillation through data asymmetry.The asymmetry be-
+tween these two networks originates entirely in data space. The
+teacher is not a larger parameterization or a distinct expert net-
+work. It is the exact same predictive family evaluated on a richer
+view of the same sample. While teacher-student distillation is a
+standard technique, our specific contribution lies in thesourceof
+the privileged signal. It is generated purely by evaluating the same
+history under a different observation process, requiring no external
+annotations, auxiliary sensors, or expanded datasets.
+Preserving the anti-leakage invariant.To maintain a mathemati-
+cally valid evaluation, the teacher and student must differonlyin
+their observation density. Both networks operate over the same
+historical window, target the same prediction times, and receive
+the same supervision. The teacher never observes a future state
+or a ground-truth label denied to the student. Without this strict
+boundary, the distillation term would degenerate into label leakage.
+We enforce this invariant through assertions over every batch key
+that carries supervision, validating it programmatically for both
+forecasting and classification tasks.
+Inference constraints.At deployment, the student processes a
+single sparse observation to emit a prediction. The teacher network,
+the rich observation view, and the auxiliary forward pass are strictly
+training-time constructs.
+4.3 Observation-process augmentation
+Privileged distillation requires the student to process sparse views.
+The supporting augmentation mechanism supplies these views
+by treating the observation process itself as nuisance variation to
+marginalize over. For each training trajectory, we draw𝑉 indepen-
+dent processes from a mixture distribution𝑃mix and train the model
+on every resulting view,
+O𝑣 =S𝑣(𝑋),S 𝑣∼𝑃 mix,L task = 1𝑉 𝑉∑︁𝑣=1ℓ(︁𝑓𝜃(O𝑣),𝑌 )︁,(9)
+whereℓ represents the masked mean squared error for forecasting
+or cross-entropy for classification. The ground-truth targets𝑌 re-
+main fixed across all views, reinforcing that every view is merely a
+different observation mechanism applied to an identical physical
+episode.
+We intentionally avoid imposing any representation-level match-
+ing penalties. Our framework requires that𝑓𝜃(S1(𝑋)) and𝑓𝜃(S2(𝑋))
+both yield accurate task predictions, which is a fundamentally
+weaker constraint than forcing their intermediate latent codes to
+perfectly align. This is a deliberate safety measure. Explicit repre-
+sentation matching often leads to degenerate collapse where all
+--- PAGE 6 ---
+Conference acronym ’XX, June 03–05, 2018, Woodstock, NY Anonymous Authors
+TRAINING DEPLOYMENT
+one history H
+drawn once; everything
+right of here is a
+re-recording of it
+rich view  Sr(X)  — all observations kept
+density — how much survives
+timing — when they arrive
+variables — which channels exist
+Pmix: V sparse draws per history
+TEACHER
+frozen
+STUDENT
+fθ
+sg[ ̂yT]
+TARGET Y
+one target, shared:
+same prediction times for both models
+ = task( ̂yS, Y) + λd D( ̂yS, sg[ ̂yT])
+one loss, one backward pass
+̂yS
+one sparse observation
+STUDENT
+fθ
+̂Y
+no teacher
+no rich view
+identical parameters
+identical latency
+Figure 2: The student is restricted to a sparse observation of a trajectory. The teacher receives a richer observation of thesame
+underlying history, evaluated over the same prediction window and with identical supervision. The teacher’s task output then
+serves as a privileged target for the student (dashed arrows). Observation-process augmentation generates the student’s views.
+At deployment, only the student and a single sparse observation remain.
+Algorithm 1Opera Training Step
+Require: batch (𝑋,𝑌) with observation (𝑡,𝑚) ; mixture 𝑃mix;
+frozen teacher𝑓 𝜃𝑇
+1:{S 𝑣}𝑉𝑣=1∼𝑃 mix ⊲ Observation-process augmentation:𝑉 draws
+of one history
+2: ˆ𝑌𝑇←sg [︁𝑓𝜃𝑇(S𝑟(𝑋)) ]︁ ⊲Evaluate same history through the
+richer view
+3:L← 1𝑉 ∑︁𝑣ℓ(𝑓𝜃(S𝑣(𝑋)),𝑌)+𝜆 𝑑 ∑︁𝑣Ldistill
+4:Execute one optimizer step onL
+observations map to a single constant vector, requiring complex
+anti-collapse heuristics unrelated to the distribution shift under
+study.
+4.4 Complete objective
+The unified framework modifies the task objective by introducing
+a single regularizing term,
+L=L task+𝜆𝑑Ldistill (10)
+where augmentation dictates the specific observation processes con-
+tributing toLtask. No auxiliary representation-consistency losses
+are required. Setting𝜆𝑑 = 0and 𝑉= 1smoothly recovers standard
+empirical risk minimization. For our primary evaluations, we utilize
+𝜆𝑑 =1and𝑉=2alongside a frozen teacher network.
+5 Experiments
+Our claim is about the observation process, not about an architec-
+ture, a task or a dataset. An experiment that supported it on one
+encoder, one task and one dataset would not distinguish a property
+of observation-process shift from a property of that particular setup.
+We therefore vary two things that the claim should be independent
+of, and hold the protocol fixed across both.
+Axis 1: where the model sits.Irregular observations reach a model
+in one of two ways, and we cover both.
+• A conventional time-series model with an irregularity-
+aware embedding.A query-based embedding [ 17] pools
+the observations belonging to a variable or a temporal patch
+into a fixed-size token, after which a standard multivari-
+ate backbone consumes it unchanged. We run three such
+backbones, differing in what they mix over: variables, time
+patches, and time patches through an MLP. This is the plug-
+in regime, where irregularity is handled before the model
+and the model itself is ordinary.
+• A purpose-built irregular time-series model.Architec-
+tures designed for irregular data directly, which interleave
+time, value and mask rather than pooling first. [name the
+integrated model(s); tPatchGNN first, then one of GraFITi /
+HyperIMTS]
+The two regimes make different assumptions about where irregu-
+larity is absorbed, so a mechanism that helps in both is acting on
+the observation process rather than on either design.
+Axis 2: what the model is asked to do.We coverforecasting
+andclassification. The distinction matters here more than usual:
+a forecaster must reconstruct the future trajectory of each vari-
+able, so losing a variable removes the only direct evidence about it,
+whereas a classifier pools the whole history into one decision and
+--- PAGE 7 ---
+OPERA: Robust Representation Learning for Irregular Time Series
+under Observation-Process Shift Conference acronym ’XX, June 03–05, 2018, Woodstock, NY
+can compensate across channels. The two tasks therefore stress the
+dimensions of the observation process differently, and a mechanism
+that helps only one of them would be a task artefact.
+Coverage: datasets.Across both axes we use [N] datasets span-
+ning [k] sensing modalities — clinical records, wearable and body
+sensors, and climate stations — at several forecast horizons. Di-
+versity is not decoration: the severity of observation-process shift
+varies by orders of magnitude across these settings, so a single
+dataset would license almost any conclusion.
+5.1 Benchmark protocol
+One protocol is used for every cell of both axes, so numbers differ
+only in the architecture, the task or the dataset.
+Evaluation by re-observation.For each condition we replace
+thehistoryof every held-out input by that observation process
+applied to it, and leave the prediction times, forecast targets and
+labels untouched (Section ??). The underlying trajectory and the
+supervision are therefore held fixed by construction, and one test
+set yields as many shifted conditions as there are processes. The
+pseudo-random draw is seeded independently of the run, so every
+architecture, arm and seed is scored on byte-identical shifted inputs
+and comparisons are paired at the level of individual inputs.
+Conditions.The clean condition is the dataset’s own observa-
+tion process. Four shifted conditions each move one dimension of
+Section ?? past what training covers, plus one that moves two at
+once: [PLACEHOLDER — restate the four specs and severities once
+fixed: density, timing, variables, composed.] The training mixture
+is deliberately milder than every evaluation condition and spans
+all three dimensions, so no evaluation process is ever trained on.
+Arms.[PLACEHOLDER — confirm the arm list.] Each archi-
+tecture is trained without any mechanism (the baseline) and with
+OPERA, and the mining variant OPERA++ is reported where it was
+run. The teacher for the distillation term is the baseline checkpoint
+of the same cell, so OPERA requires no additional training run.
+5.2 Metrics
+Forecasting uses masked MSE and MAE over observed target entries.
+Binary classification uses AUROC and AUPRC; the multi-class
+task uses accuracy and macro F1. We summarise sensitivity by the
+relative degradation of a model against itsownclean score,
+Δ= 1|E| ∑︁S∈E errS−err cleanerrclean ,(11)
+over the shifted conditionsE. For classification we take err= 1−
+AUROC (or1−accuracy ), so Δ is computed on the metric used to
+judge the task and is lower-is-better for both tasks; cross-entropy
+degradation can move opposite to AUROC and we do not use it.
+Three cautions govern how Δ is read, and we observe them
+throughout. It is normalised by a model’s own clean score, so a uni-
+formly weaker model can post a flattering ratio; absolute clean and
+shifted performance is therefore reported beside it everywhere. Its
+magnitude is not comparable across metric families, since forecast-
+ing error is unbounded above while a classifier can only degrade
+to chance, which caps Δ at a value fixed by the metric; its sign
+is comparable. And a model that has collapsed to chance cannot
+degrade at all, so a near-zero Δ is checked against the clean column
+before it is read as robustness.
+6 Results
+We evaluate whether OPERA improves robustness to observation-
+process shift, how its two components contribute, and how well the
+resulting robustness transfers beyond the observation processes
+seen during training. We first compare the baseline model with
+OPERA across the full benchmark, then examine the contributions
+of observation-process augmentation and privileged observation
+self-distillation. Finally, we evaluate generalisation to unseen obser-
+vation processes, study the additional benefit of hard observation-
+process mining in OPERA++, and report the computational cost.
+6.1 OPERA reduces sensitivity to
+observation-process shift
+Main result.OPERA consistently reduces the performance degra-
+dation caused by observation-process shift while maintaining com-
+parable performance under the original observation process.
+[MAIN TABLE. Rows: dataset× task× architecture. Columns
+should report clean performance, shifted performance for the base-
+line, shifted performance for OPERA, and corresponding degrada-
+tion Δ. Include mean and worst-case degradation where appropri-
+ate.]
+[REPORT THE CENTRAL RESULT. State the aggregate reduc-
+tion in sensitivity across the benchmark, followed by the strongest
+and weakest settings. Use placeholders until final numbers are
+available.]
+[INTERPRETATION. Emphasize that OPERA changes the model’s
+sensitivity to the observation process rather than simply improving
+clean-data performance.]
+6.2 The two components of OPERA provide
+complementary robustness
+We next isolate the contribution of the two components of OPERA.
+Observation-process augmentation exposes the model to variation
+in how histories are observed, while privileged observation self-
+distillation provides task-level supervision from a richer view of
+the same history.
+[ABLATION TABLE. Baseline, augmentation only, privileged ob-
+servation self-distillation only if available, and full OPERA. Report
+clean performance, shifted performance, and degradation.]
+[DESCRIBE WHETHER AUGMENTATION PROVIDES THE PRI-
+MARY GAIN AND WHETHER SELF-DISTILLATION PROVIDES
+AN ADDITIONAL GAIN BEYOND AUGMENTATION. Do not claim
+complementarity unless the ablation supports it.]
+6.3 Privileged observation provides additional
+supervision beyond augmentation
+[FOCUS SPECIFICALLY ON POSD. Compare augmentation against
+augmentation + POSD under matched training conditions.]
+[REPORT THE CHANGE IN SHIFTED PERFORMANCE AND Δ.
+Explain that the teacher receives a richer observation of the same
+history and supplies a task-level target, while inference remains
+restricted to the deployment observation.]
+--- PAGE 8 ---
+Conference acronym ’XX, June 03–05, 2018, Woodstock, NY Anonymous Authors
+Table 1: Forecasting under observation-process shift, averaged over four shifted evaluation conditions. All values ×10−2. Lower
+is better. Mean±std over 5 seeds. Bold marks the better of each pair.
+QuITE
+Dataset Horizon Metric iTransformer+OPERA PatchTST+OPERA TimeMixer+OPERA
+PhysioNet
+12→36ℎMSE 1.04±0.040.73±0.01 5.97±0.104.18±0.13 6.10±0.164.05±0.05
+MAE 5.52±0.124.60±0.02 15.33±0.2011.93±0.08 15.40±0.2512.01±0.08
+24→24ℎMSE 1.89±0.390.67±0.01 5.41±0.203.71±0.11 5.66±0.183.51±0.06
+MAE 7.51±0.744.28±0.05 14.08±0.3410.25±0.08 14.54±0.3210.42±0.14
+36→12ℎMSE 2.31±0.110.67±0.02 5.99±0.273.43±0.03 6.13±0.503.26±0.06
+MAE 8.34±0.304.27±0.12 14.89±0.349.63±0.12 14.95±0.619.66±0.06
+Activity
+1000→3000𝑚𝑠MSE 3.23±0.160.64±0.06 4.10±1.660.88±0.12 3.78±0.640.79±0.04
+MAE 13.87±0.515.44±0.25 15.19±4.696.18±0.37 14.75±1.805.92±0.15
+2000→2000𝑚𝑠MSE 6.03±0.960.54±0.04 7.73±1.240.76±0.11 8.12±0.900.69±0.03
+MAE 20.96±1.914.86±0.16 24.12±2.245.70±0.36 24.91±1.565.46±0.19
+3000→1000𝑚𝑠MSE 6.67±0.820.44±0.02 9.26±1.201.17±1.05 10.00±0.520.62±0.01
+MAE 22.17±1.694.31±0.15 26.71±1.986.43±2.05 27.75±0.745.08±0.13
+USHCN
+24→1𝑚𝑜MSE 56.4±2.053.8±0.6 61.3±0.758.8±0.5 64.7±9.259.9±2.5
+MAE 34.9±1.032.7±0.6 37.7±1.835.4±1.3 40.5±5.537.4±2.0
+24→6𝑚𝑜MSE 54.4±0.153.1±0.5 60.7±0.459.0±0.5 72.1±7.068.9±9.4
+MAE 33.4±2.232.4±0.8 38.3±1.536.5±1.6 44.5±4.142.6±6.8
+24→12𝑚𝑜MSE 55.3±0.553.6±0.5 61.2±0.759.4±0.6 65.9±8.275.2±8.3
+MAE 33.4±1.132.2±0.6 37.7±1.636.0±0.6 40.4±3.347.1±5.9
+Table 2: Classification under observation-process shift, averaged over four shifted evaluation conditions. Higher is better. Mean
+±std over 5 seeds. Columns as in Table 1. Bold marks the better of each pair.
+QuITE
+Dataset Metric iTransformer+OPERA PatchTST+OPERA TimeMixer+OPERA
+P12 mortality AUROC 80.62±1.7782.32±1.03 81.94±1.3183.31±1.09 80.65±1.1681.45±1.93
+AUPRC 38.50±3.6441.10±2.10 42.96±2.9444.79±2.49 39.45±1.8040.62±2.72
+P19 sepsis AUROC 84.21±1.5586.93±1.40 80.31±1.9282.48±1.71 75.65±14.5368.49±14.31
+AUPRC 52.16±2.7556.80±1.67 29.63±14.7032.65±12.07 31.22±18.3518.92±13.94
+PAM activity accuracy 67.82±3.6677.54±0.98 71.94±0.5475.30±0.92 71.25±1.2273.57±1.19
+precision 78.68±1.0482.72±0.95 78.34±1.3880.87±0.88 77.98±1.3279.01±2.04
+recall 66.75±4.5378.06±1.28 71.74±1.0975.28±1.14 70.62±1.8273.51±1.06
+macro F1 68.95±4.2479.55±0.97 73.56±0.7877.02±0.98 72.43±1.5675.03±1.07
+Table 3: Forecasting under observation-process shift, averaged over the four shifted conditions, for architectures built for
+irregular sampling. Clean values for the same runs are in Table 7. All values ×10−2. Lower is better. Δ is the relative change
+in error from the backbone to+OPERA, so positive favours OPERA throughout; for AUROC and accuracy it is computed on
+100−metric so that the two tasks are comparable. Mean±std over five seeds. Bold marks the better of each pair.
+Purpose-built irregular architectures
+Dataset Metric GRU-D+OPERAΔ mTAND+OPERAΔ Warpformer+OPERAΔ
+Activity MSE 1.946±0.2190.443±0.005+77.2% 1.239±0.0730.422±0.015+65.9% 1.342±0.0160.905±0.091+32.6%
+USHCN 24→12 mo MSE 65.3±1.268.0±1.8−4.2% 65.8±3.564.6±4.4+1.8% 70.6±4.971.0±3.9−0.6%
+meanΔ +36.5% +33.9% +16.0%
+[OPTIONAL FIGURE. Show teacher/student predictions or ro-
+bustness curves if they provide mechanistic evidence rather than
+simply repeating the ablation table.]
+--- PAGE 9 ---
+OPERA: Robust Representation Learning for Irregular Time Series
+under Observation-Process Shift Conference acronym ’XX, June 03–05, 2018, Woodstock, NY
+Table 4: Classification under observation-process shift, averaged over the four shifted conditions, for architectures built for
+irregular sampling. Clean values for the same runs are in Table 8. Higher is better. Δ is the relative change in error from the
+backbone to+OPERA, so positive favours OPERA throughout; for AUROC and accuracy it is computed on100 −metric so that
+the two tasks are comparable. Mean± std over five seeds. Bold marks the better of each pair. GRU-D on P12 mortality was not
+run; those cells are left as —.
+Purpose-built irregular architectures
+Dataset Metric GRU-D+OPERAΔ mTAND+OPERAΔ Warpformer+OPERAΔ
+P12 mortality AUROC — — — 82.93±0.9584.17±0.83+7.3% 74.60±1.2377.15±0.47+10.0%
+P19 sepsis AUROC 81.74±1.2684.46±0.59+14.9% 74.38±0.7277.29±1.85+11.4% 81.61±0.8283.29±0.71+9.1%
+PAM activity accuracy 69.98±1.8678.60±0.60+28.7% 75.20±1.0081.12±0.80+23.9% 60.19±2.5366.41±1.43+15.6%
+meanΔ +21.8% +14.2% +11.6%
+Table 5: Forecasting on the clean observation process, no shift imposed, for architectures built for irregular sampling. This is
+the in-distribution reference for Table 1. All values×10−2. All values×10−2. Lower is better. Mean± std over 5 seeds. Bold marks
+the better of each pair.
+QuITE
+Dataset Horizon Metric iTransformer+OPERAΔ PatchTST+OPERAΔ
+USHCN
+24→1 mo MSE 52.951.6+2.5% 51.2 51.6−0.7%
+MAE 32.431.4+3.1% 30.930.6+0.8%
+24→6 mo MSE 51.0 51.1−0.1% 51.7 52.1−0.8%
+MAE 31.4 31.7−0.9% 32.031.5+1.6%
+24→12 mo MSE 52.251.6+1.2% 51.6 52.3−1.3%
+MAE 32.431.8+1.9% 30.5 30.7−0.7%
+meanMSE +1.2% −1.0%
+meanMAE +1.4% +0.6%
+6.4 OPERA generalises beyond the observation
+processes seen during training
+[UNSEEN-GENERALISATION TABLE. Compare performance on
+observation processes included in the training mixture against pro-
+cesses held out entirely from training. Distinguish unseen severity
+from genuinely unseen process families if both are evaluated.]
+[REPORT WHETHER THE ROBUSTNESS GAIN PERSISTS ON
+UNSEEN PROCESSES. Avoid implying that the model memorises
+specific observation processes unless the experiment establishes
+this.]
+6.5 OPERA++ improves robustness when hard
+processes extend the training distribution
+[COMPARE OPERA AND OPERA++ USING THE SAME CANDI-
+DATE POOL. Report mean and worst-case shifted performance.]
+[SHOW THAT HARD MINING IDENTIFIES PROCESSES ON
+WHICH THE CURRENT MODEL IS PARTICULARLY SENSITIVE.]
+[IMPORTANT BOUNDARY CONDITION. If OPERA++ only
+helps when the candidate pool contains processes harsher than
+the ordinary training mixture, state this explicitly rather than pre-
+senting hard mining as universally beneficial.]
+6.6 Robustness does not require additional
+inference-time computation
+[COST TABLE. Report parameter count, inference latency, mem-
+ory, and any relevant training-time overhead for the baseline and
+OPERA.]
+[STATE CLEARLY THAT THE TEACHER AND PRIVILEGED
+OBSERVATION ARE USED ONLY DURING TRAINING. OPERA
+DOES NOT REQUIRE THE RICHER OBSERVATION OR TEACHER
+AT INFERENCE.]
+6.7 Summary of empirical findings
+[OPTIONAL. A short closing paragraph synthesising the empirical
+evidence: OPERA reduces sensitivity to observation-process shift,
+the components contribute distinct gains, robustness transfers to
+unseen processes, and OPERA++ can further improve robustness
+when hard processes are available.]
+7 Discussion and Limitations
+Two mechanisms, two different jobs.The results separate an effect
+we set out to measure from one we did not. Exposure to diverse
+observation processes is what reduces sensitivity to a change of
+observation process, and it does so without an in-distribution cost.
+Privileged observation self-distillation instead improves absolute
+accuracy, on clean and shifted conditions alike, in the settings
+--- PAGE 10 ---
+Conference acronym ’XX, June 03–05, 2018, Woodstock, NY Anonymous Authors
+Table 6: Classification on thecleanobservation process, no shift imposed. Higher is better, and Δ is the change in points from
+the backbone to+OPERA, so positive favours OPERA. Mean± std over 5 seeds. Columns as in Table 2, which reports the same
+runs under shift; this table is the in-distribution reference for it. The lower block is not a clean version of the upper one:
+those two settings are a different hospital and a different region, so their observation process differs from training without us
+imposing anything. The mean Δ rows average over the cells of their block and so mix metric families; they indicate direction,
+not effect size. Bold marks the better of each pair.
+QuITE
+Dataset Metric iTransformer+OPERAΔ PatchTST+OPERAΔ
+Same source as training
+P12 mortality AUROC 84.11±1.8384.72±0.95+0.61 85.03±1.0885.75±0.81+0.73
+AUPRC 44.02±3.8145.37±2.75+1.35 48.41±3.3449.46±2.71+1.05
+P19 sepsis AUROC 87.30±1.6389.02±1.98+1.72 82.48±1.2483.57±1.36+1.09
+AUPRC 55.96±3.2359.14±2.25+3.18 30.15±14.0030.16±10.17+0.01
+PAM activity accuracy 88.54±1.0188.54±0.45+0.00 87.08±1.0687.75±0.60+0.67
+precision 89.83±1.2889.68±0.97−0.15 88.49±1.4688.96±0.61+0.47
+recall 89.86±0.7990.19±0.29+0.33 88.51±0.4689.19±0.87+0.68
+macro F1 89.75±0.9089.83±0.53+0.09 88.40±0.9589.00±0.71+0.60
+Native shift: a different source
+P19 held-out hospital AUROC 79.63±1.8979.85±3.73+0.22 73.73±2.0273.24±3.63−0.48
+AUPRC 37.58±1.7836.40±6.71−1.18 23.09±5.7524.17±4.58+1.08
+eICU different region AUROC 75.63±1.8276.89±1.65+1.26 75.60±2.4873.63±2.98−1.97
+AUPRC 23.84±4.1325.04±5.26+1.20 24.08±4.3120.32±4.78−3.76
+Table 7: Forecasting on the clean observation process, no shift imposed, for architectures built for irregular sampling. This is
+the in-distribution reference for Table 3. All values ×10−2. Lower is better. Δ is the relative change in error from the backbone
+to+OPERA, so positive favours OPERA throughout; for AUROC and accuracy it is computed on100 −metric so that the two
+tasks are comparable. Mean±std over five seeds. Bold marks the better of each pair.
+Purpose-built irregular architectures
+Dataset Metric GRU-D+OPERAΔ mTAND+OPERAΔ Warpformer+OPERAΔ
+Activity MSE 0.292±0.0020.301±0.002−3.1% 0.307±0.0070.311±0.003−1.3% 1.037±0.1080.874±0.092+15.7%
+USHCN 24→12 mo MSE 62.3±1.666.1±1.8−6.0% 62.4±4.163.1±4.5−1.2% 68.3±4.769.3±3.8−1.4%
+meanΔ −4.6% −1.3% +7.1%
+Table 8: Classification on the clean observation process, no shift imposed, for architectures built for irregular sampling. This
+is the in-distribution reference for Table 4. Higher is better. Δ is the relative change in error from the backbone to +OPERA,
+so positive favours OPERA throughout; for AUROC and accuracy it is computed on100 −metric so that the two tasks are
+comparable. Mean± std over five seeds. Bold marks the better of each pair. GRU-D on P12 mortality was not run; those cells are
+left as —.
+Purpose-built irregular architectures
+Dataset Metric GRU-D+OPERAΔ mTAND+OPERAΔ Warpformer+OPERAΔ
+P12 mortality AUROC — — — 86.13±1.0886.88±0.72+5.4% 76.62±1.2878.36±0.81+7.4%
+P19 sepsis AUROC 89.02±0.5989.64±0.65+5.6% 79.82±1.5380.09±2.19+1.3% 87.90±0.8387.03±1.03−7.2%
+PAM activity accuracy 88.62±1.6289.63±0.56+8.9% 89.32±0.8890.15±0.64+7.8% 71.39±3.9476.03±1.23+16.2%
+meanΔ +7.3% +4.8% +5.5%
+where the task is information limited, and leaves relative degrada-
+tion unchanged. Conflating the two would be easy, because both
+mechanisms involve sparse views of the same history, and it would
+make the paper’s central claim untestable. We therefore state them
+separately, and we do not claim that the complete configuration
+is uniformly the best choice: on PhysioNet the best shifted error
+comes from augmentation with a harsher mining pool, and on
+--- PAGE 11 ---
+OPERA: Robust Representation Learning for Irregular Time Series
+under Observation-Process Shift Conference acronym ’XX, June 03–05, 2018, Woodstock, NY
+USHCN at one month the best clean and mean shifted error come
+from augmentation plus distillation without mining.
+Reading the degradation ratio.Eq. 11 normalises by a model’s
+own clean score, which makes a uniformly weaker model look ro-
+bust. USHCN-1mo is the clear case: the baseline’s ratio,+1.9%, is
+close to the complete configuration’s+1.5%, yet its error is higher at
+every condition, and its clean error (0.53787) exceeds the complete
+configuration’s errorunder shift(0 .52871). A second failure mode
+concerns the choice of metric. On P12, cross-entropy improves un-
+der mild shifts while AUROC and AUPRC fall, so a degradation ratio
+computed on cross-entropy is negative and uninterpretable there.
+We compute classification degradation on1−AUROC throughout,
+which makes P12 an ordinary mild case (+11.4%baseline, +7.2%
+with the method) rather than an anomaly, but the episode is a
+reminder that the summary metric has to be chosen before it is
+trusted.
+Limitations.Every number here is single-seed and preliminary.
+The protocol calls for five paired seeds, and the smaller differences
+in Tables??, ?? and ?? are within the range we would expect seeds to
+move; the mining comparison in particular rests on a0.00006MSE
+margin and should not be read as established. Our observation
+processes are synthetic re-observations of real records, which is
+what makes the targets well defined but is weaker evidence than
+a shift between two genuinely different acquisition environments.
+Compositions are limited to pairs, and the unseen families are
+drawn from the same nine-primitive vocabulary as the training pool.
+The two backbones are tied to tasks rather than crossed with them,
+so architecture and task are not separated. USHCN is not min-max
+normalised by its published pipeline, so its errors are in raw units
+and not comparable in magnitude to the other forecasting settings.
+Finally, the teacher in our experiments observes the untouched
+record; we do not vary the richness of the teacher’s view, so we
+cannot say how much of the distillation gain depends on the size
+of the teacher–student observation gap.
+8 Conclusion
+Irregularly sampled data is the product of a temporal process and
+an observation process, and the second can shift independently of
+the first. We formalised that shift, gave a controlled protocol that
+re-observes held-out histories while preserving their targets, and
+found degradation ranging from a few percent to more than an order
+of magnitude across seven task settings, in a way that observation
+density alone does not explain. The method we propose exploits the
+one asymmetry the setting offers: during training, and only during
+training, the same history can be observed more richly than de-
+ployment allows. Privileged observation self-distillation turns that
+richer observation into a task-level target for a student restricted
+to the deployment view, and it improves absolute accuracy where
+the sparse view leaves the target ambiguous. Observation-process
+augmentation supplies the student’s views and is what reduces sen-
+sitivity to the shift itself; hard observation-process mining improves
+worst-case error, but only when its candidate pool is harsher than
+the mixture augmentation already draws, which is why we report
+it as a conditional extension rather than a component. None of the
+three changes what deployment requires: one sparse observation
+and the student. The natural next questions are how the gain varies
+with the size of the teacher–student observation gap, and whether
+a shift between two real acquisition environments behaves like the
+synthetic re-observations studied here.
+References
+[1] Denis Agniel, Isaac S. Kohane, and Griffin M. Weber. 2018. Biases in Electronic
+Health Record Data due to Processes within the Healthcare System: Retrospective
+Observational Study.BMJ361 (2018), k1479.
+[2] Martin Arjovsky, Léon Bottou, Ishaan Gulrajani, and David Lopez-Paz. 2019.
+Invariant Risk Minimization.arXiv preprint arXiv:1907.02893(2019).
+[3] Adrien Bardes, Jean Ponce, and Yann LeCun. 2022. VICReg: Variance-Invariance-
+Covariance Regularization for Self-Supervised Learning. InInternational Confer-
+ence on Learning Representations (ICLR).
+[4] Zhengping Che, Sanjay Purushotham, Kyunghyun Cho, David Sontag, and Yan
+Liu. 2018. Recurrent Neural Networks for Multivariate Time Series with Missing
+Values.Scientific Reports8, 6085 (2018).
+[5] Ting Chen, Simon Kornblith, Mohammad Norouzi, and Geoffrey Hinton. 2020.
+A Simple Framework for Contrastive Learning of Visual Representations. In
+Proceedings of the 37th International Conference on Machine Learning (ICML).
+[6] Edward De Brouwer, Jaak Simm, Adam Arany, and Yves Moreau. 2019. GRU-ODE-
+Bayes: Continuous Modeling of Sporadically-Observed Time Series. InAdvances
+in Neural Information Processing Systems (NeurIPS).
+[7] Tommaso Furlanello, Zachary C. Lipton, Michael Tschannen, Laurent Itti, and
+Anima Anandkumar. 2018. Born Again Neural Networks. InProceedings of the
+35th International Conference on Machine Learning (ICML).
+[8] Nuno C. Garcia, Pietro Morerio, and Vittorio Murino. 2018. Modality Distillation
+with Multiple Stream Networks for Action Recognition. InEuropean Conference
+on Computer Vision (ECCV).
+[9] Jean-Bastien Grill, Florian Strub, Florent Altché, Corentin Tallec, Pierre H.
+Richemond, Elena Buchatskaya, Carl Doersch, Bernardo Avila Pires, Zhao-
+han Daniel Guo, Mohammad Gheshlaghi Azar, Bilal Piot, Koray Kavukcuoglu,
+Rémi Munos, and Michal Valko. 2020. Bootstrap Your Own Latent: A New Ap-
+proach to Self-Supervised Learning. InAdvances in Neural Information Processing
+Systems (NeurIPS).
+[10] Saurabh Gupta, Judy Hoffman, and Jitendra Malik. 2016. Cross Modal Distillation
+for Supervision Transfer. InIEEE Conference on Computer Vision and Pattern
+Recognition (CVPR).
+[11] Geoffrey Hinton, Oriol Vinyals, and Jeff Dean. 2015. Distilling the Knowledge in
+a Neural Network.arXiv preprint arXiv:1503.02531(2015).
+[12] Max Horn, Michael Moor, Christian Bock, Bastian Rieck, and Karsten Borgwardt.
+2020. Set Functions for Time Series. InProceedings of the 37th International
+Conference on Machine Learning (ICML).
+[13] Patrick Kidger, James Morrill, James Foster, and Terry Lyons. 2020. Neural
+Controlled Differential Equations for Irregular Time Series. InAdvances in Neural
+Information Processing Systems (NeurIPS).
+[14] Sangho Lee, Kyeongseo Min, Youngdoo Son, and Hyungrok Do. 2025. Adaptive
+Time Encoding for Irregular Multivariate Time-Series Classification. InAdvances
+in Neural Information Processing Systems (NeurIPS).
+[15] Hao Li, Bowen Deng, Chang Xu, Zhiyuan Feng, Viktor Schlegel, Yu-Hao Huang,
+Yizheng Sun, Jingyuan Sun, Kailai Yang, Yiyao Yu, and Jiang Bian. 2025. MIRA:
+Medical Time Series Foundation Model for Real-World Health Data. InAdvances
+in Neural Information Processing Systems (NeurIPS).
+[16] Zekun Li, Shiyang Li, and Xifeng Yan. 2023. Time Series as Images: Vision Trans-
+former for Irregularly Sampled Time Series. InAdvances in Neural Information
+Processing Systems (NeurIPS).
+[17] Junghoon Lim. 2026. QuITE: Query-based Irregular Time-series Embedding. In
+Proceedings of the 43rd International Conference on Machine Learning (ICML).
+[18] Zachary C. Lipton, David C. Kale, and Randall Wetzel. 2016. Modeling Missing
+Data in Clinical Time Series with RNNs. InMachine Learning for Healthcare
+Conference (MLHC).
+[19] Yong Liu, Tengge Hu, Haoran Zhang, Haixu Wu, Shiyu Wang, Lintao Ma, and
+Mingsheng Long. 2024. iTransformer: Inverted Transformers Are Effective for
+Time Series Forecasting. InInternational Conference on Learning Representations
+(ICLR).
+[20] David Lopez-Paz, Léon Bottou, Bernhard Schölkopf, and Vladimir Vapnik. 2016.
+Unifying Distillation and Privileged Information. InInternational Conference on
+Learning Representations (ICLR).
+[21] Aleksander Madry, Aleksandar Makelov, Ludwig Schmidt, Dimitris Tsipras, and
+Adrian Vladu. 2018. Towards Deep Learning Models Resistant to Adversarial
+Attacks. InInternational Conference on Learning Representations (ICLR).
+[22] Max Moebus, Björn Braun, and Christian Holz. 2025. Contimask: Explaining
+Irregular Time Series via Perturbations in Continuous Time. InAdvances in
+Neural Information Processing Systems (NeurIPS).
+--- PAGE 12 ---
+Conference acronym ’XX, June 03–05, 2018, Woodstock, NY Anonymous Authors
+[23] Yuqi Nie, Nam H. Nguyen, Phanwadee Sinthong, and Jayant Kalagnanam. 2023.
+A Time Series is Worth 64 Words: Long-term Forecasting with Transformers. In
+International Conference on Learning Representations (ICLR).
+[24] Yulia Rubanova, Ricky T. Q. Chen, and David Duvenaud. 2019. Latent Ordinary
+Differential Equations for Irregularly-Sampled Time Series. InAdvances in Neural
+Information Processing Systems (NeurIPS).
+[25] Shiori Sagawa, Pang Wei Koh, Tatsunori B. Hashimoto, and Percy Liang. 2020.
+Distributionally Robust Neural Networks for Group Shifts: On the Importance
+of Regularization for Worst-Case Generalization. InInternational Conference on
+Learning Representations (ICLR).
+[26] Yuge Shi, N. Siddharth, Philip H. S. Torr, and Adam R. Kosiorek. 2022. Adversarial
+Masking for Self-Supervised Learning. InInternational Conference on Machine
+Learning (ICML).
+[27] Abhinav Shrivastava, Abhinav Gupta, and Ross Girshick. 2016. Training Region-
+Based Object Detectors with Online Hard Example Mining. InIEEE Conference
+on Computer Vision and Pattern Recognition (CVPR).
+[28] Satya Narayan Shukla and Benjamin M. Marlin. 2019. Interpolation-Prediction
+Networks for Irregularly Sampled Time Series. InInternational Conference on
+Learning Representations (ICLR).
+[29] Satya Narayan Shukla and Benjamin M. Marlin. 2021. Multi-Time Attention
+Networks for Irregularly Sampled Time Series. InInternational Conference on
+Learning Representations (ICLR).
+[30] Ikaro Silva, George Moody, Daniel J. Scott, Leo A. Celi, and Roger G. Mark. 2012.
+Predicting In-Hospital Mortality of ICU Patients: The PhysioNet/Computing in
+Cardiology Challenge 2012. InComputing in Cardiology.
+[31] Kihyuk Sohn, David Berthelot, Chun-Liang Li, Zizhao Zhang, Nicholas Carlini,
+Ekin D. Cubuk, Alex Kurakin, Han Zhang, and Colin Raffel. 2020. FixMatch:
+Simplifying Semi-Supervised Learning with Consistency and Confidence. In
+Advances in Neural Information Processing Systems (NeurIPS).
+[32] Tyrel Stokes, Hyungrok Do, Saul Blecker, Rumi Chunara, and Samrachana Ad-
+hikari. 2025. Domain Adaptation Under MNAR Missingness.arXiv preprint
+arXiv:2504.00322(2025).
+[33] Antti Tarvainen and Harri Valpola. 2017. Mean Teachers Are Better Role Models:
+Weight-Averaged Consistency Targets Improve Semi-Supervised Deep Learning
+Results. InAdvances in Neural Information Processing Systems (NeurIPS).
+[34] Josh Tobin, Rachel Fong, Alex Ray, Jonas Schneider, Wojciech Zaremba, and
+Pieter Abbeel. 2017. Domain Randomization for Transferring Deep Neural Net-
+works from Simulation to the Real World. InIEEE/RSJ International Conference
+on Intelligent Robots and Systems (IROS).
+[35] Vladimir Vapnik and Rauf Izmailov. 2015. Learning Using Privileged Information:
+Similarity Control and Knowledge Transfer.Journal of Machine Learning Research
+16 (2015), 2023–2049.
+[36] Qingsong Wen, Liang Sun, Fan Yang, Xiaomin Song, Jingkun Gao, Xue Wang,
+and Huan Xu. 2021. Time Series Data Augmentation for Deep Learning: A Survey.
+InProceedings of the 30th International Joint Conference on Artificial Intelligence
+(IJCAI).
+[37] Qizhe Xie, Minh-Thang Luong, Eduard Hovy, and Quoc V. Le. 2020. Self-Training
+with Noisy Student Improves ImageNet Classification. InIEEE/CVF Conference
+on Computer Vision and Pattern Recognition (CVPR).
+[38] Linfeng Zhang, Jiebo Song, Anni Gao, Jingwei Chen, Chenglong Bao, and
+Kaisheng Ma. 2019. Be Your Own Teacher: Improve the Performance of Convolu-
+tional Neural Networks via Self Distillation. InIEEE/CVF International Conference
+on Computer Vision (ICCV).
+[39] Weijia Zhang, Chenlong Yin, Hao Liu, Xiaofang Zhou, and Hui Xiong. 2024.
+Irregular Multivariate Time Series Forecasting: A Transformable Patching Graph
+Neural Networks Approach. InProceedings of the 41st International Conference on
+Machine Learning (ICML).
+[40] Xiang Zhang, Marko Zeman, Theodoros Tsiligkaridis, and Marinka Zitnik. 2022.
+Graph-Guided Network for Irregularly Sampled Multivariate Time Series. In
+International Conference on Learning Representations (ICLR).
+[41] Helen Zhou, Sivaraman Balakrishnan, and Zachary Lipton. 2023. Domain Adapta-
+tion under Missingness Shift. InInternational Conference on Artificial Intelligence
+and Statistics (AISTATS) (PMLR, Vol. 206). 9577–9606.

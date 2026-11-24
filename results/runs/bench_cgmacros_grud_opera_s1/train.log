@@ -1,0 +1,57 @@
+run bench_cgmacros_grud_opera_s1 | device cuda:0 | params 21084 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 180, "n_records": 100000000, "name": "cgmacros", "patch_size": 45, "pred_window": 60, "stride": 45}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_cgmacros_grud_vanilla_s1/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01581 val_mse 0.00560 best 0.00560@0 (21.2s)
+epoch 001 loss 0.00654 val_mse 0.00532 best 0.00532@1 (21.1s)
+epoch 002 loss 0.00592 val_mse 0.00500 best 0.00500@2 (21.4s)
+epoch 003 loss 0.00546 val_mse 0.00481 best 0.00481@3 (21.2s)
+epoch 004 loss 0.00541 val_mse 0.00486 best 0.00481@3 (21.1s)
+epoch 005 loss 0.00521 val_mse 0.00467 best 0.00467@5 (21.3s)
+epoch 006 loss 0.00520 val_mse 0.00467 best 0.00467@5 (21.0s)
+epoch 007 loss 0.00509 val_mse 0.00463 best 0.00463@7 (21.1s)
+epoch 008 loss 0.00494 val_mse 0.00463 best 0.00463@8 (21.2s)
+epoch 009 loss 0.00506 val_mse 0.00472 best 0.00463@8 (21.2s)
+epoch 010 loss 0.00503 val_mse 0.00465 best 0.00463@8 (19.8s)
+epoch 011 loss 0.00499 val_mse 0.00462 best 0.00462@11 (18.0s)
+epoch 012 loss 0.00480 val_mse 0.00457 best 0.00457@12 (18.0s)
+epoch 013 loss 0.00480 val_mse 0.00473 best 0.00457@12 (18.0s)
+epoch 014 loss 0.00473 val_mse 0.00456 best 0.00456@14 (18.2s)
+epoch 015 loss 0.00467 val_mse 0.00459 best 0.00456@14 (18.1s)
+epoch 016 loss 0.00469 val_mse 0.00454 best 0.00454@16 (18.0s)
+epoch 017 loss 0.00476 val_mse 0.00460 best 0.00454@16 (18.0s)
+epoch 018 loss 0.00472 val_mse 0.00454 best 0.00454@18 (18.1s)
+epoch 019 loss 0.00455 val_mse 0.00453 best 0.00453@19 (18.0s)
+epoch 020 loss 0.00469 val_mse 0.00456 best 0.00453@19 (17.9s)
+epoch 021 loss 0.00470 val_mse 0.00460 best 0.00453@19 (14.1s)
+epoch 022 loss 0.00456 val_mse 0.00456 best 0.00453@19 (14.2s)
+epoch 023 loss 0.00461 val_mse 0.00460 best 0.00453@19 (14.1s)
+epoch 024 loss 0.00458 val_mse 0.00451 best 0.00451@24 (14.2s)
+epoch 025 loss 0.00462 val_mse 0.00454 best 0.00451@24 (14.0s)
+epoch 026 loss 0.00457 val_mse 0.00465 best 0.00451@24 (14.0s)
+epoch 027 loss 0.00466 val_mse 0.00452 best 0.00451@24 (14.1s)
+epoch 028 loss 0.00455 val_mse 0.00455 best 0.00451@24 (14.1s)
+epoch 029 loss 0.00463 val_mse 0.00459 best 0.00451@24 (14.2s)
+epoch 030 loss 0.00451 val_mse 0.00454 best 0.00451@24 (14.1s)
+epoch 031 loss 0.00454 val_mse 0.00455 best 0.00451@24 (14.1s)
+epoch 032 loss 0.00447 val_mse 0.00449 best 0.00449@32 (14.1s)
+epoch 033 loss 0.00452 val_mse 0.00456 best 0.00449@32 (14.0s)
+epoch 034 loss 0.00456 val_mse 0.00455 best 0.00449@32 (14.1s)
+epoch 035 loss 0.00456 val_mse 0.00456 best 0.00449@32 (13.9s)
+epoch 036 loss 0.00448 val_mse 0.00454 best 0.00449@32 (14.1s)
+epoch 037 loss 0.00447 val_mse 0.00460 best 0.00449@32 (14.1s)
+epoch 038 loss 0.00452 val_mse 0.00454 best 0.00449@32 (14.2s)
+epoch 039 loss 0.00441 val_mse 0.00454 best 0.00449@32 (14.0s)
+  [identity                                  ] MSE 0.00399  MAE 0.04162
+  [random_dropout:0.7                        ] MSE 0.00516  MAE 0.04843
+  [temporal_stride:3                         ] MSE 0.00537  MAE 0.04968
+  [variable_dropout:0.5                      ] MSE 0.00705  MAE 0.05590
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00699  MAE 0.05630
+best {'val_mse': 0.004494344815611839, 'epoch': 32} -> results/raw/bench_cgmacros_grud_opera_s1/results.json
+summary {
+  "clean_mse": 0.003987050615251064,
+  "mean_shift_mse": 0.006142900791019201,
+  "mean_degradation": 0.5407130191730418,
+  "worst_mse": 0.007046154234558344,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.006142900791019201,
+  "mean_unseen_degradation": 0.5407130191730418
+}

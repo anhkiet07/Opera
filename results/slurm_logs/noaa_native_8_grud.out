@@ -1,0 +1,604 @@
+stage A: 1 cells
+
+[1/1] bench_noaa_isd_grud_vanilla_s0
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/noaa_isd_baseline.yaml --seed 0 --name bench_noaa_isd_grud_vanilla_s0 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grud --no_wandb
+noaa_isd records: 495 297 99 99
+noaa_isd windows: 23838 14498 4809 4531
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   39.1000,  144.8410])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(29.9999)
+run bench_noaa_isd_grud_vanilla_s0 | device cuda:0 | params 21608 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00805 val_mse 0.00193 best 0.00193@0 (113.3s)
+epoch 001 loss 0.00144 val_mse 0.00112 best 0.00112@1 (111.3s)
+epoch 002 loss 0.00111 val_mse 0.00097 best 0.00097@2 (110.9s)
+epoch 003 loss 0.00099 val_mse 0.00089 best 0.00089@3 (110.6s)
+epoch 004 loss 0.00094 val_mse 0.00095 best 0.00089@3 (110.1s)
+epoch 005 loss 0.00092 val_mse 0.00095 best 0.00089@3 (111.8s)
+epoch 006 loss 0.00088 val_mse 0.00077 best 0.00077@6 (111.8s)
+epoch 007 loss 0.00088 val_mse 0.00083 best 0.00077@6 (109.3s)
+epoch 008 loss 0.00087 val_mse 0.00099 best 0.00077@6 (119.0s)
+epoch 009 loss 0.00085 val_mse 0.00074 best 0.00074@9 (112.2s)
+epoch 010 loss 0.00083 val_mse 0.00078 best 0.00074@9 (110.3s)
+epoch 011 loss 0.00082 val_mse 0.00086 best 0.00074@9 (116.7s)
+epoch 012 loss 0.00082 val_mse 0.00114 best 0.00074@9 (113.5s)
+epoch 013 loss 0.00082 val_mse 0.00077 best 0.00074@9 (109.9s)
+epoch 014 loss 0.00081 val_mse 0.00085 best 0.00074@9 (110.6s)
+epoch 015 loss 0.00080 val_mse 0.00095 best 0.00074@9 (110.9s)
+epoch 016 loss 0.00080 val_mse 0.00071 best 0.00071@16 (112.0s)
+epoch 017 loss 0.00079 val_mse 0.00073 best 0.00071@16 (112.6s)
+epoch 018 loss 0.00078 val_mse 0.00075 best 0.00071@16 (112.2s)
+epoch 019 loss 0.00078 val_mse 0.00072 best 0.00071@16 (111.5s)
+epoch 020 loss 0.00078 val_mse 0.00080 best 0.00071@16 (118.1s)
+epoch 021 loss 0.00077 val_mse 0.00074 best 0.00071@16 (111.6s)
+epoch 022 loss 0.00077 val_mse 0.00088 best 0.00071@16 (112.5s)
+epoch 023 loss 0.00078 val_mse 0.00069 best 0.00069@23 (112.5s)
+epoch 024 loss 0.00076 val_mse 0.00089 best 0.00069@23 (111.9s)
+epoch 025 loss 0.00076 val_mse 0.00071 best 0.00069@23 (111.6s)
+epoch 026 loss 0.00075 val_mse 0.00069 best 0.00069@23 (111.6s)
+epoch 027 loss 0.00075 val_mse 0.00073 best 0.00069@23 (111.7s)
+epoch 028 loss 0.00076 val_mse 0.00077 best 0.00069@23 (119.6s)
+epoch 029 loss 0.00075 val_mse 0.00085 best 0.00069@23 (112.0s)
+epoch 030 loss 0.00074 val_mse 0.00072 best 0.00069@23 (112.0s)
+epoch 031 loss 0.00074 val_mse 0.00075 best 0.00069@23 (112.0s)
+epoch 032 loss 0.00075 val_mse 0.00069 best 0.00069@23 (112.2s)
+epoch 033 loss 0.00074 val_mse 0.00075 best 0.00069@23 (113.0s)
+early stop
+  [identity                                  ] MSE 0.00074  MAE 0.01801
+  [random_dropout:0.7                        ] MSE 0.00200  MAE 0.03264
+  [temporal_stride:3                         ] MSE 0.00096  MAE 0.02139
+  [variable_dropout:0.5                      ] MSE 0.02072  MAE 0.08513
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00987  MAE 0.05489
+best {'val_mse': 0.0006863026064820588, 'epoch': 23} -> results/raw/bench_noaa_isd_grud_vanilla_s0/results.json
+summary {
+  "clean_mse": 0.0007352585671469569,
+  "mean_shift_mse": 0.008386127243284136,
+  "mean_degradation": 10.405684500658108,
+  "worst_mse": 0.020716799423098564,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.008386127243284136,
+  "mean_unseen_degradation": 10.405684500658108
+}
+[1/1] ok bench_noaa_isd_grud_vanilla_s0 (77.4 min)
+
+stage A: 1 ok, 0 failed
+stage B: 4 cells
+
+[1/4] bench_noaa_isd_grud_vanilla_s1
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/noaa_isd_baseline.yaml --seed 1 --name bench_noaa_isd_grud_vanilla_s1 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grud --no_wandb
+noaa_isd records: 495 297 99 99
+noaa_isd windows: 23838 14498 4809 4531
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   39.1000,  144.8410])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(29.9999)
+run bench_noaa_isd_grud_vanilla_s1 | device cuda:0 | params 21608 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00713 val_mse 0.00128 best 0.00128@0 (118.3s)
+epoch 001 loss 0.00111 val_mse 0.00097 best 0.00097@1 (110.7s)
+epoch 002 loss 0.00101 val_mse 0.00089 best 0.00089@2 (110.1s)
+epoch 003 loss 0.00097 val_mse 0.00099 best 0.00089@2 (108.9s)
+epoch 004 loss 0.00095 val_mse 0.00084 best 0.00084@4 (109.6s)
+epoch 005 loss 0.00092 val_mse 0.00082 best 0.00082@5 (110.0s)
+epoch 006 loss 0.00090 val_mse 0.00090 best 0.00082@5 (109.4s)
+epoch 007 loss 0.00088 val_mse 0.00098 best 0.00082@5 (110.7s)
+epoch 008 loss 0.00087 val_mse 0.00245 best 0.00082@5 (109.3s)
+epoch 009 loss 0.00087 val_mse 0.00093 best 0.00082@5 (112.4s)
+epoch 010 loss 0.00084 val_mse 0.00087 best 0.00082@5 (109.3s)
+epoch 011 loss 0.00083 val_mse 0.00077 best 0.00077@11 (110.5s)
+epoch 012 loss 0.00082 val_mse 0.00077 best 0.00077@11 (109.9s)
+epoch 013 loss 0.00082 val_mse 0.00078 best 0.00077@11 (109.2s)
+epoch 014 loss 0.00080 val_mse 0.00081 best 0.00077@11 (108.5s)
+epoch 015 loss 0.00080 val_mse 0.00090 best 0.00077@11 (109.4s)
+epoch 016 loss 0.00079 val_mse 0.00075 best 0.00075@16 (110.4s)
+epoch 017 loss 0.00079 val_mse 0.00079 best 0.00075@16 (129.5s)
+epoch 018 loss 0.00079 val_mse 0.00079 best 0.00075@16 (108.1s)
+epoch 019 loss 0.00078 val_mse 0.00069 best 0.00069@19 (109.6s)
+epoch 020 loss 0.00078 val_mse 0.00082 best 0.00069@19 (108.3s)
+epoch 021 loss 0.00077 val_mse 0.00072 best 0.00069@19 (110.1s)
+epoch 022 loss 0.00076 val_mse 0.00071 best 0.00069@19 (111.4s)
+epoch 023 loss 0.00076 val_mse 0.00080 best 0.00069@19 (108.8s)
+epoch 024 loss 0.00076 val_mse 0.00078 best 0.00069@19 (119.5s)
+epoch 025 loss 0.00077 val_mse 0.00072 best 0.00069@19 (106.9s)
+epoch 026 loss 0.00076 val_mse 0.00075 best 0.00069@19 (104.3s)
+epoch 027 loss 0.00075 val_mse 0.00069 best 0.00069@27 (103.0s)
+epoch 028 loss 0.00075 val_mse 0.00068 best 0.00068@28 (103.5s)
+epoch 029 loss 0.00074 val_mse 0.00068 best 0.00068@28 (103.9s)
+epoch 030 loss 0.00075 val_mse 0.00068 best 0.00068@28 (104.0s)
+epoch 031 loss 0.00074 val_mse 0.00078 best 0.00068@28 (104.7s)
+epoch 032 loss 0.00074 val_mse 0.00067 best 0.00067@32 (103.9s)
+epoch 033 loss 0.00074 val_mse 0.00067 best 0.00067@33 (102.4s)
+epoch 034 loss 0.00074 val_mse 0.00087 best 0.00067@33 (103.6s)
+epoch 035 loss 0.00073 val_mse 0.00069 best 0.00067@33 (102.8s)
+epoch 036 loss 0.00073 val_mse 0.00079 best 0.00067@33 (110.3s)
+epoch 037 loss 0.00072 val_mse 0.00074 best 0.00067@33 (109.8s)
+epoch 038 loss 0.00073 val_mse 0.00068 best 0.00067@33 (108.9s)
+epoch 039 loss 0.00072 val_mse 0.00072 best 0.00067@33 (102.8s)
+  [identity                                  ] MSE 0.00069  MAE 0.01775
+  [random_dropout:0.7                        ] MSE 0.00127  MAE 0.02539
+  [temporal_stride:3                         ] MSE 0.00099  MAE 0.02202
+  [variable_dropout:0.5                      ] MSE 0.01150  MAE 0.06582
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00647  MAE 0.04665
+best {'val_mse': 0.0006654865574091673, 'epoch': 33} -> results/raw/bench_noaa_isd_grud_vanilla_s1/results.json
+summary {
+  "clean_mse": 0.0006941643659956753,
+  "mean_shift_mse": 0.005055370274931192,
+  "mean_degradation": 6.282670391298489,
+  "worst_mse": 0.011497391387820244,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.005055370274931192,
+  "mean_unseen_degradation": 6.282670391298489
+}
+[1/4] ok bench_noaa_isd_grud_vanilla_s1 (87.5 min)
+
+[2/4] bench_noaa_isd_grud_vanilla_s2
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/noaa_isd_baseline.yaml --seed 2 --name bench_noaa_isd_grud_vanilla_s2 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grud --no_wandb
+noaa_isd records: 495 297 99 99
+noaa_isd windows: 23838 14498 4809 4531
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   39.1000,  144.8410])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(29.9999)
+run bench_noaa_isd_grud_vanilla_s2 | device cuda:0 | params 21608 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00770 val_mse 0.00150 best 0.00150@0 (103.0s)
+epoch 001 loss 0.00125 val_mse 0.00110 best 0.00110@1 (102.8s)
+epoch 002 loss 0.00102 val_mse 0.00087 best 0.00087@2 (103.7s)
+epoch 003 loss 0.00096 val_mse 0.00093 best 0.00087@2 (109.4s)
+epoch 004 loss 0.00093 val_mse 0.00091 best 0.00087@2 (105.7s)
+epoch 005 loss 0.00091 val_mse 0.00079 best 0.00079@5 (103.8s)
+epoch 006 loss 0.00088 val_mse 0.00083 best 0.00079@5 (104.3s)
+epoch 007 loss 0.00086 val_mse 0.00088 best 0.00079@5 (104.3s)
+epoch 008 loss 0.00084 val_mse 0.00085 best 0.00079@5 (103.8s)
+epoch 009 loss 0.00083 val_mse 0.00074 best 0.00074@9 (103.2s)
+epoch 010 loss 0.00083 val_mse 0.00074 best 0.00074@10 (104.6s)
+epoch 011 loss 0.00083 val_mse 0.00077 best 0.00074@10 (102.3s)
+epoch 012 loss 0.00082 val_mse 0.00104 best 0.00074@10 (103.2s)
+epoch 013 loss 0.00080 val_mse 0.00090 best 0.00074@10 (103.7s)
+epoch 014 loss 0.00081 val_mse 0.00074 best 0.00074@14 (102.9s)
+epoch 015 loss 0.00080 val_mse 0.00070 best 0.00070@15 (109.6s)
+epoch 016 loss 0.00079 val_mse 0.00081 best 0.00070@15 (107.7s)
+epoch 017 loss 0.00079 val_mse 0.00082 best 0.00070@15 (112.5s)
+epoch 018 loss 0.00078 val_mse 0.00075 best 0.00070@15 (103.6s)
+epoch 019 loss 0.00078 val_mse 0.00074 best 0.00070@15 (103.0s)
+epoch 020 loss 0.00077 val_mse 0.00074 best 0.00070@15 (104.7s)
+epoch 021 loss 0.00077 val_mse 0.00080 best 0.00070@15 (103.7s)
+epoch 022 loss 0.00077 val_mse 0.00079 best 0.00070@15 (101.5s)
+epoch 023 loss 0.00077 val_mse 0.00080 best 0.00070@15 (103.5s)
+epoch 024 loss 0.00076 val_mse 0.00074 best 0.00070@15 (103.3s)
+epoch 025 loss 0.00076 val_mse 0.00082 best 0.00070@15 (104.1s)
+early stop
+  [identity                                  ] MSE 0.00074  MAE 0.01758
+  [random_dropout:0.7                        ] MSE 0.00173  MAE 0.03006
+  [temporal_stride:3                         ] MSE 0.00092  MAE 0.02042
+  [variable_dropout:0.5                      ] MSE 0.02904  MAE 0.10092
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01423  MAE 0.06506
+best {'val_mse': 0.0007036171737127006, 'epoch': 15} -> results/raw/bench_noaa_isd_grud_vanilla_s2/results.json
+summary {
+  "clean_mse": 0.0007385804201476276,
+  "mean_shift_mse": 0.011478716362034902,
+  "mean_degradation": 14.541593100641002,
+  "worst_mse": 0.02903788350522518,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.011478716362034902,
+  "mean_unseen_degradation": 14.541593100641002
+}
+[2/4] ok bench_noaa_isd_grud_vanilla_s2 (55.7 min)
+
+[3/4] bench_noaa_isd_grud_vanilla_s3
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/noaa_isd_baseline.yaml --seed 3 --name bench_noaa_isd_grud_vanilla_s3 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grud --no_wandb
+noaa_isd records: 495 297 99 99
+noaa_isd windows: 23838 14498 4809 4531
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   39.1000,  144.8410])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(29.9999)
+run bench_noaa_isd_grud_vanilla_s3 | device cuda:0 | params 21608 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00691 val_mse 0.00213 best 0.00213@0 (102.8s)
+epoch 001 loss 0.00142 val_mse 0.00112 best 0.00112@1 (104.6s)
+epoch 002 loss 0.00106 val_mse 0.00160 best 0.00112@1 (101.5s)
+epoch 003 loss 0.00099 val_mse 0.00096 best 0.00096@3 (104.6s)
+epoch 004 loss 0.00093 val_mse 0.00104 best 0.00096@3 (105.8s)
+epoch 005 loss 0.00091 val_mse 0.00101 best 0.00096@3 (116.0s)
+epoch 006 loss 0.00089 val_mse 0.00104 best 0.00096@3 (103.3s)
+epoch 007 loss 0.00088 val_mse 0.00105 best 0.00096@3 (114.4s)
+epoch 008 loss 0.00086 val_mse 0.00087 best 0.00087@8 (102.1s)
+epoch 009 loss 0.00085 val_mse 0.00080 best 0.00080@9 (103.4s)
+epoch 010 loss 0.00084 val_mse 0.00075 best 0.00075@10 (104.8s)
+epoch 011 loss 0.00083 val_mse 0.00107 best 0.00075@10 (102.6s)
+epoch 012 loss 0.00083 val_mse 0.00076 best 0.00075@10 (102.8s)
+epoch 013 loss 0.00081 val_mse 0.00075 best 0.00075@10 (103.7s)
+epoch 014 loss 0.00082 val_mse 0.00080 best 0.00075@10 (104.1s)
+epoch 015 loss 0.00081 val_mse 0.00073 best 0.00073@15 (102.9s)
+epoch 016 loss 0.00080 val_mse 0.00076 best 0.00073@15 (86.7s)
+epoch 017 loss 0.00080 val_mse 0.00075 best 0.00073@15 (67.2s)
+epoch 018 loss 0.00080 val_mse 0.00076 best 0.00073@15 (68.7s)
+epoch 019 loss 0.00079 val_mse 0.00085 best 0.00073@15 (68.1s)
+epoch 020 loss 0.00080 val_mse 0.00089 best 0.00073@15 (69.1s)
+epoch 021 loss 0.00078 val_mse 0.00079 best 0.00073@15 (68.7s)
+epoch 022 loss 0.00078 val_mse 0.00081 best 0.00073@15 (67.8s)
+epoch 023 loss 0.00078 val_mse 0.00076 best 0.00073@15 (68.1s)
+epoch 024 loss 0.00078 val_mse 0.00070 best 0.00070@24 (67.8s)
+epoch 025 loss 0.00077 val_mse 0.00071 best 0.00070@24 (68.7s)
+epoch 026 loss 0.00077 val_mse 0.00078 best 0.00070@24 (68.0s)
+epoch 027 loss 0.00076 val_mse 0.00075 best 0.00070@24 (67.9s)
+epoch 028 loss 0.00077 val_mse 0.00072 best 0.00070@24 (67.5s)
+epoch 029 loss 0.00075 val_mse 0.00076 best 0.00070@24 (68.4s)
+epoch 030 loss 0.00075 val_mse 0.00071 best 0.00070@24 (39.5s)
+epoch 031 loss 0.00074 val_mse 0.00069 best 0.00069@31 (38.0s)
+epoch 032 loss 0.00075 val_mse 0.00071 best 0.00069@31 (37.9s)
+epoch 033 loss 0.00075 val_mse 0.00074 best 0.00069@31 (37.9s)
+epoch 034 loss 0.00074 val_mse 0.00069 best 0.00069@31 (37.6s)
+epoch 035 loss 0.00074 val_mse 0.00073 best 0.00069@31 (37.9s)
+epoch 036 loss 0.00073 val_mse 0.00071 best 0.00069@31 (37.7s)
+epoch 037 loss 0.00074 val_mse 0.00069 best 0.00069@31 (38.0s)
+epoch 038 loss 0.00073 val_mse 0.00073 best 0.00069@31 (38.2s)
+epoch 039 loss 0.00073 val_mse 0.00073 best 0.00069@31 (37.7s)
+  [identity                                  ] MSE 0.00074  MAE 0.01815
+  [random_dropout:0.7                        ] MSE 0.00187  MAE 0.03370
+  [temporal_stride:3                         ] MSE 0.00100  MAE 0.02227
+  [variable_dropout:0.5                      ] MSE 0.01782  MAE 0.08168
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00949  MAE 0.05520
+best {'val_mse': 0.0006856682011857629, 'epoch': 31} -> results/raw/bench_noaa_isd_grud_vanilla_s3/results.json
+summary {
+  "clean_mse": 0.0007354753324761987,
+  "mean_shift_mse": 0.007546322303824127,
+  "mean_degradation": 9.260469618222498,
+  "worst_mse": 0.0178197231143713,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.007546322303824127,
+  "mean_unseen_degradation": 9.260469618222498
+}
+[3/4] ok bench_noaa_isd_grud_vanilla_s3 (60.2 min)
+
+[4/4] bench_noaa_isd_grud_vanilla_s4
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/noaa_isd_baseline.yaml --seed 4 --name bench_noaa_isd_grud_vanilla_s4 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grud --no_wandb
+noaa_isd records: 495 297 99 99
+noaa_isd windows: 23838 14498 4809 4531
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   39.1000,  144.8410])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(29.9999)
+run bench_noaa_isd_grud_vanilla_s4 | device cuda:0 | params 21608 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00776 val_mse 0.00189 best 0.00189@0 (39.7s)
+epoch 001 loss 0.00135 val_mse 0.00104 best 0.00104@1 (39.3s)
+epoch 002 loss 0.00102 val_mse 0.00122 best 0.00104@1 (39.4s)
+epoch 003 loss 0.00098 val_mse 0.00102 best 0.00102@3 (39.5s)
+epoch 004 loss 0.00094 val_mse 0.00081 best 0.00081@4 (39.7s)
+epoch 005 loss 0.00091 val_mse 0.00084 best 0.00081@4 (39.1s)
+epoch 006 loss 0.00088 val_mse 0.00076 best 0.00076@6 (39.4s)
+epoch 007 loss 0.00087 val_mse 0.00086 best 0.00076@6 (39.1s)
+epoch 008 loss 0.00085 val_mse 0.00078 best 0.00076@6 (39.5s)
+epoch 009 loss 0.00083 val_mse 0.00083 best 0.00076@6 (39.1s)
+epoch 010 loss 0.00084 val_mse 0.00074 best 0.00074@10 (39.3s)
+epoch 011 loss 0.00083 val_mse 0.00082 best 0.00074@10 (39.3s)
+epoch 012 loss 0.00082 val_mse 0.00071 best 0.00071@12 (39.6s)
+epoch 013 loss 0.00081 val_mse 0.00084 best 0.00071@12 (39.3s)
+epoch 014 loss 0.00081 val_mse 0.00079 best 0.00071@12 (39.5s)
+epoch 015 loss 0.00080 val_mse 0.00084 best 0.00071@12 (39.3s)
+epoch 016 loss 0.00080 val_mse 0.00076 best 0.00071@12 (39.3s)
+epoch 017 loss 0.00079 val_mse 0.00074 best 0.00071@12 (39.4s)
+epoch 018 loss 0.00079 val_mse 0.00074 best 0.00071@12 (39.1s)
+epoch 019 loss 0.00077 val_mse 0.00071 best 0.00071@19 (38.9s)
+epoch 020 loss 0.00077 val_mse 0.00069 best 0.00069@20 (39.5s)
+epoch 021 loss 0.00077 val_mse 0.00080 best 0.00069@20 (39.1s)
+epoch 022 loss 0.00078 val_mse 0.00075 best 0.00069@20 (39.8s)
+epoch 023 loss 0.00077 val_mse 0.00072 best 0.00069@20 (39.0s)
+epoch 024 loss 0.00076 val_mse 0.00071 best 0.00069@20 (39.4s)
+epoch 025 loss 0.00076 val_mse 0.00069 best 0.00069@20 (39.1s)
+epoch 026 loss 0.00075 val_mse 0.00078 best 0.00069@20 (39.5s)
+epoch 027 loss 0.00076 val_mse 0.00075 best 0.00069@20 (39.4s)
+epoch 028 loss 0.00075 val_mse 0.00073 best 0.00069@20 (39.3s)
+epoch 029 loss 0.00075 val_mse 0.00079 best 0.00069@20 (39.4s)
+epoch 030 loss 0.00075 val_mse 0.00072 best 0.00069@20 (39.4s)
+early stop
+  [identity                                  ] MSE 0.00072  MAE 0.01752
+  [random_dropout:0.7                        ] MSE 0.00187  MAE 0.03248
+  [temporal_stride:3                         ] MSE 0.00098  MAE 0.02139
+  [variable_dropout:0.5                      ] MSE 0.01960  MAE 0.08437
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01137  MAE 0.05854
+best {'val_mse': 0.0006854150560684502, 'epoch': 20} -> results/raw/bench_noaa_isd_grud_vanilla_s4/results.json
+summary {
+  "clean_mse": 0.0007182092522270977,
+  "mean_shift_mse": 0.008455800591036677,
+  "mean_degradation": 10.773449819556145,
+  "worst_mse": 0.01959748938679695,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.008455800591036677,
+  "mean_unseen_degradation": 10.773449819556145
+}
+[4/4] ok bench_noaa_isd_grud_vanilla_s4 (23.0 min)
+
+stage B: 4 ok, 0 failed
+stage C: 1 cells
+
+[1/1] bench_noaa_isd_grud_opera_s0
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/noaa_isd_distillation.yaml --seed 0 --name bench_noaa_isd_grud_opera_s0 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grud distillation.teacher_ckpt=results/raw/bench_noaa_isd_grud_vanilla_s0/model.pt --no_wandb
+noaa_isd records: 495 297 99 99
+noaa_isd windows: 23838 14498 4809 4531
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   39.1000,  144.8410])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(29.9999)
+run bench_noaa_isd_grud_opera_s0 | device cuda:0 | params 21608 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_noaa_isd_grud_vanilla_s0/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01637 val_mse 0.00231 best 0.00231@0 (85.1s)
+epoch 001 loss 0.00328 val_mse 0.00199 best 0.00199@1 (84.3s)
+epoch 002 loss 0.00222 val_mse 0.00106 best 0.00106@2 (85.0s)
+epoch 003 loss 0.00177 val_mse 0.00109 best 0.00106@2 (84.5s)
+epoch 004 loss 0.00161 val_mse 0.00093 best 0.00093@4 (85.0s)
+epoch 005 loss 0.00152 val_mse 0.00082 best 0.00082@5 (84.5s)
+epoch 006 loss 0.00150 val_mse 0.00079 best 0.00079@6 (84.6s)
+epoch 007 loss 0.00137 val_mse 0.00089 best 0.00079@6 (85.4s)
+epoch 008 loss 0.00134 val_mse 0.00075 best 0.00075@8 (84.5s)
+epoch 009 loss 0.00128 val_mse 0.00076 best 0.00075@8 (85.7s)
+epoch 010 loss 0.00127 val_mse 0.00074 best 0.00074@10 (84.0s)
+epoch 011 loss 0.00129 val_mse 0.00083 best 0.00074@10 (84.6s)
+epoch 012 loss 0.00121 val_mse 0.00071 best 0.00071@12 (84.3s)
+epoch 013 loss 0.00123 val_mse 0.00075 best 0.00071@12 (84.7s)
+epoch 014 loss 0.00119 val_mse 0.00163 best 0.00071@12 (85.1s)
+epoch 015 loss 0.00129 val_mse 0.00073 best 0.00071@12 (84.2s)
+epoch 016 loss 0.00119 val_mse 0.00072 best 0.00071@12 (84.7s)
+epoch 017 loss 0.00119 val_mse 0.00071 best 0.00071@12 (84.3s)
+epoch 018 loss 0.00111 val_mse 0.00075 best 0.00071@12 (84.6s)
+epoch 019 loss 0.00115 val_mse 0.00074 best 0.00071@12 (85.0s)
+epoch 020 loss 0.00120 val_mse 0.00102 best 0.00071@12 (85.0s)
+epoch 021 loss 0.00120 val_mse 0.00076 best 0.00071@12 (85.2s)
+epoch 022 loss 0.00116 val_mse 0.00079 best 0.00071@12 (84.3s)
+early stop
+  [identity                                  ] MSE 0.00074  MAE 0.01825
+  [random_dropout:0.7                        ] MSE 0.00115  MAE 0.02352
+  [temporal_stride:3                         ] MSE 0.00095  MAE 0.02154
+  [variable_dropout:0.5                      ] MSE 0.00327  MAE 0.03609
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00227  MAE 0.03063
+best {'val_mse': 0.0007055226597003639, 'epoch': 12} -> results/raw/bench_noaa_isd_grud_opera_s0/results.json
+summary {
+  "clean_mse": 0.0007386099314317107,
+  "mean_shift_mse": 0.0019121741061098874,
+  "mean_degradation": 1.588882202549534,
+  "worst_mse": 0.003274236572906375,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.0019121741061098874,
+  "mean_unseen_degradation": 1.588882202549534
+}
+[1/1] ok bench_noaa_isd_grud_opera_s0 (34.6 min)
+
+stage C: 1 ok, 0 failed
+stage D: 4 cells
+
+[1/4] bench_noaa_isd_grud_opera_s1
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/noaa_isd_distillation.yaml --seed 1 --name bench_noaa_isd_grud_opera_s1 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grud distillation.teacher_ckpt=results/raw/bench_noaa_isd_grud_vanilla_s1/model.pt --no_wandb
+noaa_isd records: 495 297 99 99
+noaa_isd windows: 23838 14498 4809 4531
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   39.1000,  144.8410])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(29.9999)
+run bench_noaa_isd_grud_opera_s1 | device cuda:0 | params 21608 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_noaa_isd_grud_vanilla_s1/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01492 val_mse 0.00146 best 0.00146@0 (87.0s)
+epoch 001 loss 0.00246 val_mse 0.00125 best 0.00125@1 (86.5s)
+epoch 002 loss 0.00188 val_mse 0.00086 best 0.00086@2 (86.9s)
+epoch 003 loss 0.00170 val_mse 0.00116 best 0.00086@2 (87.9s)
+epoch 004 loss 0.00167 val_mse 0.00085 best 0.00085@4 (87.3s)
+epoch 005 loss 0.00152 val_mse 0.00085 best 0.00085@5 (87.7s)
+epoch 006 loss 0.00141 val_mse 0.00087 best 0.00085@5 (88.0s)
+epoch 007 loss 0.00137 val_mse 0.00083 best 0.00083@7 (87.1s)
+epoch 008 loss 0.00139 val_mse 0.00078 best 0.00078@8 (88.9s)
+epoch 009 loss 0.00132 val_mse 0.00084 best 0.00078@8 (86.5s)
+epoch 010 loss 0.00131 val_mse 0.00076 best 0.00076@10 (87.3s)
+epoch 011 loss 0.00128 val_mse 0.00079 best 0.00076@10 (86.9s)
+epoch 012 loss 0.00127 val_mse 0.00079 best 0.00076@10 (87.2s)
+epoch 013 loss 0.00129 val_mse 0.00074 best 0.00074@13 (86.8s)
+epoch 014 loss 0.00125 val_mse 0.00076 best 0.00074@13 (86.6s)
+epoch 015 loss 0.00118 val_mse 0.00071 best 0.00071@15 (87.4s)
+epoch 016 loss 0.00125 val_mse 0.00072 best 0.00071@15 (87.1s)
+epoch 017 loss 0.00123 val_mse 0.00070 best 0.00070@17 (87.4s)
+epoch 018 loss 0.00117 val_mse 0.00082 best 0.00070@17 (86.4s)
+epoch 019 loss 0.00122 val_mse 0.00073 best 0.00070@17 (86.5s)
+epoch 020 loss 0.00113 val_mse 0.00080 best 0.00070@17 (87.2s)
+epoch 021 loss 0.00114 val_mse 0.00069 best 0.00069@21 (86.8s)
+epoch 022 loss 0.00114 val_mse 0.00081 best 0.00069@21 (86.8s)
+epoch 023 loss 0.00109 val_mse 0.00069 best 0.00069@23 (87.5s)
+epoch 024 loss 0.00104 val_mse 0.00068 best 0.00068@24 (86.9s)
+epoch 025 loss 0.00113 val_mse 0.00086 best 0.00068@24 (86.7s)
+epoch 026 loss 0.00109 val_mse 0.00068 best 0.00068@24 (86.5s)
+epoch 027 loss 0.00112 val_mse 0.00075 best 0.00068@24 (87.1s)
+epoch 028 loss 0.00106 val_mse 0.00071 best 0.00068@24 (87.2s)
+epoch 029 loss 0.00108 val_mse 0.00068 best 0.00068@24 (86.4s)
+epoch 030 loss 0.00105 val_mse 0.00082 best 0.00068@24 (87.1s)
+epoch 031 loss 0.00108 val_mse 0.00069 best 0.00068@24 (86.7s)
+epoch 032 loss 0.00109 val_mse 0.00077 best 0.00068@24 (87.5s)
+epoch 033 loss 0.00104 val_mse 0.00081 best 0.00068@24 (88.0s)
+epoch 034 loss 0.00113 val_mse 0.00071 best 0.00068@24 (86.6s)
+early stop
+  [identity                                  ] MSE 0.00072  MAE 0.01749
+  [random_dropout:0.7                        ] MSE 0.00095  MAE 0.02112
+  [temporal_stride:3                         ] MSE 0.00090  MAE 0.02033
+  [variable_dropout:0.5                      ] MSE 0.00331  MAE 0.03508
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00227  MAE 0.03009
+best {'val_mse': 0.0006788420723751187, 'epoch': 24} -> results/raw/bench_noaa_isd_grud_opera_s1/results.json
+summary {
+  "clean_mse": 0.0007150067831389606,
+  "mean_shift_mse": 0.0018567291117506102,
+  "mean_degradation": 1.5967992969232536,
+  "worst_mse": 0.0033051571808755398,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.0018567291117506102,
+  "mean_unseen_degradation": 1.5967992969232536
+}
+[1/4] ok bench_noaa_isd_grud_opera_s1 (53.8 min)
+
+[2/4] bench_noaa_isd_grud_opera_s2
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/noaa_isd_distillation.yaml --seed 2 --name bench_noaa_isd_grud_opera_s2 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grud distillation.teacher_ckpt=results/raw/bench_noaa_isd_grud_vanilla_s2/model.pt --no_wandb
+noaa_isd records: 495 297 99 99
+noaa_isd windows: 23838 14498 4809 4531
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   39.1000,  144.8410])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(29.9999)
+run bench_noaa_isd_grud_opera_s2 | device cuda:0 | params 21608 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_noaa_isd_grud_vanilla_s2/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01587 val_mse 0.00205 best 0.00205@0 (84.6s)
+epoch 001 loss 0.00287 val_mse 0.00135 best 0.00135@1 (84.0s)
+epoch 002 loss 0.00194 val_mse 0.00098 best 0.00098@2 (84.6s)
+epoch 003 loss 0.00161 val_mse 0.00093 best 0.00093@3 (83.9s)
+epoch 004 loss 0.00163 val_mse 0.00100 best 0.00093@3 (82.8s)
+epoch 005 loss 0.00146 val_mse 0.00082 best 0.00082@5 (83.2s)
+epoch 006 loss 0.00143 val_mse 0.00079 best 0.00079@6 (84.1s)
+epoch 007 loss 0.00136 val_mse 0.00088 best 0.00079@6 (84.3s)
+epoch 008 loss 0.00130 val_mse 0.00090 best 0.00079@6 (83.6s)
+epoch 009 loss 0.00127 val_mse 0.00098 best 0.00079@6 (83.0s)
+epoch 010 loss 0.00126 val_mse 0.00077 best 0.00077@10 (83.6s)
+epoch 011 loss 0.00124 val_mse 0.00080 best 0.00077@10 (83.6s)
+epoch 012 loss 0.00120 val_mse 0.00081 best 0.00077@10 (84.0s)
+epoch 013 loss 0.00126 val_mse 0.00089 best 0.00077@10 (83.5s)
+epoch 014 loss 0.00120 val_mse 0.00082 best 0.00077@10 (84.2s)
+epoch 015 loss 0.00115 val_mse 0.00073 best 0.00073@15 (83.7s)
+epoch 016 loss 0.00123 val_mse 0.00072 best 0.00072@16 (83.4s)
+epoch 017 loss 0.00118 val_mse 0.00082 best 0.00072@16 (83.9s)
+epoch 018 loss 0.00115 val_mse 0.00103 best 0.00072@16 (83.1s)
+epoch 019 loss 0.00110 val_mse 0.00086 best 0.00072@16 (83.7s)
+epoch 020 loss 0.00118 val_mse 0.00078 best 0.00072@16 (84.5s)
+epoch 021 loss 0.00112 val_mse 0.00084 best 0.00072@16 (82.9s)
+epoch 022 loss 0.00117 val_mse 0.00075 best 0.00072@16 (83.2s)
+epoch 023 loss 0.00113 val_mse 0.00086 best 0.00072@16 (83.8s)
+epoch 024 loss 0.00115 val_mse 0.00071 best 0.00071@24 (84.0s)
+epoch 025 loss 0.00108 val_mse 0.00073 best 0.00071@24 (83.4s)
+epoch 026 loss 0.00113 val_mse 0.00069 best 0.00069@26 (83.1s)
+epoch 027 loss 0.00110 val_mse 0.00081 best 0.00069@26 (83.1s)
+epoch 028 loss 0.00115 val_mse 0.00074 best 0.00069@26 (83.9s)
+epoch 029 loss 0.00116 val_mse 0.00069 best 0.00069@26 (83.2s)
+epoch 030 loss 0.00111 val_mse 0.00094 best 0.00069@26 (83.8s)
+epoch 031 loss 0.00115 val_mse 0.00076 best 0.00069@26 (84.6s)
+epoch 032 loss 0.00109 val_mse 0.00068 best 0.00068@32 (82.8s)
+epoch 033 loss 0.00114 val_mse 0.00074 best 0.00068@32 (83.3s)
+epoch 034 loss 0.00108 val_mse 0.00070 best 0.00068@32 (83.3s)
+epoch 035 loss 0.00110 val_mse 0.00070 best 0.00068@32 (84.4s)
+epoch 036 loss 0.00108 val_mse 0.00068 best 0.00068@32 (83.9s)
+epoch 037 loss 0.00112 val_mse 0.00077 best 0.00068@32 (83.9s)
+epoch 038 loss 0.00108 val_mse 0.00078 best 0.00068@32 (83.5s)
+epoch 039 loss 0.00112 val_mse 0.00068 best 0.00068@32 (83.5s)
+  [identity                                  ] MSE 0.00071  MAE 0.01726
+  [random_dropout:0.7                        ] MSE 0.00094  MAE 0.02036
+  [temporal_stride:3                         ] MSE 0.00086  MAE 0.01957
+  [variable_dropout:0.5                      ] MSE 0.00321  MAE 0.03441
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00217  MAE 0.02883
+best {'val_mse': 0.0006777169182896614, 'epoch': 32} -> results/raw/bench_noaa_isd_grud_opera_s2/results.json
+summary {
+  "clean_mse": 0.0007057918701320887,
+  "mean_shift_mse": 0.0017952227790374309,
+  "mean_degradation": 1.5435583137298756,
+  "worst_mse": 0.0032129697501659393,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.0017952227790374309,
+  "mean_unseen_degradation": 1.5435583137298756
+}
+[2/4] ok bench_noaa_isd_grud_opera_s2 (59.1 min)
+
+[3/4] bench_noaa_isd_grud_opera_s3
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/noaa_isd_distillation.yaml --seed 3 --name bench_noaa_isd_grud_opera_s3 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grud distillation.teacher_ckpt=results/raw/bench_noaa_isd_grud_vanilla_s3/model.pt --no_wandb
+noaa_isd records: 495 297 99 99
+noaa_isd windows: 23838 14498 4809 4531
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   39.1000,  144.8410])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(29.9999)
+run bench_noaa_isd_grud_opera_s3 | device cuda:0 | params 21608 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_noaa_isd_grud_vanilla_s3/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01416 val_mse 0.00278 best 0.00278@0 (84.6s)
+epoch 001 loss 0.00307 val_mse 0.00118 best 0.00118@1 (83.8s)
+epoch 002 loss 0.00216 val_mse 0.00095 best 0.00095@2 (84.2s)
+epoch 003 loss 0.00180 val_mse 0.00087 best 0.00087@3 (84.6s)
+epoch 004 loss 0.00167 val_mse 0.00091 best 0.00087@3 (85.0s)
+epoch 005 loss 0.00157 val_mse 0.00088 best 0.00087@3 (84.8s)
+epoch 006 loss 0.00150 val_mse 0.00086 best 0.00086@6 (83.5s)
+epoch 007 loss 0.00145 val_mse 0.00086 best 0.00086@7 (84.1s)
+epoch 008 loss 0.00136 val_mse 0.00089 best 0.00086@7 (84.0s)
+epoch 009 loss 0.00129 val_mse 0.00076 best 0.00076@9 (85.4s)
+epoch 010 loss 0.00126 val_mse 0.00076 best 0.00076@9 (85.9s)
+epoch 011 loss 0.00128 val_mse 0.00088 best 0.00076@9 (84.8s)
+epoch 012 loss 0.00125 val_mse 0.00080 best 0.00076@9 (85.2s)
+epoch 013 loss 0.00121 val_mse 0.00078 best 0.00076@9 (85.3s)
+epoch 014 loss 0.00122 val_mse 0.00072 best 0.00072@14 (83.6s)
+epoch 015 loss 0.00127 val_mse 0.00072 best 0.00072@15 (84.5s)
+epoch 016 loss 0.00123 val_mse 0.00076 best 0.00072@15 (84.0s)
+epoch 017 loss 0.00124 val_mse 0.00076 best 0.00072@15 (85.0s)
+epoch 018 loss 0.00121 val_mse 0.00097 best 0.00072@15 (83.8s)
+epoch 019 loss 0.00120 val_mse 0.00091 best 0.00072@15 (84.9s)
+epoch 020 loss 0.00114 val_mse 0.00099 best 0.00072@15 (84.6s)
+epoch 021 loss 0.00117 val_mse 0.00072 best 0.00072@15 (84.3s)
+epoch 022 loss 0.00115 val_mse 0.00074 best 0.00072@15 (85.0s)
+epoch 023 loss 0.00118 val_mse 0.00072 best 0.00072@15 (84.7s)
+epoch 024 loss 0.00122 val_mse 0.00089 best 0.00072@15 (84.1s)
+epoch 025 loss 0.00118 val_mse 0.00070 best 0.00070@25 (84.1s)
+epoch 026 loss 0.00123 val_mse 0.00180 best 0.00070@25 (83.8s)
+epoch 027 loss 0.00123 val_mse 0.00075 best 0.00070@25 (84.2s)
+epoch 028 loss 0.00119 val_mse 0.00071 best 0.00070@25 (85.0s)
+epoch 029 loss 0.00108 val_mse 0.00074 best 0.00070@25 (85.0s)
+epoch 030 loss 0.00118 val_mse 0.00071 best 0.00070@25 (84.5s)
+epoch 031 loss 0.00108 val_mse 0.00068 best 0.00068@31 (84.7s)
+epoch 032 loss 0.00111 val_mse 0.00072 best 0.00068@31 (85.3s)
+epoch 033 loss 0.00111 val_mse 0.00069 best 0.00068@31 (84.2s)
+epoch 034 loss 0.00118 val_mse 0.00073 best 0.00068@31 (84.8s)
+epoch 035 loss 0.00111 val_mse 0.00069 best 0.00068@31 (84.3s)
+epoch 036 loss 0.00113 val_mse 0.00070 best 0.00068@31 (83.5s)
+epoch 037 loss 0.00107 val_mse 0.00070 best 0.00068@31 (84.4s)
+epoch 038 loss 0.00109 val_mse 0.00069 best 0.00068@31 (84.5s)
+epoch 039 loss 0.00110 val_mse 0.00074 best 0.00068@31 (83.9s)
+  [identity                                  ] MSE 0.00072  MAE 0.01818
+  [random_dropout:0.7                        ] MSE 0.00098  MAE 0.02193
+  [temporal_stride:3                         ] MSE 0.00093  MAE 0.02163
+  [variable_dropout:0.5                      ] MSE 0.00312  MAE 0.03498
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00221  MAE 0.03048
+best {'val_mse': 0.0006832274375483394, 'epoch': 31} -> results/raw/bench_noaa_isd_grud_opera_s3/results.json
+summary {
+  "clean_mse": 0.0007169365417212248,
+  "mean_shift_mse": 0.0018092284735757858,
+  "mean_degradation": 1.5235545523069325,
+  "worst_mse": 0.003121952759101987,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.0018092284735757858,
+  "mean_unseen_degradation": 1.5235545523069325
+}
+[3/4] ok bench_noaa_isd_grud_opera_s3 (59.7 min)
+
+[4/4] bench_noaa_isd_grud_opera_s4
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/noaa_isd_distillation.yaml --seed 4 --name bench_noaa_isd_grud_opera_s4 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grud distillation.teacher_ckpt=results/raw/bench_noaa_isd_grud_vanilla_s4/model.pt --no_wandb
+noaa_isd records: 495 297 99 99
+noaa_isd windows: 23838 14498 4809 4531
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   39.1000,  144.8410])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(29.9999)
+run bench_noaa_isd_grud_opera_s4 | device cuda:0 | params 21608 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_noaa_isd_grud_vanilla_s4/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01629 val_mse 0.00250 best 0.00250@0 (84.4s)
+epoch 001 loss 0.00314 val_mse 0.00113 best 0.00113@1 (83.4s)
+epoch 002 loss 0.00187 val_mse 0.00109 best 0.00109@2 (84.7s)
+epoch 003 loss 0.00169 val_mse 0.00085 best 0.00085@3 (85.1s)
+epoch 004 loss 0.00161 val_mse 0.00132 best 0.00085@3 (84.4s)
+epoch 005 loss 0.00149 val_mse 0.00096 best 0.00085@3 (83.1s)
+epoch 006 loss 0.00150 val_mse 0.00078 best 0.00078@6 (84.6s)
+epoch 007 loss 0.00139 val_mse 0.00097 best 0.00078@6 (82.6s)
+epoch 008 loss 0.00135 val_mse 0.00104 best 0.00078@6 (84.5s)
+epoch 009 loss 0.00137 val_mse 0.00081 best 0.00078@6 (84.0s)
+epoch 010 loss 0.00132 val_mse 0.00079 best 0.00078@6 (85.4s)
+epoch 011 loss 0.00124 val_mse 0.00078 best 0.00078@6 (84.8s)
+epoch 012 loss 0.00123 val_mse 0.00102 best 0.00078@6 (84.3s)
+epoch 013 loss 0.00124 val_mse 0.00086 best 0.00078@6 (83.5s)
+epoch 014 loss 0.00117 val_mse 0.00085 best 0.00078@6 (84.6s)
+epoch 015 loss 0.00129 val_mse 0.00098 best 0.00078@6 (83.1s)
+epoch 016 loss 0.00120 val_mse 0.00082 best 0.00078@6 (83.6s)
+early stop
+  [identity                                  ] MSE 0.00080  MAE 0.01955
+  [random_dropout:0.7                        ] MSE 0.00121  MAE 0.02481
+  [temporal_stride:3                         ] MSE 0.00103  MAE 0.02265
+  [variable_dropout:0.5                      ] MSE 0.00350  MAE 0.03800
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00245  MAE 0.03245
+best {'val_mse': 0.0007782214088365436, 'epoch': 6} -> results/raw/bench_noaa_isd_grud_opera_s4/results.json
+summary {
+  "clean_mse": 0.000804782728664577,
+  "mean_shift_mse": 0.0020500787650234997,
+  "mean_degradation": 1.5473692364463576,
+  "worst_mse": 0.00350353610701859,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.0020500787650234997,
+  "mean_unseen_degradation": 1.5473692364463576
+}
+[4/4] ok bench_noaa_isd_grud_opera_s4 (25.5 min)
+
+stage D: 4 ok, 0 failed

@@ -1,0 +1,33 @@
+run bench_noaa_isd_tmix_opera_s4 | device cuda:0 | params 445761 | commit 062d811bb0e6415c263dd34d47f8e63ceb91b379
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_noaa_isd_tmix_vanilla_s4/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "tmix", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.04068 val_mse 0.00310 best 0.00310@0 (17.2s)
+epoch 001 loss 0.01275 val_mse 0.00453 best 0.00310@0 (10.9s)
+epoch 002 loss 0.01175 val_mse 0.00805 best 0.00310@0 (11.1s)
+epoch 003 loss 0.01277 val_mse 0.00474 best 0.00310@0 (11.2s)
+epoch 004 loss 0.01060 val_mse 0.00224 best 0.00224@4 (11.3s)
+epoch 005 loss 0.00948 val_mse 0.00288 best 0.00224@4 (11.7s)
+epoch 006 loss 0.00860 val_mse 0.00275 best 0.00224@4 (11.3s)
+epoch 007 loss 0.00810 val_mse 0.00236 best 0.00224@4 (11.4s)
+epoch 008 loss 0.00751 val_mse 0.00258 best 0.00224@4 (11.4s)
+epoch 009 loss 0.00763 val_mse 0.00430 best 0.00224@4 (11.2s)
+epoch 010 loss 0.01025 val_mse 0.00275 best 0.00224@4 (11.3s)
+epoch 011 loss 0.00679 val_mse 0.00236 best 0.00224@4 (11.5s)
+epoch 012 loss 0.00805 val_mse 0.00289 best 0.00224@4 (11.6s)
+epoch 013 loss 0.00763 val_mse 0.00256 best 0.00224@4 (11.4s)
+epoch 014 loss 0.01146 val_mse 0.00361 best 0.00224@4 (11.3s)
+early stop
+  [identity                                  ] MSE 0.00274  MAE 0.03300
+  [random_dropout:0.7                        ] MSE 0.00871  MAE 0.05124
+  [temporal_stride:3                         ] MSE 0.00311  MAE 0.03726
+  [variable_dropout:0.5                      ] MSE 0.09063  MAE 0.18723
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.05358  MAE 0.12469
+best {'val_mse': 0.0022447749506682158, 'epoch': 4} -> results/raw/bench_noaa_isd_tmix_opera_s4/results.json
+summary {
+  "clean_mse": 0.0027370681054890156,
+  "mean_shift_mse": 0.039006977691315114,
+  "mean_degradation": 13.251372705373718,
+  "worst_mse": 0.09062998741865158,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.039006977691315114,
+  "mean_unseen_degradation": 13.251372705373718
+}

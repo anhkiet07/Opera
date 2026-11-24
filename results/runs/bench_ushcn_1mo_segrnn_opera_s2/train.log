@@ -1,0 +1,41 @@
+wandb disabled: No API key configured. Use `wandb login` to log in.
+run bench_ushcn_1mo_segrnn_opera_s2 | device cuda:0 | params 126657 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 128, "history": 24, "n_records": 100000000, "name": "ushcn", "patch_size": 1.5, "pred_window": 1, "stride": 1.5}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_ushcn_1mo_segrnn_vanilla_s2/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "segrnn", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.83227 val_mse 0.90569 best 0.90569@0 (11.3s)
+epoch 001 loss 0.63850 val_mse 0.86339 best 0.86339@1 (10.0s)
+epoch 002 loss 0.60232 val_mse 0.77831 best 0.77831@2 (10.1s)
+epoch 003 loss 0.59223 val_mse 0.76761 best 0.76761@3 (10.0s)
+epoch 004 loss 0.57461 val_mse 0.75026 best 0.75026@4 (10.0s)
+epoch 005 loss 0.56376 val_mse 0.76082 best 0.75026@4 (10.0s)
+epoch 006 loss 0.55598 val_mse 0.77507 best 0.75026@4 (10.0s)
+epoch 007 loss 0.57246 val_mse 0.73982 best 0.73982@7 (10.0s)
+epoch 008 loss 0.55723 val_mse 0.74930 best 0.73982@7 (10.0s)
+epoch 009 loss 0.56111 val_mse 0.74624 best 0.73982@7 (10.0s)
+epoch 010 loss 0.55859 val_mse 0.74383 best 0.73982@7 (10.0s)
+epoch 011 loss 0.56145 val_mse 0.72823 best 0.72823@11 (10.1s)
+epoch 012 loss 0.54773 val_mse 0.74579 best 0.72823@11 (10.1s)
+epoch 013 loss 0.55535 val_mse 0.74320 best 0.72823@11 (10.1s)
+epoch 014 loss 0.55013 val_mse 0.73782 best 0.72823@11 (10.0s)
+epoch 015 loss 0.55006 val_mse 0.73759 best 0.72823@11 (10.1s)
+epoch 016 loss 0.54171 val_mse 0.76187 best 0.72823@11 (10.1s)
+epoch 017 loss 0.55695 val_mse 0.75500 best 0.72823@11 (10.0s)
+epoch 018 loss 0.54852 val_mse 0.74422 best 0.72823@11 (10.0s)
+epoch 019 loss 0.54091 val_mse 0.73414 best 0.72823@11 (10.0s)
+epoch 020 loss 0.53946 val_mse 0.74533 best 0.72823@11 (10.0s)
+epoch 021 loss 0.53793 val_mse 0.73234 best 0.72823@11 (10.1s)
+early stop
+  [identity                                  ] MSE 0.51566  MAE 0.30712
+  [random_dropout:0.7                        ] MSE 0.60441  MAE 0.37126
+  [temporal_stride:3                         ] MSE 0.53260  MAE 0.31922
+  [variable_dropout:0.5                      ] MSE 0.65671  MAE 0.39242
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.60664  MAE 0.36557
+best {'val_mse': 0.7282325625419617, 'epoch': 11} -> results/raw/bench_ushcn_1mo_segrnn_opera_s2/results.json
+summary {
+  "clean_mse": 0.5156607627868652,
+  "mean_shift_mse": 0.6000895351171494,
+  "mean_degradation": 0.1637292934098624,
+  "worst_mse": 0.6567100286483765,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.6000895351171494,
+  "mean_unseen_degradation": 0.1637292934098624
+}

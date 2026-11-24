@@ -1,0 +1,57 @@
+run bench_activity_tmix_opera_s0 | device cuda:0 | params 445761 | commit 8b0f79e5a962846d66e880b6794e668997208edd
+config: {"data": {"batch_size": 32, "history": 3000, "n_records": 100000000, "name": "activity", "patch_size": 750, "stride": 750}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw\\bench_activity_tmix_vanilla_s0\\model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "tmix", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.04864 val_mse 0.01770 best 0.01770@0 (8.1s)
+epoch 001 loss 0.02210 val_mse 0.00490 best 0.00490@1 (7.5s)
+epoch 002 loss 0.00948 val_mse 0.00509 best 0.00490@1 (7.6s)
+epoch 003 loss 0.00617 val_mse 0.00401 best 0.00401@3 (7.5s)
+epoch 004 loss 0.00592 val_mse 0.00507 best 0.00401@3 (7.5s)
+epoch 005 loss 0.00545 val_mse 0.00443 best 0.00401@3 (7.4s)
+epoch 006 loss 0.00533 val_mse 0.00462 best 0.00401@3 (7.6s)
+epoch 007 loss 0.00534 val_mse 0.00522 best 0.00401@3 (7.4s)
+epoch 008 loss 0.00520 val_mse 0.00418 best 0.00401@3 (7.5s)
+epoch 009 loss 0.00523 val_mse 0.00389 best 0.00389@9 (7.4s)
+epoch 010 loss 0.00493 val_mse 0.00383 best 0.00383@10 (7.5s)
+epoch 011 loss 0.00477 val_mse 0.00371 best 0.00371@11 (7.5s)
+epoch 012 loss 0.00473 val_mse 0.00470 best 0.00371@11 (7.4s)
+epoch 013 loss 0.00464 val_mse 0.00415 best 0.00371@11 (7.6s)
+epoch 014 loss 0.00455 val_mse 0.00374 best 0.00371@11 (7.6s)
+epoch 015 loss 0.00453 val_mse 0.00423 best 0.00371@11 (7.5s)
+epoch 016 loss 0.00475 val_mse 0.00377 best 0.00371@11 (7.4s)
+epoch 017 loss 0.00437 val_mse 0.00352 best 0.00352@17 (7.5s)
+epoch 018 loss 0.00444 val_mse 0.00347 best 0.00347@18 (7.6s)
+epoch 019 loss 0.00454 val_mse 0.00354 best 0.00347@18 (7.5s)
+epoch 020 loss 0.00517 val_mse 0.00415 best 0.00347@18 (7.6s)
+epoch 021 loss 0.00555 val_mse 0.00525 best 0.00347@18 (7.5s)
+epoch 022 loss 0.00465 val_mse 0.00355 best 0.00347@18 (7.5s)
+epoch 023 loss 0.00465 val_mse 0.00385 best 0.00347@18 (7.5s)
+epoch 024 loss 0.00434 val_mse 0.00389 best 0.00347@18 (7.5s)
+epoch 025 loss 0.00453 val_mse 0.00333 best 0.00333@25 (7.5s)
+epoch 026 loss 0.00432 val_mse 0.00333 best 0.00333@25 (7.6s)
+epoch 027 loss 0.00448 val_mse 0.00397 best 0.00333@25 (7.6s)
+epoch 028 loss 0.00424 val_mse 0.00350 best 0.00333@25 (7.5s)
+epoch 029 loss 0.00430 val_mse 0.00392 best 0.00333@25 (7.5s)
+epoch 030 loss 0.00449 val_mse 0.00376 best 0.00333@25 (7.6s)
+epoch 031 loss 0.00431 val_mse 0.00373 best 0.00333@25 (7.5s)
+epoch 032 loss 0.00424 val_mse 0.00328 best 0.00328@32 (7.5s)
+epoch 033 loss 0.00414 val_mse 0.00324 best 0.00324@33 (7.6s)
+epoch 034 loss 0.00436 val_mse 0.00372 best 0.00324@33 (7.6s)
+epoch 035 loss 0.00439 val_mse 0.00330 best 0.00324@33 (7.5s)
+epoch 036 loss 0.00448 val_mse 0.00346 best 0.00324@33 (7.6s)
+epoch 037 loss 0.00435 val_mse 0.00364 best 0.00324@33 (7.5s)
+epoch 038 loss 0.00437 val_mse 0.00353 best 0.00324@33 (7.5s)
+epoch 039 loss 0.00413 val_mse 0.00418 best 0.00324@33 (7.6s)
+  [identity                                  ] MSE 0.00315  MAE 0.03350
+  [random_dropout:0.7                        ] MSE 0.00456  MAE 0.04418
+  [temporal_stride:3                         ] MSE 0.00342  MAE 0.03591
+  [variable_dropout:0.5                      ] MSE 0.00980  MAE 0.06739
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00679  MAE 0.05260
+best {'val_mse': 0.00324090919457376, 'epoch': 33} -> results/raw\bench_activity_tmix_opera_s0\results.json
+summary {
+  "clean_mse": 0.0031460451427847147,
+  "mean_shift_mse": 0.006143566744867712,
+  "mean_degradation": 0.9527903974797222,
+  "worst_mse": 0.009803004562854767,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.006143566744867712,
+  "mean_unseen_degradation": 0.9527903974797222
+}

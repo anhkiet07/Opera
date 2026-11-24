@@ -1,0 +1,232 @@
+{
+  "config": {
+    "experiment": "E2_distillation",
+    "data": {
+      "name": "noaa_isd",
+      "history": 24,
+      "patch_size": 6,
+      "stride": 6,
+      "batch_size": 32,
+      "n_records": 100000000,
+      "pred_window": 6
+    },
+    "model": {
+      "backbone": "segrnn",
+      "embedding": "quite",
+      "irr_emb": true,
+      "hid_dim": 64,
+      "nhead": 4,
+      "nlayer": 3,
+      "dropout": 0.1,
+      "observation_aware": false,
+      "adaptive_query": "none"
+    },
+    "training": {
+      "epochs": 40,
+      "patience": 10,
+      "min_epochs": 15,
+      "lr": 0.001
+    },
+    "observation": {
+      "train_processes": [
+        "random_dropout:0.1",
+        "random_dropout:0.25",
+        "random_dropout:0.4",
+        "temporal_stride:2",
+        "burst:0.2",
+        "burst:0.3",
+        "variable_dropout:0.2",
+        "local_mask:0.3"
+      ],
+      "num_views": 2,
+      "rich_process": "identity",
+      "constraints": {
+        "min_density": 0.15,
+        "min_variable_coverage": 0.3,
+        "max_gap": 0.6,
+        "min_obs_per_sample": 4
+      }
+    },
+    "distillation": {
+      "enabled": true,
+      "teacher_type": "frozen",
+      "teacher_ckpt": "results/raw/bench_noaa_isd_segrnn_vanilla_s0/model.pt",
+      "loss": "prediction",
+      "prediction_loss": "mse",
+      "weight": 1.0
+    },
+    "hard_mining": {
+      "enabled": false,
+      "candidate_pool": 8,
+      "top_k": 2,
+      "alpha": 0.5,
+      "warmup_epochs": 5
+    },
+    "wandb": {
+      "enabled": true,
+      "project": "opera"
+    },
+    "seed": 0
+  },
+  "info": {
+    "name": "noaa_isd",
+    "input_dim": 5,
+    "history": 24.0,
+    "pred_window": 6.0,
+    "patch_size": 6.0,
+    "stride": 6.0,
+    "npatch": 4,
+    "maxlen": 0,
+    "batch_size": 32,
+    "n_records": 100000000,
+    "n_train_batches": 454,
+    "n_val_batches": 151,
+    "n_test_batches": 142
+  },
+  "per_condition": {
+    "identity": {
+      "mse": 0.001193723757751286,
+      "mse_per_var": [
+        0.0008812200976535678,
+        0.001045200857333839,
+        0.000435430119978264,
+        0.0030079418793320656,
+        0.0005988256889395416
+      ],
+      "mae": 0.02311917208135128,
+      "mae_per_var": [
+        0.022165752947330475,
+        0.023441221565008163,
+        0.014973669312894344,
+        0.03687455505132675,
+        0.01814066246151924
+      ],
+      "mape": 0.21398968994617462,
+      "rmse": 0.034550307636130914,
+      "condition": "identity",
+      "n_series": 4531,
+      "infer_ms_per_series": 0.042266336347167
+    },
+    "random_dropout:0.7": {
+      "mse": 0.0037937425076961517,
+      "mse_per_var": [
+        0.003001719480380416,
+        0.00404793256893754,
+        0.004207990597933531,
+        0.005927462596446276,
+        0.001783606014214456
+      ],
+      "mae": 0.03497247397899628,
+      "mae_per_var": [
+        0.03239249065518379,
+        0.03411463648080826,
+        0.02687382511794567,
+        0.0481937937438488,
+        0.03328762575984001
+      ],
+      "mape": 0.28272292017936707,
+      "rmse": 0.061593364153098115,
+      "condition": "random_dropout:0.7",
+      "n_series": 4531,
+      "infer_ms_per_series": 0.04088323496740876
+    },
+    "temporal_stride:3": {
+      "mse": 0.001803019316866994,
+      "mse_per_var": [
+        0.001220213482156396,
+        0.0012326452415436506,
+        0.0005633921246044338,
+        0.0045966231264173985,
+        0.001402222434990108
+      ],
+      "mae": 0.028372809290885925,
+      "mae_per_var": [
+        0.026336783543229103,
+        0.02549036592245102,
+        0.017202984541654587,
+        0.04380088672041893,
+        0.029033023864030838
+      ],
+      "mape": 0.251777708530426,
+      "rmse": 0.04246197495250302,
+      "condition": "temporal_stride:3",
+      "n_series": 4531,
+      "infer_ms_per_series": 0.040348253353256126
+    },
+    "variable_dropout:0.5": {
+      "mse": 0.036789361387491226,
+      "mse_per_var": [
+        0.023946741595864296,
+        0.05378870293498039,
+        0.03518024832010269,
+        0.040452465415000916,
+        0.030578643083572388
+      ],
+      "mae": 0.13137993216514587,
+      "mae_per_var": [
+        0.09579406678676605,
+        0.16824066638946533,
+        0.12736263871192932,
+        0.1444491147994995,
+        0.12105321884155273
+      ],
+      "mape": 1.0240278244018555,
+      "rmse": 0.1918055301274998,
+      "condition": "variable_dropout:0.5",
+      "n_series": 4531,
+      "infer_ms_per_series": 0.0404526502768795
+    },
+    "temporal_stride:3+variable_group_dropout:0.3": {
+      "mse": 0.02009641006588936,
+      "mse_per_var": [
+        0.01771456189453602,
+        0.018705017864704132,
+        0.027689466252923012,
+        0.021422425284981728,
+        0.014950585551559925
+      ],
+      "mae": 0.08431051671504974,
+      "mae_per_var": [
+        0.07810395210981369,
+        0.07291726022958755,
+        0.10479363799095154,
+        0.09165970981121063,
+        0.07407800108194351
+      ],
+      "mape": 0.6334999203681946,
+      "rmse": 0.14176180750078407,
+      "condition": "temporal_stride:3+variable_group_dropout:0.3",
+      "n_series": 4531,
+      "infer_ms_per_series": 0.04358803086711249
+    }
+  },
+  "summary": {
+    "clean_mse": 0.001193723757751286,
+    "mean_shift_mse": 0.015620633319485933,
+    "mean_degradation": 12.085634945317485,
+    "worst_mse": 0.036789361387491226,
+    "worst_condition": "variable_dropout:0.5",
+    "mean_unseen_mse": 0.015620633319485933,
+    "mean_unseen_degradation": 12.085634945317485
+  },
+  "cost": {
+    "n_params": 125889,
+    "train_time_per_epoch_s": 10.073689970705244,
+    "total_train_time_s": 362.6528389453888,
+    "epochs_run": 36,
+    "peak_gpu_mem_mb": 297.1875,
+    "infer_ms_per_series": 0.042266336347167
+  },
+  "best": {
+    "val_mse": 0.001021820236928761,
+    "epoch": 25
+  },
+  "run": {
+    "name": "bench_noaa_isd_segrnn_opera_s0",
+    "seed": 0,
+    "config_path": "configs/noaa_isd_distillation.yaml",
+    "git_commit": "e6065879aa77f570f2eb12787d7e9bda76b25a6e",
+    "experiment": "E2_distillation",
+    "dataset": "noaa_isd"
+  }
+}

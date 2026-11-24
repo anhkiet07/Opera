@@ -1,0 +1,803 @@
+stage A: 1 cells
+
+[1/1] bench_physionet_h36_grud_vanilla_s0
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/physionet_h36_baseline.yaml --seed 0 --name bench_physionet_h36_grud_vanilla_s0 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grud --no_wandb
+Total records: 12000
+Dataset n_samples: 12000 7200 2400 2400
+Test record ids (first 20): ['134302', '144753', '137142', '153444', '134906', '154300', '144359', '162459', '141317', '151947', '135968', '136920', '133579', '140585', '142964', '158681', '140670', '143983', '132821', '135775']
+Test record ids (last 20): ['150324', '137692', '151553', '144871', '142022', '142764', '142160', '153909', '144034', '155047', '149146', '138666', '150034', '149577', '144809', '140296', '158002', '146644', '137769', '150611']
+data_max: tensor([9.0000e+01, 1.0000e+00, 4.6230e+02, 4.0000e+00, 4.7200e+02, 5.0000e+00,
+        4.6950e+03, 1.6920e+04, 3.6400e+04, 8.2800e+01, 2.0900e+02, 3.6200e+02,
+        2.2100e+01, 2.8300e+02, 1.0000e+00, 1.5000e+01, 1.5910e+03, 5.2000e+01,
+        6.1800e+01, 2.4500e+02, 2.2900e+01, 3.1000e+01, 3.7500e+01, 3.0000e+02,
+        1.0000e+00, 1.8000e+02, 2.1100e+02, 2.2800e+02, 3.0000e+02, 1.0000e+02,
+        5.0000e+02, 7.3500e+02, 2.2920e+03, 9.8000e+01, 1.0000e+02, 2.8900e+02,
+        4.2200e+01, 4.9600e+01, 2.4910e+01, 1.1000e+04, 6.2519e+03],
+       device='cuda:0')
+data_min: tensor([ 1.5000e+01, -1.0000e+00, -1.0000e+00,  1.0000e+00, -1.0000e+00,
+         1.0000e+00,  8.0000e+00,  1.0000e+00,  4.0000e+00,  0.0000e+00,
+         0.0000e+00,  2.8000e+01,  1.0000e-01, -1.0000e+00,  2.1000e-01,
+         3.0000e+00,  8.0000e+00,  5.0000e+00,  5.0000e+00,  0.0000e+00,
+         1.5000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,  1.0000e+00,
+         9.8000e+01, -1.0000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00,  0.0000e+00,  5.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00, -1.7800e+01,  3.0000e-01,  1.0000e-02,  0.0000e+00,
+         1.0000e-01], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+run bench_physionet_h36_grud_vanilla_s0 | device cuda:0 | params 41804 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 36, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01566 val_mse 0.00949 best 0.00949@0 (84.9s)
+epoch 001 loss 0.00685 val_mse 0.00818 best 0.00818@1 (88.6s)
+epoch 002 loss 0.00634 val_mse 0.00747 best 0.00747@2 (84.0s)
+epoch 003 loss 0.00571 val_mse 0.00673 best 0.00673@3 (84.2s)
+epoch 004 loss 0.00540 val_mse 0.00657 best 0.00657@4 (85.1s)
+epoch 005 loss 0.00510 val_mse 0.00594 best 0.00594@5 (86.4s)
+epoch 006 loss 0.00486 val_mse 0.00568 best 0.00568@6 (83.8s)
+epoch 007 loss 0.00477 val_mse 0.00558 best 0.00558@7 (85.5s)
+epoch 008 loss 0.00453 val_mse 0.00559 best 0.00558@7 (86.1s)
+epoch 009 loss 0.00444 val_mse 0.00527 best 0.00527@9 (84.9s)
+epoch 010 loss 0.00431 val_mse 0.00531 best 0.00527@9 (86.4s)
+epoch 011 loss 0.00427 val_mse 0.00546 best 0.00527@9 (81.8s)
+epoch 012 loss 0.00419 val_mse 0.00530 best 0.00527@9 (83.8s)
+epoch 013 loss 0.00408 val_mse 0.00518 best 0.00518@13 (85.8s)
+epoch 014 loss 0.00403 val_mse 0.00508 best 0.00508@14 (82.6s)
+epoch 015 loss 0.00388 val_mse 0.00496 best 0.00496@15 (55.0s)
+epoch 016 loss 0.00401 val_mse 0.00493 best 0.00493@16 (86.4s)
+epoch 017 loss 0.00393 val_mse 0.00471 best 0.00471@17 (82.5s)
+epoch 018 loss 0.00378 val_mse 0.00498 best 0.00471@17 (73.0s)
+epoch 019 loss 0.00378 val_mse 0.00514 best 0.00471@17 (86.7s)
+epoch 020 loss 0.00366 val_mse 0.00545 best 0.00471@17 (86.0s)
+epoch 021 loss 0.00359 val_mse 0.00518 best 0.00471@17 (85.9s)
+epoch 022 loss 0.00362 val_mse 0.00485 best 0.00471@17 (87.1s)
+epoch 023 loss 0.00352 val_mse 0.00469 best 0.00469@23 (84.9s)
+epoch 024 loss 0.00356 val_mse 0.00467 best 0.00467@24 (85.7s)
+epoch 025 loss 0.00352 val_mse 0.00484 best 0.00467@24 (85.0s)
+epoch 026 loss 0.00349 val_mse 0.00495 best 0.00467@24 (86.3s)
+epoch 027 loss 0.00346 val_mse 0.00467 best 0.00467@24 (84.7s)
+epoch 028 loss 0.00345 val_mse 0.00510 best 0.00467@24 (86.3s)
+epoch 029 loss 0.00332 val_mse 0.00477 best 0.00467@24 (66.2s)
+epoch 030 loss 0.00323 val_mse 0.00489 best 0.00467@24 (82.5s)
+epoch 031 loss 0.00326 val_mse 0.00461 best 0.00461@31 (70.2s)
+epoch 032 loss 0.00324 val_mse 0.00489 best 0.00461@31 (75.7s)
+epoch 033 loss 0.00326 val_mse 0.00515 best 0.00461@31 (85.7s)
+epoch 034 loss 0.00316 val_mse 0.00484 best 0.00461@31 (85.2s)
+epoch 035 loss 0.00317 val_mse 0.00485 best 0.00461@31 (83.9s)
+epoch 036 loss 0.00318 val_mse 0.00502 best 0.00461@31 (86.4s)
+epoch 037 loss 0.00314 val_mse 0.00490 best 0.00461@31 (83.9s)
+epoch 038 loss 0.00306 val_mse 0.00502 best 0.00461@31 (85.8s)
+epoch 039 loss 0.00307 val_mse 0.00503 best 0.00461@31 (84.8s)
+  [identity                                  ] MSE 0.00492  MAE 0.03840
+  [random_dropout:0.7                        ] MSE 0.00686  MAE 0.04826
+  [temporal_stride:3                         ] MSE 0.00574  MAE 0.04164
+  [variable_dropout:0.5                      ] MSE 0.01047  MAE 0.06046
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00751  MAE 0.04950
+best {'val_mse': 0.004611440002918243, 'epoch': 31} -> results/raw/bench_physionet_h36_grud_vanilla_s0/results.json
+summary {
+  "clean_mse": 0.004919322673231363,
+  "mean_shift_mse": 0.00764506624545902,
+  "mean_degradation": 0.5540892015601802,
+  "worst_mse": 0.010472916066646576,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.00764506624545902,
+  "mean_unseen_degradation": 0.5540892015601802
+}
+[1/1] ok bench_physionet_h36_grud_vanilla_s0 (70.6 min)
+
+stage A: 1 ok, 0 failed
+stage B: 4 cells
+
+[1/4] bench_physionet_h36_grud_vanilla_s1
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/physionet_h36_baseline.yaml --seed 1 --name bench_physionet_h36_grud_vanilla_s1 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grud --no_wandb
+Total records: 12000
+Dataset n_samples: 12000 7200 2400 2400
+Test record ids (first 20): ['134302', '144753', '137142', '153444', '134906', '154300', '144359', '162459', '141317', '151947', '135968', '136920', '133579', '140585', '142964', '158681', '140670', '143983', '132821', '135775']
+Test record ids (last 20): ['150324', '137692', '151553', '144871', '142022', '142764', '142160', '153909', '144034', '155047', '149146', '138666', '150034', '149577', '144809', '140296', '158002', '146644', '137769', '150611']
+data_max: tensor([9.0000e+01, 1.0000e+00, 4.6230e+02, 4.0000e+00, 4.7200e+02, 5.0000e+00,
+        4.6950e+03, 1.6920e+04, 3.6400e+04, 8.2800e+01, 2.0900e+02, 3.6200e+02,
+        2.2100e+01, 2.8300e+02, 1.0000e+00, 1.5000e+01, 1.5910e+03, 5.2000e+01,
+        6.1800e+01, 2.4500e+02, 2.2900e+01, 3.1000e+01, 3.7500e+01, 3.0000e+02,
+        1.0000e+00, 1.8000e+02, 2.1100e+02, 2.2800e+02, 3.0000e+02, 1.0000e+02,
+        5.0000e+02, 7.3500e+02, 2.2920e+03, 9.8000e+01, 1.0000e+02, 2.8900e+02,
+        4.2200e+01, 4.9600e+01, 2.4910e+01, 1.1000e+04, 6.2519e+03],
+       device='cuda:0')
+data_min: tensor([ 1.5000e+01, -1.0000e+00, -1.0000e+00,  1.0000e+00, -1.0000e+00,
+         1.0000e+00,  8.0000e+00,  1.0000e+00,  4.0000e+00,  0.0000e+00,
+         0.0000e+00,  2.8000e+01,  1.0000e-01, -1.0000e+00,  2.1000e-01,
+         3.0000e+00,  8.0000e+00,  5.0000e+00,  5.0000e+00,  0.0000e+00,
+         1.5000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,  1.0000e+00,
+         9.8000e+01, -1.0000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00,  0.0000e+00,  5.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00, -1.7800e+01,  3.0000e-01,  1.0000e-02,  0.0000e+00,
+         1.0000e-01], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+run bench_physionet_h36_grud_vanilla_s1 | device cuda:0 | params 41804 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 36, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01281 val_mse 0.00881 best 0.00881@0 (88.0s)
+epoch 001 loss 0.00614 val_mse 0.00746 best 0.00746@1 (84.3s)
+epoch 002 loss 0.00558 val_mse 0.00672 best 0.00672@2 (85.9s)
+epoch 003 loss 0.00512 val_mse 0.00628 best 0.00628@3 (84.4s)
+epoch 004 loss 0.00484 val_mse 0.00625 best 0.00625@4 (84.3s)
+epoch 005 loss 0.00469 val_mse 0.00584 best 0.00584@5 (87.6s)
+epoch 006 loss 0.00450 val_mse 0.00563 best 0.00563@6 (56.8s)
+epoch 007 loss 0.00450 val_mse 0.00557 best 0.00557@7 (85.1s)
+epoch 008 loss 0.00429 val_mse 0.00547 best 0.00547@8 (65.0s)
+epoch 009 loss 0.00409 val_mse 0.00524 best 0.00524@9 (86.1s)
+epoch 010 loss 0.00405 val_mse 0.00515 best 0.00515@10 (88.7s)
+epoch 011 loss 0.00405 val_mse 0.00540 best 0.00515@10 (84.7s)
+epoch 012 loss 0.00395 val_mse 0.00505 best 0.00505@12 (85.5s)
+epoch 013 loss 0.00383 val_mse 0.00528 best 0.00505@12 (86.3s)
+epoch 014 loss 0.00376 val_mse 0.00484 best 0.00484@14 (86.5s)
+epoch 015 loss 0.00385 val_mse 0.00497 best 0.00484@14 (85.6s)
+epoch 016 loss 0.00367 val_mse 0.00499 best 0.00484@14 (84.5s)
+epoch 017 loss 0.00362 val_mse 0.00525 best 0.00484@14 (87.1s)
+epoch 018 loss 0.00354 val_mse 0.00486 best 0.00484@14 (86.4s)
+epoch 019 loss 0.00349 val_mse 0.00492 best 0.00484@14 (61.3s)
+epoch 020 loss 0.00342 val_mse 0.00492 best 0.00484@14 (77.9s)
+epoch 021 loss 0.00340 val_mse 0.00487 best 0.00484@14 (77.3s)
+epoch 022 loss 0.00343 val_mse 0.00524 best 0.00484@14 (76.5s)
+epoch 023 loss 0.00333 val_mse 0.00502 best 0.00484@14 (67.2s)
+epoch 024 loss 0.00332 val_mse 0.00504 best 0.00484@14 (68.3s)
+early stop
+  [identity                                  ] MSE 0.00456  MAE 0.03876
+  [random_dropout:0.7                        ] MSE 0.00688  MAE 0.04926
+  [temporal_stride:3                         ] MSE 0.00496  MAE 0.04078
+  [variable_dropout:0.5                      ] MSE 0.01245  MAE 0.06332
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00789  MAE 0.04990
+best {'val_mse': 0.004838577937334776, 'epoch': 14} -> results/raw/bench_physionet_h36_grud_vanilla_s1/results.json
+summary {
+  "clean_mse": 0.004556331317871809,
+  "mean_shift_mse": 0.008044112706556916,
+  "mean_degradation": 0.7654801956575439,
+  "worst_mse": 0.012446343898773193,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.008044112706556916,
+  "mean_unseen_degradation": 0.7654801956575439
+}
+[1/4] ok bench_physionet_h36_grud_vanilla_s1 (43.5 min)
+
+[2/4] bench_physionet_h36_grud_vanilla_s2
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/physionet_h36_baseline.yaml --seed 2 --name bench_physionet_h36_grud_vanilla_s2 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grud --no_wandb
+Total records: 12000
+Dataset n_samples: 12000 7200 2400 2400
+Test record ids (first 20): ['134302', '144753', '137142', '153444', '134906', '154300', '144359', '162459', '141317', '151947', '135968', '136920', '133579', '140585', '142964', '158681', '140670', '143983', '132821', '135775']
+Test record ids (last 20): ['150324', '137692', '151553', '144871', '142022', '142764', '142160', '153909', '144034', '155047', '149146', '138666', '150034', '149577', '144809', '140296', '158002', '146644', '137769', '150611']
+data_max: tensor([9.0000e+01, 1.0000e+00, 4.6230e+02, 4.0000e+00, 4.7200e+02, 5.0000e+00,
+        4.6950e+03, 1.6920e+04, 3.6400e+04, 8.2800e+01, 2.0900e+02, 3.6200e+02,
+        2.2100e+01, 2.8300e+02, 1.0000e+00, 1.5000e+01, 1.5910e+03, 5.2000e+01,
+        6.1800e+01, 2.4500e+02, 2.2900e+01, 3.1000e+01, 3.7500e+01, 3.0000e+02,
+        1.0000e+00, 1.8000e+02, 2.1100e+02, 2.2800e+02, 3.0000e+02, 1.0000e+02,
+        5.0000e+02, 7.3500e+02, 2.2920e+03, 9.8000e+01, 1.0000e+02, 2.8900e+02,
+        4.2200e+01, 4.9600e+01, 2.4910e+01, 1.1000e+04, 6.2519e+03],
+       device='cuda:0')
+data_min: tensor([ 1.5000e+01, -1.0000e+00, -1.0000e+00,  1.0000e+00, -1.0000e+00,
+         1.0000e+00,  8.0000e+00,  1.0000e+00,  4.0000e+00,  0.0000e+00,
+         0.0000e+00,  2.8000e+01,  1.0000e-01, -1.0000e+00,  2.1000e-01,
+         3.0000e+00,  8.0000e+00,  5.0000e+00,  5.0000e+00,  0.0000e+00,
+         1.5000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,  1.0000e+00,
+         9.8000e+01, -1.0000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00,  0.0000e+00,  5.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00, -1.7800e+01,  3.0000e-01,  1.0000e-02,  0.0000e+00,
+         1.0000e-01], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+run bench_physionet_h36_grud_vanilla_s2 | device cuda:0 | params 41804 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 36, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01648 val_mse 0.01043 best 0.01043@0 (78.9s)
+epoch 001 loss 0.00741 val_mse 0.00826 best 0.00826@1 (79.4s)
+epoch 002 loss 0.00612 val_mse 0.00751 best 0.00751@2 (79.2s)
+epoch 003 loss 0.00541 val_mse 0.00693 best 0.00693@3 (77.7s)
+epoch 004 loss 0.00532 val_mse 0.00652 best 0.00652@4 (77.5s)
+epoch 005 loss 0.00482 val_mse 0.00636 best 0.00636@5 (78.7s)
+epoch 006 loss 0.00469 val_mse 0.00597 best 0.00597@6 (81.3s)
+epoch 007 loss 0.00448 val_mse 0.00545 best 0.00545@7 (66.1s)
+epoch 008 loss 0.00439 val_mse 0.00544 best 0.00544@8 (79.9s)
+epoch 009 loss 0.00422 val_mse 0.00543 best 0.00543@9 (79.0s)
+epoch 010 loss 0.00425 val_mse 0.00535 best 0.00535@10 (78.6s)
+epoch 011 loss 0.00407 val_mse 0.00531 best 0.00531@11 (77.9s)
+epoch 012 loss 0.00409 val_mse 0.00547 best 0.00531@11 (79.8s)
+epoch 013 loss 0.00396 val_mse 0.00564 best 0.00531@11 (79.3s)
+epoch 014 loss 0.00401 val_mse 0.00504 best 0.00504@14 (77.3s)
+epoch 015 loss 0.00379 val_mse 0.00487 best 0.00487@15 (79.0s)
+epoch 016 loss 0.00387 val_mse 0.00511 best 0.00487@15 (57.2s)
+epoch 017 loss 0.00375 val_mse 0.00493 best 0.00487@15 (78.3s)
+epoch 018 loss 0.00379 val_mse 0.00497 best 0.00487@15 (75.4s)
+epoch 019 loss 0.00371 val_mse 0.00480 best 0.00480@19 (75.6s)
+epoch 020 loss 0.00371 val_mse 0.00493 best 0.00480@19 (76.4s)
+epoch 021 loss 0.00362 val_mse 0.00495 best 0.00480@19 (74.9s)
+epoch 022 loss 0.00353 val_mse 0.00487 best 0.00480@19 (76.2s)
+epoch 023 loss 0.00347 val_mse 0.00552 best 0.00480@19 (75.1s)
+epoch 024 loss 0.00345 val_mse 0.00464 best 0.00464@24 (74.4s)
+epoch 025 loss 0.00351 val_mse 0.00477 best 0.00464@24 (65.9s)
+epoch 026 loss 0.00348 val_mse 0.00468 best 0.00464@24 (75.4s)
+epoch 027 loss 0.00328 val_mse 0.00473 best 0.00464@24 (76.6s)
+epoch 028 loss 0.00334 val_mse 0.00511 best 0.00464@24 (76.7s)
+epoch 029 loss 0.00325 val_mse 0.00475 best 0.00464@24 (78.1s)
+epoch 030 loss 0.00322 val_mse 0.00498 best 0.00464@24 (75.1s)
+epoch 031 loss 0.00324 val_mse 0.00501 best 0.00464@24 (78.8s)
+epoch 032 loss 0.00323 val_mse 0.00481 best 0.00464@24 (78.3s)
+epoch 033 loss 0.00324 val_mse 0.00495 best 0.00464@24 (75.3s)
+epoch 034 loss 0.00317 val_mse 0.00542 best 0.00464@24 (75.6s)
+early stop
+  [identity                                  ] MSE 0.00458  MAE 0.03839
+  [random_dropout:0.7                        ] MSE 0.00712  MAE 0.04958
+  [temporal_stride:3                         ] MSE 0.00536  MAE 0.04263
+  [variable_dropout:0.5                      ] MSE 0.01113  MAE 0.06167
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00754  MAE 0.05036
+best {'val_mse': 0.004636202938854694, 'epoch': 24} -> results/raw/bench_physionet_h36_grud_vanilla_s2/results.json
+summary {
+  "clean_mse": 0.004579199943691492,
+  "mean_shift_mse": 0.007786666159518063,
+  "mean_degradation": 0.7004424911048748,
+  "worst_mse": 0.011127009987831116,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.007786666159518063,
+  "mean_unseen_degradation": 0.7004424911048748
+}
+[2/4] ok bench_physionet_h36_grud_vanilla_s2 (56.9 min)
+
+[3/4] bench_physionet_h36_grud_vanilla_s3
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/physionet_h36_baseline.yaml --seed 3 --name bench_physionet_h36_grud_vanilla_s3 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grud --no_wandb
+Total records: 12000
+Dataset n_samples: 12000 7200 2400 2400
+Test record ids (first 20): ['134302', '144753', '137142', '153444', '134906', '154300', '144359', '162459', '141317', '151947', '135968', '136920', '133579', '140585', '142964', '158681', '140670', '143983', '132821', '135775']
+Test record ids (last 20): ['150324', '137692', '151553', '144871', '142022', '142764', '142160', '153909', '144034', '155047', '149146', '138666', '150034', '149577', '144809', '140296', '158002', '146644', '137769', '150611']
+data_max: tensor([9.0000e+01, 1.0000e+00, 4.6230e+02, 4.0000e+00, 4.7200e+02, 5.0000e+00,
+        4.6950e+03, 1.6920e+04, 3.6400e+04, 8.2800e+01, 2.0900e+02, 3.6200e+02,
+        2.2100e+01, 2.8300e+02, 1.0000e+00, 1.5000e+01, 1.5910e+03, 5.2000e+01,
+        6.1800e+01, 2.4500e+02, 2.2900e+01, 3.1000e+01, 3.7500e+01, 3.0000e+02,
+        1.0000e+00, 1.8000e+02, 2.1100e+02, 2.2800e+02, 3.0000e+02, 1.0000e+02,
+        5.0000e+02, 7.3500e+02, 2.2920e+03, 9.8000e+01, 1.0000e+02, 2.8900e+02,
+        4.2200e+01, 4.9600e+01, 2.4910e+01, 1.1000e+04, 6.2519e+03],
+       device='cuda:0')
+data_min: tensor([ 1.5000e+01, -1.0000e+00, -1.0000e+00,  1.0000e+00, -1.0000e+00,
+         1.0000e+00,  8.0000e+00,  1.0000e+00,  4.0000e+00,  0.0000e+00,
+         0.0000e+00,  2.8000e+01,  1.0000e-01, -1.0000e+00,  2.1000e-01,
+         3.0000e+00,  8.0000e+00,  5.0000e+00,  5.0000e+00,  0.0000e+00,
+         1.5000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,  1.0000e+00,
+         9.8000e+01, -1.0000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00,  0.0000e+00,  5.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00, -1.7800e+01,  3.0000e-01,  1.0000e-02,  0.0000e+00,
+         1.0000e-01], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+run bench_physionet_h36_grud_vanilla_s3 | device cuda:0 | params 41804 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 36, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01570 val_mse 0.01006 best 0.01006@0 (77.5s)
+epoch 001 loss 0.00653 val_mse 0.00849 best 0.00849@1 (54.5s)
+epoch 002 loss 0.00577 val_mse 0.00680 best 0.00680@2 (76.1s)
+epoch 003 loss 0.00532 val_mse 0.00604 best 0.00604@3 (75.9s)
+epoch 004 loss 0.00494 val_mse 0.00570 best 0.00570@4 (74.8s)
+epoch 005 loss 0.00481 val_mse 0.00561 best 0.00561@5 (75.2s)
+epoch 006 loss 0.00466 val_mse 0.00548 best 0.00548@6 (76.9s)
+epoch 007 loss 0.00448 val_mse 0.00538 best 0.00538@7 (77.6s)
+epoch 008 loss 0.00434 val_mse 0.00622 best 0.00538@7 (74.1s)
+epoch 009 loss 0.00442 val_mse 0.00609 best 0.00538@7 (76.1s)
+epoch 010 loss 0.00407 val_mse 0.00495 best 0.00495@10 (75.7s)
+epoch 011 loss 0.00404 val_mse 0.00495 best 0.00495@10 (78.3s)
+epoch 012 loss 0.00392 val_mse 0.00564 best 0.00495@10 (75.6s)
+epoch 013 loss 0.00389 val_mse 0.00519 best 0.00495@10 (75.1s)
+epoch 014 loss 0.00391 val_mse 0.00543 best 0.00495@10 (76.1s)
+epoch 015 loss 0.00382 val_mse 0.00484 best 0.00484@15 (76.1s)
+epoch 016 loss 0.00370 val_mse 0.00493 best 0.00484@15 (75.2s)
+epoch 017 loss 0.00364 val_mse 0.00490 best 0.00484@15 (76.1s)
+epoch 018 loss 0.00359 val_mse 0.00511 best 0.00484@15 (76.3s)
+epoch 019 loss 0.00355 val_mse 0.00522 best 0.00484@15 (75.6s)
+epoch 020 loss 0.00348 val_mse 0.00461 best 0.00461@20 (75.4s)
+epoch 021 loss 0.00348 val_mse 0.00546 best 0.00461@20 (75.1s)
+epoch 022 loss 0.00355 val_mse 0.00519 best 0.00461@20 (75.4s)
+epoch 023 loss 0.00351 val_mse 0.00477 best 0.00461@20 (52.8s)
+epoch 024 loss 0.00338 val_mse 0.00531 best 0.00461@20 (34.7s)
+epoch 025 loss 0.00335 val_mse 0.00477 best 0.00461@20 (72.1s)
+epoch 026 loss 0.00333 val_mse 0.00500 best 0.00461@20 (75.5s)
+epoch 027 loss 0.00324 val_mse 0.00483 best 0.00461@20 (74.0s)
+epoch 028 loss 0.00326 val_mse 0.00499 best 0.00461@20 (74.2s)
+epoch 029 loss 0.00330 val_mse 0.00556 best 0.00461@20 (76.4s)
+epoch 030 loss 0.00331 val_mse 0.00478 best 0.00461@20 (76.7s)
+early stop
+  [identity                                  ] MSE 0.00481  MAE 0.03849
+  [random_dropout:0.7                        ] MSE 0.00658  MAE 0.04706
+  [temporal_stride:3                         ] MSE 0.00546  MAE 0.04214
+  [variable_dropout:0.5                      ] MSE 0.01197  MAE 0.06169
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00739  MAE 0.04851
+best {'val_mse': 0.004607128910720348, 'epoch': 20} -> results/raw/bench_physionet_h36_grud_vanilla_s3/results.json
+summary {
+  "clean_mse": 0.004811723716557026,
+  "mean_shift_mse": 0.007850897614844143,
+  "mean_degradation": 0.6316185378286356,
+  "worst_mse": 0.011968575417995453,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.007850897614844143,
+  "mean_unseen_degradation": 0.6316185378286356
+}
+[3/4] ok bench_physionet_h36_grud_vanilla_s3 (48.7 min)
+
+[4/4] bench_physionet_h36_grud_vanilla_s4
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/physionet_h36_baseline.yaml --seed 4 --name bench_physionet_h36_grud_vanilla_s4 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grud --no_wandb
+Total records: 12000
+Dataset n_samples: 12000 7200 2400 2400
+Test record ids (first 20): ['134302', '144753', '137142', '153444', '134906', '154300', '144359', '162459', '141317', '151947', '135968', '136920', '133579', '140585', '142964', '158681', '140670', '143983', '132821', '135775']
+Test record ids (last 20): ['150324', '137692', '151553', '144871', '142022', '142764', '142160', '153909', '144034', '155047', '149146', '138666', '150034', '149577', '144809', '140296', '158002', '146644', '137769', '150611']
+data_max: tensor([9.0000e+01, 1.0000e+00, 4.6230e+02, 4.0000e+00, 4.7200e+02, 5.0000e+00,
+        4.6950e+03, 1.6920e+04, 3.6400e+04, 8.2800e+01, 2.0900e+02, 3.6200e+02,
+        2.2100e+01, 2.8300e+02, 1.0000e+00, 1.5000e+01, 1.5910e+03, 5.2000e+01,
+        6.1800e+01, 2.4500e+02, 2.2900e+01, 3.1000e+01, 3.7500e+01, 3.0000e+02,
+        1.0000e+00, 1.8000e+02, 2.1100e+02, 2.2800e+02, 3.0000e+02, 1.0000e+02,
+        5.0000e+02, 7.3500e+02, 2.2920e+03, 9.8000e+01, 1.0000e+02, 2.8900e+02,
+        4.2200e+01, 4.9600e+01, 2.4910e+01, 1.1000e+04, 6.2519e+03],
+       device='cuda:0')
+data_min: tensor([ 1.5000e+01, -1.0000e+00, -1.0000e+00,  1.0000e+00, -1.0000e+00,
+         1.0000e+00,  8.0000e+00,  1.0000e+00,  4.0000e+00,  0.0000e+00,
+         0.0000e+00,  2.8000e+01,  1.0000e-01, -1.0000e+00,  2.1000e-01,
+         3.0000e+00,  8.0000e+00,  5.0000e+00,  5.0000e+00,  0.0000e+00,
+         1.5000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,  1.0000e+00,
+         9.8000e+01, -1.0000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00,  0.0000e+00,  5.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00, -1.7800e+01,  3.0000e-01,  1.0000e-02,  0.0000e+00,
+         1.0000e-01], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+run bench_physionet_h36_grud_vanilla_s4 | device cuda:0 | params 41804 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 36, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01261 val_mse 0.00875 best 0.00875@0 (76.9s)
+epoch 001 loss 0.00633 val_mse 0.00738 best 0.00738@1 (75.8s)
+epoch 002 loss 0.00555 val_mse 0.00633 best 0.00633@2 (77.2s)
+epoch 003 loss 0.00515 val_mse 0.00612 best 0.00612@3 (79.4s)
+epoch 004 loss 0.00478 val_mse 0.00579 best 0.00579@4 (75.2s)
+epoch 005 loss 0.00475 val_mse 0.00540 best 0.00540@5 (76.2s)
+epoch 006 loss 0.00449 val_mse 0.00580 best 0.00540@5 (75.1s)
+epoch 007 loss 0.00431 val_mse 0.00526 best 0.00526@7 (76.5s)
+epoch 008 loss 0.00431 val_mse 0.00529 best 0.00526@7 (74.5s)
+epoch 009 loss 0.00415 val_mse 0.00507 best 0.00507@9 (76.9s)
+epoch 010 loss 0.00395 val_mse 0.00495 best 0.00495@10 (76.8s)
+epoch 011 loss 0.00393 val_mse 0.00508 best 0.00495@10 (78.3s)
+epoch 012 loss 0.00387 val_mse 0.00502 best 0.00495@10 (80.3s)
+epoch 013 loss 0.00390 val_mse 0.00494 best 0.00494@13 (40.4s)
+epoch 014 loss 0.00385 val_mse 0.00496 best 0.00494@13 (44.6s)
+epoch 015 loss 0.00371 val_mse 0.00463 best 0.00463@15 (51.7s)
+epoch 016 loss 0.00366 val_mse 0.00494 best 0.00463@15 (51.6s)
+epoch 017 loss 0.00362 val_mse 0.00491 best 0.00463@15 (52.2s)
+epoch 018 loss 0.00359 val_mse 0.00459 best 0.00459@18 (51.2s)
+epoch 019 loss 0.00358 val_mse 0.00468 best 0.00459@18 (50.9s)
+epoch 020 loss 0.00348 val_mse 0.00456 best 0.00456@20 (51.0s)
+epoch 021 loss 0.00351 val_mse 0.00499 best 0.00456@20 (51.3s)
+epoch 022 loss 0.00335 val_mse 0.00460 best 0.00456@20 (51.8s)
+epoch 023 loss 0.00342 val_mse 0.00465 best 0.00456@20 (52.2s)
+epoch 024 loss 0.00334 val_mse 0.00461 best 0.00456@20 (50.6s)
+epoch 025 loss 0.00335 val_mse 0.00473 best 0.00456@20 (52.2s)
+epoch 026 loss 0.00326 val_mse 0.00468 best 0.00456@20 (51.6s)
+epoch 027 loss 0.00325 val_mse 0.00456 best 0.00456@27 (51.8s)
+epoch 028 loss 0.00326 val_mse 0.00474 best 0.00456@27 (51.4s)
+epoch 029 loss 0.00325 val_mse 0.00473 best 0.00456@27 (34.7s)
+epoch 030 loss 0.00319 val_mse 0.00456 best 0.00456@27 (51.6s)
+epoch 031 loss 0.00317 val_mse 0.00484 best 0.00456@27 (52.6s)
+epoch 032 loss 0.00318 val_mse 0.00445 best 0.00445@32 (50.6s)
+epoch 033 loss 0.00319 val_mse 0.00478 best 0.00445@32 (50.7s)
+epoch 034 loss 0.00316 val_mse 0.00477 best 0.00445@32 (50.4s)
+epoch 035 loss 0.00310 val_mse 0.00472 best 0.00445@32 (52.5s)
+epoch 036 loss 0.00310 val_mse 0.00479 best 0.00445@32 (50.9s)
+epoch 037 loss 0.00304 val_mse 0.00480 best 0.00445@32 (51.4s)
+epoch 038 loss 0.00307 val_mse 0.00481 best 0.00445@32 (51.0s)
+epoch 039 loss 0.00300 val_mse 0.00494 best 0.00445@32 (51.7s)
+  [identity                                  ] MSE 0.00425  MAE 0.03670
+  [random_dropout:0.7                        ] MSE 0.00659  MAE 0.04735
+  [temporal_stride:3                         ] MSE 0.00519  MAE 0.04064
+  [variable_dropout:0.5                      ] MSE 0.01071  MAE 0.06286
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00732  MAE 0.04937
+best {'val_mse': 0.00445189094170928, 'epoch': 32} -> results/raw/bench_physionet_h36_grud_vanilla_s4/results.json
+summary {
+  "clean_mse": 0.004250471014529467,
+  "mean_shift_mse": 0.007451116223819554,
+  "mean_degradation": 0.75300953667235,
+  "worst_mse": 0.010705199092626572,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.007451116223819554,
+  "mean_unseen_degradation": 0.75300953667235
+}
+[4/4] ok bench_physionet_h36_grud_vanilla_s4 (49.3 min)
+
+stage B: 4 ok, 0 failed
+stage C: 1 cells
+
+[1/1] bench_physionet_h36_grud_opera_s0
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/physionet_h36_distillation.yaml --seed 0 --name bench_physionet_h36_grud_opera_s0 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grud distillation.teacher_ckpt=results/raw/bench_physionet_h36_grud_vanilla_s0/model.pt --no_wandb
+Total records: 12000
+Dataset n_samples: 12000 7200 2400 2400
+Test record ids (first 20): ['134302', '144753', '137142', '153444', '134906', '154300', '144359', '162459', '141317', '151947', '135968', '136920', '133579', '140585', '142964', '158681', '140670', '143983', '132821', '135775']
+Test record ids (last 20): ['150324', '137692', '151553', '144871', '142022', '142764', '142160', '153909', '144034', '155047', '149146', '138666', '150034', '149577', '144809', '140296', '158002', '146644', '137769', '150611']
+data_max: tensor([9.0000e+01, 1.0000e+00, 4.6230e+02, 4.0000e+00, 4.7200e+02, 5.0000e+00,
+        4.6950e+03, 1.6920e+04, 3.6400e+04, 8.2800e+01, 2.0900e+02, 3.6200e+02,
+        2.2100e+01, 2.8300e+02, 1.0000e+00, 1.5000e+01, 1.5910e+03, 5.2000e+01,
+        6.1800e+01, 2.4500e+02, 2.2900e+01, 3.1000e+01, 3.7500e+01, 3.0000e+02,
+        1.0000e+00, 1.8000e+02, 2.1100e+02, 2.2800e+02, 3.0000e+02, 1.0000e+02,
+        5.0000e+02, 7.3500e+02, 2.2920e+03, 9.8000e+01, 1.0000e+02, 2.8900e+02,
+        4.2200e+01, 4.9600e+01, 2.4910e+01, 1.1000e+04, 6.2519e+03],
+       device='cuda:0')
+data_min: tensor([ 1.5000e+01, -1.0000e+00, -1.0000e+00,  1.0000e+00, -1.0000e+00,
+         1.0000e+00,  8.0000e+00,  1.0000e+00,  4.0000e+00,  0.0000e+00,
+         0.0000e+00,  2.8000e+01,  1.0000e-01, -1.0000e+00,  2.1000e-01,
+         3.0000e+00,  8.0000e+00,  5.0000e+00,  5.0000e+00,  0.0000e+00,
+         1.5000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,  1.0000e+00,
+         9.8000e+01, -1.0000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00,  0.0000e+00,  5.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00, -1.7800e+01,  3.0000e-01,  1.0000e-02,  0.0000e+00,
+         1.0000e-01], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+run bench_physionet_h36_grud_opera_s0 | device cuda:0 | params 41804 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 36, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_physionet_h36_grud_vanilla_s0/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.02891 val_mse 0.00931 best 0.00931@0 (90.0s)
+epoch 001 loss 0.00916 val_mse 0.00873 best 0.00873@1 (73.8s)
+epoch 002 loss 0.00834 val_mse 0.00781 best 0.00781@2 (49.7s)
+epoch 003 loss 0.00757 val_mse 0.00748 best 0.00748@3 (50.1s)
+epoch 004 loss 0.00700 val_mse 0.00673 best 0.00673@4 (49.5s)
+epoch 005 loss 0.00665 val_mse 0.00643 best 0.00643@5 (49.8s)
+epoch 006 loss 0.00635 val_mse 0.00610 best 0.00610@6 (49.6s)
+epoch 007 loss 0.00609 val_mse 0.00603 best 0.00603@7 (49.1s)
+epoch 008 loss 0.00578 val_mse 0.00598 best 0.00598@8 (49.6s)
+epoch 009 loss 0.00566 val_mse 0.00582 best 0.00582@9 (49.8s)
+epoch 010 loss 0.00564 val_mse 0.00555 best 0.00555@10 (49.3s)
+epoch 011 loss 0.00541 val_mse 0.00587 best 0.00555@10 (49.2s)
+epoch 012 loss 0.00512 val_mse 0.00532 best 0.00532@12 (49.4s)
+epoch 013 loss 0.00501 val_mse 0.00538 best 0.00532@12 (49.4s)
+epoch 014 loss 0.00499 val_mse 0.00518 best 0.00518@14 (49.8s)
+epoch 015 loss 0.00498 val_mse 0.00520 best 0.00518@14 (49.4s)
+epoch 016 loss 0.00490 val_mse 0.00510 best 0.00510@16 (49.8s)
+epoch 017 loss 0.00466 val_mse 0.00503 best 0.00503@17 (49.3s)
+epoch 018 loss 0.00475 val_mse 0.00530 best 0.00503@17 (49.8s)
+epoch 019 loss 0.00467 val_mse 0.00517 best 0.00503@17 (49.2s)
+epoch 020 loss 0.00449 val_mse 0.00494 best 0.00494@20 (50.1s)
+epoch 021 loss 0.00463 val_mse 0.00522 best 0.00494@20 (50.0s)
+epoch 022 loss 0.00441 val_mse 0.00502 best 0.00494@20 (49.7s)
+epoch 023 loss 0.00445 val_mse 0.00516 best 0.00494@20 (49.6s)
+epoch 024 loss 0.00450 val_mse 0.00528 best 0.00494@20 (49.6s)
+epoch 025 loss 0.00452 val_mse 0.00482 best 0.00482@25 (49.5s)
+epoch 026 loss 0.00435 val_mse 0.00520 best 0.00482@25 (49.3s)
+epoch 027 loss 0.00445 val_mse 0.00502 best 0.00482@25 (49.7s)
+epoch 028 loss 0.00431 val_mse 0.00481 best 0.00481@28 (51.1s)
+epoch 029 loss 0.00427 val_mse 0.00475 best 0.00475@29 (50.5s)
+epoch 030 loss 0.00423 val_mse 0.00472 best 0.00472@30 (49.4s)
+epoch 031 loss 0.00419 val_mse 0.00503 best 0.00472@30 (49.5s)
+epoch 032 loss 0.00419 val_mse 0.00477 best 0.00472@30 (49.0s)
+epoch 033 loss 0.00413 val_mse 0.00471 best 0.00471@33 (49.7s)
+epoch 034 loss 0.00411 val_mse 0.00491 best 0.00471@33 (49.9s)
+epoch 035 loss 0.00419 val_mse 0.00503 best 0.00471@33 (50.4s)
+epoch 036 loss 0.00410 val_mse 0.00480 best 0.00471@33 (50.4s)
+epoch 037 loss 0.00419 val_mse 0.00512 best 0.00471@33 (50.1s)
+epoch 038 loss 0.00417 val_mse 0.00503 best 0.00471@33 (50.8s)
+epoch 039 loss 0.00422 val_mse 0.00504 best 0.00471@33 (50.4s)
+  [identity                                  ] MSE 0.00483  MAE 0.03791
+  [random_dropout:0.7                        ] MSE 0.00587  MAE 0.04171
+  [temporal_stride:3                         ] MSE 0.00515  MAE 0.03979
+  [variable_dropout:0.5                      ] MSE 0.00701  MAE 0.04576
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00586  MAE 0.04234
+best {'val_mse': 0.004713898524641991, 'epoch': 33} -> results/raw/bench_physionet_h36_grud_opera_s0/results.json
+summary {
+  "clean_mse": 0.00482670683413744,
+  "mean_shift_mse": 0.00597341253887862,
+  "mean_degradation": 0.23757517167418826,
+  "worst_mse": 0.007008249871432781,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.00597341253887862,
+  "mean_unseen_degradation": 0.23757517167418826
+}
+[1/1] ok bench_physionet_h36_grud_opera_s0 (37.8 min)
+
+stage C: 1 ok, 0 failed
+stage D: 4 cells
+
+[1/4] bench_physionet_h36_grud_opera_s1
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/physionet_h36_distillation.yaml --seed 1 --name bench_physionet_h36_grud_opera_s1 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grud distillation.teacher_ckpt=results/raw/bench_physionet_h36_grud_vanilla_s1/model.pt --no_wandb
+Total records: 12000
+Dataset n_samples: 12000 7200 2400 2400
+Test record ids (first 20): ['134302', '144753', '137142', '153444', '134906', '154300', '144359', '162459', '141317', '151947', '135968', '136920', '133579', '140585', '142964', '158681', '140670', '143983', '132821', '135775']
+Test record ids (last 20): ['150324', '137692', '151553', '144871', '142022', '142764', '142160', '153909', '144034', '155047', '149146', '138666', '150034', '149577', '144809', '140296', '158002', '146644', '137769', '150611']
+data_max: tensor([9.0000e+01, 1.0000e+00, 4.6230e+02, 4.0000e+00, 4.7200e+02, 5.0000e+00,
+        4.6950e+03, 1.6920e+04, 3.6400e+04, 8.2800e+01, 2.0900e+02, 3.6200e+02,
+        2.2100e+01, 2.8300e+02, 1.0000e+00, 1.5000e+01, 1.5910e+03, 5.2000e+01,
+        6.1800e+01, 2.4500e+02, 2.2900e+01, 3.1000e+01, 3.7500e+01, 3.0000e+02,
+        1.0000e+00, 1.8000e+02, 2.1100e+02, 2.2800e+02, 3.0000e+02, 1.0000e+02,
+        5.0000e+02, 7.3500e+02, 2.2920e+03, 9.8000e+01, 1.0000e+02, 2.8900e+02,
+        4.2200e+01, 4.9600e+01, 2.4910e+01, 1.1000e+04, 6.2519e+03],
+       device='cuda:0')
+data_min: tensor([ 1.5000e+01, -1.0000e+00, -1.0000e+00,  1.0000e+00, -1.0000e+00,
+         1.0000e+00,  8.0000e+00,  1.0000e+00,  4.0000e+00,  0.0000e+00,
+         0.0000e+00,  2.8000e+01,  1.0000e-01, -1.0000e+00,  2.1000e-01,
+         3.0000e+00,  8.0000e+00,  5.0000e+00,  5.0000e+00,  0.0000e+00,
+         1.5000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,  1.0000e+00,
+         9.8000e+01, -1.0000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00,  0.0000e+00,  5.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00, -1.7800e+01,  3.0000e-01,  1.0000e-02,  0.0000e+00,
+         1.0000e-01], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+run bench_physionet_h36_grud_opera_s1 | device cuda:0 | params 41804 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 36, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_physionet_h36_grud_vanilla_s1/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01989 val_mse 0.00882 best 0.00882@0 (51.5s)
+epoch 001 loss 0.00794 val_mse 0.00773 best 0.00773@1 (51.4s)
+epoch 002 loss 0.00703 val_mse 0.00717 best 0.00717@2 (51.3s)
+epoch 003 loss 0.00620 val_mse 0.00608 best 0.00608@3 (51.9s)
+epoch 004 loss 0.00592 val_mse 0.00682 best 0.00608@3 (51.2s)
+epoch 005 loss 0.00547 val_mse 0.00562 best 0.00562@5 (51.5s)
+epoch 006 loss 0.00534 val_mse 0.00543 best 0.00543@6 (50.7s)
+epoch 007 loss 0.00501 val_mse 0.00546 best 0.00543@6 (51.0s)
+epoch 008 loss 0.00490 val_mse 0.00562 best 0.00543@6 (50.4s)
+epoch 009 loss 0.00498 val_mse 0.00518 best 0.00518@9 (50.4s)
+epoch 010 loss 0.00484 val_mse 0.00560 best 0.00518@9 (50.4s)
+epoch 011 loss 0.00468 val_mse 0.00517 best 0.00517@11 (50.3s)
+epoch 012 loss 0.00473 val_mse 0.00501 best 0.00501@12 (49.7s)
+epoch 013 loss 0.00455 val_mse 0.00503 best 0.00501@12 (50.6s)
+epoch 014 loss 0.00448 val_mse 0.00496 best 0.00496@14 (50.0s)
+epoch 015 loss 0.00448 val_mse 0.00483 best 0.00483@15 (49.7s)
+epoch 016 loss 0.00440 val_mse 0.00515 best 0.00483@15 (51.2s)
+epoch 017 loss 0.00438 val_mse 0.00514 best 0.00483@15 (50.2s)
+epoch 018 loss 0.00454 val_mse 0.00496 best 0.00483@15 (49.6s)
+epoch 019 loss 0.00439 val_mse 0.00482 best 0.00482@19 (49.9s)
+epoch 020 loss 0.00443 val_mse 0.00525 best 0.00482@19 (49.8s)
+epoch 021 loss 0.00436 val_mse 0.00523 best 0.00482@19 (51.5s)
+epoch 022 loss 0.00428 val_mse 0.00521 best 0.00482@19 (50.8s)
+epoch 023 loss 0.00419 val_mse 0.00467 best 0.00467@23 (50.6s)
+epoch 024 loss 0.00415 val_mse 0.00493 best 0.00467@23 (50.3s)
+epoch 025 loss 0.00415 val_mse 0.00488 best 0.00467@23 (50.0s)
+epoch 026 loss 0.00412 val_mse 0.00508 best 0.00467@23 (50.2s)
+epoch 027 loss 0.00411 val_mse 0.00493 best 0.00467@23 (50.0s)
+epoch 028 loss 0.00422 val_mse 0.00498 best 0.00467@23 (50.9s)
+epoch 029 loss 0.00406 val_mse 0.00495 best 0.00467@23 (50.7s)
+epoch 030 loss 0.00412 val_mse 0.00556 best 0.00467@23 (52.2s)
+epoch 031 loss 0.00419 val_mse 0.00472 best 0.00467@23 (50.4s)
+epoch 032 loss 0.00410 val_mse 0.00481 best 0.00467@23 (51.5s)
+epoch 033 loss 0.00411 val_mse 0.00508 best 0.00467@23 (50.8s)
+early stop
+  [identity                                  ] MSE 0.00456  MAE 0.03872
+  [random_dropout:0.7                        ] MSE 0.00563  MAE 0.04239
+  [temporal_stride:3                         ] MSE 0.00489  MAE 0.03957
+  [variable_dropout:0.5                      ] MSE 0.00700  MAE 0.04725
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00573  MAE 0.04288
+best {'val_mse': 0.004674400668591261, 'epoch': 23} -> results/raw/bench_physionet_h36_grud_opera_s1/results.json
+summary {
+  "clean_mse": 0.004556195344775915,
+  "mean_shift_mse": 0.005813161260448396,
+  "mean_degradation": 0.2758806022471588,
+  "worst_mse": 0.007000903133302927,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.005813161260448396,
+  "mean_unseen_degradation": 0.2758806022471588
+}
+[1/4] ok bench_physionet_h36_grud_opera_s1 (31.5 min)
+
+[2/4] bench_physionet_h36_grud_opera_s2
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/physionet_h36_distillation.yaml --seed 2 --name bench_physionet_h36_grud_opera_s2 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grud distillation.teacher_ckpt=results/raw/bench_physionet_h36_grud_vanilla_s2/model.pt --no_wandb
+Total records: 12000
+Dataset n_samples: 12000 7200 2400 2400
+Test record ids (first 20): ['134302', '144753', '137142', '153444', '134906', '154300', '144359', '162459', '141317', '151947', '135968', '136920', '133579', '140585', '142964', '158681', '140670', '143983', '132821', '135775']
+Test record ids (last 20): ['150324', '137692', '151553', '144871', '142022', '142764', '142160', '153909', '144034', '155047', '149146', '138666', '150034', '149577', '144809', '140296', '158002', '146644', '137769', '150611']
+data_max: tensor([9.0000e+01, 1.0000e+00, 4.6230e+02, 4.0000e+00, 4.7200e+02, 5.0000e+00,
+        4.6950e+03, 1.6920e+04, 3.6400e+04, 8.2800e+01, 2.0900e+02, 3.6200e+02,
+        2.2100e+01, 2.8300e+02, 1.0000e+00, 1.5000e+01, 1.5910e+03, 5.2000e+01,
+        6.1800e+01, 2.4500e+02, 2.2900e+01, 3.1000e+01, 3.7500e+01, 3.0000e+02,
+        1.0000e+00, 1.8000e+02, 2.1100e+02, 2.2800e+02, 3.0000e+02, 1.0000e+02,
+        5.0000e+02, 7.3500e+02, 2.2920e+03, 9.8000e+01, 1.0000e+02, 2.8900e+02,
+        4.2200e+01, 4.9600e+01, 2.4910e+01, 1.1000e+04, 6.2519e+03],
+       device='cuda:0')
+data_min: tensor([ 1.5000e+01, -1.0000e+00, -1.0000e+00,  1.0000e+00, -1.0000e+00,
+         1.0000e+00,  8.0000e+00,  1.0000e+00,  4.0000e+00,  0.0000e+00,
+         0.0000e+00,  2.8000e+01,  1.0000e-01, -1.0000e+00,  2.1000e-01,
+         3.0000e+00,  8.0000e+00,  5.0000e+00,  5.0000e+00,  0.0000e+00,
+         1.5000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,  1.0000e+00,
+         9.8000e+01, -1.0000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00,  0.0000e+00,  5.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00, -1.7800e+01,  3.0000e-01,  1.0000e-02,  0.0000e+00,
+         1.0000e-01], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+run bench_physionet_h36_grud_opera_s2 | device cuda:0 | params 41804 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 36, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_physionet_h36_grud_vanilla_s2/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.02740 val_mse 0.00917 best 0.00917@0 (51.7s)
+epoch 001 loss 0.00894 val_mse 0.00814 best 0.00814@1 (50.6s)
+epoch 002 loss 0.00806 val_mse 0.00754 best 0.00754@2 (50.5s)
+epoch 003 loss 0.00722 val_mse 0.00777 best 0.00754@2 (50.9s)
+epoch 004 loss 0.00676 val_mse 0.00662 best 0.00662@4 (50.7s)
+epoch 005 loss 0.00617 val_mse 0.00631 best 0.00631@5 (50.9s)
+epoch 006 loss 0.00589 val_mse 0.00594 best 0.00594@6 (51.5s)
+epoch 007 loss 0.00581 val_mse 0.00595 best 0.00594@6 (50.6s)
+epoch 008 loss 0.00550 val_mse 0.00568 best 0.00568@8 (50.6s)
+epoch 009 loss 0.00546 val_mse 0.00557 best 0.00557@9 (50.7s)
+epoch 010 loss 0.00513 val_mse 0.00549 best 0.00549@10 (51.1s)
+epoch 011 loss 0.00497 val_mse 0.00524 best 0.00524@11 (51.0s)
+epoch 012 loss 0.00496 val_mse 0.00549 best 0.00524@11 (50.6s)
+epoch 013 loss 0.00498 val_mse 0.00505 best 0.00505@13 (50.9s)
+epoch 014 loss 0.00483 val_mse 0.00504 best 0.00504@14 (51.0s)
+epoch 015 loss 0.00466 val_mse 0.00536 best 0.00504@14 (51.3s)
+epoch 016 loss 0.00459 val_mse 0.00495 best 0.00495@16 (50.8s)
+epoch 017 loss 0.00462 val_mse 0.00489 best 0.00489@17 (50.6s)
+epoch 018 loss 0.00475 val_mse 0.00522 best 0.00489@17 (50.7s)
+epoch 019 loss 0.00455 val_mse 0.00501 best 0.00489@17 (50.4s)
+epoch 020 loss 0.00445 val_mse 0.00493 best 0.00489@17 (50.5s)
+epoch 021 loss 0.00450 val_mse 0.00506 best 0.00489@17 (50.6s)
+epoch 022 loss 0.00440 val_mse 0.00491 best 0.00489@17 (50.8s)
+epoch 023 loss 0.00443 val_mse 0.00489 best 0.00489@23 (50.3s)
+epoch 024 loss 0.00441 val_mse 0.00504 best 0.00489@23 (50.8s)
+epoch 025 loss 0.00423 val_mse 0.00508 best 0.00489@23 (51.4s)
+epoch 026 loss 0.00426 val_mse 0.00507 best 0.00489@23 (51.5s)
+epoch 027 loss 0.00424 val_mse 0.00493 best 0.00489@23 (51.4s)
+epoch 028 loss 0.00422 val_mse 0.00482 best 0.00482@28 (52.5s)
+epoch 029 loss 0.00420 val_mse 0.00491 best 0.00482@28 (51.1s)
+epoch 030 loss 0.00408 val_mse 0.00491 best 0.00482@28 (50.0s)
+epoch 031 loss 0.00415 val_mse 0.00509 best 0.00482@28 (50.5s)
+epoch 032 loss 0.00427 val_mse 0.00518 best 0.00482@28 (49.9s)
+epoch 033 loss 0.00415 val_mse 0.00502 best 0.00482@28 (49.8s)
+epoch 034 loss 0.00416 val_mse 0.00491 best 0.00482@28 (49.6s)
+epoch 035 loss 0.00418 val_mse 0.00524 best 0.00482@28 (49.7s)
+epoch 036 loss 0.00416 val_mse 0.00493 best 0.00482@28 (50.0s)
+epoch 037 loss 0.00417 val_mse 0.00537 best 0.00482@28 (50.0s)
+epoch 038 loss 0.00410 val_mse 0.00514 best 0.00482@28 (49.9s)
+early stop
+  [identity                                  ] MSE 0.00441  MAE 0.03703
+  [random_dropout:0.7                        ] MSE 0.00564  MAE 0.04144
+  [temporal_stride:3                         ] MSE 0.00480  MAE 0.03857
+  [variable_dropout:0.5                      ] MSE 0.00677  MAE 0.04609
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00570  MAE 0.04208
+best {'val_mse': 0.004823117051273584, 'epoch': 28} -> results/raw/bench_physionet_h36_grud_opera_s2/results.json
+summary {
+  "clean_mse": 0.0044057234190404415,
+  "mean_shift_mse": 0.0057283188216388226,
+  "mean_degradation": 0.30019937177228434,
+  "worst_mse": 0.006768555846065283,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.0057283188216388226,
+  "mean_unseen_degradation": 0.30019937177228434
+}
+[2/4] ok bench_physionet_h36_grud_opera_s2 (36.1 min)
+
+[3/4] bench_physionet_h36_grud_opera_s3
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/physionet_h36_distillation.yaml --seed 3 --name bench_physionet_h36_grud_opera_s3 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grud distillation.teacher_ckpt=results/raw/bench_physionet_h36_grud_vanilla_s3/model.pt --no_wandb
+Total records: 12000
+Dataset n_samples: 12000 7200 2400 2400
+Test record ids (first 20): ['134302', '144753', '137142', '153444', '134906', '154300', '144359', '162459', '141317', '151947', '135968', '136920', '133579', '140585', '142964', '158681', '140670', '143983', '132821', '135775']
+Test record ids (last 20): ['150324', '137692', '151553', '144871', '142022', '142764', '142160', '153909', '144034', '155047', '149146', '138666', '150034', '149577', '144809', '140296', '158002', '146644', '137769', '150611']
+data_max: tensor([9.0000e+01, 1.0000e+00, 4.6230e+02, 4.0000e+00, 4.7200e+02, 5.0000e+00,
+        4.6950e+03, 1.6920e+04, 3.6400e+04, 8.2800e+01, 2.0900e+02, 3.6200e+02,
+        2.2100e+01, 2.8300e+02, 1.0000e+00, 1.5000e+01, 1.5910e+03, 5.2000e+01,
+        6.1800e+01, 2.4500e+02, 2.2900e+01, 3.1000e+01, 3.7500e+01, 3.0000e+02,
+        1.0000e+00, 1.8000e+02, 2.1100e+02, 2.2800e+02, 3.0000e+02, 1.0000e+02,
+        5.0000e+02, 7.3500e+02, 2.2920e+03, 9.8000e+01, 1.0000e+02, 2.8900e+02,
+        4.2200e+01, 4.9600e+01, 2.4910e+01, 1.1000e+04, 6.2519e+03],
+       device='cuda:0')
+data_min: tensor([ 1.5000e+01, -1.0000e+00, -1.0000e+00,  1.0000e+00, -1.0000e+00,
+         1.0000e+00,  8.0000e+00,  1.0000e+00,  4.0000e+00,  0.0000e+00,
+         0.0000e+00,  2.8000e+01,  1.0000e-01, -1.0000e+00,  2.1000e-01,
+         3.0000e+00,  8.0000e+00,  5.0000e+00,  5.0000e+00,  0.0000e+00,
+         1.5000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,  1.0000e+00,
+         9.8000e+01, -1.0000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00,  0.0000e+00,  5.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00, -1.7800e+01,  3.0000e-01,  1.0000e-02,  0.0000e+00,
+         1.0000e-01], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+run bench_physionet_h36_grud_opera_s3 | device cuda:0 | params 41804 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 36, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_physionet_h36_grud_vanilla_s3/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.02587 val_mse 0.00878 best 0.00878@0 (50.1s)
+epoch 001 loss 0.00864 val_mse 0.00786 best 0.00786@1 (49.7s)
+epoch 002 loss 0.00752 val_mse 0.00735 best 0.00735@2 (49.9s)
+epoch 003 loss 0.00701 val_mse 0.00644 best 0.00644@3 (50.1s)
+epoch 004 loss 0.00632 val_mse 0.00601 best 0.00601@4 (50.0s)
+epoch 005 loss 0.00598 val_mse 0.00586 best 0.00586@5 (50.1s)
+epoch 006 loss 0.00571 val_mse 0.00563 best 0.00563@6 (49.4s)
+epoch 007 loss 0.00545 val_mse 0.00543 best 0.00543@7 (49.9s)
+epoch 008 loss 0.00550 val_mse 0.00527 best 0.00527@8 (49.6s)
+epoch 009 loss 0.00499 val_mse 0.00512 best 0.00512@9 (50.1s)
+epoch 010 loss 0.00503 val_mse 0.00515 best 0.00512@9 (50.2s)
+epoch 011 loss 0.00493 val_mse 0.00506 best 0.00506@11 (50.5s)
+epoch 012 loss 0.00491 val_mse 0.00518 best 0.00506@11 (50.0s)
+epoch 013 loss 0.00474 val_mse 0.00515 best 0.00506@11 (50.0s)
+epoch 014 loss 0.00473 val_mse 0.00477 best 0.00477@14 (50.0s)
+epoch 015 loss 0.00459 val_mse 0.00485 best 0.00477@14 (50.2s)
+epoch 016 loss 0.00449 val_mse 0.00485 best 0.00477@14 (50.4s)
+epoch 017 loss 0.00463 val_mse 0.00480 best 0.00477@14 (49.7s)
+epoch 018 loss 0.00433 val_mse 0.00555 best 0.00477@14 (49.3s)
+epoch 019 loss 0.00438 val_mse 0.00475 best 0.00475@19 (50.3s)
+epoch 020 loss 0.00439 val_mse 0.00478 best 0.00475@19 (49.6s)
+epoch 021 loss 0.00431 val_mse 0.00484 best 0.00475@19 (49.5s)
+epoch 022 loss 0.00441 val_mse 0.00474 best 0.00474@22 (49.8s)
+epoch 023 loss 0.00442 val_mse 0.00502 best 0.00474@22 (49.7s)
+epoch 024 loss 0.00435 val_mse 0.00523 best 0.00474@22 (49.3s)
+epoch 025 loss 0.00430 val_mse 0.00512 best 0.00474@22 (50.1s)
+epoch 026 loss 0.00427 val_mse 0.00483 best 0.00474@22 (50.0s)
+epoch 027 loss 0.00427 val_mse 0.00488 best 0.00474@22 (49.5s)
+epoch 028 loss 0.00411 val_mse 0.00504 best 0.00474@22 (49.7s)
+epoch 029 loss 0.00420 val_mse 0.00508 best 0.00474@22 (50.1s)
+epoch 030 loss 0.00424 val_mse 0.00494 best 0.00474@22 (49.7s)
+epoch 031 loss 0.00402 val_mse 0.00527 best 0.00474@22 (50.2s)
+epoch 032 loss 0.00421 val_mse 0.00493 best 0.00474@22 (50.0s)
+early stop
+  [identity                                  ] MSE 0.00479  MAE 0.03873
+  [random_dropout:0.7                        ] MSE 0.00620  MAE 0.04419
+  [temporal_stride:3                         ] MSE 0.00501  MAE 0.03982
+  [variable_dropout:0.5                      ] MSE 0.00735  MAE 0.04908
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00590  MAE 0.04309
+best {'val_mse': 0.004736360628157854, 'epoch': 22} -> results/raw/bench_physionet_h36_grud_opera_s3/results.json
+summary {
+  "clean_mse": 0.004790643695741892,
+  "mean_shift_mse": 0.006113210576586425,
+  "mean_degradation": 0.2760728964293633,
+  "worst_mse": 0.007347814738750458,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.006113210576586425,
+  "mean_unseen_degradation": 0.2760728964293633
+}
+[3/4] ok bench_physionet_h36_grud_opera_s3 (30.1 min)
+
+[4/4] bench_physionet_h36_grud_opera_s4
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/physionet_h36_distillation.yaml --seed 4 --name bench_physionet_h36_grud_opera_s4 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grud distillation.teacher_ckpt=results/raw/bench_physionet_h36_grud_vanilla_s4/model.pt --no_wandb
+Total records: 12000
+Dataset n_samples: 12000 7200 2400 2400
+Test record ids (first 20): ['134302', '144753', '137142', '153444', '134906', '154300', '144359', '162459', '141317', '151947', '135968', '136920', '133579', '140585', '142964', '158681', '140670', '143983', '132821', '135775']
+Test record ids (last 20): ['150324', '137692', '151553', '144871', '142022', '142764', '142160', '153909', '144034', '155047', '149146', '138666', '150034', '149577', '144809', '140296', '158002', '146644', '137769', '150611']
+data_max: tensor([9.0000e+01, 1.0000e+00, 4.6230e+02, 4.0000e+00, 4.7200e+02, 5.0000e+00,
+        4.6950e+03, 1.6920e+04, 3.6400e+04, 8.2800e+01, 2.0900e+02, 3.6200e+02,
+        2.2100e+01, 2.8300e+02, 1.0000e+00, 1.5000e+01, 1.5910e+03, 5.2000e+01,
+        6.1800e+01, 2.4500e+02, 2.2900e+01, 3.1000e+01, 3.7500e+01, 3.0000e+02,
+        1.0000e+00, 1.8000e+02, 2.1100e+02, 2.2800e+02, 3.0000e+02, 1.0000e+02,
+        5.0000e+02, 7.3500e+02, 2.2920e+03, 9.8000e+01, 1.0000e+02, 2.8900e+02,
+        4.2200e+01, 4.9600e+01, 2.4910e+01, 1.1000e+04, 6.2519e+03],
+       device='cuda:0')
+data_min: tensor([ 1.5000e+01, -1.0000e+00, -1.0000e+00,  1.0000e+00, -1.0000e+00,
+         1.0000e+00,  8.0000e+00,  1.0000e+00,  4.0000e+00,  0.0000e+00,
+         0.0000e+00,  2.8000e+01,  1.0000e-01, -1.0000e+00,  2.1000e-01,
+         3.0000e+00,  8.0000e+00,  5.0000e+00,  5.0000e+00,  0.0000e+00,
+         1.5000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,  1.0000e+00,
+         9.8000e+01, -1.0000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00,  0.0000e+00,  5.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00, -1.7800e+01,  3.0000e-01,  1.0000e-02,  0.0000e+00,
+         1.0000e-01], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+run bench_physionet_h36_grud_opera_s4 | device cuda:0 | params 41804 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 36, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_physionet_h36_grud_vanilla_s4/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.02203 val_mse 0.00915 best 0.00915@0 (50.1s)
+epoch 001 loss 0.00899 val_mse 0.00764 best 0.00764@1 (49.9s)
+epoch 002 loss 0.00783 val_mse 0.00708 best 0.00708@2 (50.3s)
+epoch 003 loss 0.00710 val_mse 0.00671 best 0.00671@3 (50.1s)
+epoch 004 loss 0.00639 val_mse 0.00652 best 0.00652@4 (50.2s)
+epoch 005 loss 0.00607 val_mse 0.00669 best 0.00652@4 (49.4s)
+epoch 006 loss 0.00577 val_mse 0.00582 best 0.00582@6 (50.0s)
+epoch 007 loss 0.00549 val_mse 0.00572 best 0.00572@7 (49.4s)
+epoch 008 loss 0.00536 val_mse 0.00571 best 0.00571@8 (50.3s)
+epoch 009 loss 0.00516 val_mse 0.00519 best 0.00519@9 (50.2s)
+epoch 010 loss 0.00506 val_mse 0.00522 best 0.00519@9 (50.1s)
+epoch 011 loss 0.00511 val_mse 0.00567 best 0.00519@9 (50.5s)
+epoch 012 loss 0.00491 val_mse 0.00500 best 0.00500@12 (49.9s)
+epoch 013 loss 0.00489 val_mse 0.00463 best 0.00463@13 (50.0s)
+epoch 014 loss 0.00478 val_mse 0.00475 best 0.00463@13 (50.1s)
+epoch 015 loss 0.00469 val_mse 0.00536 best 0.00463@13 (50.2s)
+epoch 016 loss 0.00456 val_mse 0.00458 best 0.00458@16 (50.4s)
+epoch 017 loss 0.00464 val_mse 0.00500 best 0.00458@16 (50.5s)
+epoch 018 loss 0.00446 val_mse 0.00466 best 0.00458@16 (49.9s)
+epoch 019 loss 0.00447 val_mse 0.00507 best 0.00458@16 (50.1s)
+epoch 020 loss 0.00446 val_mse 0.00464 best 0.00458@16 (50.8s)
+epoch 021 loss 0.00434 val_mse 0.00470 best 0.00458@16 (50.5s)
+epoch 022 loss 0.00426 val_mse 0.00494 best 0.00458@16 (50.3s)
+epoch 023 loss 0.00438 val_mse 0.00458 best 0.00458@16 (50.1s)
+epoch 024 loss 0.00429 val_mse 0.00474 best 0.00458@16 (50.4s)
+epoch 025 loss 0.00417 val_mse 0.00452 best 0.00452@25 (50.2s)
+epoch 026 loss 0.00403 val_mse 0.00439 best 0.00439@26 (50.6s)
+epoch 027 loss 0.00424 val_mse 0.00470 best 0.00439@26 (50.4s)
+epoch 028 loss 0.00411 val_mse 0.00468 best 0.00439@26 (49.6s)
+epoch 029 loss 0.00416 val_mse 0.00475 best 0.00439@26 (49.5s)
+epoch 030 loss 0.00412 val_mse 0.00447 best 0.00439@26 (49.6s)
+epoch 031 loss 0.00404 val_mse 0.00509 best 0.00439@26 (50.1s)
+epoch 032 loss 0.00407 val_mse 0.00481 best 0.00439@26 (49.7s)
+epoch 033 loss 0.00408 val_mse 0.00489 best 0.00439@26 (49.6s)
+epoch 034 loss 0.00407 val_mse 0.00459 best 0.00439@26 (49.3s)
+epoch 035 loss 0.00401 val_mse 0.00507 best 0.00439@26 (49.6s)
+epoch 036 loss 0.00412 val_mse 0.00465 best 0.00439@26 (49.4s)
+early stop
+  [identity                                  ] MSE 0.00446  MAE 0.03646
+  [random_dropout:0.7                        ] MSE 0.00563  MAE 0.04089
+  [temporal_stride:3                         ] MSE 0.00480  MAE 0.03833
+  [variable_dropout:0.5                      ] MSE 0.00670  MAE 0.04494
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00565  MAE 0.04194
+best {'val_mse': 0.004393899813294411, 'epoch': 26} -> results/raw/bench_physionet_h36_grud_opera_s4/results.json
+summary {
+  "clean_mse": 0.004459524992853403,
+  "mean_shift_mse": 0.005694551044143736,
+  "mean_degradation": 0.27694116599178614,
+  "worst_mse": 0.006703992839902639,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.005694551044143736,
+  "mean_unseen_degradation": 0.27694116599178614
+}
+[4/4] ok bench_physionet_h36_grud_opera_s4 (33.8 min)
+
+stage D: 4 ok, 0 failed

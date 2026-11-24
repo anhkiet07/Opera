@@ -1,0 +1,137 @@
+stage smoke: 6 cells
+
+[1/6] _smoke_cgmacros_grud
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/cgmacros_baseline.yaml --seed 0 --name _smoke_cgmacros_grud --out results/raw --conditions identity --set model.backbone=grud training.epochs=1 training.min_epochs=1 --no_wandb
+cgmacros records: 45 27 9 9
+cgmacros windows: 11422 6770 2261 2391
+data_max: tensor([400.0000, 405.0000, 172.0000, 124.2000])
+data_min: tensor([40.0000, 40.0000, 42.6000,  0.0000])
+time_max: tensor(239.)
+run _smoke_cgmacros_grud | device cuda:0 | params 21084 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 180, "n_records": 100000000, "name": "cgmacros", "patch_size": 45, "pred_window": 60, "stride": 45}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 1, "lr": 0.001, "min_epochs": 1, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00796 val_mse 0.00577 best 0.00577@0 (7.1s)
+  [identity                                  ] MSE 0.00559  MAE 0.05131
+best {'val_mse': 0.005768647417426109, 'epoch': 0} -> results/raw/_smoke_cgmacros_grud/results.json
+summary {
+  "clean_mse": 0.005586434155702591,
+  "mean_shift_mse": 0.0,
+  "mean_degradation": 0.0,
+  "worst_mse": NaN,
+  "worst_condition": null
+}
+[1/6] ok _smoke_cgmacros_grud (0.3 min)
+
+[2/6] _smoke_noaa_isd_grud
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/noaa_isd_baseline.yaml --seed 0 --name _smoke_noaa_isd_grud --out results/raw --conditions identity --set model.backbone=grud training.epochs=1 training.min_epochs=1 --no_wandb
+noaa_isd: 100/497 stations processed
+noaa_isd: 200/497 stations processed
+noaa_isd: 300/497 stations processed
+noaa_isd: 400/497 stations processed
+noaa_isd records: 495 297 99 99
+noaa_isd windows: 23838 14498 4809 4531
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   39.1000,  144.8410])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(29.9999)
+run _smoke_noaa_isd_grud | device cuda:0 | params 21608 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grud", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 1, "lr": 0.001, "min_epochs": 1, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00805 val_mse 0.00193 best 0.00193@0 (36.8s)
+  [identity                                  ] MSE 0.00198  MAE 0.03169
+best {'val_mse': 0.0019325127359479666, 'epoch': 0} -> results/raw/_smoke_noaa_isd_grud/results.json
+summary {
+  "clean_mse": 0.0019766332115978003,
+  "mean_shift_mse": 0.0,
+  "mean_degradation": 0.0,
+  "worst_mse": NaN,
+  "worst_condition": null
+}
+[2/6] ok _smoke_noaa_isd_grud (1.9 min)
+
+[3/6] _smoke_cgmacros_mtand
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/cgmacros_baseline.yaml --seed 0 --name _smoke_cgmacros_mtand --out results/raw --conditions identity --set model.backbone=mtand training.epochs=1 training.min_epochs=1 --no_wandb
+cgmacros records: 45 27 9 9
+cgmacros windows: 11422 6770 2261 2391
+data_max: tensor([400.0000, 405.0000, 172.0000, 124.2000])
+data_min: tensor([40.0000, 40.0000, 42.6000,  0.0000])
+time_max: tensor(239.)
+run _smoke_cgmacros_mtand | device cuda:0 | params 68996 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 180, "n_records": 100000000, "name": "cgmacros", "patch_size": 45, "pred_window": 60, "stride": 45}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "mtand", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 1, "lr": 0.001, "min_epochs": 1, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00848 val_mse 0.00563 best 0.00563@0 (2.7s)
+  [identity                                  ] MSE 0.00568  MAE 0.05148
+best {'val_mse': 0.0056261769495904446, 'epoch': 0} -> results/raw/_smoke_cgmacros_mtand/results.json
+summary {
+  "clean_mse": 0.005679577589035034,
+  "mean_shift_mse": 0.0,
+  "mean_degradation": 0.0,
+  "worst_mse": NaN,
+  "worst_condition": null
+}
+[3/6] ok _smoke_cgmacros_mtand (0.1 min)
+
+[4/6] _smoke_noaa_isd_mtand
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/noaa_isd_baseline.yaml --seed 0 --name _smoke_noaa_isd_mtand --out results/raw --conditions identity --set model.backbone=mtand training.epochs=1 training.min_epochs=1 --no_wandb
+noaa_isd records: 495 297 99 99
+noaa_isd windows: 23838 14498 4809 4531
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   39.1000,  144.8410])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(29.9999)
+run _smoke_noaa_isd_mtand | device cuda:0 | params 69573 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "mtand", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 1, "lr": 0.001, "min_epochs": 1, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00826 val_mse 0.00134 best 0.00134@0 (6.1s)
+  [identity                                  ] MSE 0.00138  MAE 0.02538
+best {'val_mse': 0.001337969908490777, 'epoch': 0} -> results/raw/_smoke_noaa_isd_mtand/results.json
+summary {
+  "clean_mse": 0.0013775097904726863,
+  "mean_shift_mse": 0.0,
+  "mean_degradation": 0.0,
+  "worst_mse": NaN,
+  "worst_condition": null
+}
+[4/6] ok _smoke_noaa_isd_mtand (0.2 min)
+
+[5/6] _smoke_cgmacros_warpformer
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/cgmacros_baseline.yaml --seed 0 --name _smoke_cgmacros_warpformer --out results/raw --conditions identity --set model.backbone=warpformer training.epochs=1 training.min_epochs=1 --no_wandb
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+cgmacros records: 45 27 9 9
+cgmacros windows: 11422 6770 2261 2391
+data_max: tensor([400.0000, 405.0000, 172.0000, 124.2000])
+data_min: tensor([40.0000, 40.0000, 42.6000,  0.0000])
+time_max: tensor(239.)
+run _smoke_cgmacros_warpformer | device cuda:0 | params 84484 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 180, "n_records": 100000000, "name": "cgmacros", "patch_size": 45, "pred_window": 60, "stride": 45}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 1, "lr": 0.001, "min_epochs": 1, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01042 val_mse 0.00752 best 0.00752@0 (2.9s)
+  [identity                                  ] MSE 0.00915  MAE 0.07219
+best {'val_mse': 0.007519093342125416, 'epoch': 0} -> results/raw/_smoke_cgmacros_warpformer/results.json
+summary {
+  "clean_mse": 0.009147200733423233,
+  "mean_shift_mse": 0.0,
+  "mean_degradation": 0.0,
+  "worst_mse": NaN,
+  "worst_condition": null
+}
+[5/6] ok _smoke_cgmacros_warpformer (0.1 min)
+
+[6/6] _smoke_noaa_isd_warpformer
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/noaa_isd_baseline.yaml --seed 0 --name _smoke_noaa_isd_warpformer --out results/raw --conditions identity --set model.backbone=warpformer training.epochs=1 training.min_epochs=1 --no_wandb
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+noaa_isd records: 495 297 99 99
+noaa_isd windows: 23838 14498 4809 4531
+data_max: tensor([  48.3000,   35.0000, 1047.1000,   39.1000,  144.8410])
+data_min: tensor([-43.9500, -41.6000, 959.0000,   0.0000,   0.0000])
+time_max: tensor(29.9999)
+run _smoke_noaa_isd_warpformer | device cuda:0 | params 84613 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 1, "lr": 0.001, "min_epochs": 1, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00593 val_mse 0.00379 best 0.00379@0 (6.5s)
+  [identity                                  ] MSE 0.00377  MAE 0.04424
+best {'val_mse': 0.0037925741635262966, 'epoch': 0} -> results/raw/_smoke_noaa_isd_warpformer/results.json
+summary {
+  "clean_mse": 0.0037675462663173676,
+  "mean_shift_mse": 0.0,
+  "mean_degradation": 0.0,
+  "worst_mse": NaN,
+  "worst_condition": null
+}
+[6/6] ok _smoke_noaa_isd_warpformer (0.2 min)
+
+stage smoke: 6 ok, 0 failed

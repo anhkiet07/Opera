@@ -1,0 +1,706 @@
+stage A: 1 cells
+
+[1/1] bench_ushcn_6mo_dlinear_vanilla_s0
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/ushcn_6mo_baseline.yaml --seed 0 --name bench_ushcn_6mo_dlinear_vanilla_s0 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=dlinear --no_wandb
+Total records: 1114
+Dataset n_samples: 1114 668 223 223
+Test record ids (first 20): [886, 101, 1120, 730, 291, 875, 958, 260, 128, 1043, 620, 88, 1005, 872, 617, 538, 508, 44, 273, 817]
+Test record ids (last 20): [982, 275, 991, 997, 66, 801, 67, 942, 12, 361, 555, 710, 333, 1017, 851, 184, 882, 509, 726, 587]
+data_max: tensor([37.2551, 36.6691, 38.2520,  3.0401,  2.9104], device='cuda:0')
+data_min: tensor([-0.3057, -0.1280, -0.1738, -3.8821, -4.1854], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+Dataset n_samples after time split: 4456 2672 892 892
+run bench_ushcn_6mo_dlinear_vanilla_s0 | device cuda:0 | params 52321 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 128, "history": 24, "n_records": 100000000, "name": "ushcn", "patch_size": 1.5, "pred_window": 6, "stride": 1.5}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "dlinear", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.83319 val_mse 1.20697 best 1.20697@0 (3.2s)
+epoch 001 loss 0.80180 val_mse 1.12474 best 1.12474@1 (2.9s)
+epoch 002 loss 0.73636 val_mse 1.07323 best 1.07323@2 (2.8s)
+epoch 003 loss 0.71732 val_mse 1.06151 best 1.06151@3 (2.8s)
+epoch 004 loss 0.71456 val_mse 1.04891 best 1.04891@4 (2.9s)
+epoch 005 loss 0.70484 val_mse 1.04152 best 1.04152@5 (2.9s)
+epoch 006 loss 0.70047 val_mse 1.04545 best 1.04152@5 (2.8s)
+epoch 007 loss 0.69205 val_mse 1.02850 best 1.02850@7 (2.8s)
+epoch 008 loss 0.68573 val_mse 1.01581 best 1.01581@8 (2.8s)
+epoch 009 loss 0.67312 val_mse 1.01236 best 1.01236@9 (2.9s)
+epoch 010 loss 0.66240 val_mse 0.99812 best 0.99812@10 (2.8s)
+epoch 011 loss 0.65417 val_mse 0.97180 best 0.97180@11 (2.8s)
+epoch 012 loss 0.63817 val_mse 0.93754 best 0.93754@12 (2.8s)
+epoch 013 loss 0.61073 val_mse 0.92709 best 0.92709@13 (2.7s)
+epoch 014 loss 0.60503 val_mse 0.91577 best 0.91577@14 (3.2s)
+epoch 015 loss 0.58884 val_mse 0.87900 best 0.87900@15 (2.8s)
+epoch 016 loss 0.58055 val_mse 0.93203 best 0.87900@15 (2.8s)
+epoch 017 loss 0.57445 val_mse 0.88117 best 0.87900@15 (2.8s)
+epoch 018 loss 0.56769 val_mse 0.85362 best 0.85362@18 (2.8s)
+epoch 019 loss 0.54998 val_mse 0.86927 best 0.85362@18 (2.7s)
+epoch 020 loss 0.54910 val_mse 0.82202 best 0.82202@20 (2.7s)
+epoch 021 loss 0.53793 val_mse 0.83549 best 0.82202@20 (3.0s)
+epoch 022 loss 0.54005 val_mse 0.80667 best 0.80667@22 (3.1s)
+epoch 023 loss 0.53347 val_mse 0.79976 best 0.79976@23 (2.8s)
+epoch 024 loss 0.53604 val_mse 0.80647 best 0.79976@23 (2.8s)
+epoch 025 loss 0.54441 val_mse 0.81460 best 0.79976@23 (2.8s)
+epoch 026 loss 0.53017 val_mse 0.78430 best 0.78430@26 (2.7s)
+epoch 027 loss 0.53571 val_mse 0.84039 best 0.78430@26 (2.8s)
+epoch 028 loss 0.53292 val_mse 0.80721 best 0.78430@26 (2.8s)
+epoch 029 loss 0.51965 val_mse 0.77648 best 0.77648@29 (2.5s)
+epoch 030 loss 0.52229 val_mse 0.78431 best 0.77648@29 (2.7s)
+epoch 031 loss 0.52090 val_mse 0.79393 best 0.77648@29 (2.8s)
+epoch 032 loss 0.52239 val_mse 0.77314 best 0.77314@32 (2.7s)
+epoch 033 loss 0.51883 val_mse 0.77935 best 0.77314@32 (2.7s)
+epoch 034 loss 0.51766 val_mse 0.78317 best 0.77314@32 (2.8s)
+epoch 035 loss 0.52187 val_mse 0.78387 best 0.77314@32 (2.8s)
+epoch 036 loss 0.51495 val_mse 0.77076 best 0.77076@36 (2.8s)
+epoch 037 loss 0.53631 val_mse 0.80970 best 0.77076@36 (2.7s)
+epoch 038 loss 0.52245 val_mse 0.78127 best 0.77076@36 (2.8s)
+epoch 039 loss 0.51112 val_mse 0.76016 best 0.76016@39 (2.7s)
+  [identity                                  ] MSE 0.51138  MAE 0.30035
+  [random_dropout:0.7                        ] MSE 0.62975  MAE 0.38251
+  [temporal_stride:3                         ] MSE 0.53834  MAE 0.32214
+  [variable_dropout:0.5                      ] MSE 0.65803  MAE 0.38523
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.61492  MAE 0.36759
+best {'val_mse': 0.7601645588874817, 'epoch': 39} -> results/raw/bench_ushcn_6mo_dlinear_vanilla_s0/results.json
+summary {
+  "clean_mse": 0.5113822817802429,
+  "mean_shift_mse": 0.6102604866027832,
+  "mean_degradation": 0.19335477263373657,
+  "worst_mse": 0.6580284237861633,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.6102604866027832,
+  "mean_unseen_degradation": 0.19335477263373657
+}
+[1/1] ok bench_ushcn_6mo_dlinear_vanilla_s0 (2.6 min)
+
+stage A: 1 ok, 0 failed
+stage B: 4 cells
+
+[1/4] bench_ushcn_6mo_dlinear_vanilla_s1
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/ushcn_6mo_baseline.yaml --seed 1 --name bench_ushcn_6mo_dlinear_vanilla_s1 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=dlinear --no_wandb
+Total records: 1114
+Dataset n_samples: 1114 668 223 223
+Test record ids (first 20): [886, 101, 1120, 730, 291, 875, 958, 260, 128, 1043, 620, 88, 1005, 872, 617, 538, 508, 44, 273, 817]
+Test record ids (last 20): [982, 275, 991, 997, 66, 801, 67, 942, 12, 361, 555, 710, 333, 1017, 851, 184, 882, 509, 726, 587]
+data_max: tensor([37.2551, 36.6691, 38.2520,  3.0401,  2.9104], device='cuda:0')
+data_min: tensor([-0.3057, -0.1280, -0.1738, -3.8821, -4.1854], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+Dataset n_samples after time split: 4456 2672 892 892
+run bench_ushcn_6mo_dlinear_vanilla_s1 | device cuda:0 | params 52321 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 128, "history": 24, "n_records": 100000000, "name": "ushcn", "patch_size": 1.5, "pred_window": 6, "stride": 1.5}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "dlinear", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.82697 val_mse 1.17058 best 1.17058@0 (2.6s)
+epoch 001 loss 0.76436 val_mse 1.10525 best 1.10525@1 (2.9s)
+epoch 002 loss 0.73661 val_mse 1.07287 best 1.07287@2 (2.8s)
+epoch 003 loss 0.72334 val_mse 1.06535 best 1.06535@3 (2.7s)
+epoch 004 loss 0.71424 val_mse 1.06038 best 1.06038@4 (2.7s)
+epoch 005 loss 0.71126 val_mse 1.05484 best 1.05484@5 (2.8s)
+epoch 006 loss 0.70178 val_mse 1.03935 best 1.03935@6 (2.8s)
+epoch 007 loss 0.69331 val_mse 1.02643 best 1.02643@7 (2.6s)
+epoch 008 loss 0.68770 val_mse 1.01569 best 1.01569@8 (2.7s)
+epoch 009 loss 0.68303 val_mse 0.99404 best 0.99404@9 (2.9s)
+epoch 010 loss 0.65480 val_mse 0.95620 best 0.95620@10 (2.8s)
+epoch 011 loss 0.62642 val_mse 0.94219 best 0.94219@11 (2.7s)
+epoch 012 loss 0.60851 val_mse 0.92084 best 0.92084@12 (2.7s)
+epoch 013 loss 0.59831 val_mse 0.89545 best 0.89545@13 (2.8s)
+epoch 014 loss 0.58523 val_mse 0.91803 best 0.89545@13 (2.8s)
+epoch 015 loss 0.57627 val_mse 0.88029 best 0.88029@15 (2.7s)
+epoch 016 loss 0.56772 val_mse 0.85929 best 0.85929@16 (2.8s)
+epoch 017 loss 0.55759 val_mse 0.85561 best 0.85561@17 (2.7s)
+epoch 018 loss 0.55856 val_mse 0.85366 best 0.85366@18 (2.6s)
+epoch 019 loss 0.56012 val_mse 0.84276 best 0.84276@19 (2.8s)
+epoch 020 loss 0.54898 val_mse 0.81957 best 0.81957@20 (2.8s)
+epoch 021 loss 0.54548 val_mse 0.81907 best 0.81907@21 (2.8s)
+epoch 022 loss 0.54413 val_mse 0.83229 best 0.81907@21 (2.8s)
+epoch 023 loss 0.53673 val_mse 0.80192 best 0.80192@23 (2.7s)
+epoch 024 loss 0.54757 val_mse 0.78771 best 0.78771@24 (2.7s)
+epoch 025 loss 0.53282 val_mse 0.77418 best 0.77418@25 (2.7s)
+epoch 026 loss 0.52756 val_mse 0.76523 best 0.76523@26 (2.8s)
+epoch 027 loss 0.53112 val_mse 0.75546 best 0.75546@27 (2.8s)
+epoch 028 loss 0.53709 val_mse 0.76961 best 0.75546@27 (2.8s)
+epoch 029 loss 0.52834 val_mse 0.78848 best 0.75546@27 (2.9s)
+epoch 030 loss 0.52832 val_mse 0.77183 best 0.75546@27 (3.0s)
+epoch 031 loss 0.52815 val_mse 0.76453 best 0.75546@27 (2.8s)
+epoch 032 loss 0.52012 val_mse 0.76531 best 0.75546@27 (2.7s)
+epoch 033 loss 0.52628 val_mse 0.78381 best 0.75546@27 (2.7s)
+epoch 034 loss 0.52726 val_mse 0.79205 best 0.75546@27 (2.7s)
+epoch 035 loss 0.52143 val_mse 0.82125 best 0.75546@27 (2.9s)
+epoch 036 loss 0.52799 val_mse 0.80923 best 0.75546@27 (2.8s)
+epoch 037 loss 0.51989 val_mse 0.75784 best 0.75546@27 (2.9s)
+early stop
+  [identity                                  ] MSE 0.53191  MAE 0.33053
+  [random_dropout:0.7                        ] MSE 0.65276  MAE 0.42024
+  [temporal_stride:3                         ] MSE 0.56747  MAE 0.36509
+  [variable_dropout:0.5                      ] MSE 0.67096  MAE 0.41400
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.63734  MAE 0.40581
+best {'val_mse': 0.7554632425308228, 'epoch': 27} -> results/raw/bench_ushcn_6mo_dlinear_vanilla_s1/results.json
+summary {
+  "clean_mse": 0.5319096446037292,
+  "mean_shift_mse": 0.6321301460266113,
+  "mean_degradation": 0.1884164019953915,
+  "worst_mse": 0.6709617376327515,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.6321301460266113,
+  "mean_unseen_degradation": 0.1884164019953915
+}
+[1/4] ok bench_ushcn_6mo_dlinear_vanilla_s1 (2.4 min)
+
+[2/4] bench_ushcn_6mo_dlinear_vanilla_s2
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/ushcn_6mo_baseline.yaml --seed 2 --name bench_ushcn_6mo_dlinear_vanilla_s2 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=dlinear --no_wandb
+Total records: 1114
+Dataset n_samples: 1114 668 223 223
+Test record ids (first 20): [886, 101, 1120, 730, 291, 875, 958, 260, 128, 1043, 620, 88, 1005, 872, 617, 538, 508, 44, 273, 817]
+Test record ids (last 20): [982, 275, 991, 997, 66, 801, 67, 942, 12, 361, 555, 710, 333, 1017, 851, 184, 882, 509, 726, 587]
+data_max: tensor([37.2551, 36.6691, 38.2520,  3.0401,  2.9104], device='cuda:0')
+data_min: tensor([-0.3057, -0.1280, -0.1738, -3.8821, -4.1854], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+Dataset n_samples after time split: 4456 2672 892 892
+run bench_ushcn_6mo_dlinear_vanilla_s2 | device cuda:0 | params 52321 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 128, "history": 24, "n_records": 100000000, "name": "ushcn", "patch_size": 1.5, "pred_window": 6, "stride": 1.5}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "dlinear", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.83296 val_mse 1.20319 best 1.20319@0 (3.0s)
+epoch 001 loss 0.78470 val_mse 1.12414 best 1.12414@1 (1.9s)
+epoch 002 loss 0.73780 val_mse 1.07294 best 1.07294@2 (2.1s)
+epoch 003 loss 0.72022 val_mse 1.05691 best 1.05691@3 (2.5s)
+epoch 004 loss 0.71249 val_mse 1.04841 best 1.04841@4 (2.8s)
+epoch 005 loss 0.70485 val_mse 1.04191 best 1.04191@5 (2.7s)
+epoch 006 loss 0.69585 val_mse 1.03013 best 1.03013@6 (2.8s)
+epoch 007 loss 0.68596 val_mse 1.01105 best 1.01105@7 (2.8s)
+epoch 008 loss 0.66048 val_mse 0.96991 best 0.96991@8 (2.8s)
+epoch 009 loss 0.63504 val_mse 0.94271 best 0.94271@9 (2.8s)
+epoch 010 loss 0.62330 val_mse 0.92325 best 0.92325@10 (2.8s)
+epoch 011 loss 0.60918 val_mse 0.89930 best 0.89930@11 (2.9s)
+epoch 012 loss 0.60309 val_mse 0.90182 best 0.89930@11 (2.7s)
+epoch 013 loss 0.58550 val_mse 0.87127 best 0.87127@13 (2.7s)
+epoch 014 loss 0.56796 val_mse 0.85451 best 0.85451@14 (2.7s)
+epoch 015 loss 0.55887 val_mse 0.85959 best 0.85451@14 (2.8s)
+epoch 016 loss 0.55402 val_mse 0.83440 best 0.83440@16 (2.7s)
+epoch 017 loss 0.54584 val_mse 0.84445 best 0.83440@16 (2.7s)
+epoch 018 loss 0.55178 val_mse 0.84624 best 0.83440@16 (2.6s)
+epoch 019 loss 0.54183 val_mse 0.82339 best 0.82339@19 (2.8s)
+epoch 020 loss 0.53513 val_mse 0.81274 best 0.81274@20 (2.7s)
+epoch 021 loss 0.53034 val_mse 0.80342 best 0.80342@21 (2.9s)
+epoch 022 loss 0.53856 val_mse 0.81815 best 0.80342@21 (2.8s)
+epoch 023 loss 0.52721 val_mse 0.80640 best 0.80342@21 (3.0s)
+epoch 024 loss 0.52310 val_mse 0.78547 best 0.78547@24 (2.8s)
+epoch 025 loss 0.52477 val_mse 0.80267 best 0.78547@24 (2.7s)
+epoch 026 loss 0.52557 val_mse 0.80481 best 0.78547@24 (2.7s)
+epoch 027 loss 0.51949 val_mse 0.77818 best 0.77818@27 (2.7s)
+epoch 028 loss 0.51495 val_mse 0.76853 best 0.76853@28 (2.7s)
+epoch 029 loss 0.52169 val_mse 0.76363 best 0.76363@29 (2.8s)
+epoch 030 loss 0.52106 val_mse 0.79157 best 0.76363@29 (2.7s)
+epoch 031 loss 0.51422 val_mse 0.76295 best 0.76295@31 (2.7s)
+epoch 032 loss 0.51637 val_mse 0.79591 best 0.76295@31 (3.0s)
+epoch 033 loss 0.51066 val_mse 0.75949 best 0.75949@33 (2.8s)
+epoch 034 loss 0.51926 val_mse 0.75637 best 0.75637@34 (2.8s)
+epoch 035 loss 0.50723 val_mse 0.75088 best 0.75088@35 (2.7s)
+epoch 036 loss 0.51108 val_mse 0.78265 best 0.75088@35 (2.7s)
+epoch 037 loss 0.50290 val_mse 0.76280 best 0.75088@35 (2.8s)
+epoch 038 loss 0.50789 val_mse 0.74767 best 0.74767@38 (2.7s)
+epoch 039 loss 0.51087 val_mse 0.78291 best 0.74767@38 (2.7s)
+  [identity                                  ] MSE 0.51223  MAE 0.32258
+  [random_dropout:0.7                        ] MSE 0.64541  MAE 0.42638
+  [temporal_stride:3                         ] MSE 0.54875  MAE 0.36166
+  [variable_dropout:0.5                      ] MSE 0.66106  MAE 0.41555
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.62557  MAE 0.40711
+best {'val_mse': 0.747671902179718, 'epoch': 38} -> results/raw/bench_ushcn_6mo_dlinear_vanilla_s2/results.json
+summary {
+  "clean_mse": 0.5122312307357788,
+  "mean_shift_mse": 0.6201963722705841,
+  "mean_degradation": 0.21077422667048648,
+  "worst_mse": 0.6610639691352844,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.6201963722705841,
+  "mean_unseen_degradation": 0.21077422667048648
+}
+[2/4] ok bench_ushcn_6mo_dlinear_vanilla_s2 (2.5 min)
+
+[3/4] bench_ushcn_6mo_dlinear_vanilla_s3
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/ushcn_6mo_baseline.yaml --seed 3 --name bench_ushcn_6mo_dlinear_vanilla_s3 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=dlinear --no_wandb
+Total records: 1114
+Dataset n_samples: 1114 668 223 223
+Test record ids (first 20): [886, 101, 1120, 730, 291, 875, 958, 260, 128, 1043, 620, 88, 1005, 872, 617, 538, 508, 44, 273, 817]
+Test record ids (last 20): [982, 275, 991, 997, 66, 801, 67, 942, 12, 361, 555, 710, 333, 1017, 851, 184, 882, 509, 726, 587]
+data_max: tensor([37.2551, 36.6691, 38.2520,  3.0401,  2.9104], device='cuda:0')
+data_min: tensor([-0.3057, -0.1280, -0.1738, -3.8821, -4.1854], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+Dataset n_samples after time split: 4456 2672 892 892
+run bench_ushcn_6mo_dlinear_vanilla_s3 | device cuda:0 | params 52321 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 128, "history": 24, "n_records": 100000000, "name": "ushcn", "patch_size": 1.5, "pred_window": 6, "stride": 1.5}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "dlinear", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.83506 val_mse 1.20430 best 1.20430@0 (3.1s)
+epoch 001 loss 0.78947 val_mse 1.11214 best 1.11214@1 (2.0s)
+epoch 002 loss 0.73547 val_mse 1.07885 best 1.07885@2 (1.8s)
+epoch 003 loss 0.72144 val_mse 1.06597 best 1.06597@3 (2.6s)
+epoch 004 loss 0.71068 val_mse 1.05399 best 1.05399@4 (2.8s)
+epoch 005 loss 0.70395 val_mse 1.04365 best 1.04365@5 (2.7s)
+epoch 006 loss 0.69433 val_mse 1.03229 best 1.03229@6 (2.8s)
+epoch 007 loss 0.68648 val_mse 1.01092 best 1.01092@7 (2.7s)
+epoch 008 loss 0.67741 val_mse 1.00333 best 1.00333@8 (2.8s)
+epoch 009 loss 0.66582 val_mse 0.97421 best 0.97421@9 (2.9s)
+epoch 010 loss 0.65523 val_mse 0.94699 best 0.94699@10 (2.7s)
+epoch 011 loss 0.62364 val_mse 0.89551 best 0.89551@11 (2.7s)
+epoch 012 loss 0.60479 val_mse 0.88672 best 0.88672@12 (2.7s)
+epoch 013 loss 0.57903 val_mse 0.88138 best 0.88138@13 (2.8s)
+epoch 014 loss 0.57231 val_mse 0.85908 best 0.85908@14 (2.7s)
+epoch 015 loss 0.55452 val_mse 0.83869 best 0.83869@15 (2.7s)
+epoch 016 loss 0.55263 val_mse 0.83391 best 0.83391@16 (2.8s)
+epoch 017 loss 0.54473 val_mse 0.81277 best 0.81277@17 (2.7s)
+epoch 018 loss 0.54115 val_mse 0.81701 best 0.81277@17 (2.7s)
+epoch 019 loss 0.53934 val_mse 0.81344 best 0.81277@17 (2.6s)
+epoch 020 loss 0.54328 val_mse 0.82076 best 0.81277@17 (2.7s)
+epoch 021 loss 0.52985 val_mse 0.80631 best 0.80631@21 (2.7s)
+epoch 022 loss 0.53203 val_mse 0.81988 best 0.80631@21 (2.7s)
+epoch 023 loss 0.52458 val_mse 0.78917 best 0.78917@23 (2.8s)
+epoch 024 loss 0.52985 val_mse 0.79400 best 0.78917@23 (2.8s)
+epoch 025 loss 0.52983 val_mse 0.78915 best 0.78915@25 (2.8s)
+epoch 026 loss 0.52105 val_mse 0.80544 best 0.78915@25 (3.0s)
+epoch 027 loss 0.52192 val_mse 0.79940 best 0.78915@25 (2.8s)
+epoch 028 loss 0.51799 val_mse 0.81098 best 0.78915@25 (2.8s)
+epoch 029 loss 0.51709 val_mse 0.80357 best 0.78915@25 (2.8s)
+epoch 030 loss 0.51623 val_mse 0.77517 best 0.77517@30 (2.7s)
+epoch 031 loss 0.50956 val_mse 0.79505 best 0.77517@30 (2.8s)
+epoch 032 loss 0.51309 val_mse 0.77594 best 0.77517@30 (2.9s)
+epoch 033 loss 0.50832 val_mse 0.77831 best 0.77517@30 (2.7s)
+epoch 034 loss 0.50898 val_mse 0.77603 best 0.77517@30 (2.7s)
+epoch 035 loss 0.51073 val_mse 0.76922 best 0.76922@35 (2.8s)
+epoch 036 loss 0.51907 val_mse 0.80350 best 0.76922@35 (2.8s)
+epoch 037 loss 0.51631 val_mse 0.77890 best 0.76922@35 (2.8s)
+epoch 038 loss 0.51072 val_mse 0.80612 best 0.76922@35 (2.9s)
+epoch 039 loss 0.51022 val_mse 0.80229 best 0.76922@35 (2.7s)
+  [identity                                  ] MSE 0.51668  MAE 0.31084
+  [random_dropout:0.7                        ] MSE 0.62887  MAE 0.37861
+  [temporal_stride:3                         ] MSE 0.53561  MAE 0.32083
+  [variable_dropout:0.5                      ] MSE 0.66650  MAE 0.38966
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.61745  MAE 0.36742
+best {'val_mse': 0.7692154049873352, 'epoch': 35} -> results/raw/bench_ushcn_6mo_dlinear_vanilla_s3/results.json
+summary {
+  "clean_mse": 0.5166805982589722,
+  "mean_shift_mse": 0.61210598051548,
+  "mean_degradation": 0.1846893082071537,
+  "worst_mse": 0.6665000915527344,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.61210598051548,
+  "mean_unseen_degradation": 0.1846893082071537
+}
+[3/4] ok bench_ushcn_6mo_dlinear_vanilla_s3 (2.5 min)
+
+[4/4] bench_ushcn_6mo_dlinear_vanilla_s4
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/ushcn_6mo_baseline.yaml --seed 4 --name bench_ushcn_6mo_dlinear_vanilla_s4 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=dlinear --no_wandb
+Total records: 1114
+Dataset n_samples: 1114 668 223 223
+Test record ids (first 20): [886, 101, 1120, 730, 291, 875, 958, 260, 128, 1043, 620, 88, 1005, 872, 617, 538, 508, 44, 273, 817]
+Test record ids (last 20): [982, 275, 991, 997, 66, 801, 67, 942, 12, 361, 555, 710, 333, 1017, 851, 184, 882, 509, 726, 587]
+data_max: tensor([37.2551, 36.6691, 38.2520,  3.0401,  2.9104], device='cuda:0')
+data_min: tensor([-0.3057, -0.1280, -0.1738, -3.8821, -4.1854], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+Dataset n_samples after time split: 4456 2672 892 892
+run bench_ushcn_6mo_dlinear_vanilla_s4 | device cuda:0 | params 52321 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 128, "history": 24, "n_records": 100000000, "name": "ushcn", "patch_size": 1.5, "pred_window": 6, "stride": 1.5}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "dlinear", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.82658 val_mse 1.17256 best 1.17256@0 (3.1s)
+epoch 001 loss 0.75984 val_mse 1.09759 best 1.09759@1 (2.3s)
+epoch 002 loss 0.72625 val_mse 1.06767 best 1.06767@2 (1.9s)
+epoch 003 loss 0.71677 val_mse 1.06288 best 1.06288@3 (2.2s)
+epoch 004 loss 0.71262 val_mse 1.04874 best 1.04874@4 (2.7s)
+epoch 005 loss 0.70097 val_mse 1.03607 best 1.03607@5 (2.9s)
+epoch 006 loss 0.69130 val_mse 1.02157 best 1.02157@6 (2.7s)
+epoch 007 loss 0.68274 val_mse 1.01350 best 1.01350@7 (2.7s)
+epoch 008 loss 0.67460 val_mse 0.97752 best 0.97752@8 (2.7s)
+epoch 009 loss 0.65796 val_mse 0.96128 best 0.96128@9 (2.8s)
+epoch 010 loss 0.62910 val_mse 0.92400 best 0.92400@10 (2.8s)
+epoch 011 loss 0.61442 val_mse 0.92390 best 0.92390@11 (2.9s)
+epoch 012 loss 0.59184 val_mse 0.89932 best 0.89932@12 (2.8s)
+epoch 013 loss 0.57119 val_mse 0.88076 best 0.88076@13 (2.8s)
+epoch 014 loss 0.57750 val_mse 0.88973 best 0.88076@13 (2.7s)
+epoch 015 loss 0.56056 val_mse 0.89400 best 0.88076@13 (2.7s)
+epoch 016 loss 0.56163 val_mse 0.87449 best 0.87449@16 (2.9s)
+epoch 017 loss 0.55207 val_mse 0.85164 best 0.85164@17 (2.8s)
+epoch 018 loss 0.54352 val_mse 0.87475 best 0.85164@17 (2.7s)
+epoch 019 loss 0.54802 val_mse 0.87290 best 0.85164@17 (2.8s)
+epoch 020 loss 0.55553 val_mse 0.84749 best 0.84749@20 (2.8s)
+epoch 021 loss 0.54500 val_mse 0.85272 best 0.84749@20 (2.8s)
+epoch 022 loss 0.53585 val_mse 0.83619 best 0.83619@22 (2.8s)
+epoch 023 loss 0.52912 val_mse 0.82386 best 0.82386@23 (2.9s)
+epoch 024 loss 0.52952 val_mse 0.82671 best 0.82386@23 (2.8s)
+epoch 025 loss 0.53724 val_mse 0.82793 best 0.82386@23 (2.8s)
+epoch 026 loss 0.53000 val_mse 0.82499 best 0.82386@23 (2.8s)
+epoch 027 loss 0.52446 val_mse 0.81905 best 0.81905@27 (2.8s)
+epoch 028 loss 0.52168 val_mse 0.82102 best 0.81905@27 (2.9s)
+epoch 029 loss 0.52488 val_mse 0.80255 best 0.80255@29 (2.7s)
+epoch 030 loss 0.51433 val_mse 0.80572 best 0.80255@29 (2.8s)
+epoch 031 loss 0.51195 val_mse 0.79496 best 0.79496@31 (2.7s)
+epoch 032 loss 0.51046 val_mse 0.79179 best 0.79179@32 (3.0s)
+epoch 033 loss 0.51389 val_mse 0.80965 best 0.79179@32 (2.7s)
+epoch 034 loss 0.51189 val_mse 0.80020 best 0.79179@32 (2.9s)
+epoch 035 loss 0.51092 val_mse 0.78571 best 0.78571@35 (2.8s)
+epoch 036 loss 0.51042 val_mse 0.79522 best 0.78571@35 (2.7s)
+epoch 037 loss 0.50666 val_mse 0.79600 best 0.78571@35 (2.7s)
+epoch 038 loss 0.51311 val_mse 0.79638 best 0.78571@35 (2.8s)
+epoch 039 loss 0.50667 val_mse 0.80076 best 0.78571@35 (2.7s)
+  [identity                                  ] MSE 0.51195  MAE 0.30448
+  [random_dropout:0.7                        ] MSE 0.65202  MAE 0.41112
+  [temporal_stride:3                         ] MSE 0.56006  MAE 0.35099
+  [variable_dropout:0.5                      ] MSE 0.65794  MAE 0.39609
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.63076  MAE 0.39346
+best {'val_mse': 0.7857089638710022, 'epoch': 35} -> results/raw/bench_ushcn_6mo_dlinear_vanilla_s4/results.json
+summary {
+  "clean_mse": 0.5119516253471375,
+  "mean_shift_mse": 0.6251938790082932,
+  "mean_degradation": 0.22119717577685172,
+  "worst_mse": 0.6579407453536987,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.6251938790082932,
+  "mean_unseen_degradation": 0.22119717577685172
+}
+[4/4] ok bench_ushcn_6mo_dlinear_vanilla_s4 (2.5 min)
+
+stage B: 4 ok, 0 failed
+stage C: 1 cells
+
+[1/1] bench_ushcn_6mo_dlinear_opera_s0
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/ushcn_6mo_distillation.yaml --seed 0 --name bench_ushcn_6mo_dlinear_opera_s0 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=dlinear distillation.teacher_ckpt=results/raw/bench_ushcn_6mo_dlinear_vanilla_s0/model.pt --no_wandb
+Total records: 1114
+Dataset n_samples: 1114 668 223 223
+Test record ids (first 20): [886, 101, 1120, 730, 291, 875, 958, 260, 128, 1043, 620, 88, 1005, 872, 617, 538, 508, 44, 273, 817]
+Test record ids (last 20): [982, 275, 991, 997, 66, 801, 67, 942, 12, 361, 555, 710, 333, 1017, 851, 184, 882, 509, 726, 587]
+data_max: tensor([37.2551, 36.6691, 38.2520,  3.0401,  2.9104], device='cuda:0')
+data_min: tensor([-0.3057, -0.1280, -0.1738, -3.8821, -4.1854], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+Dataset n_samples after time split: 4456 2672 892 892
+run bench_ushcn_6mo_dlinear_opera_s0 | device cuda:0 | params 52321 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 128, "history": 24, "n_records": 100000000, "name": "ushcn", "patch_size": 1.5, "pred_window": 6, "stride": 1.5}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_ushcn_6mo_dlinear_vanilla_s0/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "dlinear", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 1.18584 val_mse 1.20895 best 1.20895@0 (4.7s)
+epoch 001 loss 1.13312 val_mse 1.12824 best 1.12824@1 (2.9s)
+epoch 002 loss 1.01747 val_mse 1.08017 best 1.08017@2 (2.5s)
+epoch 003 loss 0.98767 val_mse 1.06694 best 1.06694@3 (3.2s)
+epoch 004 loss 0.96720 val_mse 1.05779 best 1.05779@4 (3.8s)
+epoch 005 loss 0.95822 val_mse 1.04980 best 1.04980@5 (3.8s)
+epoch 006 loss 0.94284 val_mse 1.03657 best 1.03657@6 (3.7s)
+epoch 007 loss 0.91940 val_mse 1.01220 best 1.01220@7 (3.8s)
+epoch 008 loss 0.88742 val_mse 0.99746 best 0.99746@8 (3.8s)
+epoch 009 loss 0.85148 val_mse 0.97426 best 0.97426@9 (3.8s)
+epoch 010 loss 0.82551 val_mse 0.96150 best 0.96150@10 (3.9s)
+epoch 011 loss 0.80389 val_mse 0.95617 best 0.95617@11 (3.8s)
+epoch 012 loss 0.77442 val_mse 0.94230 best 0.94230@12 (4.1s)
+epoch 013 loss 0.75339 val_mse 0.92824 best 0.92824@13 (3.9s)
+epoch 014 loss 0.73553 val_mse 0.90747 best 0.90747@14 (3.8s)
+epoch 015 loss 0.69732 val_mse 0.88199 best 0.88199@15 (3.9s)
+epoch 016 loss 0.67184 val_mse 0.86807 best 0.86807@16 (4.0s)
+epoch 017 loss 0.66533 val_mse 0.84406 best 0.84406@17 (3.9s)
+epoch 018 loss 0.65400 val_mse 0.83909 best 0.83909@18 (4.0s)
+epoch 019 loss 0.64486 val_mse 0.83985 best 0.83909@18 (4.0s)
+epoch 020 loss 0.62329 val_mse 0.82947 best 0.82947@20 (3.8s)
+epoch 021 loss 0.61943 val_mse 0.83450 best 0.82947@20 (3.8s)
+epoch 022 loss 0.62427 val_mse 0.83401 best 0.82947@20 (3.8s)
+epoch 023 loss 0.59953 val_mse 0.82929 best 0.82929@23 (3.8s)
+epoch 024 loss 0.61532 val_mse 0.82713 best 0.82713@24 (3.8s)
+epoch 025 loss 0.61069 val_mse 0.82637 best 0.82637@25 (4.1s)
+epoch 026 loss 0.59018 val_mse 0.81455 best 0.81455@26 (3.8s)
+epoch 027 loss 0.59687 val_mse 0.81664 best 0.81455@26 (4.0s)
+epoch 028 loss 0.58618 val_mse 0.81202 best 0.81202@28 (3.8s)
+epoch 029 loss 0.58146 val_mse 0.81745 best 0.81202@28 (3.8s)
+epoch 030 loss 0.59559 val_mse 0.80458 best 0.80458@30 (3.9s)
+epoch 031 loss 0.58473 val_mse 0.81001 best 0.80458@30 (3.9s)
+epoch 032 loss 0.59041 val_mse 0.81535 best 0.80458@30 (3.7s)
+epoch 033 loss 0.58227 val_mse 0.81141 best 0.80458@30 (3.9s)
+epoch 034 loss 0.58187 val_mse 0.80105 best 0.80105@34 (3.7s)
+epoch 035 loss 0.57308 val_mse 0.80106 best 0.80105@34 (4.1s)
+epoch 036 loss 0.58057 val_mse 0.80094 best 0.80094@36 (3.8s)
+epoch 037 loss 0.58858 val_mse 0.79404 best 0.79404@37 (3.8s)
+epoch 038 loss 0.57378 val_mse 0.79298 best 0.79298@38 (3.9s)
+epoch 039 loss 0.58066 val_mse 0.78827 best 0.78827@39 (3.8s)
+  [identity                                  ] MSE 0.51271  MAE 0.30819
+  [random_dropout:0.7                        ] MSE 0.58338  MAE 0.36492
+  [temporal_stride:3                         ] MSE 0.51799  MAE 0.31605
+  [variable_dropout:0.5                      ] MSE 0.65578  MAE 0.39501
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.59803  MAE 0.36587
+best {'val_mse': 0.7882691621780396, 'epoch': 39} -> results/raw/bench_ushcn_6mo_dlinear_opera_s0/results.json
+summary {
+  "clean_mse": 0.5127074718475342,
+  "mean_shift_mse": 0.58879554271698,
+  "mean_degradation": 0.14840445097330746,
+  "worst_mse": 0.6557828783988953,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.58879554271698,
+  "mean_unseen_degradation": 0.14840445097330746
+}
+[1/1] ok bench_ushcn_6mo_dlinear_opera_s0 (3.4 min)
+
+stage C: 1 ok, 0 failed
+stage D: 4 cells
+
+[1/4] bench_ushcn_6mo_dlinear_opera_s1
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/ushcn_6mo_distillation.yaml --seed 1 --name bench_ushcn_6mo_dlinear_opera_s1 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=dlinear distillation.teacher_ckpt=results/raw/bench_ushcn_6mo_dlinear_vanilla_s1/model.pt --no_wandb
+Total records: 1114
+Dataset n_samples: 1114 668 223 223
+Test record ids (first 20): [886, 101, 1120, 730, 291, 875, 958, 260, 128, 1043, 620, 88, 1005, 872, 617, 538, 508, 44, 273, 817]
+Test record ids (last 20): [982, 275, 991, 997, 66, 801, 67, 942, 12, 361, 555, 710, 333, 1017, 851, 184, 882, 509, 726, 587]
+data_max: tensor([37.2551, 36.6691, 38.2520,  3.0401,  2.9104], device='cuda:0')
+data_min: tensor([-0.3057, -0.1280, -0.1738, -3.8821, -4.1854], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+Dataset n_samples after time split: 4456 2672 892 892
+run bench_ushcn_6mo_dlinear_opera_s1 | device cuda:0 | params 52321 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 128, "history": 24, "n_records": 100000000, "name": "ushcn", "patch_size": 1.5, "pred_window": 6, "stride": 1.5}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_ushcn_6mo_dlinear_vanilla_s1/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "dlinear", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 1.14147 val_mse 1.18718 best 1.18718@0 (4.4s)
+epoch 001 loss 1.04789 val_mse 1.10583 best 1.10583@1 (2.5s)
+epoch 002 loss 0.98321 val_mse 1.07578 best 1.07578@2 (2.7s)
+epoch 003 loss 0.95326 val_mse 1.07119 best 1.07119@3 (3.6s)
+epoch 004 loss 0.93925 val_mse 1.05980 best 1.05980@4 (3.8s)
+epoch 005 loss 0.92881 val_mse 1.03945 best 1.03945@5 (4.1s)
+epoch 006 loss 0.91419 val_mse 1.03622 best 1.03622@6 (3.8s)
+epoch 007 loss 0.90741 val_mse 1.01960 best 1.01960@7 (3.8s)
+epoch 008 loss 0.87722 val_mse 1.00690 best 1.00690@8 (3.8s)
+epoch 009 loss 0.87052 val_mse 0.99893 best 0.99893@9 (3.8s)
+epoch 010 loss 0.86819 val_mse 0.99623 best 0.99623@10 (3.9s)
+epoch 011 loss 0.84374 val_mse 0.96346 best 0.96346@11 (3.9s)
+epoch 012 loss 0.84192 val_mse 0.96325 best 0.96325@12 (4.0s)
+epoch 013 loss 0.81053 val_mse 0.92285 best 0.92285@13 (4.1s)
+epoch 014 loss 0.76520 val_mse 0.88080 best 0.88080@14 (3.9s)
+epoch 015 loss 0.76083 val_mse 0.87807 best 0.87807@15 (3.9s)
+epoch 016 loss 0.72986 val_mse 0.87095 best 0.87095@16 (3.8s)
+epoch 017 loss 0.70262 val_mse 0.86093 best 0.86093@17 (3.8s)
+epoch 018 loss 0.68741 val_mse 0.81180 best 0.81180@18 (3.8s)
+epoch 019 loss 0.65211 val_mse 0.80638 best 0.80638@19 (3.7s)
+epoch 020 loss 0.65365 val_mse 0.79959 best 0.79959@20 (4.2s)
+epoch 021 loss 0.64426 val_mse 0.78218 best 0.78218@21 (3.8s)
+epoch 022 loss 0.63151 val_mse 0.77592 best 0.77592@22 (3.9s)
+epoch 023 loss 0.62489 val_mse 0.76189 best 0.76189@23 (3.9s)
+epoch 024 loss 0.62149 val_mse 0.76488 best 0.76189@23 (3.9s)
+epoch 025 loss 0.61643 val_mse 0.76095 best 0.76095@25 (4.3s)
+epoch 026 loss 0.62080 val_mse 0.75705 best 0.75705@26 (3.9s)
+epoch 027 loss 0.60515 val_mse 0.74507 best 0.74507@27 (3.9s)
+epoch 028 loss 0.60767 val_mse 0.74596 best 0.74507@27 (3.9s)
+epoch 029 loss 0.61556 val_mse 0.74343 best 0.74343@29 (4.0s)
+epoch 030 loss 0.60156 val_mse 0.74940 best 0.74343@29 (4.1s)
+epoch 031 loss 0.60101 val_mse 0.73856 best 0.73856@31 (3.8s)
+epoch 032 loss 0.60298 val_mse 0.75191 best 0.73856@31 (3.9s)
+epoch 033 loss 0.59299 val_mse 0.74083 best 0.73856@31 (3.9s)
+epoch 034 loss 0.59527 val_mse 0.74363 best 0.73856@31 (4.0s)
+epoch 035 loss 0.58387 val_mse 0.73563 best 0.73563@35 (3.9s)
+epoch 036 loss 0.58940 val_mse 0.74676 best 0.73563@35 (4.1s)
+epoch 037 loss 0.60184 val_mse 0.73967 best 0.73563@35 (3.9s)
+epoch 038 loss 0.59027 val_mse 0.74924 best 0.73563@35 (3.9s)
+epoch 039 loss 0.58925 val_mse 0.74554 best 0.73563@35 (4.0s)
+  [identity                                  ] MSE 0.52018  MAE 0.31909
+  [random_dropout:0.7                        ] MSE 0.62215  MAE 0.40295
+  [temporal_stride:3                         ] MSE 0.53641  MAE 0.34207
+  [variable_dropout:0.5                      ] MSE 0.66042  MAE 0.41140
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.61134  MAE 0.39019
+best {'val_mse': 0.735632061958313, 'epoch': 35} -> results/raw/bench_ushcn_6mo_dlinear_opera_s1/results.json
+summary {
+  "clean_mse": 0.5201799273490906,
+  "mean_shift_mse": 0.6075820624828339,
+  "mean_degradation": 0.16802289080848765,
+  "worst_mse": 0.6604205369949341,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.6075820624828339,
+  "mean_unseen_degradation": 0.16802289080848765
+}
+[1/4] ok bench_ushcn_6mo_dlinear_opera_s1 (3.4 min)
+
+[2/4] bench_ushcn_6mo_dlinear_opera_s2
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/ushcn_6mo_distillation.yaml --seed 2 --name bench_ushcn_6mo_dlinear_opera_s2 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=dlinear distillation.teacher_ckpt=results/raw/bench_ushcn_6mo_dlinear_vanilla_s2/model.pt --no_wandb
+Total records: 1114
+Dataset n_samples: 1114 668 223 223
+Test record ids (first 20): [886, 101, 1120, 730, 291, 875, 958, 260, 128, 1043, 620, 88, 1005, 872, 617, 538, 508, 44, 273, 817]
+Test record ids (last 20): [982, 275, 991, 997, 66, 801, 67, 942, 12, 361, 555, 710, 333, 1017, 851, 184, 882, 509, 726, 587]
+data_max: tensor([37.2551, 36.6691, 38.2520,  3.0401,  2.9104], device='cuda:0')
+data_min: tensor([-0.3057, -0.1280, -0.1738, -3.8821, -4.1854], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+Dataset n_samples after time split: 4456 2672 892 892
+run bench_ushcn_6mo_dlinear_opera_s2 | device cuda:0 | params 52321 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 128, "history": 24, "n_records": 100000000, "name": "ushcn", "patch_size": 1.5, "pred_window": 6, "stride": 1.5}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_ushcn_6mo_dlinear_vanilla_s2/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "dlinear", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 1.15614 val_mse 1.20750 best 1.20750@0 (4.5s)
+epoch 001 loss 1.10609 val_mse 1.13876 best 1.13876@1 (2.5s)
+epoch 002 loss 1.00270 val_mse 1.08159 best 1.08159@2 (2.7s)
+epoch 003 loss 0.96465 val_mse 1.06820 best 1.06820@3 (3.6s)
+epoch 004 loss 0.95404 val_mse 1.06441 best 1.06441@4 (3.9s)
+epoch 005 loss 0.93828 val_mse 1.05364 best 1.05364@5 (3.8s)
+epoch 006 loss 0.91817 val_mse 1.04019 best 1.04019@6 (4.1s)
+epoch 007 loss 0.88235 val_mse 1.00918 best 1.00918@7 (3.9s)
+epoch 008 loss 0.86392 val_mse 0.98060 best 0.98060@8 (3.9s)
+epoch 009 loss 0.78736 val_mse 1.03845 best 0.98060@8 (3.8s)
+epoch 010 loss 0.78974 val_mse 0.94032 best 0.94032@10 (3.9s)
+epoch 011 loss 0.73170 val_mse 0.91792 best 0.91792@11 (4.0s)
+epoch 012 loss 0.70157 val_mse 0.90197 best 0.90197@12 (4.0s)
+epoch 013 loss 0.70621 val_mse 0.88137 best 0.88137@13 (4.0s)
+epoch 014 loss 0.65172 val_mse 0.87764 best 0.87764@14 (4.0s)
+epoch 015 loss 0.65583 val_mse 0.86578 best 0.86578@15 (4.0s)
+epoch 016 loss 0.64046 val_mse 0.90103 best 0.86578@15 (4.1s)
+epoch 017 loss 0.65694 val_mse 0.87262 best 0.86578@15 (3.9s)
+epoch 018 loss 0.63541 val_mse 0.85698 best 0.85698@18 (3.9s)
+epoch 019 loss 0.63325 val_mse 0.85368 best 0.85368@19 (3.8s)
+epoch 020 loss 0.62195 val_mse 0.85846 best 0.85368@19 (3.8s)
+epoch 021 loss 0.61858 val_mse 0.85206 best 0.85206@21 (3.7s)
+epoch 022 loss 0.61852 val_mse 0.84556 best 0.84556@22 (3.9s)
+epoch 023 loss 0.61728 val_mse 0.84371 best 0.84371@23 (3.9s)
+epoch 024 loss 0.61999 val_mse 0.84791 best 0.84371@23 (3.9s)
+epoch 025 loss 0.61509 val_mse 0.84016 best 0.84016@25 (3.8s)
+epoch 026 loss 0.59927 val_mse 0.84171 best 0.84016@25 (3.9s)
+epoch 027 loss 0.60084 val_mse 0.82856 best 0.82856@27 (3.9s)
+epoch 028 loss 0.59055 val_mse 0.83494 best 0.82856@27 (3.9s)
+epoch 029 loss 0.59338 val_mse 0.82596 best 0.82596@29 (3.8s)
+epoch 030 loss 0.59394 val_mse 0.83468 best 0.82596@29 (3.7s)
+epoch 031 loss 0.60142 val_mse 0.82509 best 0.82509@31 (4.2s)
+epoch 032 loss 0.57954 val_mse 0.82016 best 0.82016@32 (3.6s)
+epoch 033 loss 0.59130 val_mse 0.81022 best 0.81022@33 (3.9s)
+epoch 034 loss 0.58684 val_mse 0.81857 best 0.81022@33 (3.8s)
+epoch 035 loss 0.60146 val_mse 0.82395 best 0.81022@33 (3.9s)
+epoch 036 loss 0.59219 val_mse 0.79763 best 0.79763@36 (4.0s)
+epoch 037 loss 0.59686 val_mse 0.79178 best 0.79178@37 (3.9s)
+epoch 038 loss 0.57582 val_mse 0.78674 best 0.78674@38 (4.0s)
+epoch 039 loss 0.56950 val_mse 0.78440 best 0.78440@39 (3.7s)
+  [identity                                  ] MSE 0.52468  MAE 0.34615
+  [random_dropout:0.7                        ] MSE 0.62028  MAE 0.41324
+  [temporal_stride:3                         ] MSE 0.53657  MAE 0.35733
+  [variable_dropout:0.5                      ] MSE 0.66415  MAE 0.42628
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.61215  MAE 0.40220
+best {'val_mse': 0.7843958139419556, 'epoch': 39} -> results/raw/bench_ushcn_6mo_dlinear_opera_s2/results.json
+summary {
+  "clean_mse": 0.5246814489364624,
+  "mean_shift_mse": 0.6082894057035446,
+  "mean_degradation": 0.15934993878010525,
+  "worst_mse": 0.6641529202461243,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.6082894057035446,
+  "mean_unseen_degradation": 0.15934993878010525
+}
+[2/4] ok bench_ushcn_6mo_dlinear_opera_s2 (3.4 min)
+
+[3/4] bench_ushcn_6mo_dlinear_opera_s3
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/ushcn_6mo_distillation.yaml --seed 3 --name bench_ushcn_6mo_dlinear_opera_s3 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=dlinear distillation.teacher_ckpt=results/raw/bench_ushcn_6mo_dlinear_vanilla_s3/model.pt --no_wandb
+Total records: 1114
+Dataset n_samples: 1114 668 223 223
+Test record ids (first 20): [886, 101, 1120, 730, 291, 875, 958, 260, 128, 1043, 620, 88, 1005, 872, 617, 538, 508, 44, 273, 817]
+Test record ids (last 20): [982, 275, 991, 997, 66, 801, 67, 942, 12, 361, 555, 710, 333, 1017, 851, 184, 882, 509, 726, 587]
+data_max: tensor([37.2551, 36.6691, 38.2520,  3.0401,  2.9104], device='cuda:0')
+data_min: tensor([-0.3057, -0.1280, -0.1738, -3.8821, -4.1854], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+Dataset n_samples after time split: 4456 2672 892 892
+run bench_ushcn_6mo_dlinear_opera_s3 | device cuda:0 | params 52321 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 128, "history": 24, "n_records": 100000000, "name": "ushcn", "patch_size": 1.5, "pred_window": 6, "stride": 1.5}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_ushcn_6mo_dlinear_vanilla_s3/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "dlinear", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 1.24382 val_mse 1.20780 best 1.20780@0 (4.4s)
+epoch 001 loss 1.18921 val_mse 1.15116 best 1.15116@1 (2.5s)
+epoch 002 loss 1.04891 val_mse 1.07836 best 1.07836@2 (2.9s)
+epoch 003 loss 0.99960 val_mse 1.06240 best 1.06240@3 (3.6s)
+epoch 004 loss 0.98342 val_mse 1.05232 best 1.05232@4 (4.0s)
+epoch 005 loss 0.96135 val_mse 1.04410 best 1.04410@5 (3.9s)
+epoch 006 loss 0.94026 val_mse 1.02600 best 1.02600@6 (4.0s)
+epoch 007 loss 0.91812 val_mse 1.00777 best 1.00777@7 (4.1s)
+epoch 008 loss 0.90455 val_mse 1.00549 best 1.00549@8 (3.9s)
+epoch 009 loss 0.87753 val_mse 0.97792 best 0.97792@9 (3.8s)
+epoch 010 loss 0.82354 val_mse 0.92010 best 0.92010@10 (4.0s)
+epoch 011 loss 0.76209 val_mse 0.87037 best 0.87037@11 (4.0s)
+epoch 012 loss 0.72108 val_mse 0.85169 best 0.85169@12 (3.9s)
+epoch 013 loss 0.68594 val_mse 0.83787 best 0.83787@13 (3.8s)
+epoch 014 loss 0.67574 val_mse 0.83070 best 0.83070@14 (3.9s)
+epoch 015 loss 0.64639 val_mse 0.82769 best 0.82769@15 (3.9s)
+epoch 016 loss 0.64198 val_mse 0.81889 best 0.81889@16 (4.0s)
+epoch 017 loss 0.63975 val_mse 0.79147 best 0.79147@17 (4.1s)
+epoch 018 loss 0.63098 val_mse 0.80988 best 0.79147@17 (3.8s)
+epoch 019 loss 0.62031 val_mse 0.80063 best 0.79147@17 (3.8s)
+epoch 020 loss 0.61867 val_mse 0.80856 best 0.79147@17 (3.9s)
+epoch 021 loss 0.60693 val_mse 0.79771 best 0.79147@17 (3.9s)
+epoch 022 loss 0.59399 val_mse 0.79983 best 0.79147@17 (3.9s)
+epoch 023 loss 0.59031 val_mse 0.77672 best 0.77672@23 (3.9s)
+epoch 024 loss 0.59245 val_mse 0.78821 best 0.77672@23 (3.7s)
+epoch 025 loss 0.60206 val_mse 0.80847 best 0.77672@23 (3.9s)
+epoch 026 loss 0.60389 val_mse 0.78462 best 0.77672@23 (3.9s)
+epoch 027 loss 0.59310 val_mse 0.77805 best 0.77672@23 (3.8s)
+epoch 028 loss 0.59889 val_mse 0.77945 best 0.77672@23 (3.9s)
+epoch 029 loss 0.58802 val_mse 0.77900 best 0.77672@23 (3.9s)
+epoch 030 loss 0.58196 val_mse 0.79062 best 0.77672@23 (3.8s)
+epoch 031 loss 0.59908 val_mse 0.78967 best 0.77672@23 (3.8s)
+epoch 032 loss 0.57449 val_mse 0.79371 best 0.77672@23 (3.9s)
+epoch 033 loss 0.59683 val_mse 0.77778 best 0.77672@23 (3.9s)
+early stop
+  [identity                                  ] MSE 0.53318  MAE 0.33258
+  [random_dropout:0.7                        ] MSE 0.60843  MAE 0.38395
+  [temporal_stride:3                         ] MSE 0.52689  MAE 0.32704
+  [variable_dropout:0.5                      ] MSE 0.67178  MAE 0.41094
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.60685  MAE 0.37584
+best {'val_mse': 0.7767223119735718, 'epoch': 23} -> results/raw/bench_ushcn_6mo_dlinear_opera_s3/results.json
+summary {
+  "clean_mse": 0.5331777334213257,
+  "mean_shift_mse": 0.6034889817237854,
+  "mean_degradation": 0.13187206422009118,
+  "worst_mse": 0.6717835664749146,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.6034889817237854,
+  "mean_unseen_degradation": 0.13187206422009118
+}
+[3/4] ok bench_ushcn_6mo_dlinear_opera_s3 (2.9 min)
+
+[4/4] bench_ushcn_6mo_dlinear_opera_s4
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/ushcn_6mo_distillation.yaml --seed 4 --name bench_ushcn_6mo_dlinear_opera_s4 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=dlinear distillation.teacher_ckpt=results/raw/bench_ushcn_6mo_dlinear_vanilla_s4/model.pt --no_wandb
+Total records: 1114
+Dataset n_samples: 1114 668 223 223
+Test record ids (first 20): [886, 101, 1120, 730, 291, 875, 958, 260, 128, 1043, 620, 88, 1005, 872, 617, 538, 508, 44, 273, 817]
+Test record ids (last 20): [982, 275, 991, 997, 66, 801, 67, 942, 12, 361, 555, 710, 333, 1017, 851, 184, 882, 509, 726, 587]
+data_max: tensor([37.2551, 36.6691, 38.2520,  3.0401,  2.9104], device='cuda:0')
+data_min: tensor([-0.3057, -0.1280, -0.1738, -3.8821, -4.1854], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+Dataset n_samples after time split: 4456 2672 892 892
+run bench_ushcn_6mo_dlinear_opera_s4 | device cuda:0 | params 52321 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 128, "history": 24, "n_records": 100000000, "name": "ushcn", "patch_size": 1.5, "pred_window": 6, "stride": 1.5}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_ushcn_6mo_dlinear_vanilla_s4/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "dlinear", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 1.17055 val_mse 1.18214 best 1.18214@0 (4.8s)
+epoch 001 loss 1.06534 val_mse 1.09784 best 1.09784@1 (4.2s)
+epoch 002 loss 0.99274 val_mse 1.07274 best 1.07274@2 (4.0s)
+epoch 003 loss 0.97287 val_mse 1.06411 best 1.06411@3 (4.0s)
+epoch 004 loss 0.95436 val_mse 1.05234 best 1.05234@4 (4.1s)
+epoch 005 loss 0.94360 val_mse 1.03807 best 1.03807@5 (4.0s)
+epoch 006 loss 0.91487 val_mse 1.03313 best 1.03313@6 (3.4s)
+epoch 007 loss 0.90139 val_mse 1.01777 best 1.01777@7 (2.7s)
+epoch 008 loss 0.87838 val_mse 1.00061 best 1.00061@8 (2.7s)
+epoch 009 loss 0.85153 val_mse 0.97492 best 0.97492@9 (3.3s)
+epoch 010 loss 0.77609 val_mse 0.92691 best 0.92691@10 (3.8s)
+epoch 011 loss 0.73605 val_mse 0.89748 best 0.89748@11 (3.8s)
+epoch 012 loss 0.73024 val_mse 0.91482 best 0.89748@11 (3.9s)
+epoch 013 loss 0.70176 val_mse 0.88386 best 0.88386@13 (3.9s)
+epoch 014 loss 0.68007 val_mse 0.86182 best 0.86182@14 (3.8s)
+epoch 015 loss 0.64617 val_mse 0.84940 best 0.84940@15 (3.8s)
+epoch 016 loss 0.64370 val_mse 0.85043 best 0.84940@15 (3.9s)
+epoch 017 loss 0.64306 val_mse 0.83929 best 0.83929@17 (3.8s)
+epoch 018 loss 0.63635 val_mse 0.86284 best 0.83929@17 (4.0s)
+epoch 019 loss 0.64572 val_mse 0.84233 best 0.83929@17 (3.8s)
+epoch 020 loss 0.60865 val_mse 0.83723 best 0.83723@20 (3.7s)
+epoch 021 loss 0.59363 val_mse 0.82884 best 0.82884@21 (3.8s)
+epoch 022 loss 0.59577 val_mse 0.88208 best 0.82884@21 (3.8s)
+epoch 023 loss 0.61376 val_mse 0.82733 best 0.82733@23 (3.9s)
+epoch 024 loss 0.59237 val_mse 0.82413 best 0.82413@24 (3.9s)
+epoch 025 loss 0.59416 val_mse 0.81643 best 0.81643@25 (3.8s)
+epoch 026 loss 0.58364 val_mse 0.81957 best 0.81643@25 (3.9s)
+epoch 027 loss 0.60015 val_mse 0.80213 best 0.80213@27 (3.9s)
+epoch 028 loss 0.58168 val_mse 0.82464 best 0.80213@27 (3.7s)
+epoch 029 loss 0.59719 val_mse 0.80218 best 0.80213@27 (3.8s)
+epoch 030 loss 0.58255 val_mse 0.80036 best 0.80036@30 (4.0s)
+epoch 031 loss 0.57071 val_mse 0.79973 best 0.79973@31 (3.9s)
+epoch 032 loss 0.56895 val_mse 0.78818 best 0.78818@32 (3.8s)
+epoch 033 loss 0.58243 val_mse 0.80408 best 0.78818@32 (3.8s)
+epoch 034 loss 0.57339 val_mse 0.80228 best 0.78818@32 (4.1s)
+epoch 035 loss 0.58822 val_mse 0.78412 best 0.78412@35 (3.8s)
+epoch 036 loss 0.56924 val_mse 0.77672 best 0.77672@36 (3.8s)
+epoch 037 loss 0.56615 val_mse 0.76997 best 0.76997@37 (3.8s)
+epoch 038 loss 0.55234 val_mse 0.75955 best 0.75955@38 (3.9s)
+epoch 039 loss 0.57105 val_mse 0.75568 best 0.75568@39 (3.6s)
+  [identity                                  ] MSE 0.51852  MAE 0.30408
+  [random_dropout:0.7                        ] MSE 0.60673  MAE 0.37173
+  [temporal_stride:3                         ] MSE 0.52936  MAE 0.31313
+  [variable_dropout:0.5                      ] MSE 0.65980  MAE 0.39127
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.60540  MAE 0.36266
+best {'val_mse': 0.7556812167167664, 'epoch': 39} -> results/raw/bench_ushcn_6mo_dlinear_opera_s4/results.json
+summary {
+  "clean_mse": 0.5185155272483826,
+  "mean_shift_mse": 0.6003242284059525,
+  "mean_degradation": 0.1577748338448144,
+  "worst_mse": 0.6597977876663208,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.6003242284059525,
+  "mean_unseen_degradation": 0.1577748338448144
+}
+[4/4] ok bench_ushcn_6mo_dlinear_opera_s4 (3.3 min)
+
+stage D: 4 ok, 0 failed

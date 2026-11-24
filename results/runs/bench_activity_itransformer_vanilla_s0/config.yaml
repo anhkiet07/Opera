@@ -1,0 +1,50 @@
+data:
+  batch_size: 32
+  history: 3000
+  n_records: 100000000
+  name: activity
+  patch_size: 750
+  stride: 750
+distillation:
+  enabled: false
+  loss: prediction
+  prediction_loss: mse
+  teacher_ckpt: null
+  teacher_type: frozen
+  weight: 1.0
+experiment: E0_baseline
+hard_mining:
+  alpha: 0.5
+  candidate_pool: 8
+  enabled: false
+  top_k: 2
+  warmup_epochs: 5
+model:
+  adaptive_query: none
+  backbone: itransformer
+  dropout: 0.1
+  embedding: quite
+  hid_dim: 64
+  irr_emb: true
+  nhead: 4
+  nlayer: 3
+  observation_aware: false
+observation:
+  constraints:
+    max_gap: 0.6
+    min_density: 0.15
+    min_obs_per_sample: 4
+    min_variable_coverage: 0.3
+  num_views: 1
+  rich_process: identity
+  train_processes:
+  - identity
+seed: 0
+training:
+  epochs: 40
+  lr: 0.001
+  min_epochs: 15
+  patience: 10
+wandb:
+  enabled: true
+  project: opera

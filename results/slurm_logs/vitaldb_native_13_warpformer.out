@@ -1,0 +1,673 @@
+stage A: 1 cells
+
+[1/1] bench_vitaldb_warpformer_vanilla_s0
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_baseline.yaml --seed 0 --name bench_vitaldb_warpformer_vanilla_s0 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=warpformer --no_wandb
+vitaldb: 500/6388 cases processed
+vitaldb: 1000/6388 cases processed
+vitaldb: 1500/6388 cases processed
+vitaldb: 2000/6388 cases processed
+vitaldb: 2500/6388 cases processed
+vitaldb: 3000/6388 cases processed
+vitaldb: 3500/6388 cases processed
+vitaldb: 4000/6388 cases processed
+vitaldb: 4500/6388 cases processed
+vitaldb: 5000/6388 cases processed
+vitaldb: 5500/6388 cases processed
+vitaldb: 6000/6388 cases processed
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_warpformer_vanilla_s0 | device cuda:0 | params 85387 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00656 val_mse 0.00465 best 0.00465@0 (14.4s)
+epoch 001 loss 0.00489 val_mse 0.00449 best 0.00449@1 (14.0s)
+epoch 002 loss 0.00464 val_mse 0.00421 best 0.00421@2 (14.1s)
+epoch 003 loss 0.00451 val_mse 0.00417 best 0.00417@3 (14.1s)
+epoch 004 loss 0.00445 val_mse 0.00399 best 0.00399@4 (14.0s)
+epoch 005 loss 0.00439 val_mse 0.00413 best 0.00399@4 (14.1s)
+epoch 006 loss 0.00433 val_mse 0.00402 best 0.00399@4 (14.0s)
+epoch 007 loss 0.00427 val_mse 0.00399 best 0.00399@4 (13.9s)
+epoch 008 loss 0.00421 val_mse 0.00384 best 0.00384@8 (14.0s)
+epoch 009 loss 0.00417 val_mse 0.00391 best 0.00384@8 (14.0s)
+epoch 010 loss 0.00423 val_mse 0.00413 best 0.00384@8 (13.9s)
+epoch 011 loss 0.00420 val_mse 0.00394 best 0.00384@8 (14.0s)
+epoch 012 loss 0.00417 val_mse 0.00403 best 0.00384@8 (14.0s)
+epoch 013 loss 0.00428 val_mse 0.00415 best 0.00384@8 (13.9s)
+epoch 014 loss 0.00417 val_mse 0.00470 best 0.00384@8 (14.0s)
+epoch 015 loss 0.00418 val_mse 0.00391 best 0.00384@8 (14.0s)
+epoch 016 loss 0.00418 val_mse 0.00386 best 0.00384@8 (13.9s)
+epoch 017 loss 0.00411 val_mse 0.00396 best 0.00384@8 (14.0s)
+epoch 018 loss 0.00413 val_mse 0.00398 best 0.00384@8 (14.0s)
+early stop
+  [identity                                  ] MSE 0.00407  MAE 0.04380
+  [random_dropout:0.7                        ] MSE 0.00689  MAE 0.06185
+  [temporal_stride:3                         ] MSE 0.00527  MAE 0.05225
+  [variable_dropout:0.5                      ] MSE 0.00725  MAE 0.06292
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00629  MAE 0.05754
+best {'val_mse': 0.0038386101368814707, 'epoch': 8} -> results/raw/bench_vitaldb_warpformer_vanilla_s0/results.json
+summary {
+  "clean_mse": 0.004070769064128399,
+  "mean_shift_mse": 0.006425604224205017,
+  "mean_degradation": 0.5784742693530361,
+  "worst_mse": 0.007253717165440321,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.006425604224205017,
+  "mean_unseen_degradation": 0.5784742693530361
+}
+[1/1] ok bench_vitaldb_warpformer_vanilla_s0 (9.9 min)
+
+stage A: 1 ok, 0 failed
+stage B: 4 cells
+
+[1/4] bench_vitaldb_warpformer_vanilla_s1
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_baseline.yaml --seed 1 --name bench_vitaldb_warpformer_vanilla_s1 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=warpformer --no_wandb
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_warpformer_vanilla_s1 | device cuda:0 | params 85387 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00613 val_mse 0.00490 best 0.00490@0 (14.3s)
+epoch 001 loss 0.00486 val_mse 0.00535 best 0.00490@0 (13.9s)
+epoch 002 loss 0.00458 val_mse 0.00405 best 0.00405@2 (12.3s)
+epoch 003 loss 0.00447 val_mse 0.00447 best 0.00405@2 (13.8s)
+epoch 004 loss 0.00446 val_mse 0.00403 best 0.00403@4 (14.1s)
+epoch 005 loss 0.00437 val_mse 0.00417 best 0.00403@4 (14.0s)
+epoch 006 loss 0.00432 val_mse 0.00402 best 0.00402@6 (14.0s)
+epoch 007 loss 0.00427 val_mse 0.00404 best 0.00402@6 (14.1s)
+epoch 008 loss 0.00428 val_mse 0.00423 best 0.00402@6 (13.9s)
+epoch 009 loss 0.00417 val_mse 0.00399 best 0.00399@9 (14.0s)
+epoch 010 loss 0.00414 val_mse 0.00388 best 0.00388@10 (14.0s)
+epoch 011 loss 0.00412 val_mse 0.00389 best 0.00388@10 (13.9s)
+epoch 012 loss 0.00414 val_mse 0.00387 best 0.00387@12 (14.0s)
+epoch 013 loss 0.00407 val_mse 0.00396 best 0.00387@12 (14.0s)
+epoch 014 loss 0.00407 val_mse 0.00384 best 0.00384@14 (13.9s)
+epoch 015 loss 0.00408 val_mse 0.00383 best 0.00383@15 (13.9s)
+epoch 016 loss 0.00405 val_mse 0.00382 best 0.00382@16 (14.0s)
+epoch 017 loss 0.00405 val_mse 0.00387 best 0.00382@16 (13.9s)
+epoch 018 loss 0.00402 val_mse 0.00388 best 0.00382@16 (14.0s)
+epoch 019 loss 0.00403 val_mse 0.00390 best 0.00382@16 (14.1s)
+epoch 020 loss 0.00404 val_mse 0.00372 best 0.00372@20 (13.9s)
+epoch 021 loss 0.00395 val_mse 0.00376 best 0.00372@20 (14.0s)
+epoch 022 loss 0.00397 val_mse 0.00394 best 0.00372@20 (14.0s)
+epoch 023 loss 0.00393 val_mse 0.00368 best 0.00368@23 (13.9s)
+epoch 024 loss 0.00391 val_mse 0.00375 best 0.00368@23 (14.1s)
+epoch 025 loss 0.00397 val_mse 0.00369 best 0.00368@23 (14.1s)
+epoch 026 loss 0.00393 val_mse 0.00370 best 0.00368@23 (14.0s)
+epoch 027 loss 0.00398 val_mse 0.00385 best 0.00368@23 (14.1s)
+epoch 028 loss 0.00390 val_mse 0.00393 best 0.00368@23 (14.1s)
+epoch 029 loss 0.00390 val_mse 0.00374 best 0.00368@23 (14.0s)
+epoch 030 loss 0.00389 val_mse 0.00396 best 0.00368@23 (14.1s)
+epoch 031 loss 0.00388 val_mse 0.00370 best 0.00368@23 (14.0s)
+epoch 032 loss 0.00389 val_mse 0.00371 best 0.00368@23 (13.9s)
+epoch 033 loss 0.00390 val_mse 0.00374 best 0.00368@23 (14.0s)
+early stop
+  [identity                                  ] MSE 0.00393  MAE 0.04383
+  [random_dropout:0.7                        ] MSE 0.00892  MAE 0.06949
+  [temporal_stride:3                         ] MSE 0.00433  MAE 0.04716
+  [variable_dropout:0.5                      ] MSE 0.00881  MAE 0.06972
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00658  MAE 0.05821
+best {'val_mse': 0.0036765208933502436, 'epoch': 23} -> results/raw/bench_vitaldb_warpformer_vanilla_s1/results.json
+summary {
+  "clean_mse": 0.0039263502694666386,
+  "mean_shift_mse": 0.0071597982896491885,
+  "mean_degradation": 0.823525105573881,
+  "worst_mse": 0.008919239044189453,
+  "worst_condition": "random_dropout:0.7",
+  "mean_unseen_mse": 0.0071597982896491885,
+  "mean_unseen_degradation": 0.823525105573881
+}
+[1/4] ok bench_vitaldb_warpformer_vanilla_s1 (10.7 min)
+
+[2/4] bench_vitaldb_warpformer_vanilla_s2
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_baseline.yaml --seed 2 --name bench_vitaldb_warpformer_vanilla_s2 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=warpformer --no_wandb
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_warpformer_vanilla_s2 | device cuda:0 | params 85387 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00871 val_mse 0.00514 best 0.00514@0 (14.5s)
+epoch 001 loss 0.00502 val_mse 0.00491 best 0.00491@1 (14.0s)
+epoch 002 loss 0.00477 val_mse 0.00423 best 0.00423@2 (14.1s)
+epoch 003 loss 0.00463 val_mse 0.00460 best 0.00423@2 (14.0s)
+epoch 004 loss 0.00451 val_mse 0.00447 best 0.00423@2 (13.8s)
+epoch 005 loss 0.00444 val_mse 0.00424 best 0.00423@2 (13.7s)
+epoch 006 loss 0.00439 val_mse 0.00413 best 0.00413@6 (10.9s)
+epoch 007 loss 0.00436 val_mse 0.00444 best 0.00413@6 (11.3s)
+epoch 008 loss 0.00432 val_mse 0.00391 best 0.00391@8 (13.9s)
+epoch 009 loss 0.00427 val_mse 0.00402 best 0.00391@8 (13.9s)
+epoch 010 loss 0.00421 val_mse 0.00394 best 0.00391@8 (14.0s)
+epoch 011 loss 0.00415 val_mse 0.00400 best 0.00391@8 (13.9s)
+epoch 012 loss 0.00418 val_mse 0.00392 best 0.00391@8 (13.9s)
+epoch 013 loss 0.00413 val_mse 0.00407 best 0.00391@8 (14.0s)
+epoch 014 loss 0.00416 val_mse 0.00391 best 0.00391@8 (13.9s)
+epoch 015 loss 0.00405 val_mse 0.00381 best 0.00381@15 (13.9s)
+epoch 016 loss 0.00408 val_mse 0.00366 best 0.00366@16 (14.1s)
+epoch 017 loss 0.00404 val_mse 0.00376 best 0.00366@16 (14.0s)
+epoch 018 loss 0.00402 val_mse 0.00368 best 0.00366@16 (14.0s)
+epoch 019 loss 0.00396 val_mse 0.00365 best 0.00365@19 (14.1s)
+epoch 020 loss 0.00398 val_mse 0.00393 best 0.00365@19 (14.0s)
+epoch 021 loss 0.00394 val_mse 0.00388 best 0.00365@19 (14.0s)
+epoch 022 loss 0.00397 val_mse 0.00377 best 0.00365@19 (14.0s)
+epoch 023 loss 0.00394 val_mse 0.00376 best 0.00365@19 (13.9s)
+epoch 024 loss 0.00395 val_mse 0.00359 best 0.00359@24 (13.9s)
+epoch 025 loss 0.00391 val_mse 0.00370 best 0.00359@24 (14.1s)
+epoch 026 loss 0.00392 val_mse 0.00364 best 0.00359@24 (13.9s)
+epoch 027 loss 0.00394 val_mse 0.00360 best 0.00359@24 (14.0s)
+epoch 028 loss 0.00391 val_mse 0.00360 best 0.00359@24 (14.0s)
+epoch 029 loss 0.00385 val_mse 0.00378 best 0.00359@24 (13.9s)
+epoch 030 loss 0.00392 val_mse 0.00361 best 0.00359@24 (14.0s)
+epoch 031 loss 0.00394 val_mse 0.00367 best 0.00359@24 (14.0s)
+epoch 032 loss 0.00387 val_mse 0.00386 best 0.00359@24 (13.9s)
+epoch 033 loss 0.00391 val_mse 0.00364 best 0.00359@24 (14.1s)
+epoch 034 loss 0.00383 val_mse 0.00368 best 0.00359@24 (14.1s)
+early stop
+  [identity                                  ] MSE 0.00378  MAE 0.04239
+  [random_dropout:0.7                        ] MSE 0.01558  MAE 0.09127
+  [temporal_stride:3                         ] MSE 0.00397  MAE 0.04357
+  [variable_dropout:0.5                      ] MSE 0.00700  MAE 0.06103
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00497  MAE 0.04987
+best {'val_mse': 0.003588350024074316, 'epoch': 24} -> results/raw/bench_vitaldb_warpformer_vanilla_s2/results.json
+summary {
+  "clean_mse": 0.0037761114072054625,
+  "mean_shift_mse": 0.007881113444454968,
+  "mean_degradation": 1.0870977030541165,
+  "worst_mse": 0.015581770800054073,
+  "worst_condition": "random_dropout:0.7",
+  "mean_unseen_mse": 0.007881113444454968,
+  "mean_unseen_degradation": 1.0870977030541165
+}
+[2/4] ok bench_vitaldb_warpformer_vanilla_s2 (10.9 min)
+
+[3/4] bench_vitaldb_warpformer_vanilla_s3
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_baseline.yaml --seed 3 --name bench_vitaldb_warpformer_vanilla_s3 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=warpformer --no_wandb
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_warpformer_vanilla_s3 | device cuda:0 | params 85387 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00840 val_mse 0.00479 best 0.00479@0 (13.7s)
+epoch 001 loss 0.00491 val_mse 0.00537 best 0.00479@0 (12.6s)
+epoch 002 loss 0.00463 val_mse 0.00444 best 0.00444@2 (14.2s)
+epoch 003 loss 0.00453 val_mse 0.00420 best 0.00420@3 (13.9s)
+epoch 004 loss 0.00443 val_mse 0.00418 best 0.00418@4 (14.1s)
+epoch 005 loss 0.00436 val_mse 0.00404 best 0.00404@5 (14.0s)
+epoch 006 loss 0.00436 val_mse 0.00424 best 0.00404@5 (14.0s)
+epoch 007 loss 0.00428 val_mse 0.00395 best 0.00395@7 (14.1s)
+epoch 008 loss 0.00437 val_mse 0.00417 best 0.00395@7 (14.7s)
+epoch 009 loss 0.00423 val_mse 0.00446 best 0.00395@7 (14.0s)
+epoch 010 loss 0.00426 val_mse 0.00390 best 0.00390@10 (14.2s)
+epoch 011 loss 0.00437 val_mse 0.00394 best 0.00390@10 (14.2s)
+epoch 012 loss 0.00426 val_mse 0.00393 best 0.00390@10 (14.1s)
+epoch 013 loss 0.00418 val_mse 0.00395 best 0.00390@10 (14.1s)
+epoch 014 loss 0.00419 val_mse 0.00385 best 0.00385@14 (13.9s)
+epoch 015 loss 0.00414 val_mse 0.00415 best 0.00385@14 (14.1s)
+epoch 016 loss 0.00412 val_mse 0.00388 best 0.00385@14 (14.0s)
+epoch 017 loss 0.00414 val_mse 0.00400 best 0.00385@14 (13.9s)
+epoch 018 loss 0.00411 val_mse 0.00397 best 0.00385@14 (13.9s)
+epoch 019 loss 0.00407 val_mse 0.00388 best 0.00385@14 (13.9s)
+epoch 020 loss 0.00406 val_mse 0.00383 best 0.00383@20 (13.0s)
+epoch 021 loss 0.00404 val_mse 0.00373 best 0.00373@21 (12.9s)
+epoch 022 loss 0.00404 val_mse 0.00380 best 0.00373@21 (14.0s)
+epoch 023 loss 0.00399 val_mse 0.00397 best 0.00373@21 (13.8s)
+epoch 024 loss 0.00393 val_mse 0.00371 best 0.00371@24 (13.8s)
+epoch 025 loss 0.00396 val_mse 0.00384 best 0.00371@24 (10.9s)
+epoch 026 loss 0.00396 val_mse 0.00389 best 0.00371@24 (14.0s)
+epoch 027 loss 0.00390 val_mse 0.00387 best 0.00371@24 (14.0s)
+epoch 028 loss 0.00388 val_mse 0.00376 best 0.00371@24 (14.0s)
+epoch 029 loss 0.00395 val_mse 0.00367 best 0.00367@29 (14.2s)
+epoch 030 loss 0.00395 val_mse 0.00379 best 0.00367@29 (14.1s)
+epoch 031 loss 0.00390 val_mse 0.00389 best 0.00367@29 (14.0s)
+epoch 032 loss 0.00392 val_mse 0.00369 best 0.00367@29 (14.0s)
+epoch 033 loss 0.00433 val_mse 0.00449 best 0.00367@29 (14.0s)
+epoch 034 loss 0.00421 val_mse 0.00383 best 0.00367@29 (14.0s)
+epoch 035 loss 0.00413 val_mse 0.00376 best 0.00367@29 (14.2s)
+epoch 036 loss 0.00405 val_mse 0.00382 best 0.00367@29 (14.5s)
+epoch 037 loss 0.00402 val_mse 0.00377 best 0.00367@29 (14.3s)
+epoch 038 loss 0.00395 val_mse 0.00419 best 0.00367@29 (14.4s)
+epoch 039 loss 0.00397 val_mse 0.00371 best 0.00367@29 (14.2s)
+early stop
+  [identity                                  ] MSE 0.00386  MAE 0.04325
+  [random_dropout:0.7                        ] MSE 0.00907  MAE 0.07367
+  [temporal_stride:3                         ] MSE 0.00423  MAE 0.04660
+  [variable_dropout:0.5                      ] MSE 0.00857  MAE 0.06943
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00696  MAE 0.06122
+best {'val_mse': 0.003668483579531312, 'epoch': 29} -> results/raw/bench_vitaldb_warpformer_vanilla_s3/results.json
+summary {
+  "clean_mse": 0.0038643369916826487,
+  "mean_shift_mse": 0.007206278620287776,
+  "mean_degradation": 0.8648163024596738,
+  "worst_mse": 0.009067084640264511,
+  "worst_condition": "random_dropout:0.7",
+  "mean_unseen_mse": 0.007206278620287776,
+  "mean_unseen_degradation": 0.8648163024596738
+}
+[3/4] ok bench_vitaldb_warpformer_vanilla_s3 (12.4 min)
+
+[4/4] bench_vitaldb_warpformer_vanilla_s4
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_baseline.yaml --seed 4 --name bench_vitaldb_warpformer_vanilla_s4 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=warpformer --no_wandb
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_warpformer_vanilla_s4 | device cuda:0 | params 85387 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00683 val_mse 0.00461 best 0.00461@0 (14.5s)
+epoch 001 loss 0.00486 val_mse 0.00418 best 0.00418@1 (14.1s)
+epoch 002 loss 0.00459 val_mse 0.00411 best 0.00411@2 (13.9s)
+epoch 003 loss 0.00487 val_mse 0.00456 best 0.00411@2 (14.0s)
+epoch 004 loss 0.00472 val_mse 0.00500 best 0.00411@2 (14.2s)
+epoch 005 loss 0.00477 val_mse 0.00449 best 0.00411@2 (14.1s)
+epoch 006 loss 0.00470 val_mse 0.00459 best 0.00411@2 (14.1s)
+epoch 007 loss 0.00475 val_mse 0.00442 best 0.00411@2 (14.1s)
+epoch 008 loss 0.00472 val_mse 0.00452 best 0.00411@2 (14.0s)
+epoch 009 loss 0.00470 val_mse 0.00440 best 0.00411@2 (14.0s)
+epoch 010 loss 0.00472 val_mse 0.00445 best 0.00411@2 (12.1s)
+epoch 011 loss 0.00465 val_mse 0.00448 best 0.00411@2 (14.8s)
+epoch 012 loss 0.00464 val_mse 0.00459 best 0.00411@2 (15.1s)
+epoch 013 loss 0.00465 val_mse 0.00458 best 0.00411@2 (15.1s)
+epoch 014 loss 0.00461 val_mse 0.00447 best 0.00411@2 (15.1s)
+early stop
+  [identity                                  ] MSE 0.00432  MAE 0.04518
+  [random_dropout:0.7                        ] MSE 0.00842  MAE 0.06850
+  [temporal_stride:3                         ] MSE 0.00515  MAE 0.05100
+  [variable_dropout:0.5                      ] MSE 0.00900  MAE 0.07096
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00717  MAE 0.06154
+best {'val_mse': 0.004113479983061552, 'epoch': 2} -> results/raw/bench_vitaldb_warpformer_vanilla_s4/results.json
+summary {
+  "clean_mse": 0.004321028478443623,
+  "mean_shift_mse": 0.007434589439071715,
+  "mean_degradation": 0.7205601574164019,
+  "worst_mse": 0.008997928351163864,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.007434589439071715,
+  "mean_unseen_degradation": 0.7205601574164019
+}
+[4/4] ok bench_vitaldb_warpformer_vanilla_s4 (5.1 min)
+
+stage B: 4 ok, 0 failed
+stage C: 1 cells
+
+[1/1] bench_vitaldb_warpformer_opera_s0
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_distillation.yaml --seed 0 --name bench_vitaldb_warpformer_opera_s0 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=warpformer distillation.teacher_ckpt=results/raw/bench_vitaldb_warpformer_vanilla_s0/model.pt --no_wandb
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_warpformer_opera_s0 | device cuda:0 | params 85387 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_vitaldb_warpformer_vanilla_s0/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+epoch 000 loss 0.00837 val_mse 0.00475 best 0.00475@0 (17.6s)
+epoch 001 loss 0.00544 val_mse 0.00448 best 0.00448@1 (17.0s)
+epoch 002 loss 0.00519 val_mse 0.00447 best 0.00447@2 (17.0s)
+epoch 003 loss 0.00511 val_mse 0.00433 best 0.00433@3 (17.0s)
+epoch 004 loss 0.00486 val_mse 0.00415 best 0.00415@4 (17.3s)
+epoch 005 loss 0.00473 val_mse 0.00414 best 0.00414@5 (17.3s)
+epoch 006 loss 0.00465 val_mse 0.00425 best 0.00414@5 (17.2s)
+epoch 007 loss 0.00468 val_mse 0.00395 best 0.00395@7 (17.1s)
+epoch 008 loss 0.00454 val_mse 0.00392 best 0.00392@8 (17.1s)
+epoch 009 loss 0.00454 val_mse 0.00393 best 0.00392@8 (17.1s)
+epoch 010 loss 0.00444 val_mse 0.00412 best 0.00392@8 (16.9s)
+epoch 011 loss 0.00448 val_mse 0.00395 best 0.00392@8 (17.1s)
+epoch 012 loss 0.00440 val_mse 0.00384 best 0.00384@12 (17.1s)
+epoch 013 loss 0.00439 val_mse 0.00388 best 0.00384@12 (17.0s)
+epoch 014 loss 0.00436 val_mse 0.00391 best 0.00384@12 (17.0s)
+epoch 015 loss 0.00431 val_mse 0.00371 best 0.00371@15 (17.0s)
+epoch 016 loss 0.00431 val_mse 0.00389 best 0.00371@15 (17.1s)
+epoch 017 loss 0.00421 val_mse 0.00386 best 0.00371@15 (17.2s)
+epoch 018 loss 0.00422 val_mse 0.00369 best 0.00369@18 (17.1s)
+epoch 019 loss 0.00420 val_mse 0.00372 best 0.00369@18 (17.3s)
+epoch 020 loss 0.00414 val_mse 0.00374 best 0.00369@18 (17.0s)
+epoch 021 loss 0.00409 val_mse 0.00370 best 0.00369@18 (17.0s)
+epoch 022 loss 0.00413 val_mse 0.00374 best 0.00369@18 (17.0s)
+epoch 023 loss 0.00417 val_mse 0.00366 best 0.00366@23 (17.0s)
+epoch 024 loss 0.00420 val_mse 0.00372 best 0.00366@23 (15.1s)
+epoch 025 loss 0.00418 val_mse 0.00380 best 0.00366@23 (17.1s)
+epoch 026 loss 0.00413 val_mse 0.00369 best 0.00366@23 (17.2s)
+epoch 027 loss 0.00409 val_mse 0.00371 best 0.00366@23 (17.0s)
+epoch 028 loss 0.00407 val_mse 0.00367 best 0.00366@23 (17.0s)
+epoch 029 loss 0.00407 val_mse 0.00363 best 0.00363@29 (17.0s)
+epoch 030 loss 0.00437 val_mse 0.00393 best 0.00363@29 (17.2s)
+epoch 031 loss 0.00441 val_mse 0.00376 best 0.00363@29 (17.1s)
+epoch 032 loss 0.00432 val_mse 0.00395 best 0.00363@29 (16.3s)
+epoch 033 loss 0.00429 val_mse 0.00375 best 0.00363@29 (14.0s)
+epoch 034 loss 0.00421 val_mse 0.00371 best 0.00363@29 (17.0s)
+epoch 035 loss 0.00420 val_mse 0.00381 best 0.00363@29 (17.1s)
+epoch 036 loss 0.00416 val_mse 0.00375 best 0.00363@29 (17.0s)
+epoch 037 loss 0.00419 val_mse 0.00373 best 0.00363@29 (17.1s)
+epoch 038 loss 0.00408 val_mse 0.00366 best 0.00363@29 (17.2s)
+epoch 039 loss 0.00406 val_mse 0.00365 best 0.00363@29 (17.2s)
+early stop
+  [identity                                  ] MSE 0.00387  MAE 0.04275
+  [random_dropout:0.7                        ] MSE 0.00383  MAE 0.04263
+  [temporal_stride:3                         ] MSE 0.00403  MAE 0.04385
+  [variable_dropout:0.5                      ] MSE 0.00416  MAE 0.04482
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00425  MAE 0.04536
+best {'val_mse': 0.0036332791205495596, 'epoch': 29} -> results/raw/bench_vitaldb_warpformer_opera_s0/results.json
+summary {
+  "clean_mse": 0.0038662946317344904,
+  "mean_shift_mse": 0.0040671308524906635,
+  "mean_degradation": 0.05194539989469823,
+  "worst_mse": 0.004246974363923073,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.0040671308524906635,
+  "mean_unseen_degradation": 0.05194539989469823
+}
+[1/1] ok bench_vitaldb_warpformer_opera_s0 (14.7 min)
+
+stage C: 1 ok, 0 failed
+stage D: 4 cells
+
+[1/4] bench_vitaldb_warpformer_opera_s1
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_distillation.yaml --seed 1 --name bench_vitaldb_warpformer_opera_s1 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=warpformer distillation.teacher_ckpt=results/raw/bench_vitaldb_warpformer_vanilla_s1/model.pt --no_wandb
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_warpformer_opera_s1 | device cuda:0 | params 85387 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_vitaldb_warpformer_vanilla_s1/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+epoch 000 loss 0.00814 val_mse 0.00462 best 0.00462@0 (17.5s)
+epoch 001 loss 0.00568 val_mse 0.00437 best 0.00437@1 (17.0s)
+epoch 002 loss 0.00557 val_mse 0.00461 best 0.00437@1 (17.1s)
+epoch 003 loss 0.00540 val_mse 0.00416 best 0.00416@3 (17.2s)
+epoch 004 loss 0.00510 val_mse 0.00403 best 0.00403@4 (17.2s)
+epoch 005 loss 0.00489 val_mse 0.00399 best 0.00399@5 (17.1s)
+epoch 006 loss 0.00480 val_mse 0.00399 best 0.00399@6 (17.1s)
+epoch 007 loss 0.00474 val_mse 0.00403 best 0.00399@6 (17.1s)
+epoch 008 loss 0.00461 val_mse 0.00405 best 0.00399@6 (17.2s)
+epoch 009 loss 0.00457 val_mse 0.00380 best 0.00380@9 (16.9s)
+epoch 010 loss 0.00448 val_mse 0.00377 best 0.00377@10 (16.9s)
+epoch 011 loss 0.00439 val_mse 0.00368 best 0.00368@11 (17.1s)
+epoch 012 loss 0.00437 val_mse 0.00372 best 0.00368@11 (17.2s)
+epoch 013 loss 0.00429 val_mse 0.00372 best 0.00368@11 (17.0s)
+epoch 014 loss 0.00430 val_mse 0.00375 best 0.00368@11 (16.9s)
+epoch 015 loss 0.00426 val_mse 0.00367 best 0.00367@15 (17.1s)
+epoch 016 loss 0.00424 val_mse 0.00393 best 0.00367@15 (17.3s)
+epoch 017 loss 0.00427 val_mse 0.00374 best 0.00367@15 (17.2s)
+epoch 018 loss 0.00423 val_mse 0.00366 best 0.00366@18 (17.1s)
+epoch 019 loss 0.00420 val_mse 0.00373 best 0.00366@18 (17.0s)
+epoch 020 loss 0.00420 val_mse 0.00364 best 0.00364@20 (17.0s)
+epoch 021 loss 0.00416 val_mse 0.00365 best 0.00364@20 (16.9s)
+epoch 022 loss 0.00414 val_mse 0.00394 best 0.00364@20 (17.0s)
+epoch 023 loss 0.00419 val_mse 0.00362 best 0.00362@23 (17.0s)
+epoch 024 loss 0.00415 val_mse 0.00371 best 0.00362@23 (17.0s)
+epoch 025 loss 0.00413 val_mse 0.00361 best 0.00361@25 (17.0s)
+epoch 026 loss 0.00407 val_mse 0.00368 best 0.00361@25 (17.0s)
+epoch 027 loss 0.00411 val_mse 0.00361 best 0.00361@27 (17.0s)
+epoch 028 loss 0.00411 val_mse 0.00371 best 0.00361@27 (17.0s)
+epoch 029 loss 0.00413 val_mse 0.00390 best 0.00361@27 (16.3s)
+epoch 030 loss 0.00411 val_mse 0.00364 best 0.00361@27 (13.8s)
+epoch 031 loss 0.00400 val_mse 0.00355 best 0.00355@31 (17.0s)
+epoch 032 loss 0.00403 val_mse 0.00358 best 0.00355@31 (16.9s)
+epoch 033 loss 0.00406 val_mse 0.00361 best 0.00355@31 (16.9s)
+epoch 034 loss 0.00402 val_mse 0.00350 best 0.00350@34 (17.0s)
+epoch 035 loss 0.00396 val_mse 0.00356 best 0.00350@34 (17.0s)
+epoch 036 loss 0.00404 val_mse 0.00401 best 0.00350@34 (17.1s)
+epoch 037 loss 0.00401 val_mse 0.00353 best 0.00350@34 (17.1s)
+epoch 038 loss 0.00397 val_mse 0.00352 best 0.00350@34 (16.9s)
+epoch 039 loss 0.00398 val_mse 0.00352 best 0.00350@34 (14.4s)
+  [identity                                  ] MSE 0.00375  MAE 0.04236
+  [random_dropout:0.7                        ] MSE 0.00363  MAE 0.04131
+  [temporal_stride:3                         ] MSE 0.00394  MAE 0.04360
+  [variable_dropout:0.5                      ] MSE 0.00414  MAE 0.04501
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00423  MAE 0.04569
+best {'val_mse': 0.0034997775219380856, 'epoch': 34} -> results/raw/bench_vitaldb_warpformer_opera_s1/results.json
+summary {
+  "clean_mse": 0.003750554984435439,
+  "mean_shift_mse": 0.003983039234299213,
+  "mean_degradation": 0.061986626200273884,
+  "worst_mse": 0.004226400516927242,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.003983039234299213,
+  "mean_unseen_degradation": 0.061986626200273884
+}
+[1/4] ok bench_vitaldb_warpformer_opera_s1 (14.6 min)
+
+[2/4] bench_vitaldb_warpformer_opera_s2
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_distillation.yaml --seed 2 --name bench_vitaldb_warpformer_opera_s2 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=warpformer distillation.teacher_ckpt=results/raw/bench_vitaldb_warpformer_vanilla_s2/model.pt --no_wandb
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_warpformer_opera_s2 | device cuda:0 | params 85387 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_vitaldb_warpformer_vanilla_s2/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+epoch 000 loss 0.01204 val_mse 0.00461 best 0.00461@0 (17.8s)
+epoch 001 loss 0.00567 val_mse 0.00447 best 0.00447@1 (17.3s)
+epoch 002 loss 0.00545 val_mse 0.00450 best 0.00447@1 (17.2s)
+epoch 003 loss 0.00531 val_mse 0.00429 best 0.00429@3 (17.1s)
+epoch 004 loss 0.00514 val_mse 0.00432 best 0.00429@3 (17.1s)
+epoch 005 loss 0.00501 val_mse 0.00414 best 0.00414@5 (17.1s)
+epoch 006 loss 0.00499 val_mse 0.00431 best 0.00414@5 (17.1s)
+epoch 007 loss 0.00473 val_mse 0.00400 best 0.00400@7 (17.1s)
+epoch 008 loss 0.00465 val_mse 0.00385 best 0.00385@8 (17.1s)
+epoch 009 loss 0.00450 val_mse 0.00382 best 0.00382@9 (17.1s)
+epoch 010 loss 0.00444 val_mse 0.00377 best 0.00377@10 (17.1s)
+epoch 011 loss 0.00437 val_mse 0.00389 best 0.00377@10 (16.4s)
+epoch 012 loss 0.00427 val_mse 0.00380 best 0.00377@10 (13.9s)
+epoch 013 loss 0.00431 val_mse 0.00373 best 0.00373@13 (17.1s)
+epoch 014 loss 0.00421 val_mse 0.00386 best 0.00373@13 (17.3s)
+epoch 015 loss 0.00425 val_mse 0.00370 best 0.00370@15 (17.2s)
+epoch 016 loss 0.00423 val_mse 0.00380 best 0.00370@15 (17.7s)
+epoch 017 loss 0.00421 val_mse 0.00378 best 0.00370@15 (18.9s)
+epoch 018 loss 0.00415 val_mse 0.00385 best 0.00370@15 (18.5s)
+epoch 019 loss 0.00419 val_mse 0.00383 best 0.00370@15 (17.6s)
+epoch 020 loss 0.00419 val_mse 0.00366 best 0.00366@20 (17.7s)
+epoch 021 loss 0.00413 val_mse 0.00365 best 0.00365@21 (17.8s)
+epoch 022 loss 0.00412 val_mse 0.00359 best 0.00359@22 (18.3s)
+epoch 023 loss 0.00411 val_mse 0.00358 best 0.00358@23 (20.6s)
+epoch 024 loss 0.00408 val_mse 0.00351 best 0.00351@24 (17.7s)
+epoch 025 loss 0.00409 val_mse 0.00372 best 0.00351@24 (17.4s)
+epoch 026 loss 0.00406 val_mse 0.00353 best 0.00351@24 (17.5s)
+epoch 027 loss 0.00410 val_mse 0.00363 best 0.00351@24 (17.2s)
+epoch 028 loss 0.00407 val_mse 0.00358 best 0.00351@24 (17.4s)
+epoch 029 loss 0.00399 val_mse 0.00359 best 0.00351@24 (17.5s)
+epoch 030 loss 0.00400 val_mse 0.00361 best 0.00351@24 (17.4s)
+epoch 031 loss 0.00399 val_mse 0.00359 best 0.00351@24 (17.1s)
+epoch 032 loss 0.00394 val_mse 0.00367 best 0.00351@24 (17.5s)
+epoch 033 loss 0.00398 val_mse 0.00347 best 0.00347@33 (17.3s)
+epoch 034 loss 0.00397 val_mse 0.00373 best 0.00347@33 (17.3s)
+epoch 035 loss 0.00399 val_mse 0.00353 best 0.00347@33 (17.3s)
+epoch 036 loss 0.00394 val_mse 0.00352 best 0.00347@33 (17.9s)
+epoch 037 loss 0.00393 val_mse 0.00354 best 0.00347@33 (17.5s)
+epoch 038 loss 0.00394 val_mse 0.00368 best 0.00347@33 (17.9s)
+epoch 039 loss 0.00395 val_mse 0.00358 best 0.00347@33 (17.3s)
+  [identity                                  ] MSE 0.00369  MAE 0.04133
+  [random_dropout:0.7                        ] MSE 0.00373  MAE 0.04166
+  [temporal_stride:3                         ] MSE 0.00389  MAE 0.04248
+  [variable_dropout:0.5                      ] MSE 0.00406  MAE 0.04401
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00421  MAE 0.04463
+best {'val_mse': 0.003468218259513378, 'epoch': 33} -> results/raw/bench_vitaldb_warpformer_opera_s2/results.json
+summary {
+  "clean_mse": 0.0036888381000608206,
+  "mean_shift_mse": 0.0039746014517731965,
+  "mean_degradation": 0.07746703540815854,
+  "worst_mse": 0.004210243932902813,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.0039746014517731965,
+  "mean_unseen_degradation": 0.07746703540815854
+}
+[2/4] ok bench_vitaldb_warpformer_opera_s2 (15.1 min)
+
+[3/4] bench_vitaldb_warpformer_opera_s3
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_distillation.yaml --seed 3 --name bench_vitaldb_warpformer_opera_s3 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=warpformer distillation.teacher_ckpt=results/raw/bench_vitaldb_warpformer_vanilla_s3/model.pt --no_wandb
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_warpformer_opera_s3 | device cuda:0 | params 85387 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_vitaldb_warpformer_vanilla_s3/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+epoch 000 loss 0.01212 val_mse 0.00461 best 0.00461@0 (15.4s)
+epoch 001 loss 0.00567 val_mse 0.00441 best 0.00441@1 (17.7s)
+epoch 002 loss 0.00555 val_mse 0.00452 best 0.00441@1 (17.6s)
+epoch 003 loss 0.00544 val_mse 0.00447 best 0.00441@1 (17.7s)
+epoch 004 loss 0.00521 val_mse 0.00414 best 0.00414@4 (17.5s)
+epoch 005 loss 0.00498 val_mse 0.00392 best 0.00392@5 (17.8s)
+epoch 006 loss 0.00498 val_mse 0.00403 best 0.00392@5 (17.5s)
+epoch 007 loss 0.00473 val_mse 0.00406 best 0.00392@5 (18.5s)
+epoch 008 loss 0.00465 val_mse 0.00383 best 0.00383@8 (17.6s)
+epoch 009 loss 0.00459 val_mse 0.00390 best 0.00383@8 (17.7s)
+epoch 010 loss 0.00453 val_mse 0.00397 best 0.00383@8 (17.7s)
+epoch 011 loss 0.00447 val_mse 0.00387 best 0.00383@8 (17.7s)
+epoch 012 loss 0.00445 val_mse 0.00408 best 0.00383@8 (17.5s)
+epoch 013 loss 0.00438 val_mse 0.00383 best 0.00383@13 (17.7s)
+epoch 014 loss 0.00437 val_mse 0.00374 best 0.00374@14 (17.5s)
+epoch 015 loss 0.00431 val_mse 0.00376 best 0.00374@14 (17.8s)
+epoch 016 loss 0.00429 val_mse 0.00371 best 0.00371@16 (17.5s)
+epoch 017 loss 0.00428 val_mse 0.00370 best 0.00370@17 (17.6s)
+epoch 018 loss 0.00426 val_mse 0.00386 best 0.00370@17 (17.7s)
+epoch 019 loss 0.00419 val_mse 0.00395 best 0.00370@17 (17.8s)
+epoch 020 loss 0.00421 val_mse 0.00366 best 0.00366@20 (17.8s)
+epoch 021 loss 0.00418 val_mse 0.00383 best 0.00366@20 (17.8s)
+epoch 022 loss 0.00413 val_mse 0.00361 best 0.00361@22 (17.7s)
+epoch 023 loss 0.00410 val_mse 0.00358 best 0.00358@23 (17.6s)
+epoch 024 loss 0.00415 val_mse 0.00363 best 0.00358@23 (17.7s)
+epoch 025 loss 0.00410 val_mse 0.00359 best 0.00358@23 (17.6s)
+epoch 026 loss 0.00408 val_mse 0.00362 best 0.00358@23 (17.9s)
+epoch 027 loss 0.00403 val_mse 0.00365 best 0.00358@23 (17.6s)
+epoch 028 loss 0.00406 val_mse 0.00363 best 0.00358@23 (17.8s)
+epoch 029 loss 0.00404 val_mse 0.00364 best 0.00358@23 (17.4s)
+epoch 030 loss 0.00403 val_mse 0.00358 best 0.00358@23 (17.7s)
+epoch 031 loss 0.00409 val_mse 0.00357 best 0.00357@31 (17.9s)
+epoch 032 loss 0.00402 val_mse 0.00363 best 0.00357@31 (18.1s)
+epoch 033 loss 0.00399 val_mse 0.00358 best 0.00357@31 (17.6s)
+epoch 034 loss 0.00402 val_mse 0.00347 best 0.00347@34 (18.0s)
+epoch 035 loss 0.00398 val_mse 0.00360 best 0.00347@34 (16.7s)
+epoch 036 loss 0.00401 val_mse 0.00352 best 0.00347@34 (11.7s)
+epoch 037 loss 0.00395 val_mse 0.00351 best 0.00347@34 (11.4s)
+epoch 038 loss 0.00397 val_mse 0.00350 best 0.00347@34 (11.7s)
+epoch 039 loss 0.00396 val_mse 0.00364 best 0.00347@34 (12.3s)
+  [identity                                  ] MSE 0.00369  MAE 0.04157
+  [random_dropout:0.7                        ] MSE 0.00363  MAE 0.04107
+  [temporal_stride:3                         ] MSE 0.00391  MAE 0.04292
+  [variable_dropout:0.5                      ] MSE 0.00415  MAE 0.04463
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00436  MAE 0.04589
+best {'val_mse': 0.0034665241837501526, 'epoch': 34} -> results/raw/bench_vitaldb_warpformer_opera_s3/results.json
+summary {
+  "clean_mse": 0.0036864394787698984,
+  "mean_shift_mse": 0.004010843869764358,
+  "mean_degradation": 0.08799938066600448,
+  "worst_mse": 0.0043564606457948685,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.004010843869764358,
+  "mean_unseen_degradation": 0.08799938066600448
+}
+[3/4] ok bench_vitaldb_warpformer_opera_s3 (14.6 min)
+
+[4/4] bench_vitaldb_warpformer_opera_s4
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_distillation.yaml --seed 4 --name bench_vitaldb_warpformer_opera_s4 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=warpformer distillation.teacher_ckpt=results/raw/bench_vitaldb_warpformer_vanilla_s4/model.pt --no_wandb
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_warpformer_opera_s4 | device cuda:0 | params 85387 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_vitaldb_warpformer_vanilla_s4/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/src/models/irregular_baselines.py:252: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.tr = nn.TransformerEncoder(layer, max(1, args.nlayer - 1))
+epoch 000 loss 0.00947 val_mse 0.00456 best 0.00456@0 (12.0s)
+epoch 001 loss 0.00546 val_mse 0.00458 best 0.00456@0 (11.5s)
+epoch 002 loss 0.00523 val_mse 0.00451 best 0.00451@2 (11.3s)
+epoch 003 loss 0.00507 val_mse 0.00465 best 0.00451@2 (11.4s)
+epoch 004 loss 0.00500 val_mse 0.00425 best 0.00425@4 (11.7s)
+epoch 005 loss 0.00489 val_mse 0.00414 best 0.00414@5 (11.7s)
+epoch 006 loss 0.00478 val_mse 0.00408 best 0.00408@6 (11.4s)
+epoch 007 loss 0.00464 val_mse 0.00404 best 0.00404@7 (11.3s)
+epoch 008 loss 0.00457 val_mse 0.00414 best 0.00404@7 (11.3s)
+epoch 009 loss 0.00445 val_mse 0.00395 best 0.00395@9 (11.5s)
+epoch 010 loss 0.00437 val_mse 0.00381 best 0.00381@10 (11.3s)
+epoch 011 loss 0.00437 val_mse 0.00385 best 0.00381@10 (11.3s)
+epoch 012 loss 0.00430 val_mse 0.00405 best 0.00381@10 (11.5s)
+epoch 013 loss 0.00431 val_mse 0.00385 best 0.00381@10 (11.3s)
+epoch 014 loss 0.00426 val_mse 0.00375 best 0.00375@14 (11.4s)
+epoch 015 loss 0.00425 val_mse 0.00396 best 0.00375@14 (11.3s)
+epoch 016 loss 0.00425 val_mse 0.00383 best 0.00375@14 (11.4s)
+epoch 017 loss 0.00423 val_mse 0.00382 best 0.00375@14 (11.5s)
+epoch 018 loss 0.00424 val_mse 0.00375 best 0.00375@18 (11.4s)
+epoch 019 loss 0.00425 val_mse 0.00389 best 0.00375@18 (11.3s)
+epoch 020 loss 0.00427 val_mse 0.00399 best 0.00375@18 (11.4s)
+epoch 021 loss 0.00426 val_mse 0.00369 best 0.00369@21 (11.3s)
+epoch 022 loss 0.00428 val_mse 0.00385 best 0.00369@21 (11.3s)
+epoch 023 loss 0.00419 val_mse 0.00381 best 0.00369@21 (11.4s)
+epoch 024 loss 0.00419 val_mse 0.00380 best 0.00369@21 (11.4s)
+epoch 025 loss 0.00417 val_mse 0.00380 best 0.00369@21 (11.4s)
+epoch 026 loss 0.00415 val_mse 0.00370 best 0.00369@21 (11.5s)
+epoch 027 loss 0.00414 val_mse 0.00380 best 0.00369@21 (11.3s)
+epoch 028 loss 0.00411 val_mse 0.00380 best 0.00369@21 (11.5s)
+epoch 029 loss 0.00412 val_mse 0.00370 best 0.00369@21 (11.9s)
+epoch 030 loss 0.00411 val_mse 0.00387 best 0.00369@21 (11.5s)
+epoch 031 loss 0.00415 val_mse 0.00368 best 0.00368@31 (11.6s)
+epoch 032 loss 0.00415 val_mse 0.00369 best 0.00368@31 (11.6s)
+epoch 033 loss 0.00410 val_mse 0.00367 best 0.00367@33 (11.8s)
+epoch 034 loss 0.00407 val_mse 0.00369 best 0.00367@33 (11.5s)
+epoch 035 loss 0.00408 val_mse 0.00363 best 0.00363@35 (11.7s)
+epoch 036 loss 0.00407 val_mse 0.00362 best 0.00362@36 (11.8s)
+epoch 037 loss 0.00406 val_mse 0.00364 best 0.00362@36 (11.5s)
+epoch 038 loss 0.00404 val_mse 0.00364 best 0.00362@36 (11.7s)
+epoch 039 loss 0.00408 val_mse 0.00364 best 0.00362@36 (11.6s)
+  [identity                                  ] MSE 0.00384  MAE 0.04213
+  [random_dropout:0.7                        ] MSE 0.00369  MAE 0.04144
+  [temporal_stride:3                         ] MSE 0.00403  MAE 0.04355
+  [variable_dropout:0.5                      ] MSE 0.00421  MAE 0.04465
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00434  MAE 0.04555
+best {'val_mse': 0.0036200901959091425, 'epoch': 36} -> results/raw/bench_vitaldb_warpformer_opera_s4/results.json
+summary {
+  "clean_mse": 0.0038364676292985678,
+  "mean_shift_mse": 0.004065571760293096,
+  "mean_degradation": 0.059717467507060994,
+  "worst_mse": 0.0043387156911194324,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.004065571760293096,
+  "mean_unseen_degradation": 0.059717467507060994
+}
+[4/4] ok bench_vitaldb_warpformer_opera_s4 (9.8 min)
+
+stage D: 4 ok, 0 failed

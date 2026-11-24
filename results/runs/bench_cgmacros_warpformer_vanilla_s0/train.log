@@ -1,0 +1,37 @@
+run bench_cgmacros_warpformer_vanilla_s0 | device cuda:0 | params 84484 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 180, "n_records": 100000000, "name": "cgmacros", "patch_size": 45, "pred_window": 60, "stride": 45}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01042 val_mse 0.00752 best 0.00752@0 (10.0s)
+epoch 001 loss 0.00870 val_mse 0.00821 best 0.00752@0 (9.4s)
+epoch 002 loss 0.00833 val_mse 0.00794 best 0.00752@0 (9.4s)
+epoch 003 loss 0.00794 val_mse 0.00796 best 0.00752@0 (9.5s)
+epoch 004 loss 0.00775 val_mse 0.00739 best 0.00739@4 (9.5s)
+epoch 005 loss 0.00750 val_mse 0.00738 best 0.00738@5 (9.4s)
+epoch 006 loss 0.00751 val_mse 0.00775 best 0.00738@5 (9.4s)
+epoch 007 loss 0.00747 val_mse 0.00700 best 0.00700@7 (9.5s)
+epoch 008 loss 0.00714 val_mse 0.00685 best 0.00685@8 (9.4s)
+epoch 009 loss 0.00702 val_mse 0.00737 best 0.00685@8 (9.4s)
+epoch 010 loss 0.00714 val_mse 0.00761 best 0.00685@8 (9.5s)
+epoch 011 loss 0.00698 val_mse 0.00699 best 0.00685@8 (9.5s)
+epoch 012 loss 0.00700 val_mse 0.00746 best 0.00685@8 (9.4s)
+epoch 013 loss 0.00728 val_mse 0.00766 best 0.00685@8 (9.4s)
+epoch 014 loss 0.00706 val_mse 0.00721 best 0.00685@8 (9.4s)
+epoch 015 loss 0.00687 val_mse 0.00764 best 0.00685@8 (9.4s)
+epoch 016 loss 0.00713 val_mse 0.00742 best 0.00685@8 (9.4s)
+epoch 017 loss 0.00691 val_mse 0.00723 best 0.00685@8 (9.4s)
+epoch 018 loss 0.00671 val_mse 0.00717 best 0.00685@8 (9.5s)
+early stop
+  [identity                                  ] MSE 0.00783  MAE 0.06328
+  [random_dropout:0.7                        ] MSE 0.01395  MAE 0.08887
+  [temporal_stride:3                         ] MSE 0.00942  MAE 0.07337
+  [variable_dropout:0.5                      ] MSE 0.01258  MAE 0.08186
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01135  MAE 0.07955
+best {'val_mse': 0.006845767609775066, 'epoch': 8} -> results/raw/bench_cgmacros_warpformer_vanilla_s0/results.json
+summary {
+  "clean_mse": 0.007828665897250175,
+  "mean_shift_mse": 0.011824422050267458,
+  "mean_degradation": 0.5104006487773088,
+  "worst_mse": 0.013952696695923805,
+  "worst_condition": "random_dropout:0.7",
+  "mean_unseen_mse": 0.011824422050267458,
+  "mean_unseen_degradation": 0.5104006487773088
+}

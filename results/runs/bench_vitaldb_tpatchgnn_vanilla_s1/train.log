@@ -1,0 +1,39 @@
+run bench_vitaldb_tpatchgnn_vanilla_s1 | device cuda:0 | params 186407 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "tpatchgnn", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00606 val_mse 0.00307 best 0.00307@0 (6.5s)
+epoch 001 loss 0.00316 val_mse 0.00295 best 0.00295@1 (6.1s)
+epoch 002 loss 0.00317 val_mse 0.00303 best 0.00295@1 (6.1s)
+epoch 003 loss 0.00302 val_mse 0.00285 best 0.00285@3 (6.1s)
+epoch 004 loss 0.00304 val_mse 0.00283 best 0.00283@4 (6.1s)
+epoch 005 loss 0.00291 val_mse 0.00284 best 0.00283@4 (6.1s)
+epoch 006 loss 0.00293 val_mse 0.00273 best 0.00273@6 (6.1s)
+epoch 007 loss 0.00289 val_mse 0.00263 best 0.00263@7 (6.1s)
+epoch 008 loss 0.00284 val_mse 0.00263 best 0.00263@8 (6.1s)
+epoch 009 loss 0.00284 val_mse 0.00267 best 0.00263@8 (6.1s)
+epoch 010 loss 0.00283 val_mse 0.00256 best 0.00256@10 (6.1s)
+epoch 011 loss 0.00307 val_mse 0.00270 best 0.00256@10 (6.1s)
+epoch 012 loss 0.00286 val_mse 0.00307 best 0.00256@10 (6.1s)
+epoch 013 loss 0.00283 val_mse 0.00265 best 0.00256@10 (6.1s)
+epoch 014 loss 0.00275 val_mse 0.00269 best 0.00256@10 (6.1s)
+epoch 015 loss 0.00276 val_mse 0.00261 best 0.00256@10 (6.1s)
+epoch 016 loss 0.00275 val_mse 0.00259 best 0.00256@10 (6.1s)
+epoch 017 loss 0.00272 val_mse 0.00266 best 0.00256@10 (6.1s)
+epoch 018 loss 0.00273 val_mse 0.00344 best 0.00256@10 (6.1s)
+epoch 019 loss 0.00271 val_mse 0.00269 best 0.00256@10 (6.1s)
+epoch 020 loss 0.00266 val_mse 0.00264 best 0.00256@10 (6.1s)
+early stop
+  [identity                                  ] MSE 0.00272  MAE 0.03163
+  [random_dropout:0.7                        ] MSE 0.00319  MAE 0.03581
+  [temporal_stride:3                         ] MSE 0.00307  MAE 0.03413
+  [variable_dropout:0.5                      ] MSE 0.02112  MAE 0.07577
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01343  MAE 0.05713
+best {'val_mse': 0.0025580672081559896, 'epoch': 10} -> results/raw/bench_vitaldb_tpatchgnn_vanilla_s1/results.json
+summary {
+  "clean_mse": 0.0027155785355716944,
+  "mean_shift_mse": 0.010200813063420355,
+  "mean_degradation": 2.756405101085703,
+  "worst_mse": 0.021122656762599945,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.010200813063420355,
+  "mean_unseen_degradation": 2.756405101085703
+}

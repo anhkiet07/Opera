@@ -1,0 +1,680 @@
+stage A: 1 cells
+
+[1/1] bench_vitaldb_grafiti_vanilla_s0
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_baseline.yaml --seed 0 --name bench_vitaldb_grafiti_vanilla_s0 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grafiti --no_wandb
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_grafiti_vanilla_s0 | device cuda:0 | params 177857 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grafiti", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 0.01401 val_mse 0.00560 best 0.00560@0 (20.7s)
+epoch 001 loss 0.00347 val_mse 0.00374 best 0.00374@1 (19.9s)
+epoch 002 loss 0.00314 val_mse 0.00285 best 0.00285@2 (20.0s)
+epoch 003 loss 0.00306 val_mse 0.00255 best 0.00255@3 (19.9s)
+epoch 004 loss 0.00288 val_mse 0.00299 best 0.00255@3 (19.7s)
+epoch 005 loss 0.00282 val_mse 0.00253 best 0.00253@5 (19.8s)
+epoch 006 loss 0.00275 val_mse 0.00256 best 0.00253@5 (20.1s)
+epoch 007 loss 0.00284 val_mse 0.00271 best 0.00253@5 (20.0s)
+epoch 008 loss 0.00282 val_mse 0.00246 best 0.00246@8 (20.0s)
+epoch 009 loss 0.00279 val_mse 0.00245 best 0.00245@9 (20.0s)
+epoch 010 loss 0.00275 val_mse 0.00309 best 0.00245@9 (19.6s)
+epoch 011 loss 0.00267 val_mse 0.00242 best 0.00242@11 (20.1s)
+epoch 012 loss 0.00268 val_mse 0.00296 best 0.00242@11 (20.1s)
+epoch 013 loss 0.00264 val_mse 0.00248 best 0.00242@11 (20.0s)
+epoch 014 loss 0.00274 val_mse 0.00254 best 0.00242@11 (20.1s)
+epoch 015 loss 0.00266 val_mse 0.00256 best 0.00242@11 (19.4s)
+epoch 016 loss 0.00268 val_mse 0.00242 best 0.00242@16 (20.1s)
+epoch 017 loss 0.00260 val_mse 0.00244 best 0.00242@16 (20.1s)
+epoch 018 loss 0.00265 val_mse 0.00237 best 0.00237@18 (20.0s)
+epoch 019 loss 0.00261 val_mse 0.00236 best 0.00236@19 (20.0s)
+epoch 020 loss 0.00261 val_mse 0.00235 best 0.00235@20 (19.5s)
+epoch 021 loss 0.00252 val_mse 0.00233 best 0.00233@21 (20.0s)
+epoch 022 loss 0.00257 val_mse 0.00230 best 0.00230@22 (20.1s)
+epoch 023 loss 0.00254 val_mse 0.00283 best 0.00230@22 (20.2s)
+epoch 024 loss 0.00248 val_mse 0.00235 best 0.00230@22 (20.1s)
+epoch 025 loss 0.00255 val_mse 0.00264 best 0.00230@22 (19.8s)
+epoch 026 loss 0.00253 val_mse 0.00260 best 0.00230@22 (19.9s)
+epoch 027 loss 0.00246 val_mse 0.00230 best 0.00230@27 (20.0s)
+epoch 028 loss 0.00245 val_mse 0.00238 best 0.00230@27 (20.1s)
+epoch 029 loss 0.00248 val_mse 0.00243 best 0.00230@27 (20.2s)
+epoch 030 loss 0.00244 val_mse 0.00236 best 0.00230@27 (20.0s)
+epoch 031 loss 0.00245 val_mse 0.00231 best 0.00230@27 (19.7s)
+epoch 032 loss 0.00245 val_mse 0.00255 best 0.00230@27 (20.0s)
+epoch 033 loss 0.00248 val_mse 0.00269 best 0.00230@27 (20.1s)
+epoch 034 loss 0.00249 val_mse 0.00247 best 0.00230@27 (20.1s)
+epoch 035 loss 0.00238 val_mse 0.00229 best 0.00229@35 (20.1s)
+epoch 036 loss 0.00238 val_mse 0.00231 best 0.00229@35 (19.5s)
+epoch 037 loss 0.00241 val_mse 0.00230 best 0.00229@35 (20.1s)
+epoch 038 loss 0.00247 val_mse 0.00271 best 0.00229@35 (18.4s)
+epoch 039 loss 0.00238 val_mse 0.00235 best 0.00229@35 (15.3s)
+  [identity                                  ] MSE 0.00241  MAE 0.02953
+  [random_dropout:0.7                        ] MSE 0.00293  MAE 0.03361
+  [temporal_stride:3                         ] MSE 0.00271  MAE 0.03187
+  [variable_dropout:0.5                      ] MSE 0.01693  MAE 0.06683
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01093  MAE 0.05201
+best {'val_mse': 0.0022907680831849575, 'epoch': 35} -> results/raw/bench_vitaldb_grafiti_vanilla_s0/results.json
+summary {
+  "clean_mse": 0.0024073896929621696,
+  "mean_shift_mse": 0.008375717094168067,
+  "mean_degradation": 2.4791696245331085,
+  "worst_mse": 0.01692705973982811,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.008375717094168067,
+  "mean_unseen_degradation": 2.4791696245331085
+}
+[1/1] ok bench_vitaldb_grafiti_vanilla_s0 (17.3 min)
+
+stage A: 1 ok, 0 failed
+stage B: 4 cells
+
+[1/4] bench_vitaldb_grafiti_vanilla_s1
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_baseline.yaml --seed 1 --name bench_vitaldb_grafiti_vanilla_s1 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grafiti --no_wandb
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_grafiti_vanilla_s1 | device cuda:0 | params 177857 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grafiti", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 0.01058 val_mse 0.00317 best 0.00317@0 (20.6s)
+epoch 001 loss 0.00318 val_mse 0.00274 best 0.00274@1 (20.3s)
+epoch 002 loss 0.00301 val_mse 0.00398 best 0.00274@1 (20.2s)
+epoch 003 loss 0.00286 val_mse 0.00260 best 0.00260@3 (20.1s)
+epoch 004 loss 0.00284 val_mse 0.00251 best 0.00251@4 (20.1s)
+epoch 005 loss 0.00268 val_mse 0.00251 best 0.00251@4 (19.7s)
+epoch 006 loss 0.00278 val_mse 0.00253 best 0.00251@4 (20.0s)
+epoch 007 loss 0.00278 val_mse 0.00246 best 0.00246@7 (20.1s)
+epoch 008 loss 0.00267 val_mse 0.00250 best 0.00246@7 (20.2s)
+epoch 009 loss 0.00267 val_mse 0.00248 best 0.00246@7 (20.1s)
+epoch 010 loss 0.00269 val_mse 0.00341 best 0.00246@7 (19.6s)
+epoch 011 loss 0.00268 val_mse 0.00240 best 0.00240@11 (20.2s)
+epoch 012 loss 0.00260 val_mse 0.00259 best 0.00240@11 (20.3s)
+epoch 013 loss 0.00272 val_mse 0.00258 best 0.00240@11 (20.3s)
+epoch 014 loss 0.00261 val_mse 0.00237 best 0.00237@14 (20.3s)
+epoch 015 loss 0.00258 val_mse 0.00236 best 0.00236@15 (19.7s)
+epoch 016 loss 0.00255 val_mse 0.00243 best 0.00236@15 (20.3s)
+epoch 017 loss 0.00255 val_mse 0.00309 best 0.00236@15 (20.2s)
+epoch 018 loss 0.00254 val_mse 0.00242 best 0.00236@15 (20.3s)
+epoch 019 loss 0.00250 val_mse 0.00235 best 0.00235@19 (20.4s)
+epoch 020 loss 0.00252 val_mse 0.00242 best 0.00235@19 (19.8s)
+epoch 021 loss 0.00250 val_mse 0.00235 best 0.00235@21 (20.1s)
+epoch 022 loss 0.00251 val_mse 0.00256 best 0.00235@21 (20.4s)
+epoch 023 loss 0.00250 val_mse 0.00274 best 0.00235@21 (20.3s)
+epoch 024 loss 0.00251 val_mse 0.00228 best 0.00228@24 (20.2s)
+epoch 025 loss 0.00247 val_mse 0.00253 best 0.00228@24 (19.9s)
+epoch 026 loss 0.00244 val_mse 0.00228 best 0.00228@24 (20.0s)
+epoch 027 loss 0.00244 val_mse 0.00227 best 0.00227@27 (20.3s)
+epoch 028 loss 0.00248 val_mse 0.00232 best 0.00227@27 (20.3s)
+epoch 029 loss 0.00241 val_mse 0.00225 best 0.00225@29 (20.2s)
+epoch 030 loss 0.00241 val_mse 0.00230 best 0.00225@29 (20.1s)
+epoch 031 loss 0.00244 val_mse 0.00238 best 0.00225@29 (19.9s)
+epoch 032 loss 0.00240 val_mse 0.00225 best 0.00225@32 (20.2s)
+epoch 033 loss 0.00239 val_mse 0.00256 best 0.00225@32 (20.4s)
+epoch 034 loss 0.00240 val_mse 0.00237 best 0.00225@32 (20.3s)
+epoch 035 loss 0.00239 val_mse 0.00226 best 0.00225@32 (20.4s)
+epoch 036 loss 0.00236 val_mse 0.00247 best 0.00225@32 (19.6s)
+epoch 037 loss 0.00241 val_mse 0.00228 best 0.00225@32 (20.3s)
+epoch 038 loss 0.00237 val_mse 0.00227 best 0.00225@32 (18.5s)
+epoch 039 loss 0.00237 val_mse 0.00237 best 0.00225@32 (15.4s)
+  [identity                                  ] MSE 0.00242  MAE 0.02901
+  [random_dropout:0.7                        ] MSE 0.00313  MAE 0.03442
+  [temporal_stride:3                         ] MSE 0.00279  MAE 0.03176
+  [variable_dropout:0.5                      ] MSE 0.01984  MAE 0.06731
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01252  MAE 0.05207
+best {'val_mse': 0.0022502660285681486, 'epoch': 32} -> results/raw/bench_vitaldb_grafiti_vanilla_s1/results.json
+summary {
+  "clean_mse": 0.0024185313377529383,
+  "mean_shift_mse": 0.009569824615027755,
+  "mean_degradation": 2.9568743500008137,
+  "worst_mse": 0.01983521692454815,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.009569824615027755,
+  "mean_unseen_degradation": 2.9568743500008137
+}
+[1/4] ok bench_vitaldb_grafiti_vanilla_s1 (17.4 min)
+
+[2/4] bench_vitaldb_grafiti_vanilla_s2
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_baseline.yaml --seed 2 --name bench_vitaldb_grafiti_vanilla_s2 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grafiti --no_wandb
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_grafiti_vanilla_s2 | device cuda:0 | params 177857 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grafiti", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 0.01735 val_mse 0.00334 best 0.00334@0 (20.7s)
+epoch 001 loss 0.00326 val_mse 0.00470 best 0.00334@0 (20.2s)
+epoch 002 loss 0.00300 val_mse 0.00262 best 0.00262@2 (20.2s)
+epoch 003 loss 0.00280 val_mse 0.00252 best 0.00252@3 (20.3s)
+epoch 004 loss 0.00292 val_mse 0.00320 best 0.00252@3 (20.1s)
+epoch 005 loss 0.00284 val_mse 0.00251 best 0.00251@5 (19.8s)
+epoch 006 loss 0.00277 val_mse 0.00244 best 0.00244@6 (20.3s)
+epoch 007 loss 0.00278 val_mse 0.00260 best 0.00244@6 (20.2s)
+epoch 008 loss 0.00273 val_mse 0.00246 best 0.00244@6 (20.3s)
+epoch 009 loss 0.00275 val_mse 0.00294 best 0.00244@6 (20.2s)
+epoch 010 loss 0.00269 val_mse 0.00324 best 0.00244@6 (19.7s)
+epoch 011 loss 0.00271 val_mse 0.00284 best 0.00244@6 (20.1s)
+epoch 012 loss 0.00270 val_mse 0.00257 best 0.00244@6 (20.2s)
+epoch 013 loss 0.00273 val_mse 0.00261 best 0.00244@6 (20.3s)
+epoch 014 loss 0.00270 val_mse 0.00284 best 0.00244@6 (20.2s)
+epoch 015 loss 0.00266 val_mse 0.00258 best 0.00244@6 (19.6s)
+epoch 016 loss 0.00272 val_mse 0.00294 best 0.00244@6 (20.2s)
+early stop
+  [identity                                  ] MSE 0.00258  MAE 0.03093
+  [random_dropout:0.7                        ] MSE 0.00329  MAE 0.03794
+  [temporal_stride:3                         ] MSE 0.00295  MAE 0.03466
+  [variable_dropout:0.5                      ] MSE 0.01819  MAE 0.07136
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01165  MAE 0.05539
+best {'val_mse': 0.0024363475386053324, 'epoch': 6} -> results/raw/bench_vitaldb_grafiti_vanilla_s2/results.json
+summary {
+  "clean_mse": 0.0025806399062275887,
+  "mean_shift_mse": 0.009017294098157436,
+  "mean_degradation": 2.494208578421554,
+  "worst_mse": 0.018189169466495514,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.009017294098157436,
+  "mean_unseen_degradation": 2.494208578421554
+}
+[2/4] ok bench_vitaldb_grafiti_vanilla_s2 (7.8 min)
+
+[3/4] bench_vitaldb_grafiti_vanilla_s3
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_baseline.yaml --seed 3 --name bench_vitaldb_grafiti_vanilla_s3 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grafiti --no_wandb
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_grafiti_vanilla_s3 | device cuda:0 | params 177857 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grafiti", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 0.01266 val_mse 0.00371 best 0.00371@0 (20.5s)
+epoch 001 loss 0.00334 val_mse 0.00284 best 0.00284@1 (19.6s)
+epoch 002 loss 0.00303 val_mse 0.00405 best 0.00284@1 (19.1s)
+epoch 003 loss 0.00296 val_mse 0.00260 best 0.00260@3 (19.8s)
+epoch 004 loss 0.00280 val_mse 0.00252 best 0.00252@4 (19.7s)
+epoch 005 loss 0.00275 val_mse 0.00249 best 0.00249@5 (19.8s)
+epoch 006 loss 0.00274 val_mse 0.00260 best 0.00249@5 (19.8s)
+epoch 007 loss 0.00277 val_mse 0.00265 best 0.00249@5 (19.2s)
+epoch 008 loss 0.00276 val_mse 0.00251 best 0.00249@5 (19.7s)
+epoch 009 loss 0.00267 val_mse 0.00256 best 0.00249@5 (19.8s)
+epoch 010 loss 0.00269 val_mse 0.00249 best 0.00249@10 (19.9s)
+epoch 011 loss 0.00266 val_mse 0.00302 best 0.00249@10 (19.8s)
+epoch 012 loss 0.00276 val_mse 0.00245 best 0.00245@12 (19.0s)
+epoch 013 loss 0.00266 val_mse 0.00256 best 0.00245@12 (19.7s)
+epoch 014 loss 0.00278 val_mse 0.00263 best 0.00245@12 (19.9s)
+epoch 015 loss 0.00270 val_mse 0.00253 best 0.00245@12 (19.9s)
+epoch 016 loss 0.00261 val_mse 0.00242 best 0.00242@16 (19.8s)
+epoch 017 loss 0.00262 val_mse 0.00249 best 0.00242@16 (19.0s)
+epoch 018 loss 0.00261 val_mse 0.00304 best 0.00242@16 (19.7s)
+epoch 019 loss 0.00259 val_mse 0.00247 best 0.00242@16 (19.0s)
+epoch 020 loss 0.00259 val_mse 0.00268 best 0.00242@16 (17.4s)
+epoch 021 loss 0.00261 val_mse 0.00281 best 0.00242@16 (19.5s)
+epoch 022 loss 0.00258 val_mse 0.00238 best 0.00238@22 (19.7s)
+epoch 023 loss 0.00255 val_mse 0.00239 best 0.00238@22 (20.0s)
+epoch 024 loss 0.00258 val_mse 0.00246 best 0.00238@22 (20.0s)
+epoch 025 loss 0.00254 val_mse 0.00240 best 0.00238@22 (20.0s)
+epoch 026 loss 0.00256 val_mse 0.00234 best 0.00234@26 (20.0s)
+epoch 027 loss 0.00251 val_mse 0.00243 best 0.00234@26 (19.9s)
+epoch 028 loss 0.00253 val_mse 0.00241 best 0.00234@26 (19.8s)
+epoch 029 loss 0.00252 val_mse 0.00232 best 0.00232@29 (20.0s)
+epoch 030 loss 0.00252 val_mse 0.00236 best 0.00232@29 (20.2s)
+epoch 031 loss 0.00247 val_mse 0.00228 best 0.00228@31 (20.0s)
+epoch 032 loss 0.00255 val_mse 0.00238 best 0.00228@31 (20.0s)
+epoch 033 loss 0.00248 val_mse 0.00238 best 0.00228@31 (19.4s)
+epoch 034 loss 0.00244 val_mse 0.00235 best 0.00228@31 (20.0s)
+epoch 035 loss 0.00246 val_mse 0.00241 best 0.00228@31 (19.9s)
+epoch 036 loss 0.00244 val_mse 0.00228 best 0.00228@36 (20.1s)
+epoch 037 loss 0.00246 val_mse 0.00229 best 0.00228@36 (20.2s)
+epoch 038 loss 0.00240 val_mse 0.00227 best 0.00227@38 (19.4s)
+epoch 039 loss 0.00241 val_mse 0.00233 best 0.00227@38 (19.9s)
+  [identity                                  ] MSE 0.00242  MAE 0.02974
+  [random_dropout:0.7                        ] MSE 0.00296  MAE 0.03412
+  [temporal_stride:3                         ] MSE 0.00280  MAE 0.03199
+  [variable_dropout:0.5                      ] MSE 0.02177  MAE 0.06818
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01410  MAE 0.05304
+best {'val_mse': 0.0022707513999193907, 'epoch': 38} -> results/raw/bench_vitaldb_grafiti_vanilla_s3/results.json
+summary {
+  "clean_mse": 0.0024194454308599234,
+  "mean_shift_mse": 0.010405034176073968,
+  "mean_degradation": 3.300586425036994,
+  "worst_mse": 0.021765604615211487,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.010405034176073968,
+  "mean_unseen_degradation": 3.300586425036994
+}
+[3/4] ok bench_vitaldb_grafiti_vanilla_s3 (17.4 min)
+
+[4/4] bench_vitaldb_grafiti_vanilla_s4
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_baseline.yaml --seed 4 --name bench_vitaldb_grafiti_vanilla_s4 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grafiti --no_wandb
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_grafiti_vanilla_s4 | device cuda:0 | params 177857 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grafiti", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 0.01162 val_mse 0.00324 best 0.00324@0 (20.4s)
+epoch 001 loss 0.00320 val_mse 0.00298 best 0.00298@1 (19.5s)
+epoch 002 loss 0.00304 val_mse 0.00304 best 0.00298@1 (19.6s)
+epoch 003 loss 0.00291 val_mse 0.00288 best 0.00288@3 (19.7s)
+epoch 004 loss 0.00283 val_mse 0.00250 best 0.00250@4 (19.6s)
+epoch 005 loss 0.00272 val_mse 0.00310 best 0.00250@4 (19.7s)
+epoch 006 loss 0.00280 val_mse 0.00247 best 0.00247@6 (19.7s)
+epoch 007 loss 0.00285 val_mse 0.00346 best 0.00247@6 (19.3s)
+epoch 008 loss 0.00278 val_mse 0.00262 best 0.00247@6 (19.8s)
+epoch 009 loss 0.00283 val_mse 0.00247 best 0.00247@9 (19.8s)
+epoch 010 loss 0.00271 val_mse 0.00249 best 0.00247@9 (19.8s)
+epoch 011 loss 0.00269 val_mse 0.00307 best 0.00247@9 (19.8s)
+epoch 012 loss 0.00266 val_mse 0.00295 best 0.00247@9 (19.3s)
+epoch 013 loss 0.00264 val_mse 0.00258 best 0.00247@9 (19.7s)
+epoch 014 loss 0.00270 val_mse 0.00245 best 0.00245@14 (19.7s)
+epoch 015 loss 0.00269 val_mse 0.00247 best 0.00245@14 (19.8s)
+epoch 016 loss 0.00260 val_mse 0.00242 best 0.00242@16 (19.8s)
+epoch 017 loss 0.00264 val_mse 0.00247 best 0.00242@16 (19.1s)
+epoch 018 loss 0.00266 val_mse 0.00260 best 0.00242@16 (19.7s)
+epoch 019 loss 0.00259 val_mse 0.00240 best 0.00240@19 (19.4s)
+epoch 020 loss 0.00257 val_mse 0.00233 best 0.00233@20 (18.5s)
+epoch 021 loss 0.00254 val_mse 0.00244 best 0.00233@20 (17.9s)
+epoch 022 loss 0.00255 val_mse 0.00265 best 0.00233@20 (19.2s)
+epoch 023 loss 0.00251 val_mse 0.00258 best 0.00233@20 (19.7s)
+epoch 024 loss 0.00254 val_mse 0.00231 best 0.00231@24 (19.8s)
+epoch 025 loss 0.00248 val_mse 0.00232 best 0.00231@24 (19.7s)
+epoch 026 loss 0.00250 val_mse 0.00235 best 0.00231@24 (19.7s)
+epoch 027 loss 0.00244 val_mse 0.00248 best 0.00231@24 (19.3s)
+epoch 028 loss 0.00247 val_mse 0.00235 best 0.00231@24 (19.8s)
+epoch 029 loss 0.00245 val_mse 0.00252 best 0.00231@24 (19.6s)
+epoch 030 loss 0.00242 val_mse 0.00239 best 0.00231@24 (19.8s)
+epoch 031 loss 0.00244 val_mse 0.00243 best 0.00231@24 (19.7s)
+epoch 032 loss 0.00243 val_mse 0.00231 best 0.00231@24 (19.6s)
+epoch 033 loss 0.00242 val_mse 0.00227 best 0.00227@33 (19.6s)
+epoch 034 loss 0.00242 val_mse 0.00313 best 0.00227@33 (19.7s)
+epoch 035 loss 0.00242 val_mse 0.00232 best 0.00227@33 (19.7s)
+epoch 036 loss 0.00243 val_mse 0.00229 best 0.00227@33 (19.7s)
+epoch 037 loss 0.00239 val_mse 0.00248 best 0.00227@33 (19.7s)
+epoch 038 loss 0.00242 val_mse 0.00231 best 0.00227@33 (19.4s)
+epoch 039 loss 0.00237 val_mse 0.00241 best 0.00227@33 (19.8s)
+  [identity                                  ] MSE 0.00243  MAE 0.03022
+  [random_dropout:0.7                        ] MSE 0.00303  MAE 0.03492
+  [temporal_stride:3                         ] MSE 0.00280  MAE 0.03260
+  [variable_dropout:0.5                      ] MSE 0.02286  MAE 0.06749
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01491  MAE 0.05458
+best {'val_mse': 0.0022713837679475546, 'epoch': 33} -> results/raw/bench_vitaldb_grafiti_vanilla_s4/results.json
+summary {
+  "clean_mse": 0.002433913992717862,
+  "mean_shift_mse": 0.010900510649662465,
+  "mean_degradation": 3.4785931969150092,
+  "worst_mse": 0.022859567776322365,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.010900510649662465,
+  "mean_unseen_degradation": 3.4785931969150092
+}
+[4/4] ok bench_vitaldb_grafiti_vanilla_s4 (17.4 min)
+
+stage B: 4 ok, 0 failed
+stage C: 1 cells
+
+[1/1] bench_vitaldb_grafiti_opera_s0
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_distillation.yaml --seed 0 --name bench_vitaldb_grafiti_opera_s0 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grafiti distillation.teacher_ckpt=results/raw/bench_vitaldb_grafiti_vanilla_s0/model.pt --no_wandb
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_grafiti_opera_s0 | device cuda:0 | params 177857 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_vitaldb_grafiti_vanilla_s0/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grafiti", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 0.02566 val_mse 0.00339 best 0.00339@0 (25.8s)
+epoch 001 loss 0.00477 val_mse 0.00423 best 0.00339@0 (24.4s)
+epoch 002 loss 0.00426 val_mse 0.00677 best 0.00339@0 (25.3s)
+epoch 003 loss 0.00393 val_mse 0.00281 best 0.00281@3 (25.1s)
+epoch 004 loss 0.00370 val_mse 0.00263 best 0.00263@4 (25.2s)
+epoch 005 loss 0.00342 val_mse 0.00259 best 0.00259@5 (25.0s)
+epoch 006 loss 0.00349 val_mse 0.00250 best 0.00250@6 (24.7s)
+epoch 007 loss 0.00335 val_mse 0.00250 best 0.00250@6 (25.3s)
+epoch 008 loss 0.00327 val_mse 0.00272 best 0.00250@6 (25.4s)
+epoch 009 loss 0.00322 val_mse 0.00258 best 0.00250@6 (25.4s)
+epoch 010 loss 0.00324 val_mse 0.00244 best 0.00244@10 (25.1s)
+epoch 011 loss 0.00322 val_mse 0.00260 best 0.00244@10 (24.9s)
+epoch 012 loss 0.00310 val_mse 0.00291 best 0.00244@10 (25.1s)
+epoch 013 loss 0.00314 val_mse 0.00239 best 0.00239@13 (25.2s)
+epoch 014 loss 0.00324 val_mse 0.00287 best 0.00239@13 (25.0s)
+epoch 015 loss 0.00308 val_mse 0.00239 best 0.00239@13 (24.5s)
+epoch 016 loss 0.00315 val_mse 0.00292 best 0.00239@13 (25.1s)
+epoch 017 loss 0.00296 val_mse 0.00298 best 0.00239@13 (25.2s)
+epoch 018 loss 0.00292 val_mse 0.00268 best 0.00239@13 (24.1s)
+epoch 019 loss 0.00288 val_mse 0.00253 best 0.00239@13 (21.5s)
+epoch 020 loss 0.00291 val_mse 0.00233 best 0.00233@20 (26.7s)
+epoch 021 loss 0.00291 val_mse 0.00234 best 0.00233@20 (26.9s)
+epoch 022 loss 0.00278 val_mse 0.00240 best 0.00233@20 (26.8s)
+epoch 023 loss 0.00277 val_mse 0.00253 best 0.00233@20 (27.0s)
+epoch 024 loss 0.00289 val_mse 0.00262 best 0.00233@20 (26.0s)
+epoch 025 loss 0.00284 val_mse 0.00236 best 0.00233@20 (27.9s)
+epoch 026 loss 0.00277 val_mse 0.00321 best 0.00233@20 (27.9s)
+epoch 027 loss 0.00273 val_mse 0.00239 best 0.00233@20 (27.6s)
+epoch 028 loss 0.00276 val_mse 0.00229 best 0.00229@28 (27.3s)
+epoch 029 loss 0.00277 val_mse 0.00227 best 0.00227@29 (27.7s)
+epoch 030 loss 0.00277 val_mse 0.00234 best 0.00227@29 (27.7s)
+epoch 031 loss 0.00274 val_mse 0.00238 best 0.00227@29 (28.1s)
+epoch 032 loss 0.00282 val_mse 0.00244 best 0.00227@29 (27.8s)
+epoch 033 loss 0.00271 val_mse 0.00238 best 0.00227@29 (27.3s)
+epoch 034 loss 0.00272 val_mse 0.00232 best 0.00227@29 (28.0s)
+epoch 035 loss 0.00271 val_mse 0.00225 best 0.00225@35 (27.7s)
+epoch 036 loss 0.00270 val_mse 0.00229 best 0.00225@35 (27.7s)
+epoch 037 loss 0.00273 val_mse 0.00231 best 0.00225@35 (27.4s)
+epoch 038 loss 0.00268 val_mse 0.00267 best 0.00225@35 (27.8s)
+epoch 039 loss 0.00271 val_mse 0.00228 best 0.00225@35 (28.0s)
+  [identity                                  ] MSE 0.00239  MAE 0.02904
+  [random_dropout:0.7                        ] MSE 0.00271  MAE 0.03189
+  [temporal_stride:3                         ] MSE 0.00268  MAE 0.03134
+  [variable_dropout:0.5                      ] MSE 0.00319  MAE 0.03623
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00320  MAE 0.03563
+best {'val_mse': 0.0022470445837825537, 'epoch': 35} -> results/raw/bench_vitaldb_grafiti_opera_s0/results.json
+summary {
+  "clean_mse": 0.0023918086662888527,
+  "mean_shift_mse": 0.002943064202554524,
+  "mean_degradation": 0.23047643569291154,
+  "worst_mse": 0.003200542414560914,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.002943064202554524,
+  "mean_unseen_degradation": 0.23047643569291154
+}
+[1/1] ok bench_vitaldb_grafiti_opera_s0 (22.2 min)
+
+stage C: 1 ok, 0 failed
+stage D: 4 cells
+
+[1/4] bench_vitaldb_grafiti_opera_s1
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_distillation.yaml --seed 1 --name bench_vitaldb_grafiti_opera_s1 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grafiti distillation.teacher_ckpt=results/raw/bench_vitaldb_grafiti_vanilla_s1/model.pt --no_wandb
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_grafiti_opera_s1 | device cuda:0 | params 177857 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_vitaldb_grafiti_vanilla_s1/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grafiti", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 0.01970 val_mse 0.00311 best 0.00311@0 (28.4s)
+epoch 001 loss 0.00395 val_mse 0.00393 best 0.00311@0 (27.2s)
+epoch 002 loss 0.00362 val_mse 0.00263 best 0.00263@2 (27.5s)
+epoch 003 loss 0.00330 val_mse 0.00250 best 0.00250@3 (27.7s)
+epoch 004 loss 0.00330 val_mse 0.00246 best 0.00246@4 (27.7s)
+epoch 005 loss 0.00324 val_mse 0.00247 best 0.00246@4 (27.2s)
+epoch 006 loss 0.00322 val_mse 0.00253 best 0.00246@4 (27.7s)
+epoch 007 loss 0.00318 val_mse 0.00256 best 0.00246@4 (27.6s)
+epoch 008 loss 0.00310 val_mse 0.00259 best 0.00246@4 (27.7s)
+epoch 009 loss 0.00316 val_mse 0.00241 best 0.00241@9 (27.6s)
+epoch 010 loss 0.00297 val_mse 0.00294 best 0.00241@9 (27.1s)
+epoch 011 loss 0.00304 val_mse 0.00234 best 0.00234@11 (27.8s)
+epoch 012 loss 0.00301 val_mse 0.00261 best 0.00234@11 (27.6s)
+epoch 013 loss 0.00290 val_mse 0.00233 best 0.00233@13 (27.5s)
+epoch 014 loss 0.00291 val_mse 0.00239 best 0.00233@13 (27.6s)
+epoch 015 loss 0.00286 val_mse 0.00234 best 0.00233@13 (27.3s)
+epoch 016 loss 0.00302 val_mse 0.00242 best 0.00233@13 (27.8s)
+epoch 017 loss 0.00282 val_mse 0.00232 best 0.00232@17 (27.4s)
+epoch 018 loss 0.00278 val_mse 0.00228 best 0.00228@18 (25.2s)
+epoch 019 loss 0.00288 val_mse 0.00258 best 0.00228@18 (21.3s)
+epoch 020 loss 0.00281 val_mse 0.00229 best 0.00228@18 (27.9s)
+epoch 021 loss 0.00279 val_mse 0.00254 best 0.00228@18 (27.9s)
+epoch 022 loss 0.00282 val_mse 0.00226 best 0.00226@22 (27.8s)
+epoch 023 loss 0.00273 val_mse 0.00240 best 0.00226@22 (27.8s)
+epoch 024 loss 0.00275 val_mse 0.00233 best 0.00226@22 (27.2s)
+epoch 025 loss 0.00275 val_mse 0.00241 best 0.00226@22 (28.2s)
+epoch 026 loss 0.00276 val_mse 0.00229 best 0.00226@22 (28.0s)
+epoch 027 loss 0.00273 val_mse 0.00232 best 0.00226@22 (28.0s)
+epoch 028 loss 0.00268 val_mse 0.00225 best 0.00225@28 (28.0s)
+epoch 029 loss 0.00269 val_mse 0.00230 best 0.00225@28 (27.5s)
+epoch 030 loss 0.00268 val_mse 0.00225 best 0.00225@30 (28.0s)
+epoch 031 loss 0.00266 val_mse 0.00240 best 0.00225@30 (27.9s)
+epoch 032 loss 0.00263 val_mse 0.00227 best 0.00225@30 (28.2s)
+epoch 033 loss 0.00270 val_mse 0.00228 best 0.00225@30 (27.6s)
+epoch 034 loss 0.00265 val_mse 0.00226 best 0.00225@30 (28.1s)
+epoch 035 loss 0.00265 val_mse 0.00226 best 0.00225@30 (28.2s)
+epoch 036 loss 0.00267 val_mse 0.00247 best 0.00225@30 (28.1s)
+epoch 037 loss 0.00267 val_mse 0.00234 best 0.00225@30 (28.1s)
+epoch 038 loss 0.00266 val_mse 0.00227 best 0.00225@30 (27.4s)
+epoch 039 loss 0.00262 val_mse 0.00227 best 0.00225@30 (27.9s)
+  [identity                                  ] MSE 0.00240  MAE 0.02864
+  [random_dropout:0.7                        ] MSE 0.00275  MAE 0.03187
+  [temporal_stride:3                         ] MSE 0.00274  MAE 0.03141
+  [variable_dropout:0.5                      ] MSE 0.00313  MAE 0.03541
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00324  MAE 0.03579
+best {'val_mse': 0.0022481949999928474, 'epoch': 30} -> results/raw/bench_vitaldb_grafiti_opera_s1/results.json
+summary {
+  "clean_mse": 0.002402528189122677,
+  "mean_shift_mse": 0.0029637222760356963,
+  "mean_degradation": 0.23358480847542054,
+  "worst_mse": 0.0032441900111734867,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.0029637222760356963,
+  "mean_unseen_degradation": 0.23358480847542054
+}
+[1/4] ok bench_vitaldb_grafiti_opera_s1 (23.3 min)
+
+[2/4] bench_vitaldb_grafiti_opera_s2
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_distillation.yaml --seed 2 --name bench_vitaldb_grafiti_opera_s2 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grafiti distillation.teacher_ckpt=results/raw/bench_vitaldb_grafiti_vanilla_s2/model.pt --no_wandb
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_grafiti_opera_s2 | device cuda:0 | params 177857 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_vitaldb_grafiti_vanilla_s2/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grafiti", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 0.03076 val_mse 0.00334 best 0.00334@0 (28.1s)
+epoch 001 loss 0.00459 val_mse 0.00328 best 0.00328@1 (26.9s)
+epoch 002 loss 0.00363 val_mse 0.00288 best 0.00288@2 (27.7s)
+epoch 003 loss 0.00336 val_mse 0.00255 best 0.00255@3 (27.6s)
+epoch 004 loss 0.00312 val_mse 0.00277 best 0.00255@3 (27.5s)
+epoch 005 loss 0.00303 val_mse 0.00254 best 0.00254@5 (27.4s)
+epoch 006 loss 0.00308 val_mse 0.00245 best 0.00245@6 (27.0s)
+epoch 007 loss 0.00306 val_mse 0.00251 best 0.00245@6 (27.5s)
+epoch 008 loss 0.00298 val_mse 0.00244 best 0.00244@8 (27.4s)
+epoch 009 loss 0.00302 val_mse 0.00245 best 0.00244@8 (27.7s)
+epoch 010 loss 0.00298 val_mse 0.00266 best 0.00244@8 (27.4s)
+epoch 011 loss 0.00301 val_mse 0.00275 best 0.00244@8 (27.3s)
+epoch 012 loss 0.00300 val_mse 0.00243 best 0.00243@12 (27.6s)
+epoch 013 loss 0.00291 val_mse 0.00254 best 0.00243@12 (27.4s)
+epoch 014 loss 0.00302 val_mse 0.00249 best 0.00243@12 (27.5s)
+epoch 015 loss 0.00302 val_mse 0.00242 best 0.00242@15 (26.9s)
+epoch 016 loss 0.00298 val_mse 0.00242 best 0.00242@15 (27.3s)
+epoch 017 loss 0.00297 val_mse 0.00298 best 0.00242@15 (27.7s)
+epoch 018 loss 0.00295 val_mse 0.00243 best 0.00242@15 (25.3s)
+epoch 019 loss 0.00290 val_mse 0.00245 best 0.00242@15 (21.9s)
+epoch 020 loss 0.00296 val_mse 0.00245 best 0.00242@15 (27.8s)
+epoch 021 loss 0.00289 val_mse 0.00241 best 0.00241@21 (29.0s)
+epoch 022 loss 0.00289 val_mse 0.00243 best 0.00241@21 (28.4s)
+epoch 023 loss 0.00294 val_mse 0.00239 best 0.00239@23 (28.6s)
+epoch 024 loss 0.00286 val_mse 0.00242 best 0.00239@23 (28.5s)
+epoch 025 loss 0.00289 val_mse 0.00238 best 0.00238@25 (28.4s)
+epoch 026 loss 0.00285 val_mse 0.00239 best 0.00238@25 (28.9s)
+epoch 027 loss 0.00281 val_mse 0.00240 best 0.00238@25 (28.6s)
+epoch 028 loss 0.00276 val_mse 0.00235 best 0.00235@28 (28.7s)
+epoch 029 loss 0.00285 val_mse 0.00270 best 0.00235@28 (28.2s)
+epoch 030 loss 0.00282 val_mse 0.00236 best 0.00235@28 (28.5s)
+epoch 031 loss 0.00269 val_mse 0.00237 best 0.00235@28 (28.8s)
+epoch 032 loss 0.00280 val_mse 0.00239 best 0.00235@28 (28.8s)
+epoch 033 loss 0.00277 val_mse 0.00269 best 0.00235@28 (28.8s)
+epoch 034 loss 0.00276 val_mse 0.00233 best 0.00233@34 (28.2s)
+epoch 035 loss 0.00273 val_mse 0.00235 best 0.00233@34 (28.7s)
+epoch 036 loss 0.00271 val_mse 0.00231 best 0.00231@36 (28.6s)
+epoch 037 loss 0.00271 val_mse 0.00231 best 0.00231@36 (28.7s)
+epoch 038 loss 0.00271 val_mse 0.00235 best 0.00231@36 (28.5s)
+epoch 039 loss 0.00273 val_mse 0.00233 best 0.00231@36 (28.7s)
+  [identity                                  ] MSE 0.00245  MAE 0.02911
+  [random_dropout:0.7                        ] MSE 0.00274  MAE 0.03177
+  [temporal_stride:3                         ] MSE 0.00274  MAE 0.03148
+  [variable_dropout:0.5                      ] MSE 0.00323  MAE 0.03606
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00337  MAE 0.03617
+best {'val_mse': 0.0023055262863636017, 'epoch': 36} -> results/raw/bench_vitaldb_grafiti_opera_s2/results.json
+summary {
+  "clean_mse": 0.0024475122336298227,
+  "mean_shift_mse": 0.003020592324901372,
+  "mean_degradation": 0.23414799868911534,
+  "worst_mse": 0.003374600550159812,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.003020592324901372,
+  "mean_unseen_degradation": 0.23414799868911534
+}
+[2/4] ok bench_vitaldb_grafiti_opera_s2 (23.3 min)
+
+[3/4] bench_vitaldb_grafiti_opera_s3
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_distillation.yaml --seed 3 --name bench_vitaldb_grafiti_opera_s3 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grafiti distillation.teacher_ckpt=results/raw/bench_vitaldb_grafiti_vanilla_s3/model.pt --no_wandb
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_grafiti_opera_s3 | device cuda:0 | params 177857 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_vitaldb_grafiti_vanilla_s3/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grafiti", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 0.02397 val_mse 0.00345 best 0.00345@0 (28.5s)
+epoch 001 loss 0.00434 val_mse 0.00288 best 0.00288@1 (27.8s)
+epoch 002 loss 0.00400 val_mse 0.00275 best 0.00275@2 (27.3s)
+epoch 003 loss 0.00342 val_mse 0.00257 best 0.00257@3 (27.5s)
+epoch 004 loss 0.00334 val_mse 0.00406 best 0.00257@3 (27.9s)
+epoch 005 loss 0.00339 val_mse 0.00257 best 0.00257@3 (27.7s)
+epoch 006 loss 0.00326 val_mse 0.00288 best 0.00257@3 (27.1s)
+epoch 007 loss 0.00309 val_mse 0.00255 best 0.00255@7 (27.7s)
+epoch 008 loss 0.00313 val_mse 0.00261 best 0.00255@7 (27.9s)
+epoch 009 loss 0.00312 val_mse 0.00267 best 0.00255@7 (27.9s)
+epoch 010 loss 0.00310 val_mse 0.00240 best 0.00240@10 (27.6s)
+epoch 011 loss 0.00301 val_mse 0.00305 best 0.00240@10 (27.1s)
+epoch 012 loss 0.00298 val_mse 0.00313 best 0.00240@10 (27.8s)
+epoch 013 loss 0.00299 val_mse 0.00253 best 0.00240@10 (27.7s)
+epoch 014 loss 0.00299 val_mse 0.00247 best 0.00240@10 (27.7s)
+epoch 015 loss 0.00295 val_mse 0.00259 best 0.00240@10 (27.6s)
+epoch 016 loss 0.00300 val_mse 0.00237 best 0.00237@16 (27.6s)
+epoch 017 loss 0.00283 val_mse 0.00253 best 0.00237@16 (27.5s)
+epoch 018 loss 0.00289 val_mse 0.00237 best 0.00237@16 (26.3s)
+epoch 019 loss 0.00295 val_mse 0.00234 best 0.00234@19 (23.0s)
+epoch 020 loss 0.00283 val_mse 0.00229 best 0.00229@20 (28.1s)
+epoch 021 loss 0.00288 val_mse 0.00233 best 0.00229@20 (28.9s)
+epoch 022 loss 0.00281 val_mse 0.00231 best 0.00229@20 (29.0s)
+epoch 023 loss 0.00281 val_mse 0.00264 best 0.00229@20 (29.0s)
+epoch 024 loss 0.00285 val_mse 0.00239 best 0.00229@20 (29.2s)
+epoch 025 loss 0.00276 val_mse 0.00228 best 0.00228@25 (28.4s)
+epoch 026 loss 0.00280 val_mse 0.00261 best 0.00228@25 (28.9s)
+epoch 027 loss 0.00272 val_mse 0.00230 best 0.00228@25 (28.8s)
+epoch 028 loss 0.00278 val_mse 0.00258 best 0.00228@25 (28.9s)
+epoch 029 loss 0.00274 val_mse 0.00227 best 0.00227@29 (28.6s)
+epoch 030 loss 0.00265 val_mse 0.00230 best 0.00227@29 (28.7s)
+epoch 031 loss 0.00266 val_mse 0.00235 best 0.00227@29 (28.9s)
+epoch 032 loss 0.00268 val_mse 0.00226 best 0.00226@32 (29.0s)
+epoch 033 loss 0.00268 val_mse 0.00231 best 0.00226@32 (29.1s)
+epoch 034 loss 0.00266 val_mse 0.00236 best 0.00226@32 (28.4s)
+epoch 035 loss 0.00269 val_mse 0.00229 best 0.00226@32 (29.0s)
+epoch 036 loss 0.00265 val_mse 0.00233 best 0.00226@32 (28.9s)
+epoch 037 loss 0.00267 val_mse 0.00226 best 0.00226@37 (28.9s)
+epoch 038 loss 0.00262 val_mse 0.00230 best 0.00226@37 (28.8s)
+epoch 039 loss 0.00268 val_mse 0.00234 best 0.00226@37 (28.4s)
+  [identity                                  ] MSE 0.00241  MAE 0.02961
+  [random_dropout:0.7                        ] MSE 0.00274  MAE 0.03223
+  [temporal_stride:3                         ] MSE 0.00271  MAE 0.03159
+  [variable_dropout:0.5                      ] MSE 0.00320  MAE 0.03648
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00327  MAE 0.03620
+best {'val_mse': 0.002258418360725045, 'epoch': 37} -> results/raw/bench_vitaldb_grafiti_opera_s3/results.json
+summary {
+  "clean_mse": 0.00240981369279325,
+  "mean_shift_mse": 0.0029787824605591595,
+  "mean_degradation": 0.23610487792789053,
+  "worst_mse": 0.0032745152711868286,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.0029787824605591595,
+  "mean_unseen_degradation": 0.23610487792789053
+}
+[3/4] ok bench_vitaldb_grafiti_opera_s3 (23.4 min)
+
+[4/4] bench_vitaldb_grafiti_opera_s4
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/vitaldb_distillation.yaml --seed 4 --name bench_vitaldb_grafiti_opera_s4 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grafiti distillation.teacher_ckpt=results/raw/bench_vitaldb_grafiti_vanilla_s4/model.pt --no_wandb
+vitaldb records: 6388 3832 1278 1278
+vitaldb windows: 16406 9961 3213 3232
+data_max: tensor([221.3667, 100.0000, 275.0000, 197.0000, 226.0000, 300.0000, 200.0000,
+        250.0000,  97.3333,  59.2000,  45.0000])
+data_min: tensor([20., 50., 33., 18., 20., 30., 10., 20.,  5.,  2., 25.])
+time_max: tensor(74.)
+run bench_vitaldb_grafiti_opera_s4 | device cuda:0 | params 177857 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_vitaldb_grafiti_vanilla_s4/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grafiti", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 0.02191 val_mse 0.00319 best 0.00319@0 (28.2s)
+epoch 001 loss 0.00432 val_mse 0.00278 best 0.00278@1 (27.6s)
+epoch 002 loss 0.00357 val_mse 0.00327 best 0.00278@1 (26.8s)
+epoch 003 loss 0.00342 val_mse 0.00251 best 0.00251@3 (27.5s)
+epoch 004 loss 0.00333 val_mse 0.00516 best 0.00251@3 (27.7s)
+epoch 005 loss 0.00334 val_mse 0.00245 best 0.00245@5 (27.5s)
+epoch 006 loss 0.00321 val_mse 0.00301 best 0.00245@5 (27.6s)
+epoch 007 loss 0.00335 val_mse 0.00264 best 0.00245@5 (27.1s)
+epoch 008 loss 0.00318 val_mse 0.00245 best 0.00245@8 (27.4s)
+epoch 009 loss 0.00315 val_mse 0.00266 best 0.00245@8 (27.7s)
+epoch 010 loss 0.00319 val_mse 0.00245 best 0.00245@8 (27.7s)
+epoch 011 loss 0.00320 val_mse 0.00265 best 0.00245@8 (27.2s)
+epoch 012 loss 0.00293 val_mse 0.00236 best 0.00236@12 (27.6s)
+epoch 013 loss 0.00302 val_mse 0.00245 best 0.00236@12 (27.5s)
+epoch 014 loss 0.00292 val_mse 0.00242 best 0.00236@12 (27.6s)
+epoch 015 loss 0.00292 val_mse 0.00238 best 0.00236@12 (27.6s)
+epoch 016 loss 0.00300 val_mse 0.00318 best 0.00236@12 (26.7s)
+epoch 017 loss 0.00299 val_mse 0.00267 best 0.00236@12 (27.6s)
+epoch 018 loss 0.00284 val_mse 0.00251 best 0.00236@12 (26.8s)
+epoch 019 loss 0.00279 val_mse 0.00236 best 0.00236@12 (23.5s)
+epoch 020 loss 0.00284 val_mse 0.00237 best 0.00236@12 (27.0s)
+epoch 021 loss 0.00281 val_mse 0.00230 best 0.00230@21 (27.4s)
+epoch 022 loss 0.00280 val_mse 0.00233 best 0.00230@21 (27.9s)
+epoch 023 loss 0.00283 val_mse 0.00273 best 0.00230@21 (27.9s)
+epoch 024 loss 0.00283 val_mse 0.00232 best 0.00230@21 (27.8s)
+epoch 025 loss 0.00271 val_mse 0.00233 best 0.00230@21 (27.5s)
+epoch 026 loss 0.00271 val_mse 0.00232 best 0.00230@21 (27.7s)
+epoch 027 loss 0.00272 val_mse 0.00230 best 0.00230@27 (28.2s)
+epoch 028 loss 0.00277 val_mse 0.00244 best 0.00230@27 (27.8s)
+epoch 029 loss 0.00269 val_mse 0.00237 best 0.00230@27 (27.8s)
+epoch 030 loss 0.00265 val_mse 0.00240 best 0.00230@27 (27.5s)
+epoch 031 loss 0.00270 val_mse 0.00235 best 0.00230@27 (27.8s)
+epoch 032 loss 0.00266 val_mse 0.00230 best 0.00230@27 (27.8s)
+epoch 033 loss 0.00266 val_mse 0.00233 best 0.00230@27 (27.8s)
+epoch 034 loss 0.00267 val_mse 0.00236 best 0.00230@27 (27.7s)
+epoch 035 loss 0.00266 val_mse 0.00226 best 0.00226@35 (27.3s)
+epoch 036 loss 0.00263 val_mse 0.00226 best 0.00226@35 (27.8s)
+epoch 037 loss 0.00265 val_mse 0.00226 best 0.00226@35 (27.9s)
+epoch 038 loss 0.00266 val_mse 0.00260 best 0.00226@35 (28.0s)
+epoch 039 loss 0.00266 val_mse 0.00226 best 0.00226@39 (27.6s)
+  [identity                                  ] MSE 0.00241  MAE 0.03023
+  [random_dropout:0.7                        ] MSE 0.00273  MAE 0.03280
+  [temporal_stride:3                         ] MSE 0.00269  MAE 0.03230
+  [variable_dropout:0.5                      ] MSE 0.00318  MAE 0.03703
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00321  MAE 0.03646
+best {'val_mse': 0.0022564607206732035, 'epoch': 39} -> results/raw/bench_vitaldb_grafiti_opera_s4/results.json
+summary {
+  "clean_mse": 0.002408230910077691,
+  "mean_shift_mse": 0.0029511020984500647,
+  "mean_degradation": 0.22542322918480445,
+  "worst_mse": 0.0032119154930114746,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.0029511020984500647,
+  "mean_unseen_degradation": 0.22542322918480445
+}
+[4/4] ok bench_vitaldb_grafiti_opera_s4 (23.3 min)
+
+stage D: 4 ok, 0 failed

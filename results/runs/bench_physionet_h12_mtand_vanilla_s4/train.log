@@ -1,0 +1,53 @@
+run bench_physionet_h12_mtand_vanilla_s4 | device cuda:0 | params 90345 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 12, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "mtand", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01410 val_mse 0.00994 best 0.00994@0 (31.0s)
+epoch 001 loss 0.00855 val_mse 0.00920 best 0.00920@1 (26.7s)
+epoch 002 loss 0.00825 val_mse 0.00886 best 0.00886@2 (32.2s)
+epoch 003 loss 0.00787 val_mse 0.00882 best 0.00882@3 (29.3s)
+epoch 004 loss 0.00759 val_mse 0.00831 best 0.00831@4 (30.0s)
+epoch 005 loss 0.00729 val_mse 0.00838 best 0.00831@4 (30.2s)
+epoch 006 loss 0.00718 val_mse 0.00810 best 0.00810@6 (29.1s)
+epoch 007 loss 0.00681 val_mse 0.00787 best 0.00787@7 (31.0s)
+epoch 008 loss 0.00704 val_mse 0.00805 best 0.00787@7 (27.9s)
+epoch 009 loss 0.00689 val_mse 0.00757 best 0.00757@9 (19.3s)
+epoch 010 loss 0.00673 val_mse 0.00772 best 0.00757@9 (19.6s)
+epoch 011 loss 0.00664 val_mse 0.00750 best 0.00750@11 (28.5s)
+epoch 012 loss 0.00647 val_mse 0.00753 best 0.00750@11 (28.1s)
+epoch 013 loss 0.00656 val_mse 0.00777 best 0.00750@11 (28.7s)
+epoch 014 loss 0.00667 val_mse 0.00795 best 0.00750@11 (28.0s)
+epoch 015 loss 0.00644 val_mse 0.00742 best 0.00742@15 (29.2s)
+epoch 016 loss 0.00645 val_mse 0.00801 best 0.00742@15 (26.8s)
+epoch 017 loss 0.00628 val_mse 0.00847 best 0.00742@15 (29.5s)
+epoch 018 loss 0.00623 val_mse 0.00758 best 0.00742@15 (29.7s)
+epoch 019 loss 0.00615 val_mse 0.00770 best 0.00742@15 (29.5s)
+epoch 020 loss 0.00623 val_mse 0.00839 best 0.00742@15 (30.9s)
+epoch 021 loss 0.00647 val_mse 0.00766 best 0.00742@15 (28.0s)
+epoch 022 loss 0.00613 val_mse 0.00735 best 0.00735@22 (28.7s)
+epoch 023 loss 0.00599 val_mse 0.00747 best 0.00735@22 (29.7s)
+epoch 024 loss 0.00596 val_mse 0.00729 best 0.00729@24 (31.7s)
+epoch 025 loss 0.00605 val_mse 0.00829 best 0.00729@24 (30.6s)
+epoch 026 loss 0.00624 val_mse 0.00751 best 0.00729@24 (29.2s)
+epoch 027 loss 0.00606 val_mse 0.00731 best 0.00729@24 (29.9s)
+epoch 028 loss 0.00579 val_mse 0.00750 best 0.00729@24 (29.2s)
+epoch 029 loss 0.00582 val_mse 0.00766 best 0.00729@24 (27.9s)
+epoch 030 loss 0.00576 val_mse 0.00769 best 0.00729@24 (28.2s)
+epoch 031 loss 0.00574 val_mse 0.00754 best 0.00729@24 (28.3s)
+epoch 032 loss 0.00564 val_mse 0.00757 best 0.00729@24 (29.4s)
+epoch 033 loss 0.00564 val_mse 0.00774 best 0.00729@24 (29.9s)
+epoch 034 loss 0.00539 val_mse 0.00762 best 0.00729@24 (28.5s)
+early stop
+  [identity                                  ] MSE 0.00638  MAE 0.04492
+  [random_dropout:0.7                        ] MSE 0.00915  MAE 0.05436
+  [temporal_stride:3                         ] MSE 0.00655  MAE 0.04547
+  [variable_dropout:0.5                      ] MSE 0.01040  MAE 0.05733
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00815  MAE 0.05118
+best {'val_mse': 0.007289184257388115, 'epoch': 24} -> results/raw/bench_physionet_h12_mtand_vanilla_s4/results.json
+summary {
+  "clean_mse": 0.006380954757332802,
+  "mean_shift_mse": 0.008560976246371865,
+  "mean_degradation": 0.3416450314953022,
+  "worst_mse": 0.010398146696388721,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.008560976246371865,
+  "mean_unseen_degradation": 0.3416450314953022
+}

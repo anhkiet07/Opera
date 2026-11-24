@@ -1,0 +1,680 @@
+stage A: 1 cells
+
+[1/1] bench_physionet_h36_grafiti_vanilla_s0
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/physionet_h36_baseline.yaml --seed 0 --name bench_physionet_h36_grafiti_vanilla_s0 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grafiti --no_wandb
+Total records: 12000
+Dataset n_samples: 12000 7200 2400 2400
+Test record ids (first 20): ['134302', '144753', '137142', '153444', '134906', '154300', '144359', '162459', '141317', '151947', '135968', '136920', '133579', '140585', '142964', '158681', '140670', '143983', '132821', '135775']
+Test record ids (last 20): ['150324', '137692', '151553', '144871', '142022', '142764', '142160', '153909', '144034', '155047', '149146', '138666', '150034', '149577', '144809', '140296', '158002', '146644', '137769', '150611']
+data_max: tensor([9.0000e+01, 1.0000e+00, 4.6230e+02, 4.0000e+00, 4.7200e+02, 5.0000e+00,
+        4.6950e+03, 1.6920e+04, 3.6400e+04, 8.2800e+01, 2.0900e+02, 3.6200e+02,
+        2.2100e+01, 2.8300e+02, 1.0000e+00, 1.5000e+01, 1.5910e+03, 5.2000e+01,
+        6.1800e+01, 2.4500e+02, 2.2900e+01, 3.1000e+01, 3.7500e+01, 3.0000e+02,
+        1.0000e+00, 1.8000e+02, 2.1100e+02, 2.2800e+02, 3.0000e+02, 1.0000e+02,
+        5.0000e+02, 7.3500e+02, 2.2920e+03, 9.8000e+01, 1.0000e+02, 2.8900e+02,
+        4.2200e+01, 4.9600e+01, 2.4910e+01, 1.1000e+04, 6.2519e+03],
+       device='cuda:0')
+data_min: tensor([ 1.5000e+01, -1.0000e+00, -1.0000e+00,  1.0000e+00, -1.0000e+00,
+         1.0000e+00,  8.0000e+00,  1.0000e+00,  4.0000e+00,  0.0000e+00,
+         0.0000e+00,  2.8000e+01,  1.0000e-01, -1.0000e+00,  2.1000e-01,
+         3.0000e+00,  8.0000e+00,  5.0000e+00,  5.0000e+00,  0.0000e+00,
+         1.5000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,  1.0000e+00,
+         9.8000e+01, -1.0000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00,  0.0000e+00,  5.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00, -1.7800e+01,  3.0000e-01,  1.0000e-02,  0.0000e+00,
+         1.0000e-01], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+run bench_physionet_h36_grafiti_vanilla_s0 | device cuda:0 | params 179777 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 36, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grafiti", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 0.03018 val_mse 0.00746 best 0.00746@0 (50.3s)
+epoch 001 loss 0.00547 val_mse 0.00652 best 0.00652@1 (49.5s)
+epoch 002 loss 0.00489 val_mse 0.00577 best 0.00577@2 (49.8s)
+epoch 003 loss 0.00476 val_mse 0.00555 best 0.00555@3 (48.9s)
+epoch 004 loss 0.00453 val_mse 0.00573 best 0.00555@3 (48.4s)
+epoch 005 loss 0.00441 val_mse 0.00544 best 0.00544@5 (49.1s)
+epoch 006 loss 0.00427 val_mse 0.00549 best 0.00544@5 (49.0s)
+epoch 007 loss 0.00441 val_mse 0.00583 best 0.00544@5 (48.3s)
+epoch 008 loss 0.00421 val_mse 0.00564 best 0.00544@5 (48.9s)
+epoch 009 loss 0.00418 val_mse 0.00626 best 0.00544@5 (48.8s)
+epoch 010 loss 0.00423 val_mse 0.00575 best 0.00544@5 (49.2s)
+epoch 011 loss 0.00420 val_mse 0.00582 best 0.00544@5 (49.0s)
+epoch 012 loss 0.00419 val_mse 0.00552 best 0.00544@5 (49.5s)
+epoch 013 loss 0.00421 val_mse 0.00580 best 0.00544@5 (49.0s)
+epoch 014 loss 0.00418 val_mse 0.00551 best 0.00544@5 (48.5s)
+epoch 015 loss 0.00416 val_mse 0.00587 best 0.00544@5 (48.4s)
+early stop
+  [identity                                  ] MSE 0.00466  MAE 0.03780
+  [random_dropout:0.7                        ] MSE 0.00703  MAE 0.04886
+  [temporal_stride:3                         ] MSE 0.00487  MAE 0.03894
+  [variable_dropout:0.5                      ] MSE 0.01159  MAE 0.06370
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00737  MAE 0.04892
+best {'val_mse': 0.005443837493658066, 'epoch': 5} -> results/raw/bench_physionet_h36_grafiti_vanilla_s0/results.json
+summary {
+  "clean_mse": 0.004664134234189987,
+  "mean_shift_mse": 0.007716667256318033,
+  "mean_degradation": 0.6544693760637817,
+  "worst_mse": 0.011592576280236244,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.007716667256318033,
+  "mean_unseen_degradation": 0.6544693760637817
+}
+[1/1] ok bench_physionet_h36_grafiti_vanilla_s0 (18.1 min)
+
+stage A: 1 ok, 0 failed
+stage B: 4 cells
+
+[1/4] bench_physionet_h36_grafiti_vanilla_s1
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/physionet_h36_baseline.yaml --seed 1 --name bench_physionet_h36_grafiti_vanilla_s1 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grafiti --no_wandb
+Total records: 12000
+Dataset n_samples: 12000 7200 2400 2400
+Test record ids (first 20): ['134302', '144753', '137142', '153444', '134906', '154300', '144359', '162459', '141317', '151947', '135968', '136920', '133579', '140585', '142964', '158681', '140670', '143983', '132821', '135775']
+Test record ids (last 20): ['150324', '137692', '151553', '144871', '142022', '142764', '142160', '153909', '144034', '155047', '149146', '138666', '150034', '149577', '144809', '140296', '158002', '146644', '137769', '150611']
+data_max: tensor([9.0000e+01, 1.0000e+00, 4.6230e+02, 4.0000e+00, 4.7200e+02, 5.0000e+00,
+        4.6950e+03, 1.6920e+04, 3.6400e+04, 8.2800e+01, 2.0900e+02, 3.6200e+02,
+        2.2100e+01, 2.8300e+02, 1.0000e+00, 1.5000e+01, 1.5910e+03, 5.2000e+01,
+        6.1800e+01, 2.4500e+02, 2.2900e+01, 3.1000e+01, 3.7500e+01, 3.0000e+02,
+        1.0000e+00, 1.8000e+02, 2.1100e+02, 2.2800e+02, 3.0000e+02, 1.0000e+02,
+        5.0000e+02, 7.3500e+02, 2.2920e+03, 9.8000e+01, 1.0000e+02, 2.8900e+02,
+        4.2200e+01, 4.9600e+01, 2.4910e+01, 1.1000e+04, 6.2519e+03],
+       device='cuda:0')
+data_min: tensor([ 1.5000e+01, -1.0000e+00, -1.0000e+00,  1.0000e+00, -1.0000e+00,
+         1.0000e+00,  8.0000e+00,  1.0000e+00,  4.0000e+00,  0.0000e+00,
+         0.0000e+00,  2.8000e+01,  1.0000e-01, -1.0000e+00,  2.1000e-01,
+         3.0000e+00,  8.0000e+00,  5.0000e+00,  5.0000e+00,  0.0000e+00,
+         1.5000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,  1.0000e+00,
+         9.8000e+01, -1.0000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00,  0.0000e+00,  5.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00, -1.7800e+01,  3.0000e-01,  1.0000e-02,  0.0000e+00,
+         1.0000e-01], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+run bench_physionet_h36_grafiti_vanilla_s1 | device cuda:0 | params 179777 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 36, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grafiti", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 0.02620 val_mse 0.00692 best 0.00692@0 (50.0s)
+epoch 001 loss 0.00528 val_mse 0.00607 best 0.00607@1 (50.3s)
+epoch 002 loss 0.00495 val_mse 0.00595 best 0.00595@2 (48.9s)
+epoch 003 loss 0.00465 val_mse 0.00607 best 0.00595@2 (48.9s)
+epoch 004 loss 0.00456 val_mse 0.00534 best 0.00534@4 (44.9s)
+epoch 005 loss 0.00445 val_mse 0.00592 best 0.00534@4 (34.3s)
+epoch 006 loss 0.00448 val_mse 0.00539 best 0.00534@4 (34.3s)
+epoch 007 loss 0.00431 val_mse 0.00545 best 0.00534@4 (48.4s)
+epoch 008 loss 0.00424 val_mse 0.00533 best 0.00533@8 (49.1s)
+epoch 009 loss 0.00422 val_mse 0.00525 best 0.00525@9 (48.2s)
+epoch 010 loss 0.00425 val_mse 0.00510 best 0.00510@10 (48.4s)
+epoch 011 loss 0.00429 val_mse 0.00542 best 0.00510@10 (48.9s)
+epoch 012 loss 0.00417 val_mse 0.00530 best 0.00510@10 (49.2s)
+epoch 013 loss 0.00412 val_mse 0.00547 best 0.00510@10 (48.8s)
+epoch 014 loss 0.00426 val_mse 0.00491 best 0.00491@14 (48.9s)
+epoch 015 loss 0.00400 val_mse 0.00526 best 0.00491@14 (49.1s)
+epoch 016 loss 0.00417 val_mse 0.00521 best 0.00491@14 (47.8s)
+epoch 017 loss 0.00417 val_mse 0.00539 best 0.00491@14 (49.3s)
+epoch 018 loss 0.00405 val_mse 0.00521 best 0.00491@14 (49.3s)
+epoch 019 loss 0.00397 val_mse 0.00499 best 0.00491@14 (49.8s)
+epoch 020 loss 0.00394 val_mse 0.00510 best 0.00491@14 (50.1s)
+epoch 021 loss 0.00395 val_mse 0.00546 best 0.00491@14 (48.8s)
+epoch 022 loss 0.00402 val_mse 0.00498 best 0.00491@14 (44.5s)
+epoch 023 loss 0.00403 val_mse 0.00513 best 0.00491@14 (34.0s)
+epoch 024 loss 0.00387 val_mse 0.00484 best 0.00484@24 (34.4s)
+epoch 025 loss 0.00385 val_mse 0.00533 best 0.00484@24 (49.2s)
+epoch 026 loss 0.00402 val_mse 0.00529 best 0.00484@24 (49.5s)
+epoch 027 loss 0.00397 val_mse 0.00507 best 0.00484@24 (48.9s)
+epoch 028 loss 0.00383 val_mse 0.00554 best 0.00484@24 (49.1s)
+epoch 029 loss 0.00388 val_mse 0.00529 best 0.00484@24 (49.1s)
+epoch 030 loss 0.00400 val_mse 0.00510 best 0.00484@24 (48.4s)
+epoch 031 loss 0.00374 val_mse 0.00491 best 0.00484@24 (48.8s)
+epoch 032 loss 0.00373 val_mse 0.00517 best 0.00484@24 (48.6s)
+epoch 033 loss 0.00375 val_mse 0.00475 best 0.00475@33 (48.8s)
+epoch 034 loss 0.00404 val_mse 0.00507 best 0.00475@33 (48.5s)
+epoch 035 loss 0.00379 val_mse 0.00531 best 0.00475@33 (48.3s)
+epoch 036 loss 0.00384 val_mse 0.00561 best 0.00475@33 (50.0s)
+epoch 037 loss 0.00372 val_mse 0.00534 best 0.00475@33 (48.9s)
+epoch 038 loss 0.00373 val_mse 0.00522 best 0.00475@33 (49.0s)
+epoch 039 loss 0.00383 val_mse 0.00577 best 0.00475@33 (48.9s)
+  [identity                                  ] MSE 0.00457  MAE 0.03544
+  [random_dropout:0.7                        ] MSE 0.00668  MAE 0.04291
+  [temporal_stride:3                         ] MSE 0.00474  MAE 0.03595
+  [variable_dropout:0.5                      ] MSE 0.01333  MAE 0.05880
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00780  MAE 0.04534
+best {'val_mse': 0.004752127919346094, 'epoch': 33} -> results/raw/bench_physionet_h36_grafiti_vanilla_s1/results.json
+summary {
+  "clean_mse": 0.004565292038023472,
+  "mean_shift_mse": 0.00813780550379306,
+  "mean_degradation": 0.78253777327163,
+  "worst_mse": 0.013334300369024277,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.00813780550379306,
+  "mean_unseen_degradation": 0.78253777327163
+}
+[1/4] ok bench_physionet_h36_grafiti_vanilla_s1 (40.9 min)
+
+[2/4] bench_physionet_h36_grafiti_vanilla_s2
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/physionet_h36_baseline.yaml --seed 2 --name bench_physionet_h36_grafiti_vanilla_s2 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grafiti --no_wandb
+Total records: 12000
+Dataset n_samples: 12000 7200 2400 2400
+Test record ids (first 20): ['134302', '144753', '137142', '153444', '134906', '154300', '144359', '162459', '141317', '151947', '135968', '136920', '133579', '140585', '142964', '158681', '140670', '143983', '132821', '135775']
+Test record ids (last 20): ['150324', '137692', '151553', '144871', '142022', '142764', '142160', '153909', '144034', '155047', '149146', '138666', '150034', '149577', '144809', '140296', '158002', '146644', '137769', '150611']
+data_max: tensor([9.0000e+01, 1.0000e+00, 4.6230e+02, 4.0000e+00, 4.7200e+02, 5.0000e+00,
+        4.6950e+03, 1.6920e+04, 3.6400e+04, 8.2800e+01, 2.0900e+02, 3.6200e+02,
+        2.2100e+01, 2.8300e+02, 1.0000e+00, 1.5000e+01, 1.5910e+03, 5.2000e+01,
+        6.1800e+01, 2.4500e+02, 2.2900e+01, 3.1000e+01, 3.7500e+01, 3.0000e+02,
+        1.0000e+00, 1.8000e+02, 2.1100e+02, 2.2800e+02, 3.0000e+02, 1.0000e+02,
+        5.0000e+02, 7.3500e+02, 2.2920e+03, 9.8000e+01, 1.0000e+02, 2.8900e+02,
+        4.2200e+01, 4.9600e+01, 2.4910e+01, 1.1000e+04, 6.2519e+03],
+       device='cuda:0')
+data_min: tensor([ 1.5000e+01, -1.0000e+00, -1.0000e+00,  1.0000e+00, -1.0000e+00,
+         1.0000e+00,  8.0000e+00,  1.0000e+00,  4.0000e+00,  0.0000e+00,
+         0.0000e+00,  2.8000e+01,  1.0000e-01, -1.0000e+00,  2.1000e-01,
+         3.0000e+00,  8.0000e+00,  5.0000e+00,  5.0000e+00,  0.0000e+00,
+         1.5000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,  1.0000e+00,
+         9.8000e+01, -1.0000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00,  0.0000e+00,  5.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00, -1.7800e+01,  3.0000e-01,  1.0000e-02,  0.0000e+00,
+         1.0000e-01], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+run bench_physionet_h36_grafiti_vanilla_s2 | device cuda:0 | params 179777 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 36, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grafiti", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 0.02870 val_mse 0.00690 best 0.00690@0 (50.8s)
+epoch 001 loss 0.00548 val_mse 0.00616 best 0.00616@1 (49.0s)
+epoch 002 loss 0.00484 val_mse 0.00597 best 0.00597@2 (48.8s)
+epoch 003 loss 0.00492 val_mse 0.00549 best 0.00549@3 (47.9s)
+epoch 004 loss 0.00459 val_mse 0.00582 best 0.00549@3 (48.3s)
+epoch 005 loss 0.00438 val_mse 0.00545 best 0.00545@5 (48.5s)
+epoch 006 loss 0.00428 val_mse 0.00570 best 0.00545@5 (49.3s)
+epoch 007 loss 0.00425 val_mse 0.00668 best 0.00545@5 (49.4s)
+epoch 008 loss 0.00416 val_mse 0.00550 best 0.00545@5 (48.6s)
+epoch 009 loss 0.00421 val_mse 0.00577 best 0.00545@5 (48.9s)
+epoch 010 loss 0.00433 val_mse 0.00653 best 0.00545@5 (49.2s)
+epoch 011 loss 0.00431 val_mse 0.00622 best 0.00545@5 (48.7s)
+epoch 012 loss 0.00424 val_mse 0.00566 best 0.00545@5 (49.2s)
+epoch 013 loss 0.00414 val_mse 0.00597 best 0.00545@5 (48.4s)
+epoch 014 loss 0.00417 val_mse 0.00564 best 0.00545@5 (48.8s)
+epoch 015 loss 0.00407 val_mse 0.00659 best 0.00545@5 (49.0s)
+early stop
+  [identity                                  ] MSE 0.00460  MAE 0.03826
+  [random_dropout:0.7                        ] MSE 0.00674  MAE 0.04717
+  [temporal_stride:3                         ] MSE 0.00476  MAE 0.03878
+  [variable_dropout:0.5                      ] MSE 0.01229  MAE 0.06376
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00762  MAE 0.04905
+best {'val_mse': 0.005454447120428085, 'epoch': 5} -> results/raw/bench_physionet_h36_grafiti_vanilla_s2/results.json
+summary {
+  "clean_mse": 0.0045980061404407024,
+  "mean_shift_mse": 0.007853947696276009,
+  "mean_degradation": 0.7081203148465643,
+  "worst_mse": 0.012289044447243214,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.007853947696276009,
+  "mean_unseen_degradation": 0.7081203148465643
+}
+[2/4] ok bench_physionet_h36_grafiti_vanilla_s2 (18.2 min)
+
+[3/4] bench_physionet_h36_grafiti_vanilla_s3
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/physionet_h36_baseline.yaml --seed 3 --name bench_physionet_h36_grafiti_vanilla_s3 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grafiti --no_wandb
+Total records: 12000
+Dataset n_samples: 12000 7200 2400 2400
+Test record ids (first 20): ['134302', '144753', '137142', '153444', '134906', '154300', '144359', '162459', '141317', '151947', '135968', '136920', '133579', '140585', '142964', '158681', '140670', '143983', '132821', '135775']
+Test record ids (last 20): ['150324', '137692', '151553', '144871', '142022', '142764', '142160', '153909', '144034', '155047', '149146', '138666', '150034', '149577', '144809', '140296', '158002', '146644', '137769', '150611']
+data_max: tensor([9.0000e+01, 1.0000e+00, 4.6230e+02, 4.0000e+00, 4.7200e+02, 5.0000e+00,
+        4.6950e+03, 1.6920e+04, 3.6400e+04, 8.2800e+01, 2.0900e+02, 3.6200e+02,
+        2.2100e+01, 2.8300e+02, 1.0000e+00, 1.5000e+01, 1.5910e+03, 5.2000e+01,
+        6.1800e+01, 2.4500e+02, 2.2900e+01, 3.1000e+01, 3.7500e+01, 3.0000e+02,
+        1.0000e+00, 1.8000e+02, 2.1100e+02, 2.2800e+02, 3.0000e+02, 1.0000e+02,
+        5.0000e+02, 7.3500e+02, 2.2920e+03, 9.8000e+01, 1.0000e+02, 2.8900e+02,
+        4.2200e+01, 4.9600e+01, 2.4910e+01, 1.1000e+04, 6.2519e+03],
+       device='cuda:0')
+data_min: tensor([ 1.5000e+01, -1.0000e+00, -1.0000e+00,  1.0000e+00, -1.0000e+00,
+         1.0000e+00,  8.0000e+00,  1.0000e+00,  4.0000e+00,  0.0000e+00,
+         0.0000e+00,  2.8000e+01,  1.0000e-01, -1.0000e+00,  2.1000e-01,
+         3.0000e+00,  8.0000e+00,  5.0000e+00,  5.0000e+00,  0.0000e+00,
+         1.5000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,  1.0000e+00,
+         9.8000e+01, -1.0000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00,  0.0000e+00,  5.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00, -1.7800e+01,  3.0000e-01,  1.0000e-02,  0.0000e+00,
+         1.0000e-01], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+run bench_physionet_h36_grafiti_vanilla_s3 | device cuda:0 | params 179777 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 36, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grafiti", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 0.02562 val_mse 0.00684 best 0.00684@0 (49.6s)
+epoch 001 loss 0.00524 val_mse 0.00612 best 0.00612@1 (45.2s)
+epoch 002 loss 0.00480 val_mse 0.00606 best 0.00606@2 (34.3s)
+epoch 003 loss 0.00462 val_mse 0.00569 best 0.00569@3 (34.3s)
+epoch 004 loss 0.00455 val_mse 0.00709 best 0.00569@3 (49.0s)
+epoch 005 loss 0.00429 val_mse 0.00575 best 0.00569@3 (49.4s)
+epoch 006 loss 0.00426 val_mse 0.00579 best 0.00569@3 (49.0s)
+epoch 007 loss 0.00435 val_mse 0.00539 best 0.00539@7 (48.4s)
+epoch 008 loss 0.00429 val_mse 0.00567 best 0.00539@7 (49.4s)
+epoch 009 loss 0.00431 val_mse 0.00549 best 0.00539@7 (49.3s)
+epoch 010 loss 0.00416 val_mse 0.00601 best 0.00539@7 (48.8s)
+epoch 011 loss 0.00423 val_mse 0.00593 best 0.00539@7 (48.9s)
+epoch 012 loss 0.00405 val_mse 0.00603 best 0.00539@7 (48.2s)
+epoch 013 loss 0.00412 val_mse 0.00580 best 0.00539@7 (47.9s)
+epoch 014 loss 0.00422 val_mse 0.00580 best 0.00539@7 (48.5s)
+epoch 015 loss 0.00411 val_mse 0.00640 best 0.00539@7 (48.5s)
+epoch 016 loss 0.00402 val_mse 0.00551 best 0.00539@7 (49.0s)
+epoch 017 loss 0.00397 val_mse 0.00539 best 0.00539@17 (49.3s)
+epoch 018 loss 0.00406 val_mse 0.00582 best 0.00539@17 (45.4s)
+epoch 019 loss 0.00402 val_mse 0.00594 best 0.00539@17 (35.8s)
+epoch 020 loss 0.00395 val_mse 0.00624 best 0.00539@17 (34.4s)
+epoch 021 loss 0.00410 val_mse 0.00650 best 0.00539@17 (49.1s)
+epoch 022 loss 0.00389 val_mse 0.00619 best 0.00539@17 (49.5s)
+epoch 023 loss 0.00391 val_mse 0.00593 best 0.00539@17 (49.8s)
+epoch 024 loss 0.00401 val_mse 0.00590 best 0.00539@17 (49.2s)
+epoch 025 loss 0.00382 val_mse 0.00649 best 0.00539@17 (48.9s)
+epoch 026 loss 0.00383 val_mse 0.00594 best 0.00539@17 (49.0s)
+epoch 027 loss 0.00387 val_mse 0.00592 best 0.00539@17 (49.2s)
+early stop
+  [identity                                  ] MSE 0.00448  MAE 0.03668
+  [random_dropout:0.7                        ] MSE 0.00694  MAE 0.04567
+  [temporal_stride:3                         ] MSE 0.00470  MAE 0.03743
+  [variable_dropout:0.5                      ] MSE 0.01454  MAE 0.06273
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00822  MAE 0.04757
+best {'val_mse': 0.005387355573475361, 'epoch': 17} -> results/raw/bench_physionet_h36_grafiti_vanilla_s3/results.json
+summary {
+  "clean_mse": 0.004475572612136602,
+  "mean_shift_mse": 0.008600514382123947,
+  "mean_degradation": 0.9216567638298534,
+  "worst_mse": 0.014537769369781017,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.008600514382123947,
+  "mean_unseen_degradation": 0.9216567638298534
+}
+[3/4] ok bench_physionet_h36_grafiti_vanilla_s3 (28.9 min)
+
+[4/4] bench_physionet_h36_grafiti_vanilla_s4
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/physionet_h36_baseline.yaml --seed 4 --name bench_physionet_h36_grafiti_vanilla_s4 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grafiti --no_wandb
+Total records: 12000
+Dataset n_samples: 12000 7200 2400 2400
+Test record ids (first 20): ['134302', '144753', '137142', '153444', '134906', '154300', '144359', '162459', '141317', '151947', '135968', '136920', '133579', '140585', '142964', '158681', '140670', '143983', '132821', '135775']
+Test record ids (last 20): ['150324', '137692', '151553', '144871', '142022', '142764', '142160', '153909', '144034', '155047', '149146', '138666', '150034', '149577', '144809', '140296', '158002', '146644', '137769', '150611']
+data_max: tensor([9.0000e+01, 1.0000e+00, 4.6230e+02, 4.0000e+00, 4.7200e+02, 5.0000e+00,
+        4.6950e+03, 1.6920e+04, 3.6400e+04, 8.2800e+01, 2.0900e+02, 3.6200e+02,
+        2.2100e+01, 2.8300e+02, 1.0000e+00, 1.5000e+01, 1.5910e+03, 5.2000e+01,
+        6.1800e+01, 2.4500e+02, 2.2900e+01, 3.1000e+01, 3.7500e+01, 3.0000e+02,
+        1.0000e+00, 1.8000e+02, 2.1100e+02, 2.2800e+02, 3.0000e+02, 1.0000e+02,
+        5.0000e+02, 7.3500e+02, 2.2920e+03, 9.8000e+01, 1.0000e+02, 2.8900e+02,
+        4.2200e+01, 4.9600e+01, 2.4910e+01, 1.1000e+04, 6.2519e+03],
+       device='cuda:0')
+data_min: tensor([ 1.5000e+01, -1.0000e+00, -1.0000e+00,  1.0000e+00, -1.0000e+00,
+         1.0000e+00,  8.0000e+00,  1.0000e+00,  4.0000e+00,  0.0000e+00,
+         0.0000e+00,  2.8000e+01,  1.0000e-01, -1.0000e+00,  2.1000e-01,
+         3.0000e+00,  8.0000e+00,  5.0000e+00,  5.0000e+00,  0.0000e+00,
+         1.5000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,  1.0000e+00,
+         9.8000e+01, -1.0000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00,  0.0000e+00,  5.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00, -1.7800e+01,  3.0000e-01,  1.0000e-02,  0.0000e+00,
+         1.0000e-01], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+run bench_physionet_h36_grafiti_vanilla_s4 | device cuda:0 | params 179777 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 36, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grafiti", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+epoch 000 loss 0.02726 val_mse 0.00728 best 0.00728@0 (49.1s)
+epoch 001 loss 0.00538 val_mse 0.00646 best 0.00646@1 (49.3s)
+epoch 002 loss 0.00521 val_mse 0.00587 best 0.00587@2 (49.1s)
+epoch 003 loss 0.00479 val_mse 0.00629 best 0.00587@2 (48.7s)
+epoch 004 loss 0.00462 val_mse 0.00644 best 0.00587@2 (49.3s)
+epoch 005 loss 0.00462 val_mse 0.00574 best 0.00574@5 (49.0s)
+epoch 006 loss 0.00435 val_mse 0.00550 best 0.00550@6 (49.4s)
+epoch 007 loss 0.00433 val_mse 0.00555 best 0.00550@6 (49.3s)
+epoch 008 loss 0.00436 val_mse 0.00513 best 0.00513@8 (49.7s)
+epoch 009 loss 0.00420 val_mse 0.00575 best 0.00513@8 (49.9s)
+epoch 010 loss 0.00426 val_mse 0.00540 best 0.00513@8 (49.5s)
+epoch 011 loss 0.00409 val_mse 0.00570 best 0.00513@8 (49.2s)
+epoch 012 loss 0.00427 val_mse 0.00554 best 0.00513@8 (48.7s)
+epoch 013 loss 0.00411 val_mse 0.00543 best 0.00513@8 (48.5s)
+epoch 014 loss 0.00435 val_mse 0.00514 best 0.00513@8 (49.2s)
+epoch 015 loss 0.00402 val_mse 0.00512 best 0.00512@15 (48.7s)
+epoch 016 loss 0.00402 val_mse 0.00511 best 0.00511@16 (48.9s)
+epoch 017 loss 0.00411 val_mse 0.00523 best 0.00511@16 (48.7s)
+epoch 018 loss 0.00403 val_mse 0.00512 best 0.00511@16 (48.1s)
+epoch 019 loss 0.00408 val_mse 0.00495 best 0.00495@19 (49.2s)
+epoch 020 loss 0.00394 val_mse 0.00494 best 0.00494@20 (49.3s)
+epoch 021 loss 0.00406 val_mse 0.00490 best 0.00490@21 (48.8s)
+epoch 022 loss 0.00381 val_mse 0.00485 best 0.00485@22 (48.6s)
+epoch 023 loss 0.00388 val_mse 0.00491 best 0.00485@22 (45.4s)
+epoch 024 loss 0.00390 val_mse 0.00480 best 0.00480@24 (36.5s)
+epoch 025 loss 0.00385 val_mse 0.00490 best 0.00480@24 (34.6s)
+epoch 026 loss 0.00386 val_mse 0.00475 best 0.00475@26 (55.3s)
+epoch 027 loss 0.00397 val_mse 0.00530 best 0.00475@26 (55.7s)
+epoch 028 loss 0.00382 val_mse 0.00506 best 0.00475@26 (55.8s)
+epoch 029 loss 0.00382 val_mse 0.00490 best 0.00475@26 (56.6s)
+epoch 030 loss 0.00379 val_mse 0.00471 best 0.00471@30 (56.5s)
+epoch 031 loss 0.00395 val_mse 0.00472 best 0.00471@30 (56.5s)
+epoch 032 loss 0.00392 val_mse 0.00486 best 0.00471@30 (59.1s)
+epoch 033 loss 0.00380 val_mse 0.00490 best 0.00471@30 (60.0s)
+epoch 034 loss 0.00368 val_mse 0.00461 best 0.00461@34 (58.1s)
+epoch 035 loss 0.00389 val_mse 0.00472 best 0.00461@34 (55.4s)
+epoch 036 loss 0.00383 val_mse 0.00475 best 0.00461@34 (56.7s)
+epoch 037 loss 0.00371 val_mse 0.00472 best 0.00461@34 (56.7s)
+epoch 038 loss 0.00383 val_mse 0.00473 best 0.00461@34 (56.1s)
+epoch 039 loss 0.00376 val_mse 0.00488 best 0.00461@34 (55.4s)
+  [identity                                  ] MSE 0.00448  MAE 0.03538
+  [random_dropout:0.7                        ] MSE 0.00679  MAE 0.04380
+  [temporal_stride:3                         ] MSE 0.00464  MAE 0.03625
+  [variable_dropout:0.5                      ] MSE 0.01659  MAE 0.06258
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.00869  MAE 0.04651
+best {'val_mse': 0.00461119320243597, 'epoch': 34} -> results/raw/bench_physionet_h36_grafiti_vanilla_s4/results.json
+summary {
+  "clean_mse": 0.004478822462260723,
+  "mean_shift_mse": 0.009178405744023621,
+  "mean_degradation": 1.0492899241625093,
+  "worst_mse": 0.016588332131505013,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.009178405744023621,
+  "mean_unseen_degradation": 1.0492899241625093
+}
+[4/4] ok bench_physionet_h36_grafiti_vanilla_s4 (44.3 min)
+
+stage B: 4 ok, 0 failed
+stage C: 1 cells
+
+[1/1] bench_physionet_h36_grafiti_opera_s0
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/physionet_h36_distillation.yaml --seed 0 --name bench_physionet_h36_grafiti_opera_s0 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grafiti distillation.teacher_ckpt=results/raw/bench_physionet_h36_grafiti_vanilla_s0/model.pt --no_wandb
+Total records: 12000
+Dataset n_samples: 12000 7200 2400 2400
+Test record ids (first 20): ['134302', '144753', '137142', '153444', '134906', '154300', '144359', '162459', '141317', '151947', '135968', '136920', '133579', '140585', '142964', '158681', '140670', '143983', '132821', '135775']
+Test record ids (last 20): ['150324', '137692', '151553', '144871', '142022', '142764', '142160', '153909', '144034', '155047', '149146', '138666', '150034', '149577', '144809', '140296', '158002', '146644', '137769', '150611']
+data_max: tensor([9.0000e+01, 1.0000e+00, 4.6230e+02, 4.0000e+00, 4.7200e+02, 5.0000e+00,
+        4.6950e+03, 1.6920e+04, 3.6400e+04, 8.2800e+01, 2.0900e+02, 3.6200e+02,
+        2.2100e+01, 2.8300e+02, 1.0000e+00, 1.5000e+01, 1.5910e+03, 5.2000e+01,
+        6.1800e+01, 2.4500e+02, 2.2900e+01, 3.1000e+01, 3.7500e+01, 3.0000e+02,
+        1.0000e+00, 1.8000e+02, 2.1100e+02, 2.2800e+02, 3.0000e+02, 1.0000e+02,
+        5.0000e+02, 7.3500e+02, 2.2920e+03, 9.8000e+01, 1.0000e+02, 2.8900e+02,
+        4.2200e+01, 4.9600e+01, 2.4910e+01, 1.1000e+04, 6.2519e+03],
+       device='cuda:0')
+data_min: tensor([ 1.5000e+01, -1.0000e+00, -1.0000e+00,  1.0000e+00, -1.0000e+00,
+         1.0000e+00,  8.0000e+00,  1.0000e+00,  4.0000e+00,  0.0000e+00,
+         0.0000e+00,  2.8000e+01,  1.0000e-01, -1.0000e+00,  2.1000e-01,
+         3.0000e+00,  8.0000e+00,  5.0000e+00,  5.0000e+00,  0.0000e+00,
+         1.5000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,  1.0000e+00,
+         9.8000e+01, -1.0000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00,  0.0000e+00,  5.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00, -1.7800e+01,  3.0000e-01,  1.0000e-02,  0.0000e+00,
+         1.0000e-01], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+run bench_physionet_h36_grafiti_opera_s0 | device cuda:0 | params 179777 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 36, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_physionet_h36_grafiti_vanilla_s0/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grafiti", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 0, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+[W1115 08:39:21.792139568 CUDACachingAllocator.cpp:623] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 112721920, total: 16610820096).
+[W1115 08:39:21.822771759 CUDACachingAllocator.cpp:623] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 119013376, total: 16610820096).
+[W1115 08:39:21.824114655 CUDACachingAllocator.cpp:623] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 119013376, total: 16610820096).
+Traceback (most recent call last):
+  File "/home/vmo/Opera/scripts/train.py", line 146, in <module>
+    main()
+  File "/home/vmo/Opera/scripts/train.py", line 117, in main
+    best = trainer.fit()
+           ^^^^^^^^^^^^^
+  File "/home/vmo/Opera/src/training/trainer.py", line 120, in fit
+    logs = self.train_epoch(epoch)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/src/training/trainer.py", line 99, in train_epoch
+    loss, logs = opera_step(self.model, batch, views, teacher=self.teacher, cfg=self.cfg,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/src/training/objectives.py", line 55, in opera_step
+    out = model(vbatch, return_repr=need_repr)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1787, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1798, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/src/models/irregular_baselines.py", line 473, in forward
+    tn = n2(tn + self._attend(self.time_q[i](tn), kv_t, emask))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/src/models/irregular_baselines.py", line 451, in _attend
+    return torch.einsum("bphs,bpshd->bphd", a, v).reshape(B, P, self.h)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/.venv/lib/python3.12/site-packages/torch/functional.py", line 372, in einsum
+    return _VF.einsum(equation, operands)  # type: ignore[attr-defined]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/.venv/lib/python3.12/site-packages/torch/_native/registry.py", line 1145, in eager_router
+    return _fallback.call_boxed(keyset, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 32.00 MiB. GPU 0 has a total capacity of 15.47 GiB of which 133.50 MiB is free. Process 6693 has 130.31 MiB memory in use. Process 8814 has 704.37 MiB memory in use. Process 1319283 has 67.47 MiB memory in use. Process 3986797 has 53.16 MiB memory in use. Process 8476 has 4.47 MiB memory in use. Process 3212820 has 28.72 MiB memory in use. Process 717319 has 7.30 GiB memory in use. Including non-PyTorch memory, this process has 6.44 GiB memory in use. Of the allocated memory 6.15 GiB is allocated by PyTorch, and 76.29 MiB is reserved by PyTorch but unallocated. expandable_segments is enabled. If instead the process is running out of virtual address space (VSZ), expandable segments may be over-reserving VA (each segment reserves ~9/8 of device memory, times the number of streams); reduce it via PYTORCH_CUDA_ALLOC_CONF expandable_segments_reserve / expandable_segments_reserve_by_class.
+[1/1] FAILED bench_physionet_h36_grafiti_opera_s0 rc=1 (1.6 min)
+
+stage C: 0 ok, 1 failed
+  FAILED bench_physionet_h36_grafiti_opera_s0: rc=1
+stage C had failures
+stage D: 4 cells
+
+[1/4] bench_physionet_h36_grafiti_opera_s1
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/physionet_h36_distillation.yaml --seed 1 --name bench_physionet_h36_grafiti_opera_s1 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grafiti distillation.teacher_ckpt=results/raw/bench_physionet_h36_grafiti_vanilla_s1/model.pt --no_wandb
+Total records: 12000
+Dataset n_samples: 12000 7200 2400 2400
+Test record ids (first 20): ['134302', '144753', '137142', '153444', '134906', '154300', '144359', '162459', '141317', '151947', '135968', '136920', '133579', '140585', '142964', '158681', '140670', '143983', '132821', '135775']
+Test record ids (last 20): ['150324', '137692', '151553', '144871', '142022', '142764', '142160', '153909', '144034', '155047', '149146', '138666', '150034', '149577', '144809', '140296', '158002', '146644', '137769', '150611']
+data_max: tensor([9.0000e+01, 1.0000e+00, 4.6230e+02, 4.0000e+00, 4.7200e+02, 5.0000e+00,
+        4.6950e+03, 1.6920e+04, 3.6400e+04, 8.2800e+01, 2.0900e+02, 3.6200e+02,
+        2.2100e+01, 2.8300e+02, 1.0000e+00, 1.5000e+01, 1.5910e+03, 5.2000e+01,
+        6.1800e+01, 2.4500e+02, 2.2900e+01, 3.1000e+01, 3.7500e+01, 3.0000e+02,
+        1.0000e+00, 1.8000e+02, 2.1100e+02, 2.2800e+02, 3.0000e+02, 1.0000e+02,
+        5.0000e+02, 7.3500e+02, 2.2920e+03, 9.8000e+01, 1.0000e+02, 2.8900e+02,
+        4.2200e+01, 4.9600e+01, 2.4910e+01, 1.1000e+04, 6.2519e+03],
+       device='cuda:0')
+data_min: tensor([ 1.5000e+01, -1.0000e+00, -1.0000e+00,  1.0000e+00, -1.0000e+00,
+         1.0000e+00,  8.0000e+00,  1.0000e+00,  4.0000e+00,  0.0000e+00,
+         0.0000e+00,  2.8000e+01,  1.0000e-01, -1.0000e+00,  2.1000e-01,
+         3.0000e+00,  8.0000e+00,  5.0000e+00,  5.0000e+00,  0.0000e+00,
+         1.5000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,  1.0000e+00,
+         9.8000e+01, -1.0000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00,  0.0000e+00,  5.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00, -1.7800e+01,  3.0000e-01,  1.0000e-02,  0.0000e+00,
+         1.0000e-01], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+run bench_physionet_h36_grafiti_opera_s1 | device cuda:0 | params 179777 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 36, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_physionet_h36_grafiti_vanilla_s1/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grafiti", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+[W1115 08:41:00.320512300 CUDACachingAllocator.cpp:623] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 119013376, total: 16610820096).
+[W1115 08:41:00.338162336 CUDACachingAllocator.cpp:623] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 119013376, total: 16610820096).
+Traceback (most recent call last):
+  File "/home/vmo/Opera/scripts/train.py", line 146, in <module>
+    main()
+  File "/home/vmo/Opera/scripts/train.py", line 117, in main
+    best = trainer.fit()
+           ^^^^^^^^^^^^^
+  File "/home/vmo/Opera/src/training/trainer.py", line 120, in fit
+    logs = self.train_epoch(epoch)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/src/training/trainer.py", line 99, in train_epoch
+    loss, logs = opera_step(self.model, batch, views, teacher=self.teacher, cfg=self.cfg,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/src/training/objectives.py", line 55, in opera_step
+    out = model(vbatch, return_repr=need_repr)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1787, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1798, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/src/models/irregular_baselines.py", line 474, in forward
+    upd = self.edge_mlp[i](torch.cat([e, vn.unsqueeze(1).expand_as(e), tn.unsqueeze(2).expand_as(e)], -1))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 260.00 MiB. GPU 0 has a total capacity of 15.47 GiB of which 273.50 MiB is free. Process 6693 has 130.31 MiB memory in use. Process 8814 has 704.37 MiB memory in use. Process 1319283 has 67.47 MiB memory in use. Process 3986797 has 53.16 MiB memory in use. Process 8476 has 4.47 MiB memory in use. Process 3212820 has 28.72 MiB memory in use. Process 717319 has 7.30 GiB memory in use. Including non-PyTorch memory, this process has 6.30 GiB memory in use. Of the allocated memory 6.03 GiB is allocated by PyTorch, and 87.61 MiB is reserved by PyTorch but unallocated. expandable_segments is enabled. If instead the process is running out of virtual address space (VSZ), expandable segments may be over-reserving VA (each segment reserves ~9/8 of device memory, times the number of streams); reduce it via PYTORCH_CUDA_ALLOC_CONF expandable_segments_reserve / expandable_segments_reserve_by_class.
+[1/4] FAILED bench_physionet_h36_grafiti_opera_s1 rc=1 (1.7 min)
+
+[2/4] bench_physionet_h36_grafiti_opera_s2
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/physionet_h36_distillation.yaml --seed 2 --name bench_physionet_h36_grafiti_opera_s2 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grafiti distillation.teacher_ckpt=results/raw/bench_physionet_h36_grafiti_vanilla_s2/model.pt --no_wandb
+Total records: 12000
+Dataset n_samples: 12000 7200 2400 2400
+Test record ids (first 20): ['134302', '144753', '137142', '153444', '134906', '154300', '144359', '162459', '141317', '151947', '135968', '136920', '133579', '140585', '142964', '158681', '140670', '143983', '132821', '135775']
+Test record ids (last 20): ['150324', '137692', '151553', '144871', '142022', '142764', '142160', '153909', '144034', '155047', '149146', '138666', '150034', '149577', '144809', '140296', '158002', '146644', '137769', '150611']
+data_max: tensor([9.0000e+01, 1.0000e+00, 4.6230e+02, 4.0000e+00, 4.7200e+02, 5.0000e+00,
+        4.6950e+03, 1.6920e+04, 3.6400e+04, 8.2800e+01, 2.0900e+02, 3.6200e+02,
+        2.2100e+01, 2.8300e+02, 1.0000e+00, 1.5000e+01, 1.5910e+03, 5.2000e+01,
+        6.1800e+01, 2.4500e+02, 2.2900e+01, 3.1000e+01, 3.7500e+01, 3.0000e+02,
+        1.0000e+00, 1.8000e+02, 2.1100e+02, 2.2800e+02, 3.0000e+02, 1.0000e+02,
+        5.0000e+02, 7.3500e+02, 2.2920e+03, 9.8000e+01, 1.0000e+02, 2.8900e+02,
+        4.2200e+01, 4.9600e+01, 2.4910e+01, 1.1000e+04, 6.2519e+03],
+       device='cuda:0')
+data_min: tensor([ 1.5000e+01, -1.0000e+00, -1.0000e+00,  1.0000e+00, -1.0000e+00,
+         1.0000e+00,  8.0000e+00,  1.0000e+00,  4.0000e+00,  0.0000e+00,
+         0.0000e+00,  2.8000e+01,  1.0000e-01, -1.0000e+00,  2.1000e-01,
+         3.0000e+00,  8.0000e+00,  5.0000e+00,  5.0000e+00,  0.0000e+00,
+         1.5000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,  1.0000e+00,
+         9.8000e+01, -1.0000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00,  0.0000e+00,  5.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00, -1.7800e+01,  3.0000e-01,  1.0000e-02,  0.0000e+00,
+         1.0000e-01], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+run bench_physionet_h36_grafiti_opera_s2 | device cuda:0 | params 179777 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 36, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_physionet_h36_grafiti_vanilla_s2/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grafiti", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+[W1115 08:42:48.491838668 CUDACachingAllocator.cpp:623] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 112721920, total: 16610820096).
+[W1115 08:42:48.523605379 CUDACachingAllocator.cpp:623] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 106430464, total: 16610820096).
+[W1115 08:42:48.530169986 CUDACachingAllocator.cpp:623] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 106430464, total: 16610820096).
+Traceback (most recent call last):
+  File "/home/vmo/Opera/scripts/train.py", line 146, in <module>
+    main()
+  File "/home/vmo/Opera/scripts/train.py", line 117, in main
+    best = trainer.fit()
+           ^^^^^^^^^^^^^
+  File "/home/vmo/Opera/src/training/trainer.py", line 120, in fit
+    logs = self.train_epoch(epoch)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/src/training/trainer.py", line 99, in train_epoch
+    loss, logs = opera_step(self.model, batch, views, teacher=self.teacher, cfg=self.cfg,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/src/training/objectives.py", line 55, in opera_step
+    out = model(vbatch, return_repr=need_repr)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1787, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1798, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/src/models/irregular_baselines.py", line 472, in forward
+    kv_t = self.time_kv[i](torch.cat([e, vn.unsqueeze(1).expand(-1, times.shape[1], -1, -1)], dim=-1))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 154.00 MiB. GPU 0 has a total capacity of 15.47 GiB of which 181.50 MiB is free. Process 6693 has 130.31 MiB memory in use. Process 8814 has 704.37 MiB memory in use. Process 1319283 has 67.47 MiB memory in use. Process 3986797 has 53.16 MiB memory in use. Process 8476 has 4.47 MiB memory in use. Process 3212820 has 28.72 MiB memory in use. Process 717319 has 7.30 GiB memory in use. Including non-PyTorch memory, this process has 6.39 GiB memory in use. Of the allocated memory 6.09 GiB is allocated by PyTorch, and 90.90 MiB is reserved by PyTorch but unallocated. expandable_segments is enabled. If instead the process is running out of virtual address space (VSZ), expandable segments may be over-reserving VA (each segment reserves ~9/8 of device memory, times the number of streams); reduce it via PYTORCH_CUDA_ALLOC_CONF expandable_segments_reserve / expandable_segments_reserve_by_class.
+[2/4] FAILED bench_physionet_h36_grafiti_opera_s2 rc=1 (1.8 min)
+
+[3/4] bench_physionet_h36_grafiti_opera_s3
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/physionet_h36_distillation.yaml --seed 3 --name bench_physionet_h36_grafiti_opera_s3 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grafiti distillation.teacher_ckpt=results/raw/bench_physionet_h36_grafiti_vanilla_s3/model.pt --no_wandb
+Total records: 12000
+Dataset n_samples: 12000 7200 2400 2400
+Test record ids (first 20): ['134302', '144753', '137142', '153444', '134906', '154300', '144359', '162459', '141317', '151947', '135968', '136920', '133579', '140585', '142964', '158681', '140670', '143983', '132821', '135775']
+Test record ids (last 20): ['150324', '137692', '151553', '144871', '142022', '142764', '142160', '153909', '144034', '155047', '149146', '138666', '150034', '149577', '144809', '140296', '158002', '146644', '137769', '150611']
+data_max: tensor([9.0000e+01, 1.0000e+00, 4.6230e+02, 4.0000e+00, 4.7200e+02, 5.0000e+00,
+        4.6950e+03, 1.6920e+04, 3.6400e+04, 8.2800e+01, 2.0900e+02, 3.6200e+02,
+        2.2100e+01, 2.8300e+02, 1.0000e+00, 1.5000e+01, 1.5910e+03, 5.2000e+01,
+        6.1800e+01, 2.4500e+02, 2.2900e+01, 3.1000e+01, 3.7500e+01, 3.0000e+02,
+        1.0000e+00, 1.8000e+02, 2.1100e+02, 2.2800e+02, 3.0000e+02, 1.0000e+02,
+        5.0000e+02, 7.3500e+02, 2.2920e+03, 9.8000e+01, 1.0000e+02, 2.8900e+02,
+        4.2200e+01, 4.9600e+01, 2.4910e+01, 1.1000e+04, 6.2519e+03],
+       device='cuda:0')
+data_min: tensor([ 1.5000e+01, -1.0000e+00, -1.0000e+00,  1.0000e+00, -1.0000e+00,
+         1.0000e+00,  8.0000e+00,  1.0000e+00,  4.0000e+00,  0.0000e+00,
+         0.0000e+00,  2.8000e+01,  1.0000e-01, -1.0000e+00,  2.1000e-01,
+         3.0000e+00,  8.0000e+00,  5.0000e+00,  5.0000e+00,  0.0000e+00,
+         1.5000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,  1.0000e+00,
+         9.8000e+01, -1.0000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00,  0.0000e+00,  5.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00, -1.7800e+01,  3.0000e-01,  1.0000e-02,  0.0000e+00,
+         1.0000e-01], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+run bench_physionet_h36_grafiti_opera_s3 | device cuda:0 | params 179777 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 36, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_physionet_h36_grafiti_vanilla_s3/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grafiti", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 3, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+[W1115 08:44:30.777983743 CUDACachingAllocator.cpp:623] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 106430464, total: 16610820096).
+[W1115 08:44:30.817249011 CUDACachingAllocator.cpp:623] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 100139008, total: 16610820096).
+Traceback (most recent call last):
+  File "/home/vmo/Opera/scripts/train.py", line 146, in <module>
+    main()
+  File "/home/vmo/Opera/scripts/train.py", line 117, in main
+    best = trainer.fit()
+           ^^^^^^^^^^^^^
+  File "/home/vmo/Opera/src/training/trainer.py", line 120, in fit
+    logs = self.train_epoch(epoch)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/src/training/trainer.py", line 99, in train_epoch
+    loss, logs = opera_step(self.model, batch, views, teacher=self.teacher, cfg=self.cfg,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/src/training/objectives.py", line 55, in opera_step
+    out = model(vbatch, return_repr=need_repr)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1787, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1798, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/src/models/irregular_baselines.py", line 475, in forward
+    e = n3(e + upd) * emask.unsqueeze(-1)
+        ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 70.00 MiB. GPU 0 has a total capacity of 15.47 GiB of which 155.50 MiB is free. Process 6693 has 130.31 MiB memory in use. Process 8814 has 704.37 MiB memory in use. Process 1319283 has 67.47 MiB memory in use. Process 3986797 has 53.16 MiB memory in use. Process 8476 has 4.47 MiB memory in use. Process 3212820 has 28.72 MiB memory in use. Process 717319 has 7.30 GiB memory in use. Including non-PyTorch memory, this process has 6.41 GiB memory in use. Of the allocated memory 6.19 GiB is allocated by PyTorch, and 39.75 MiB is reserved by PyTorch but unallocated. expandable_segments is enabled. If instead the process is running out of virtual address space (VSZ), expandable segments may be over-reserving VA (each segment reserves ~9/8 of device memory, times the number of streams); reduce it via PYTORCH_CUDA_ALLOC_CONF expandable_segments_reserve / expandable_segments_reserve_by_class.
+[3/4] FAILED bench_physionet_h36_grafiti_opera_s3 rc=1 (1.7 min)
+
+[4/4] bench_physionet_h36_grafiti_opera_s4
+  /home/vmo/Opera/.venv/bin/python scripts/train.py --config configs/physionet_h36_distillation.yaml --seed 4 --name bench_physionet_h36_grafiti_opera_s4 --out results/raw --conditions identity,random_dropout:0.7,temporal_stride:3,variable_dropout:0.5,temporal_stride:3+variable_group_dropout:0.3 --set model.backbone=grafiti distillation.teacher_ckpt=results/raw/bench_physionet_h36_grafiti_vanilla_s4/model.pt --no_wandb
+Total records: 12000
+Dataset n_samples: 12000 7200 2400 2400
+Test record ids (first 20): ['134302', '144753', '137142', '153444', '134906', '154300', '144359', '162459', '141317', '151947', '135968', '136920', '133579', '140585', '142964', '158681', '140670', '143983', '132821', '135775']
+Test record ids (last 20): ['150324', '137692', '151553', '144871', '142022', '142764', '142160', '153909', '144034', '155047', '149146', '138666', '150034', '149577', '144809', '140296', '158002', '146644', '137769', '150611']
+data_max: tensor([9.0000e+01, 1.0000e+00, 4.6230e+02, 4.0000e+00, 4.7200e+02, 5.0000e+00,
+        4.6950e+03, 1.6920e+04, 3.6400e+04, 8.2800e+01, 2.0900e+02, 3.6200e+02,
+        2.2100e+01, 2.8300e+02, 1.0000e+00, 1.5000e+01, 1.5910e+03, 5.2000e+01,
+        6.1800e+01, 2.4500e+02, 2.2900e+01, 3.1000e+01, 3.7500e+01, 3.0000e+02,
+        1.0000e+00, 1.8000e+02, 2.1100e+02, 2.2800e+02, 3.0000e+02, 1.0000e+02,
+        5.0000e+02, 7.3500e+02, 2.2920e+03, 9.8000e+01, 1.0000e+02, 2.8900e+02,
+        4.2200e+01, 4.9600e+01, 2.4910e+01, 1.1000e+04, 6.2519e+03],
+       device='cuda:0')
+data_min: tensor([ 1.5000e+01, -1.0000e+00, -1.0000e+00,  1.0000e+00, -1.0000e+00,
+         1.0000e+00,  8.0000e+00,  1.0000e+00,  4.0000e+00,  0.0000e+00,
+         0.0000e+00,  2.8000e+01,  1.0000e-01, -1.0000e+00,  2.1000e-01,
+         3.0000e+00,  8.0000e+00,  5.0000e+00,  5.0000e+00,  0.0000e+00,
+         1.5000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,  1.0000e+00,
+         9.8000e+01, -1.0000e+00,  0.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00,  0.0000e+00,  5.0000e+00,  0.0000e+00,  0.0000e+00,
+         0.0000e+00, -1.7800e+01,  3.0000e-01,  1.0000e-02,  0.0000e+00,
+         1.0000e-01], device='cuda:0')
+time_max: tensor(48., device='cuda:0')
+run bench_physionet_h36_grafiti_opera_s4 | device cuda:0 | params 179777 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 36, "n_records": 100000000, "name": "physionet", "patch_size": 6, "stride": 6}, "distillation": {"enabled": true, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": "results/raw/bench_physionet_h36_grafiti_vanilla_s4/model.pt", "teacher_type": "frozen", "weight": 1.0}, "experiment": "E2_distillation", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grafiti", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 2, "rich_process": "identity", "train_processes": ["random_dropout:0.1", "random_dropout:0.25", "random_dropout:0.4", "temporal_stride:2", "burst:0.2", "burst:0.3", "variable_dropout:0.2", "local_mask:0.3"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+/home/vmo/Opera/.venv/lib/python3.12/site-packages/triton/knobs.py:504: UserWarning: TRITON_DEFAULT_FP_FUSION is unset: defaulting to FP fusion ENABLED for backward compatibility in Triton 3.9. The default will change to DISABLED in Triton 3.10; set TRITON_DEFAULT_FP_FUSION=1 to keep fusion enabled or =0 to adopt the new default early and silence this warning.
+  warn_once(FP_FUSION_DEFAULT_WARNING)
+[W1115 08:46:09.118068224 CUDACachingAllocator.cpp:623] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 108527616, total: 16610820096).
+[W1115 08:46:09.180780342 CUDACachingAllocator.cpp:623] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 114819072, total: 16610820096).
+[W1115 08:46:09.188188193 CUDACachingAllocator.cpp:623] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 108527616, total: 16610820096).
+Traceback (most recent call last):
+  File "/home/vmo/Opera/scripts/train.py", line 146, in <module>
+    main()
+  File "/home/vmo/Opera/scripts/train.py", line 117, in main
+    best = trainer.fit()
+           ^^^^^^^^^^^^^
+  File "/home/vmo/Opera/src/training/trainer.py", line 120, in fit
+    logs = self.train_epoch(epoch)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/src/training/trainer.py", line 99, in train_epoch
+    loss, logs = opera_step(self.model, batch, views, teacher=self.teacher, cfg=self.cfg,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/src/training/objectives.py", line 55, in opera_step
+    out = model(vbatch, return_repr=need_repr)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1787, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1798, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/vmo/Opera/src/models/irregular_baselines.py", line 472, in forward
+    kv_t = self.time_kv[i](torch.cat([e, vn.unsqueeze(1).expand(-1, times.shape[1], -1, -1)], dim=-1))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 154.00 MiB. GPU 0 has a total capacity of 15.47 GiB of which 183.50 MiB is free. Process 6693 has 130.31 MiB memory in use. Process 8814 has 704.37 MiB memory in use. Process 1319283 has 67.47 MiB memory in use. Process 3986797 has 53.16 MiB memory in use. Process 8476 has 4.47 MiB memory in use. Process 3212820 has 28.72 MiB memory in use. Process 717319 has 7.30 GiB memory in use. Including non-PyTorch memory, this process has 6.38 GiB memory in use. Of the allocated memory 6.11 GiB is allocated by PyTorch, and 61.56 MiB is reserved by PyTorch but unallocated. expandable_segments is enabled. If instead the process is running out of virtual address space (VSZ), expandable segments may be over-reserving VA (each segment reserves ~9/8 of device memory, times the number of streams); reduce it via PYTORCH_CUDA_ALLOC_CONF expandable_segments_reserve / expandable_segments_reserve_by_class.
+[4/4] FAILED bench_physionet_h36_grafiti_opera_s4 rc=1 (1.7 min)
+
+stage D: 0 ok, 4 failed
+  FAILED bench_physionet_h36_grafiti_opera_s1: rc=1
+  FAILED bench_physionet_h36_grafiti_opera_s2: rc=1
+  FAILED bench_physionet_h36_grafiti_opera_s3: rc=1
+  FAILED bench_physionet_h36_grafiti_opera_s4: rc=1
+stage D had failures

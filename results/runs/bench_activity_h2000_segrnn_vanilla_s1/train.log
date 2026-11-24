@@ -1,0 +1,43 @@
+wandb disabled: No API key configured. Use `wandb login` to log in.
+run bench_activity_h2000_segrnn_vanilla_s1 | device cuda:0 | params 125825 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 2000, "n_records": 100000000, "name": "activity", "patch_size": 750, "stride": 750}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "segrnn", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 1, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.04598 val_mse 0.01789 best 0.01789@0 (1.2s)
+epoch 001 loss 0.01671 val_mse 0.01697 best 0.01697@1 (0.7s)
+epoch 002 loss 0.00920 val_mse 0.00647 best 0.00647@2 (0.7s)
+epoch 003 loss 0.00518 val_mse 0.00467 best 0.00467@3 (0.7s)
+epoch 004 loss 0.00453 val_mse 0.00486 best 0.00467@3 (0.9s)
+epoch 005 loss 0.00422 val_mse 0.00405 best 0.00405@5 (0.8s)
+epoch 006 loss 0.00411 val_mse 0.00440 best 0.00405@5 (0.7s)
+epoch 007 loss 0.00400 val_mse 0.00455 best 0.00405@5 (0.7s)
+epoch 008 loss 0.00397 val_mse 0.00393 best 0.00393@8 (0.7s)
+epoch 009 loss 0.00393 val_mse 0.00395 best 0.00393@8 (0.8s)
+epoch 010 loss 0.00397 val_mse 0.00392 best 0.00392@10 (0.9s)
+epoch 011 loss 0.00384 val_mse 0.00398 best 0.00392@10 (0.8s)
+epoch 012 loss 0.00384 val_mse 0.00398 best 0.00392@10 (0.8s)
+epoch 013 loss 0.00380 val_mse 0.00390 best 0.00390@13 (0.8s)
+epoch 014 loss 0.00372 val_mse 0.00394 best 0.00390@13 (0.7s)
+epoch 015 loss 0.00380 val_mse 0.00402 best 0.00390@13 (0.7s)
+epoch 016 loss 0.00374 val_mse 0.00396 best 0.00390@13 (0.7s)
+epoch 017 loss 0.00369 val_mse 0.00398 best 0.00390@13 (0.7s)
+epoch 018 loss 0.00378 val_mse 0.00403 best 0.00390@13 (0.8s)
+epoch 019 loss 0.00387 val_mse 0.00422 best 0.00390@13 (0.7s)
+epoch 020 loss 0.00378 val_mse 0.00396 best 0.00390@13 (1.4s)
+epoch 021 loss 0.00371 val_mse 0.00421 best 0.00390@13 (0.9s)
+epoch 022 loss 0.00374 val_mse 0.00426 best 0.00390@13 (0.7s)
+epoch 023 loss 0.00380 val_mse 0.00411 best 0.00390@13 (0.7s)
+early stop
+  [identity                                  ] MSE 0.00377  MAE 0.03759
+  [random_dropout:0.7                        ] MSE 0.08070  MAE 0.26187
+  [temporal_stride:3                         ] MSE 0.07533  MAE 0.25518
+  [variable_dropout:0.5                      ] MSE 0.06011  MAE 0.17446
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.08620  MAE 0.27116
+best {'val_mse': 0.003904774785041809, 'epoch': 13} -> results/raw/bench_activity_h2000_segrnn_vanilla_s1/results.json
+summary {
+  "clean_mse": 0.0037678915541619062,
+  "mean_shift_mse": 0.07558713015168905,
+  "mean_degradation": 19.060856069012296,
+  "worst_mse": 0.08620055764913559,
+  "worst_condition": "temporal_stride:3+variable_group_dropout:0.3",
+  "mean_unseen_mse": 0.07558713015168905,
+  "mean_unseen_degradation": 19.060856069012296
+}

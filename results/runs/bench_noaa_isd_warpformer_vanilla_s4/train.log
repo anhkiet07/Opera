@@ -1,0 +1,33 @@
+run bench_noaa_isd_warpformer_vanilla_s4 | device cuda:0 | params 84613 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 24, "n_records": 100000000, "name": "noaa_isd", "patch_size": 6, "pred_window": 6, "stride": 6}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "warpformer", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 4, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.00626 val_mse 0.00414 best 0.00414@0 (54.7s)
+epoch 001 loss 0.00420 val_mse 0.00409 best 0.00409@1 (42.1s)
+epoch 002 loss nan val_mse nan best 0.00409@1 (42.4s)
+epoch 003 loss nan val_mse nan best 0.00409@1 (42.4s)
+epoch 004 loss nan val_mse nan best 0.00409@1 (42.3s)
+epoch 005 loss nan val_mse nan best 0.00409@1 (43.1s)
+epoch 006 loss nan val_mse nan best 0.00409@1 (42.3s)
+epoch 007 loss nan val_mse nan best 0.00409@1 (42.8s)
+epoch 008 loss nan val_mse nan best 0.00409@1 (41.3s)
+epoch 009 loss nan val_mse nan best 0.00409@1 (41.4s)
+epoch 010 loss nan val_mse nan best 0.00409@1 (43.1s)
+epoch 011 loss nan val_mse nan best 0.00409@1 (41.8s)
+epoch 012 loss nan val_mse nan best 0.00409@1 (42.7s)
+epoch 013 loss nan val_mse nan best 0.00409@1 (42.0s)
+epoch 014 loss nan val_mse nan best 0.00409@1 (41.9s)
+early stop
+  [identity                                  ] MSE 0.00428  MAE 0.05090
+  [random_dropout:0.7                        ] MSE 0.02051  MAE 0.10076
+  [temporal_stride:3                         ] MSE 0.00472  MAE 0.05265
+  [variable_dropout:0.5                      ] MSE 0.01443  MAE 0.08264
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01320  MAE 0.07784
+best {'val_mse': 0.004086068365722895, 'epoch': 1} -> results/raw/bench_noaa_isd_warpformer_vanilla_s4/results.json
+summary {
+  "clean_mse": 0.004281395580619574,
+  "mean_shift_mse": 0.013212627731263638,
+  "mean_degradation": 2.086056282926232,
+  "worst_mse": 0.020506108179688454,
+  "worst_condition": "random_dropout:0.7",
+  "mean_unseen_mse": 0.013212627731263638,
+  "mean_unseen_degradation": 2.086056282926232
+}

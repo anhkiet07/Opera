@@ -1,0 +1,35 @@
+run bench_vitaldb_grafiti_vanilla_s2 | device cuda:0 | params 177857 | commit e6065879aa77f570f2eb12787d7e9bda76b25a6e
+config: {"data": {"batch_size": 32, "history": 60, "n_records": 100000000, "name": "vitaldb", "patch_size": 15, "pred_window": 15, "stride": 15}, "distillation": {"enabled": false, "loss": "prediction", "prediction_loss": "mse", "teacher_ckpt": null, "teacher_type": "frozen", "weight": 1.0}, "experiment": "E0_baseline", "hard_mining": {"alpha": 0.5, "candidate_pool": 8, "enabled": false, "top_k": 2, "warmup_epochs": 5}, "model": {"adaptive_query": "none", "backbone": "grafiti", "dropout": 0.1, "embedding": "quite", "hid_dim": 64, "irr_emb": true, "nhead": 4, "nlayer": 3, "observation_aware": false}, "observation": {"constraints": {"max_gap": 0.6, "min_density": 0.15, "min_obs_per_sample": 4, "min_variable_coverage": 0.3}, "num_views": 1, "rich_process": "identity", "train_processes": ["identity"]}, "seed": 2, "training": {"epochs": 40, "lr": 0.001, "min_epochs": 15, "patience": 10}, "wandb": {"enabled": true, "project": "opera"}}
+epoch 000 loss 0.01735 val_mse 0.00334 best 0.00334@0 (20.7s)
+epoch 001 loss 0.00326 val_mse 0.00470 best 0.00334@0 (20.2s)
+epoch 002 loss 0.00300 val_mse 0.00262 best 0.00262@2 (20.2s)
+epoch 003 loss 0.00280 val_mse 0.00252 best 0.00252@3 (20.3s)
+epoch 004 loss 0.00292 val_mse 0.00320 best 0.00252@3 (20.1s)
+epoch 005 loss 0.00284 val_mse 0.00251 best 0.00251@5 (19.8s)
+epoch 006 loss 0.00277 val_mse 0.00244 best 0.00244@6 (20.3s)
+epoch 007 loss 0.00278 val_mse 0.00260 best 0.00244@6 (20.2s)
+epoch 008 loss 0.00273 val_mse 0.00246 best 0.00244@6 (20.3s)
+epoch 009 loss 0.00275 val_mse 0.00294 best 0.00244@6 (20.2s)
+epoch 010 loss 0.00269 val_mse 0.00324 best 0.00244@6 (19.7s)
+epoch 011 loss 0.00271 val_mse 0.00284 best 0.00244@6 (20.1s)
+epoch 012 loss 0.00270 val_mse 0.00257 best 0.00244@6 (20.2s)
+epoch 013 loss 0.00273 val_mse 0.00261 best 0.00244@6 (20.3s)
+epoch 014 loss 0.00270 val_mse 0.00284 best 0.00244@6 (20.2s)
+epoch 015 loss 0.00266 val_mse 0.00258 best 0.00244@6 (19.6s)
+epoch 016 loss 0.00272 val_mse 0.00294 best 0.00244@6 (20.2s)
+early stop
+  [identity                                  ] MSE 0.00258  MAE 0.03093
+  [random_dropout:0.7                        ] MSE 0.00329  MAE 0.03794
+  [temporal_stride:3                         ] MSE 0.00295  MAE 0.03466
+  [variable_dropout:0.5                      ] MSE 0.01819  MAE 0.07136
+  [temporal_stride:3+variable_group_dropout:0.3] MSE 0.01165  MAE 0.05539
+best {'val_mse': 0.0024363475386053324, 'epoch': 6} -> results/raw/bench_vitaldb_grafiti_vanilla_s2/results.json
+summary {
+  "clean_mse": 0.0025806399062275887,
+  "mean_shift_mse": 0.009017294098157436,
+  "mean_degradation": 2.494208578421554,
+  "worst_mse": 0.018189169466495514,
+  "worst_condition": "variable_dropout:0.5",
+  "mean_unseen_mse": 0.009017294098157436,
+  "mean_unseen_degradation": 2.494208578421554
+}
